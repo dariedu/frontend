@@ -22,6 +22,7 @@ module.exports = [
       'react-hooks': require('eslint-plugin-react-hooks'),
       prettier: require('eslint-plugin-prettier'),
       'react-refresh': require('eslint-plugin-react-refresh'),
+      tailwindcss: require('eslint-plugin-tailwindcss'),
     },
     rules: {
       'react/prop-types': 'off',
@@ -38,6 +39,8 @@ module.exports = [
           endOfLine: 'auto',
         },
       ],
+      'tailwindcss/classnames-order': 'warn',
+      'tailwindcss/no-custom-classname': 'off',
     },
   },
 ];
