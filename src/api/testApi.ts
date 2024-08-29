@@ -50,7 +50,7 @@ export const registerUser = async (
   name: string,
   email: string,
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): Promise<AuthResponse> => {
   try {
     const response = await toast.promise(
@@ -62,15 +62,16 @@ export const registerUser = async (
       }),
       {
         loading: 'Registering...',
-        success: <b>Registration successful</b>,
+        success: 'Registration successful',
         error: 'Registration failed',
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.data) {
       throw new Error(error.response.data);
     }
+    // Добавляем return после throw для удовлетворения TypeScript
     throw new Error('An unexpected error occurred.');
   }
 };
@@ -78,16 +79,16 @@ export const registerUser = async (
 // Вход пользователя
 export const loginUser = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<AuthResponse> => {
   try {
     const response = await toast.promise(
       axios.post<AuthResponse>(authLogin, { email, password }),
       {
         loading: 'Logging in...',
-        success: <b>Success login!</b>,
-        error: <b>Login failed: invalid username or password</b>,
-      }
+        success: 'Loading successful',
+        error: 'Login failed: invalid username or password',
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -127,9 +128,9 @@ export const logoutUser = async (token: string): Promise<void> => {
       }),
       {
         loading: 'Logging out...',
-        success: <b>Logout successful!</b>,
-        error: <b>Logout failed: an error occurred</b>,
-      }
+        success: 'Logout successful!',
+        error: 'Logout failed: an error occurred',
+      },
     );
     console.log('Logout response:', response.data);
   } catch (error: any) {
@@ -157,7 +158,7 @@ export const connectClientDB = async (formData: object): Promise<any> => {
 export const getUserTestStats = async (
   testID: number,
   ids: number[],
-  access: string
+  access: string,
 ): Promise<UserTestStats> => {
   try {
     const res: AxiosResponse<UserTestStats> = await axios({
@@ -180,7 +181,7 @@ export const getTestResults = async (
   id: number,
   offset: number,
   limit: number,
-  access: string
+  access: string,
 ): Promise<TestResults[]> => {
   try {
     const res: AxiosResponse<TestResults[]> = await axios({
@@ -209,7 +210,7 @@ export const getFilteredTextAnswers = async (
   limit: number,
   category: string,
   ids: number[],
-  access: string
+  access: string,
 ): Promise<FilteredTextAnswers[]> => {
   try {
     const res: AxiosResponse<FilteredTextAnswers[]> = await axios({
