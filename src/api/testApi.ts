@@ -1,11 +1,8 @@
-//в этом файле описываем эндпоинты и методы с бекенда
-// далее работает в /src/core/store пишем слайс по сущности и добавляем редьюсер в файл store
-
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-hot-toast';
 
 // Устанавливаем URL API
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL as string;
 
 // Определяем эндпоинты для авторизации
 const authRegister = `${API_URL}/register/`;
@@ -13,11 +10,51 @@ const authLogin = `${API_URL}/login/`;
 const getUserInfo = `${API_URL}/user/`;
 const authLogout = `${API_URL}/logout/`;
 
+// Типизация ответа API
+interface AuthResponse {
+  token: string;
+  user: {
+    id: number;
+    email: string;
+    username: string;
+  };
+}
+
+interface User {
+  id: number;
+  email: string;
+  username: string;
+}
+
+interface UserTestStats {
+  correct: number;
+  incorrect: number;
+  skipped: number;
+}
+
+interface TestResults {
+  id: number;
+  result: string;
+  score: number;
+}
+
+interface FilteredTextAnswers {
+  question_id: number;
+  answer: string;
+  category: string;
+  ids: number[];
+}
+
 // Регистрация пользователя
-export const registerUser = async (name, email, password, confirmPassword) => {
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string,
+  confirmPassword: string
+): Promise<AuthResponse> => {
   try {
     const response = await toast.promise(
-      axios.post(authRegister, {
+      axios.post<AuthResponse>(authRegister, {
         username: name,
         email: email,
         password1: password,
@@ -27,10 +64,10 @@ export const registerUser = async (name, email, password, confirmPassword) => {
         loading: 'Registering...',
         success: <b>Registration successful</b>,
         error: 'Registration failed',
-      },
+      }
     );
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response && error.response.data) {
       throw new Error(error.response.data);
     }
@@ -39,18 +76,21 @@ export const registerUser = async (name, email, password, confirmPassword) => {
 };
 
 // Вход пользователя
-export const loginUser = async (email, password) => {
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
   try {
     const response = await toast.promise(
-      axios.post(authLogin, { email, password }),
+      axios.post<AuthResponse>(authLogin, { email, password }),
       {
         loading: 'Logging in...',
         success: <b>Success login!</b>,
         error: <b>Login failed: invalid username or password</b>,
-      },
+      }
     );
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response && error.response.data) {
       throw new Error(error.response.data);
     }
@@ -59,23 +99,23 @@ export const loginUser = async (email, password) => {
 };
 
 // Получение данных пользователя
-export const fetchUserData = async token => {
+export const fetchUserData = async (token: string): Promise<User> => {
   try {
-    const response = await axios.get(getUserInfo, {
+    const response: AxiosResponse<User> = await axios.get(getUserInfo, {
       headers: {
         Authorization: `Token ${token}`,
         'Content-type': 'application/json',
       },
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching user data:', error);
     throw new Error('Failed to fetch user data');
   }
 };
 
 // Выход пользователя
-export const logoutUser = async token => {
+export const logoutUser = async (token: string): Promise<void> => {
   try {
     console.log('Logging out with token:', token);
     const response = await toast.promise(
@@ -89,19 +129,17 @@ export const logoutUser = async token => {
         loading: 'Logging out...',
         success: <b>Logout successful!</b>,
         error: <b>Logout failed: an error occurred</b>,
-      },
+      }
     );
     console.log('Logout response:', response.data);
-
-    return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Logout failed:', error);
     throw new Error('Failed to logout');
   }
 };
 
 // Подключение к базе данных клиента
-export const connectClientDB = async formData => {
+export const connectClientDB = async (formData: object): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/clientdb/`, formData, {
       headers: {
@@ -109,16 +147,20 @@ export const connectClientDB = async formData => {
       },
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Connection to client DB failed:', error);
     throw new Error('Failed to connect to client DB');
   }
 };
 
 // Получение статистики по тестам пользователя
-export const getUserTestStats = async (testID, ids, access) => {
+export const getUserTestStats = async (
+  testID: number,
+  ids: number[],
+  access: string
+): Promise<UserTestStats> => {
   try {
-    const res = await axios({
+    const res: AxiosResponse<UserTestStats> = await axios({
       url: `${API_URL}/tests/${testID}/stats`,
       method: 'GET',
       headers: {
@@ -127,16 +169,21 @@ export const getUserTestStats = async (testID, ids, access) => {
       },
     });
     return res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to get user test stats:', error);
     throw new Error('Failed to get user test stats');
   }
 };
 
 // Получение результатов тестов
-export const getTestResults = async (id, offset, limit, access) => {
+export const getTestResults = async (
+  id: number,
+  offset: number,
+  limit: number,
+  access: string
+): Promise<TestResults[]> => {
   try {
-    const res = await axios({
+    const res: AxiosResponse<TestResults[]> = await axios({
       url: `${API_URL}/tests-complete/?test=${id}&offset=${offset}&limit=${limit}`,
       method: 'GET',
       headers: {
@@ -149,7 +196,7 @@ export const getTestResults = async (id, offset, limit, access) => {
       },
     });
     return res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to get test results:', error);
     throw new Error('Failed to get test results');
   }
@@ -157,15 +204,15 @@ export const getTestResults = async (id, offset, limit, access) => {
 
 // Получение отфильтрованных текстовых ответов
 export const getFilteredTextAnswers = async (
-  question_id,
-  offset,
-  limit,
-  category,
-  ids,
-  access,
-) => {
+  question_id: number,
+  offset: number,
+  limit: number,
+  category: string,
+  ids: number[],
+  access: string
+): Promise<FilteredTextAnswers[]> => {
   try {
-    const res = await axios({
+    const res: AxiosResponse<FilteredTextAnswers[]> = await axios({
       url: `${API_URL}/filtered-text-answers/`,
       method: 'POST',
       headers: {
@@ -182,7 +229,7 @@ export const getFilteredTextAnswers = async (
       },
     });
     return res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to get filtered text answers:', error);
     throw new Error('Failed to get filtered text answers');
   }
