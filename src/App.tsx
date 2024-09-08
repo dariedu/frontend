@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import reactLogo from './assets/react.svg';
+import RouteMap from './components/RouteMap/RouteMap';
+import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
 import viteLogo from '/vite.svg';
 import './App.css';
 
@@ -16,6 +18,9 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <YMaps>
+        <RouteMap />
+      </YMaps>
       <h1>Vite + React</h1>
       <div className="bg-blue-500 p-4 text-white">Привет, Tailwind CSS!</div>
       <div className="card">
