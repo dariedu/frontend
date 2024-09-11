@@ -1,0 +1,29 @@
+/* Подключение Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  @font-face{
+  font-family: 'Gerbera';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/fonts/Gerbera.woff) format('woff');
+  }
+  @font-face{
+    font-family: 'GerberaLight';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(./assets/fonts/Gerbera-Light.woff) format('woff');
+    }
+    @font-face{
+      font-family: 'GerberaMedium';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(./assets/fonts/Gerbera-Medium.woff) format('woff');
+      }
+}
