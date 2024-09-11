@@ -22,7 +22,7 @@ function App() {
         <RouteMap />
       </YMaps>
       <h1>Vite + React</h1>
-      <div className="bg-blue-500 p-4 text-white">Привет, Tailwind CSS!</div>
+      <div className="bg-blue-500 p-4 text-Gray/5 ">Привет, Tailwind CSS!</div>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>
           count is {count}
@@ -30,6 +30,9 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+        <p className="font-gerberaLight text-Gray/3 text-H1">Gerbera-Light</p>
+        <p className="font-gerberaMedium text-Gray/4 text-H2">Gerbera-Medium</p>
+        <p className="font-gerbera text-Gray/5 text-Subtitle2">Gerbera</p>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
