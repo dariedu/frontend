@@ -4,6 +4,7 @@ import RouteMap from './components/RouteMap/RouteMap';
 import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
 import viteLogo from '/vite.svg';
 import './App.css';
+import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -22,7 +23,9 @@ function App() {
         <RouteMap />
       </YMaps>
       <h1>Vite + React</h1>
-      <div className="bg-blue-500 p-4 text-Gray/5 ">Привет, Tailwind CSS!</div>
+      <div className="bg-light-gray-white p-4 text-light-gray-5 dark:bg-dark-gray-white dark:text-dark-gray-5 ">
+        Привет, Tailwind CSS!
+      </div>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>
           count is {count}
@@ -37,6 +40,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <ThemeToggle />
     </>
   );
 }
