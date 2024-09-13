@@ -5,6 +5,7 @@ import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонен
 // import viteLogo from '/vite.svg';
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 declare global {
   interface Window {
@@ -43,6 +44,46 @@ const App: React.FC = () => {
         Click on the Vite and React logos to learn more
       </p>
       <ThemeToggle />
+      <div className="p-4 border-2 border-dashed border-purple-400 rounded-lg space-y-4">
+        {/* Первая кнопка +14 баллов */}
+        <button className="bg-light-brand-green text-white text-sm px-4 py-2 rounded-full">
+          +14 баллов
+        </button>
+
+        {/* Текст под кнопкой */}
+        <p className="text-sm text-black">За две недели</p>
+
+        {/* Кнопка Завершить */}
+        <button className="bg-light-brand-green text-white text-lg px-6 py-3 rounded-full">
+          Завершить
+        </button>
+
+        {/* Кнопка Отмена */}
+        <button className="bg-light-gray-1 text-black text-md px-4 py-2 rounded-full">
+          Отмена
+        </button>
+
+        {/* Кнопка Начать */}
+        <button className="bg-light-brand-green text-white text-md px-4 py-2 rounded-full">
+          Начать
+        </button>
+
+        {/* Кнопка Написать сотруднику */}
+        <button className="bg-light-brand-green text-white text-md px-4 py-2 rounded-full">
+          Написать сотруднику
+        </button>
+      </div>
+      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-72">
+        {/* Иконка поиска */}
+        <MagnifyingGlassIcon className="text-gray-400 w-5 h-5 mr-2" />
+
+        {/* Поле ввода */}
+        <input
+          type="text"
+          placeholder="Поиск по ФИО"
+          className="bg-transparent outline-none placeholder-gray-400 text-gray-600 w-full"
+        />
+      </div>
     </>
   );
 };
