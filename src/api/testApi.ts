@@ -157,7 +157,7 @@ export const connectClientDB = async (formData: object): Promise<any> => {
 // Получение статистики по тестам пользователя
 export const getUserTestStats = async (
   testID: number,
-  ids: number[],
+  // ids: number[],
   access: string,
 ): Promise<UserTestStats> => {
   try {
