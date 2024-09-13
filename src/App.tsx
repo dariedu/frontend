@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 // import reactLogo from './assets/react.svg';
-// import RouteMap from './components/RouteMap/RouteMap';
-// import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
+import RouteMap from './components/RouteMap/RouteMap';
+import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
 // import viteLogo from '/vite.svg';
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
@@ -24,9 +24,9 @@ const App: React.FC = () => {
         <h1>Добро пожаловать в мой Telegram Mini App!</h1>
         <button onClick={() => window.Telegram.WebApp.close()}>Закрыть</button>
       </div>
-      {/* <YMaps>
+      <YMaps>
         <RouteMap />
-      </YMaps> */}
+      </YMaps>
       <h1>Vite + React</h1>
       <div className="bg-light-gray-white p-4 text-light-gray-5 dark:bg-dark-gray-white dark:text-dark-gray-5 ">
         Привет, Tailwind CSS!
