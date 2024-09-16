@@ -44,7 +44,7 @@ const App: React.FC = () => {
         Click on the Vite and React logos to learn more
       </p>
       <ThemeToggle />
-      <div className="p-4 border-2 border-dashed border-purple-400 rounded-lg space-y-4">
+      <div className="p-4 border-2 border-dashed border-purple-400 bg-light-gray-bluer bg-opacity-47 rounded-lg space-y-4">
         {/* Первая кнопка +14 баллов */}
         <button className="bg-light-brand-green text-white text-sm px-4 py-2 rounded-full">
           +14 баллов
