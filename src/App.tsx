@@ -22,7 +22,9 @@ const App: React.FC = () => {
   return (
     <>
       <div>
-        <h1>Добро пожаловать в мой Telegram Mini App!</h1>
+        <h1 className="font-gerbera-h1">
+          Добро пожаловать в мой Telegram Mini App!
+        </h1>
         <button onClick={() => window.Telegram.WebApp.close()}>Закрыть</button>
       </div>
       <YMaps>
@@ -39,6 +41,13 @@ const App: React.FC = () => {
         <p className="font-gerberaLight text-Gray/3 text-H1">Gerbera-Light</p>
         <p className="font-gerberaMedium text-Gray/4 text-H2">Gerbera-Medium</p>
         <p className="font-gerbera text-Gray/5 text-Subtitle2">Gerbera</p>
+
+        <p className="font-gerbera-h1">Gerbera H1</p>
+        <p className="font-gerbera-h2">Gerbera H2</p>
+        <p className="font-gerbera-h3">Gerbera H3</p>
+        <p className="font-gerbera-sub1">Gerbera subtitle1</p>
+        <p className="font-gerbera-sub2">Gerbera subtitle2</p>
+        <p className="font-gerbera-sub3">Gerbera subtitle3</p>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more

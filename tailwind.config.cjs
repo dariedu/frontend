@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       opacity: {
-        '47': '0.47'
+        47: '0.47',
       },
       colors: {
         light: {
@@ -22,38 +22,78 @@ module.exports = {
           'gray-8-text': '#0A0A0A',
           'gray-black': '#000000',
           'brand-green': '#38AB78',
-          'gray-bluer': '#929292'
+          'gray-bluer': '#929292',
         },
         dark: {
-          'gray-white': '#000000', 
+          'gray-white': '#000000',
           'gray-1': '#070707',
           'gray-2': '#DFDFDF',
           'gray-3': '#575757',
-          'gray-4': '#888888', 
+          'gray-4': '#888888',
           'gray-5': 'white',
           'gray-6': '#323232',
           'gray-7-logo': '#F8F8F8',
           'gray-8-text': '#FFFFFF',
           'gray-black': '#FFFFFF',
           'brand-green': '#38AB78',
-          
         },
       },
-      fontSize: {
-        'H1-18': ['18px', '23px'],
-        'H2-16': ['16px', '20px'],
-        'H3-14': ['14px', '18px'],
-        'Subtitle1-10': ['10px', '13px'],
-        'Subtitle2-12': ['12px', '15px'],
-      },
-      fontFamily: {
-        gerbera: ['Gerbera'],
-        gerberaLight: ['GerberaLight'],
-        gerberaMedium: ['GerberaMedium'],
-      },
+      // fontSize: {
+      //   'H1-18': ['18px', '23px'],
+      //   'H2-16': ['16px', '20px'],
+      //   'H3-14': ['14px', '18px'],
+      //   'Subtitle1-10': ['10px', '13px'],
+      //   'Subtitle2-12': ['12px', '15px'],
+      // },
+      // fontFamily: {
+      //   gerbera: ['Gerbera'],
+      //   gerberaLight: ['GerberaLight'],
+      //   gerberaMedium: ['GerberaMedium'],
+      // },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.font-gerbera-h1': {
+          fontFamily: 'Gerbera',
+          fontSize: '18px',
+          lineHeight: '23px',
+        },
+
+        '.font-gerbera-h2': {
+          fontFamily: 'Gerbera',
+          fontSize: '16px',
+          lineHeight: '20px',
+        },
+
+        '.font-gerbera-h3': {
+          fontFamily: 'Gerbera',
+          fontSize: '14px',
+          lineHeight: '18px',
+        },
+
+        '.font-gerbera-sub1': {
+          fontFamily: 'GerberaLight',
+          fontSize: '10px',
+          lineHeight: '13px',
+        },
+
+        '.font-gerbera-sub2': {
+          fontFamily: 'Gerbera',
+          fontSize: '12px',
+          lineHeight: '15px',
+        },
+
+        '.font-gerbera-sub3': {
+          fontFamily: 'GerberaLight',
+          fontSize: '12px',
+          lineHeight: '15px',
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };
 
 {
