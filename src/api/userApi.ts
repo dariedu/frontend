@@ -10,30 +10,30 @@ const usersEndpoint = `${API_URL}/users/`;
 interface IUser {
   id: number;
   tg_id: number;
-  email: string;
-  last_name: string;
-  name: string;
-  surname: string;
-  phone: string;
-  photo: string;
+  email?: string | null;
+  last_name?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  phone?: string | null;
+  photo?: string | null;
   volunteer_hour: number;
-  point: number;
+  point?: number | null;
   rating: number;
-  city: number;
+  city?: number | null;
   is_superuser: boolean;
   is_staff: boolean;
 }
 
 // Типизация данных для запроса (схема UserRequest)
 type TUserRequest = {
-  email: string;
-  last_name: string;
-  name: string;
-  surname: string;
-  phone: string;
-  photo: string;
-  point: number;
-  city: number;
+  email?: string | null;
+  last_name?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  phone?: string | null;
+  photo?: string | null;
+  point?: number | null;
+  city?: number | null;
 };
 
 // Типизация для параметров фильтрации
