@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { ILocation } from './locationApi';
+import { TAddress, TAddressRequest } from './addressApi';
 
 // Устанавливаем URL API
 const API_URL = process.env.VITE_API_BASE_URL as string;
@@ -12,20 +13,7 @@ const assignRouteSheetEndpoint = `${API_URL}/route_sheets/assign/`;
 interface IRouteSheet {
   id: number;
   location: ILocation;
-  address: Array<{
-    id: number;
-    beneficiary: Array<{
-      id: number;
-      phone?: string;
-      full_name?: string;
-      comment?: string;
-      address?: number | null;
-    }>;
-    address: string;
-    link?: string | null;
-    location?: number | null;
-    route_sheet?: number | null;
-  }>;
+  address: TAddress[]; // Using TAddress type here
 }
 
 // Тип данных для запроса при создании или обновлении маршрутного листа
@@ -33,6 +21,7 @@ type TRouteSheetRequest = {
   name: string;
   map?: string | null;
   user?: number | null;
+  addresses?: TAddressRequest[]; // Adding addresses using TAddressRequest type
 };
 
 // Получение списка маршрутных листов
