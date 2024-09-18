@@ -2,8 +2,8 @@
 // Еще совсем не готово, тут только шаблон!!!!! апи на бэкэ еще сырой!!!!
 import axios, { AxiosResponse } from 'axios';
 //тут будет ссылка на файл с юрлом!
-const API_URL = 'http://127.0.0.1:8000' as string;
-const deliveriesUrl = `${API_URL}/api/deliveries/`;
+const API_URL = process.env.VITE_API_BASE_URL as string;
+const deliveriesUrl = `${API_URL}/deliveries/`;
 
 
 interface IDelivery {
@@ -133,3 +133,6 @@ export const getVolunteerDeliveries = async (): Promise<IDelivery[]> => {
     throw new Error('Get request getMyTasks has failed')
   }
 }
+
+// Экспортируем интерфейсы и типы для использования в других API-файлах
+export type { IDelivery };
