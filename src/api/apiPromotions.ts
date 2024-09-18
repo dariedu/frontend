@@ -3,8 +3,8 @@
 import axios, { AxiosResponse } from 'axios';
 
 //тут будет ссылка на файл с юрлом!
-const API_URL = 'http://127.0.0.1:8000' as string;
-const promotionsUrl = `${API_URL}/api/promotions/`;
+const API_URL = process.env.VITE_API_BASE_URL as string;
+const promotionsUrl = `${API_URL}/promotions/`;
 
 interface IPromotion {
   id: number
@@ -97,3 +97,6 @@ export const postPromotionCancel = async(promotionId: number): Promise<IPromotio
     throw new Error('Post request postTaskAccept has failed')
   }
 }
+
+// Экспортируем интерфейсы и типы для использования в других API-файлах
+export type { IPromotion };

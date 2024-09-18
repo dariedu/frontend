@@ -3,8 +3,8 @@
 import axios, { AxiosResponse } from 'axios';
 
 //тут будет ссылка на файл с юрлом!
-const API_URL = 'http://127.0.0.1:8000' as string;
-const tasksUrl = `${API_URL}/api/tasks/`;
+const API_URL = process.env.VITE_API_BASE_URL as string;
+const tasksUrl = `${API_URL}/tasks/`;
 
 interface ITask {
   id: number
@@ -142,3 +142,6 @@ export const getMyTasks = async(is_active:boolean = false, is_completed:boolean 
     throw new Error('Get request getMyTasks has failed')
   }
 }
+
+// Экспортируем интерфейсы и типы для использования в других API-файлах
+export type { ITask };
