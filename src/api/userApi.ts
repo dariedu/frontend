@@ -113,3 +113,6 @@ export const patchUser = async (
     throw new Error('Failed to patch user');
   }
 };
+
+// Экспортируем интерфейсы и типы для использования в других API-файлах
+export type { IUser, TUserRequest };
