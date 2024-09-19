@@ -13,7 +13,7 @@ module.exports = {
         light: {
           'gray-white': '#FFFFFF',
           'gray-1': '#F8F8F8',
-          'gray-2': '#DFDFDF',
+          'gray-2': '#E7E7E7',
           'gray-3': '#BFBFBF',
           'gray-4': '#888888',
           'gray-5': '#575757',

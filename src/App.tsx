@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import reactLogo from './assets/react.svg';
 import RouteMap from './components/RouteMap/RouteMap';
 import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
@@ -12,6 +12,7 @@ declare global {
     Telegram: any;
   }
 }
+const [click, setClick] = useState(false);
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -57,6 +58,9 @@ const App: React.FC = () => {
         {/* Первая кнопка +14 баллов */}
         <button className="bg-light-brand-green text-white text-sm px-4 py-2 rounded-full">
           +14 баллов
+        </button>
+        <button className={`${click ? 'btn-M-GreenClicked':'btn-M-GreenDefault'}`} onClick={() => { click==true ? setClick(false) : setClick(true) }}>
+        btn-M-GreenDefault/Clicked
         </button>
 
         {/* Текст под кнопкой */}
