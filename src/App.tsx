@@ -5,6 +5,7 @@ import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонен
 // import viteLogo from '/vite.svg';
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
+import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 declare global {
@@ -13,9 +14,16 @@ declare global {
   }
 }
 
-
 const App: React.FC = () => {
   const [click, setClick] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleConfirm = () => {
+    console.log('Доставка подтверждена!');
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     tg.ready(); // Сообщаем Telegram, что приложение готово
@@ -60,8 +68,13 @@ const App: React.FC = () => {
         <button className="bg-light-brand-green text-white text-sm px-4 py-2 rounded-full">
           +14 баллов
         </button>
-        <button className={`${click ? 'btn-M-GreenClicked':'btn-M-GreenDefault'}`} onClick={() => { click==true ? setClick(false) : setClick(true) }}>
-        btn-M-GreenDefault/Clicked
+        <button
+          className={`${click ? 'btn-M-GreenClicked' : 'btn-M-GreenDefault'}`}
+          onClick={() => {
+            click == true ? setClick(false) : setClick(true);
+          }}
+        >
+          btn-M-GreenDefault/Clicked
         </button>
 
         {/* Текст под кнопкой */}
@@ -87,6 +100,19 @@ const App: React.FC = () => {
           Написать сотруднику
         </button>
       </div>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Открыть модальное окно
+      </button>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onConfirm={handleConfirm}
+        deliveryDate="17 сентября"
+      />
       <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-72">
         {/* Иконка поиска */}
         <MagnifyingGlassIcon className="text-gray-400 w-5 h-5 mr-2" />
