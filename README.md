@@ -2,4 +2,4 @@
 
 Стек технологий: vite, react, typescript
 
-Запуск проекта nvm run dev
+Запуск проекта npm run dev
