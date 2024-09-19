@@ -12,9 +12,10 @@ declare global {
     Telegram: any;
   }
 }
-const [click, setClick] = useState(false);
+
 
 const App: React.FC = () => {
+  const [click, setClick] = useState(false);
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     tg.ready(); // Сообщаем Telegram, что приложение готово
