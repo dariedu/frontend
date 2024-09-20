@@ -6,6 +6,7 @@ import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонен
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
+import History from './components/history/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 declare global {
@@ -113,6 +114,16 @@ const App: React.FC = () => {
         onConfirm={handleConfirm}
         deliveryDate="17 сентября"
       />
+
+      <div className="flex justify-center items-center min-h-screen bg-light-gray-1 dark:bg-dark-gray-1">
+        <History
+          points={2}
+          eventName="Мероприятие"
+          eventDate="12 сентября"
+          eventTime="15:00"
+          description="Экскурсия в замке 18 века"
+        />
+      </div>
       <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-72">
         {/* Иконка поиска */}
         <MagnifyingGlassIcon className="text-gray-400 w-5 h-5 mr-2" />
