@@ -1,20 +1,22 @@
 //import { useState, useEffect } from "react";
 import * as Form from '@radix-ui/react-form';
-import * as Checkbox from '@radix-ui/react-checkbox';
-import { CheckIcon } from '@radix-ui/react-icons';
-
+import { PictuteUpload } from './../ui/PictureUpload/PictureUpload';
 import './index.css';
+import { Modal } from '../ui/Modal/Modal';
+import { useState } from 'react';
+import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
+
 export default function RegistrationForm() {
   // tg_id: number,
   // phone: string,
   // is_adult: boolean,
   // consent_to_personal_data: boolean
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <Form.Root>
         <div className="flex flex-col justify-around items-center w-fit h-[764px]">
-          <div className='font-gerbera-h1'>Зарегистрироваться</div>
+          <div className="font-gerbera-h1">Зарегистрироваться</div>
 
           <div className="w-fit h-[364px] flex flex-col justify-between">
             <div>
@@ -83,7 +85,6 @@ export default function RegistrationForm() {
             </div>
             <div>
               <Form.Field name="email">
-                {/* <Label>LastName</Label> */}
                 <Form.Message match="valueMissing">
                   Please enter your email
                 </Form.Message>
@@ -120,29 +121,40 @@ export default function RegistrationForm() {
               </Form.Field>
             </div>
           </div>
-          <div className="flex justify-around w-[336px]">
-            <Checkbox.Root className="bg-light-gray-1 rounded-full w-6 h-6 flex justify-center items-center">
-              <Checkbox.Indicator>
-                <CheckIcon className="text-light-gray-white font-bold rounded-full w-6 h-6 bg-light-brand-green" />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
+          <CheckboxElement>
             <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] h-[21px]">
               Я подтверждаю свое согласие на{' '}
               <b className="text-light-brand-green font-normal">
                 обработку персональных данных.
               </b>
             </label>
-          </div>
-          <div className='flex flex-col justify-between h-[152px]'>
-            <div>
-              <div className='w-[235px] h-[72px] flex flex-col justify-between items-start'>
-                <h3 className='font-gerbera-h3 text-light-gray-black' >Загрузите свое фото</h3>
-                <p className='font-gerbera-sub1 text-light-gray-6 text-left' >Для продолжения регистрации, пожалуйста, сфотографируйтесь или загрузите ваше фото
-                в формате jpg</p>
+          </CheckboxElement>
+          <div className="flex flex-col justify-between h-[152px]">
+            <div className="flex justify-between place-items-start ">
+              <div className="w-[235px] h-[72px] flex flex-col justify-between items-start">
+                <h3 className="font-gerbera-h3 text-light-gray-black">
+                  Загрузите свое фото
+                </h3>
+                <p className="font-gerbera-sub1 text-light-gray-6 text-left">
+                  Для продолжения регистрации, пожалуйста, сфотографируйтесь или
+                  загрузите ваше фото в формате jpg
+                </p>
               </div>
+              <img
+                src="./../src/assets/icons/photo.svg"
+                className="h-[35px] w-[38px] cursor-pointer"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              ></img>
             </div>
-            <button className='btn-B-GreenDefault'>Отправить заявку</button>
+            <button className="btn-B-GreenDefault">Отправить заявку</button>
           </div>
+          <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+            <PictuteUpload
+              text="Сфотографируйте согласие на обработку данных подписанное родителем"
+            />
+          </Modal>
         </div>
       </Form.Root>
     </>

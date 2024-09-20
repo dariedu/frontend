@@ -18,7 +18,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-        <Dialog.Content className="fixed inset-0 flex items-center justify-center">
+        <Dialog.Content className="fixed inset-0 flex items-center justify-center backdrop-blur-[2px]">
           <div className="bg-light-gray-white dark:bg-dark-gray-1 rounded-lg shadow-lg p-6 w-full max-w-sm text-center">
             <Dialog.Title className="font-gerbera-h1 text-light-gray-8-text dark:text-dark-gray-8-text">
               Подтверждение доставки
