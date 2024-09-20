@@ -99,9 +99,6 @@ const TabBar: React.FC<TabBarProps> = () => {
               className="w-6 h-6"
             />
           </Tabs.Trigger>
-
-          {/* Черная полоска под вкладками "Календарь" и "Куратор" */}
-          <div className="absolute bottom-0 left-1/4 w-1/2 h-[4px] bg-black"></div>
         </Tabs.List>
       </Tabs.Root>
     </div>
