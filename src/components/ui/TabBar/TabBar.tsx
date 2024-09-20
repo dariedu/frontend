@@ -53,6 +53,14 @@ const TabBar: React.FC<TabBarProps> = () => {
               alt="Главная"
               className="w-6 h-6"
             />
+            <span
+              className={classNames('mt-2 text-xs', {
+                'text-light-brand-green': activeTab === 'tab1',
+                'text-light-gray-4': activeTab !== 'tab1',
+              })}
+            >
+              Главная
+            </span>
           </Tabs.Trigger>
 
           {/* Вкладка "Календарь" */}
@@ -68,6 +76,14 @@ const TabBar: React.FC<TabBarProps> = () => {
               alt="Календарь"
               className="w-6 h-6"
             />
+            <span
+              className={classNames('mt-2 text-xs', {
+                'text-light-brand-green': activeTab === 'tab2',
+                'text-light-gray-4': activeTab !== 'tab2',
+              })}
+            >
+              Календарь
+            </span>
           </Tabs.Trigger>
 
           {/* Вкладка "Куратор" */}
@@ -83,6 +99,14 @@ const TabBar: React.FC<TabBarProps> = () => {
               alt="Куратор"
               className="w-6 h-6"
             />
+            <span
+              className={classNames('mt-2 text-xs', {
+                'text-light-brand-green': activeTab === 'tab3',
+                'text-light-gray-4': activeTab !== 'tab3',
+              })}
+            >
+              Куратор
+            </span>
           </Tabs.Trigger>
 
           {/* Вкладка "Бонусы" */}
@@ -98,6 +122,14 @@ const TabBar: React.FC<TabBarProps> = () => {
               alt="Бонусы"
               className="w-6 h-6"
             />
+            <span
+              className={classNames('mt-2 text-xs', {
+                'text-light-brand-green': activeTab === 'tab4',
+                'text-light-gray-4': activeTab !== 'tab4',
+              })}
+            >
+              Бонусы
+            </span>
           </Tabs.Trigger>
         </Tabs.List>
       </Tabs.Root>

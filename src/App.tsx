@@ -8,6 +8,7 @@ import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
 import History from './components/history/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { AddressCard } from './components/ui/AddressCard/AddressCard';
 
 declare global {
   interface Window {
@@ -23,6 +24,14 @@ const App: React.FC = () => {
   const handleConfirm = () => {
     console.log('Доставка подтверждена!');
     setIsModalOpen(false);
+  };
+
+  const handleCommentClick = () => {
+    console.log('Добавить комментарий');
+  };
+
+  const handleSubmitClick = () => {
+    console.log('Отправить');
   };
 
   useEffect(() => {
@@ -41,6 +50,14 @@ const App: React.FC = () => {
       <YMaps>
         <RouteMap />
       </YMaps>
+      <AddressCard
+        address="Ул. Бобруйская д. 4 кв. 12"
+        additionalInfo="3 подъезд 10 этаж кв 143 код #3214"
+        personName="Петрова Галина Сергеевна"
+        personImageUrl="https://via.placeholder.com/150"
+        onCommentClick={handleCommentClick}
+        onSubmitClick={handleSubmitClick}
+      />
       <h1>Vite + React</h1>
       <div className="bg-light-gray-white p-4 text-light-gray-5 dark:bg-dark-gray-white dark:text-dark-gray-5 ">
         Привет, Tailwind CSS!
