@@ -54,7 +54,7 @@ const TabBar: React.FC<TabBarProps> = () => {
               className="w-6 h-6"
             />
             <span
-              className={classNames('mt-2 text-xs', {
+              className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab1',
                 'text-light-gray-4': activeTab !== 'tab1',
               })}
@@ -77,7 +77,7 @@ const TabBar: React.FC<TabBarProps> = () => {
               className="w-6 h-6"
             />
             <span
-              className={classNames('mt-2 text-xs', {
+              className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab2',
                 'text-light-gray-4': activeTab !== 'tab2',
               })}
@@ -100,7 +100,7 @@ const TabBar: React.FC<TabBarProps> = () => {
               className="w-6 h-6"
             />
             <span
-              className={classNames('mt-2 text-xs', {
+              className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab3',
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
@@ -123,7 +123,7 @@ const TabBar: React.FC<TabBarProps> = () => {
               className="w-6 h-6"
             />
             <span
-              className={classNames('mt-2 text-xs', {
+              className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab4',
                 'text-light-gray-4': activeTab !== 'tab4',
               })}

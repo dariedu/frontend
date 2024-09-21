@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-// import reactLogo from './assets/react.svg';
 import RouteMap from './components/RouteMap/RouteMap';
-import { YMaps } from '@pbe/react-yandex-maps'; // Импорт компонента YMaps
-// import viteLogo from '/vite.svg';
+import { YMaps } from '@pbe/react-yandex-maps';
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
@@ -17,13 +15,21 @@ declare global {
 }
 
 const App: React.FC = () => {
-  const [click, setClick] = useState(false);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
 
   const handleConfirm = () => {
     console.log('Доставка подтверждена!');
-    setIsModalOpen(false);
+    setIsFirstModalOpen(false);
+    setIsSecondModalOpen(false);
+    setIsThirdModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsFirstModalOpen(false);
+    setIsSecondModalOpen(false);
+    setIsThirdModalOpen(false);
   };
 
   const handleCommentClick = () => {
@@ -36,7 +42,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    tg.ready(); // Сообщаем Telegram, что приложение готово
+    tg.ready();
   }, []);
 
   return (
@@ -50,6 +56,7 @@ const App: React.FC = () => {
       <YMaps>
         <RouteMap />
       </YMaps>
+
       <AddressCard
         address="Ул. Бобруйская д. 4 кв. 12"
         additionalInfo="3 подъезд 10 этаж кв 143 код #3214"
@@ -108,50 +115,67 @@ const App: React.FC = () => {
           Отмена
         </button>
 
-        {/* Кнопка Начать */}
-        <button className="bg-light-brand-green text-white text-md px-4 py-2 rounded-full">
-          Начать
-        </button>
+      <div className="p-4">
+        {/* Три кнопки для открытия соответствующих модальных окон */}
+        <div className="space-y-4">
+          <button
+            onClick={() => setIsFirstModalOpen(true)}
+            className="bg-light-brand-green text-white px-4 py-2 rounded-full"
+          >
+            Открыть модальное окно 1
+          </button>
 
-        {/* Кнопка Написать сотруднику */}
-        <button className="bg-light-brand-green text-white text-md px-4 py-2 rounded-full">
-          Написать сотруднику
-        </button>
+          <button
+            onClick={() => setIsSecondModalOpen(true)}
+            className="bg-light-brand-green text-white px-4 py-2 rounded-full"
+          >
+            Открыть модальное окно 2
+          </button>
+
+          <button
+            onClick={() => setIsThirdModalOpen(true)}
+            className="bg-light-brand-green text-white px-4 py-2 rounded-full"
+          >
+            Открыть модальное окно 3
+          </button>
+        </div>
       </div>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Открыть модальное окно
-      </button>
 
+      {/* Первое модальное окно */}
       <ConfirmModal
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        isOpen={isFirstModalOpen}
+        onOpenChange={setIsFirstModalOpen}
         onConfirm={handleConfirm}
-        deliveryDate="17 сентября"
+        onCancel={handleCancel}
+        title="Доставка еды в календаре!"
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
       />
 
-      <div className="flex justify-center items-center min-h-screen bg-light-gray-1 dark:bg-dark-gray-1">
-        <History
-          points={2}
-          eventName="Мероприятие"
-          eventDate="12 сентября"
-          eventTime="15:00"
-          description="Экскурсия в замке 18 века"
-        />
-      </div>
-      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-72">
-        {/* Иконка поиска */}
-        <MagnifyingGlassIcon className="text-gray-400 w-5 h-5 mr-2" />
+      {/* Второе модальное окно */}
+      <ConfirmModal
+        isOpen={isSecondModalOpen}
+        onOpenChange={setIsSecondModalOpen}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        title="Вы подтверждаете доставку?"
+        description="17 сентября"
+        confirmText="Подтвердить"
+        cancelText="Отменить"
+      />
 
-        {/* Поле ввода */}
-        <input
-          type="text"
-          placeholder="Поиск по ФИО"
-          className="bg-transparent outline-none placeholder-gray-400 text-gray-600 w-full"
-        />
-      </div>
+      {/* Третье модальное окно */}
+      <ConfirmModal
+        isOpen={isThirdModalOpen}
+        onOpenChange={setIsThirdModalOpen}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        title="Вы уверены что хотите отменить доставку?"
+        description="17 сентября"
+        confirmText="Подтвердить"
+        cancelText="Закрыть"
+      />
     </>
   );
 };
