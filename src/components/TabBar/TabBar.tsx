@@ -4,14 +4,14 @@ import classNames from 'classnames';
 import './index.css';
 
 // Пример импортов для иконок
-import HomeIcon from '../../../assets/icons/tap_home.svg';
-import HomeIconActive from '../../../assets/icons/tap_homeActive.svg';
-import CalendarIcon from '../../../assets/icons/tap_calendar.svg';
-import CalendarIconActive from '../../../assets/icons/tap_calendarActive.svg';
-import CuratorIcon from '../../../assets/icons/curator.svg';
-import CuratorIconActive from '../../../assets/icons/curatorActive.svg';
-import BonusesIcon from '../../../assets/icons/bonus.svg';
-import BonusesIconActive from '../../../assets/icons/bonusActive.svg';
+import HomeIcon from '../../assets/icons/tap_home.svg';
+import HomeIconActive from '../../assets/icons/tap_homeActive.svg';
+import CalendarIcon from '../../assets/icons/tap_calendar.svg';
+import CalendarIconActive from '../../assets/icons/tap_calendarActive.svg';
+import CuratorIcon from '../../assets/icons/curator.svg';
+import CuratorIconActive from '../../assets/icons/curatorActive.svg';
+import BonusesIcon from '../../assets/icons/bonus.svg';
+import BonusesIconActive from '../../assets/icons/bonusActive.svg';
 
 interface TabBarProps {}
 
