@@ -6,7 +6,7 @@ import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
 import History from './components/history/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { AddressCard } from './components/ui/AddressCard/AddressCard';
+import { AddressCard } from './components/AddressCard/AddressCard';
 
 declare global {
   interface Window {
