@@ -3,71 +3,72 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-  @font-face{
-  font-family: 'Gerbera';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(./assets/fonts/Gerbera.woff) format('woff');
+  @font-face {
+    font-family: 'Gerbera';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(./assets/fonts/Gerbera.woff) format('woff');
   }
-  @font-face{
+  @font-face {
     font-family: 'GerberaLight';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
     src: url(./assets/fonts/Gerbera-Light.woff) format('woff');
-    }
-    @font-face{
-      font-family: 'GerberaMedium';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url(./assets/fonts/Gerbera-Medium.woff) format('woff');
-      }
+  }
+  @font-face {
+    font-family: 'GerberaMedium';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(./assets/fonts/Gerbera-Medium.woff) format('woff');
+  }
 }
 
-
-@layer components{
+@layer components {
   ///////////////////// Big-size btn
-////ждем когда добавят цвет неактивной кнопки!!!!!
-.btn-B-GreenDefault{
-  @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-brand-green text-light-gray-white
- }
- .btn-B-GreenClicked{
-  @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-6 text-light-gray-white
- }
- .btn-B-GreenInactive{
-  @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white
- }
- .btn-B-WhiteDefault{
-  @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-brand-green
- }
- .btn-B-WhiteClicked{
-  @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-gray-8-text
- }
+  ////ждем когда добавят цвет неактивной кнопки!!!!!
+  .btn-B-GreenDefault {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-brand-green text-light-gray-white;
+  }
+  .btn-B-GreenClicked {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-6 text-light-gray-white;
+  }
+  .btn-B-GreenInactive {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white;
+  }
+  .btn-B-WhiteDefault {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-brand-green;
+  }
+  .btn-B-GrayDefault {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-gray-8-text;
+  }
+  .btn-B-WhiteClicked {
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-gray-8-text;
+  }
   ///////Medium-size btn
   .btn-M-GreenDefault {
-    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-brand-green text-light-gray-white
+    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-brand-green text-light-gray-white;
   }
   .btn-M-GreenClicked {
-    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white
+    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white;
   }
-   .btn-M-WhiteDefault{
-   @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-gray-8-text
+  .btn-M-WhiteDefault {
+    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-gray-8-text;
   }
-  .btn-M-WhiteClicked{
-    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white
-   }
-   ////Smal-size btn
-   .btn-S-GreenDefault{
-    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-brand-green text-light-gray-white
-   }
-   .btn-S-GreenClicked{
-    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white
-   }
-   .btn-S-GreenInactive{
-    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white
-   }
+  .btn-M-WhiteClicked {
+    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white;
+  }
+  ////Smal-size btn
+  .btn-S-GreenDefault {
+    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-brand-green text-light-gray-white;
+  }
+  .btn-S-GreenClicked {
+    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white;
+  }
+  .btn-S-GreenInactive {
+    @apply w-28 h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white;
+  }
 }
