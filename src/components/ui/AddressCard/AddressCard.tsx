@@ -29,14 +29,14 @@ export const AddressCard: React.FC<AddressCardProps> = ({
           </div>
 
           {/* Адрес и информация */}
-          <div className="ml-4">
-            <h2 className="font-gerbera-h2 text-light-gray-8-text dark:text-dark-gray-8-text">
+          <div className="ml-4 text-left space-y-[4px]">
+            <h2 className="font-gerbera-h3 text-light-gray-8-text dark:text-dark-gray-8-text">
               {address}
             </h2>
-            <p className="text-sm text-light-gray-4 dark:text-dark-gray-4">
+            <p className="font-gerbera-sub1 text-light-gray-5-text dark:text-dark-gray-4">
               {additionalInfo}
             </p>
-            <p className="text-sm text-light-gray-8-text dark:text-dark-gray-8-text">
+            <p className="font-gerbera-sub1 text-light-gray-5-text dark:text-dark-gray-4">
               {personName}
             </p>
           </div>
@@ -56,7 +56,7 @@ export const AddressCard: React.FC<AddressCardProps> = ({
       </div>
 
       {/* Кнопки */}
-      <div className="mt-6 space-y-4">
+      <div className="mt-[16px] space-y-[4px]">
         <button className="btn-B-GrayDefault" onClick={onCommentClick}>
           Добавить комментарий
         </button>
