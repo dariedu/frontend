@@ -9,6 +9,7 @@ import NextTask from './components/NextTask/NextTask.tsx';
 import NavigationBar from './components/NavigationBar/NavigationBar.tsx';
 import avatar from './assets/avatar.svg';
 import Search from './components/Search/Search.tsx';
+import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
       <Search />
+      <InputDate />
     </BrowserRouter>
   </StrictMode>,
 );
