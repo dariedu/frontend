@@ -6,6 +6,8 @@ import RegistrationForm from './components/registrationForm/RegistrationForm.tsx
 import TabBar from './components/TabBar/TabBar.tsx';
 import './index.scss';
 import NextTask from './components/NextTask/NextTask.tsx';
+import NavigationBar from './components/NavigationBar/NavigationBar.tsx';
+import avatar from './assets/avatar.svg';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,5 +22,8 @@ createRoot(document.getElementById('root')!).render(
       taskDate="3 окт"
       taskPoints={8}
     />
+    <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
+
+    <NavigationBar variant="mainScreen" avatarUrl={avatar} />
   </StrictMode>,
 );
