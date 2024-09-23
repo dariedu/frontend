@@ -23,11 +23,11 @@ const Calendar: React.FC<CalendarProps> = () => {
 
     return days.map((day, index) => (
       <div key={index} className="flex flex-col items-center">
-        <span className="text-xs text-gray-500">
+        <span className="text-xs pb-2 text-gray-500">
           {format(day, 'EE', { locale: ru }).slice(0, 2)}
         </span>
         <button
-          className={`w-6 h-6 flex items-center justify-center rounded-full ${
+          className={`font-gerbera-sub2 w-6 h-6 flex items-center justify-center rounded-full ${
             getDay(selectedDate) === getDay(day)
               ? 'bg-light-brand-green text-white'
               : 'text-black'
@@ -44,11 +44,11 @@ const Calendar: React.FC<CalendarProps> = () => {
     <div className="p-4 bg-white w-[360px] rounded-lg shadow relative">
       {/* Заголовок */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Другие добрые дела</h2>
+        <h2 className="font-gerbera-h1 text-lg ">Другие добрые дела</h2>
 
         {/* Вертикальный месяц */}
-        <div className="absolute left-0 top-8 flex items-center">
-          <div className="h-[120px] flex items-center justify-between text-xs">
+        <div className="absolute left-0 top-14 flex items-center">
+          <div className="h-[48px] flex items-center justify-between text-xs">
             <span className="font-gerbera-sub1 text-light-gray-4 transform rotate-[-90deg]">
               {format(selectedDate, 'LLLL', { locale: ru })}
             </span>
@@ -91,7 +91,7 @@ const Calendar: React.FC<CalendarProps> = () => {
       </div>
 
       {/* Календарь */}
-      <div className="flex space-x-4 pl-10">{renderWeekDays()}</div>
+      <div className="flex space-x-5 pl-10">{renderWeekDays()}</div>
 
       {isFullCalendarVisible && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
