@@ -3,15 +3,22 @@ import { format, getDay, startOfWeek, addDays } from 'date-fns';
 import ru from 'date-fns/locale/ru';
 import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
+import InputDate from '../InputDate/InputDate'; // Импорт компонента InputDate
 
 interface CalendarProps {}
 
 const Calendar: React.FC<CalendarProps> = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false); // Для управления InputDate
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
+  };
+
+  // Обработчик для открытия окна выбора даты
+  const handleOpenDatePicker = () => {
+    setIsDatePickerOpen(true);
   };
 
   const renderWeekDays = () => {
@@ -73,7 +80,19 @@ const Calendar: React.FC<CalendarProps> = () => {
       {isFilterOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
-            <FilterCurator onClose={() => setIsFilterOpen(false)} />
+            <FilterCurator
+              onClose={() => setIsFilterOpen(false)}
+              onOpenDatePicker={handleOpenDatePicker}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Отображение компонента InputDate */}
+      {isDatePickerOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
+            <InputDate onClose={() => setIsDatePickerOpen(false)} />
           </div>
         </div>
       )}

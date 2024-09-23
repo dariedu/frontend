@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CheckboxElementRight } from '../ui/CheckboxElement/CheckboxElementRight';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 interface FilterCuratorProps {
   onClose: () => void;
+  onOpenDatePicker: () => void; // Пропс для открытия InputDate
 }
 
-const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
-  const [filtersApplied, setFiltersApplied] = useState(false);
-
-  const handleApplyFilters = () => {
-    setFiltersApplied(true);
-    console.log('Фильтры применены');
-
-    onClose();
-  };
-
+const FilterCurator: React.FC<FilterCuratorProps> = ({
+  onClose,
+  onOpenDatePicker,
+}) => {
   return (
     <div>
       {/* Фильтры */}
@@ -23,10 +18,10 @@ const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
         {/* Фильтр за период */}
         <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text">
           <span>За период</span>
-          {/* Закрытие окна по клику на иконку */}
+          {/* Открытие окна выбора даты по клику на иконку */}
           <ChevronRightIcon
             className="text-light-gray-5 w-6 h-6 cursor-pointer"
-            // onClick={onClose}
+            onClick={onOpenDatePicker} // Открываем InputDate
           />
         </div>
 
@@ -61,7 +56,7 @@ const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
 
       {/* Кнопка Применить */}
       <div className="mt-6 flex justify-center">
-        <button className="btn-B-GreenDefault" onClick={handleApplyFilters}>
+        <button className="btn-B-GreenDefault" onClick={onClose}>
           Применить
         </button>
       </div>
