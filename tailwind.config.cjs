@@ -13,7 +13,7 @@ module.exports = {
         light: {
           'gray-white': '#FFFFFF',
           'gray-1': '#F8F8F8',
-          'gray-2': '#E7E7E7',
+          'gray-2': '#D7D7D7',
           'gray-3': '#BFBFBF',
           'gray-4': '#888888',
           'gray-5': '#575757',
@@ -22,7 +22,10 @@ module.exports = {
           'gray-8-text': '#0A0A0A',
           'gray-black': '#000000',
           'brand-green': '#38AB78',
-          'gray-bluer': '#929292',
+          'gray-blyer': '#929292',
+          'gray-blyer-dark':'#767676',
+          'error-red': '#F93C3C',
+          'error-back': '#FFECEC'
         },
         dark: {
           // 'gray-white': '#000000',
