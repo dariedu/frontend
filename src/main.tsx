@@ -11,6 +11,7 @@ import avatar from './assets/avatar.svg';
 import Search from './components/Search/Search.tsx';
 
 import Calendar from './components/Calendar/Calendar.tsx';
+// import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
       <Search />
       <Calendar />
+      {/* <InputDate /> */}
     </BrowserRouter>
   </StrictMode>,
 );
