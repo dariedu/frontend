@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CheckboxElementRight } from '../ui/CheckboxElement/CheckboxElementRight';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
@@ -7,6 +7,15 @@ interface FilterCuratorProps {
 }
 
 const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
+  const [filtersApplied, setFiltersApplied] = useState(false);
+
+  const handleApplyFilters = () => {
+    setFiltersApplied(true);
+    console.log('Фильтры применены');
+
+    onClose();
+  };
+
   return (
     <div>
       {/* Фильтры */}
@@ -17,7 +26,7 @@ const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
           {/* Закрытие окна по клику на иконку */}
           <ChevronRightIcon
             className="text-light-gray-5 w-6 h-6 cursor-pointer"
-            onClick={onClose} // Закрываем окно
+            // onClick={onClose}
           />
         </div>
 
@@ -52,7 +61,9 @@ const FilterCurator: React.FC<FilterCuratorProps> = ({ onClose }) => {
 
       {/* Кнопка Применить */}
       <div className="mt-6 flex justify-center">
-        <button className="btn-B-GreenDefault">Применить</button>
+        <button className="btn-B-GreenDefault" onClick={handleApplyFilters}>
+          Применить
+        </button>
       </div>
     </div>
   );
