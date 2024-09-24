@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, type Dispatch } from 'react';
 import { CheckboxElement } from '../CheckboxElement/CheckboxElement';
 
 interface IPictureUpload {
   text: string;
   absent?: boolean;
+  pictureConfirmed: boolean,
+  setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>,
+  onOpenChange: Dispatch<React.SetStateAction<boolean>>,
+  localeStorageName: string,
+  uploadedFileLink: string,
+  setUploadedFileLink: Dispatch<React.SetStateAction<string>>
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -11,16 +17,29 @@ interface IPictureUpload {
 export const PictuteUpload: React.FC<IPictureUpload> = ({
   text,
   absent = false,
+  pictureConfirmed,
+  setPictureConfirmed,
+  onOpenChange,
+  localeStorageName,
+  uploadedFileLink,
+  setUploadedFileLink
 }) => {
+
+
   const [fileUploaded, setFileUploaded] = useState(false);
-  const [uploadedFileLink, setuploadedFileLink] = useState('')
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let imgLink = URL.createObjectURL(event.target.files[0]);
-    localStorage.setItem('myImage', uploadedFileLink);
+    let imgLink: string;
+
+    if (event.target.files) {
+      imgLink = URL.createObjectURL(event.target.files[0]);
+    localStorage.setItem(localeStorageName, uploadedFileLink);
     setFileUploaded(true);
-    setuploadedFileLink(imgLink);
+    setUploadedFileLink(imgLink);
+    }
+    
+    
   };
 
   return (
@@ -44,38 +63,48 @@ export const PictuteUpload: React.FC<IPictureUpload> = ({
             // onClick={() => {
             //   navigator.mediaDevices.getUserMedia({ audio: false, video: true }  ) } }
           />
-          <input
-            onChange={e => handleFileChange(e)}
-            type="file"
-            accept="image/*;capture=camera"
-            className="absolute opacity-0 h-[142px] w-[140px] rounded-full cursor-pointer"
-            // onClick={(e) => {}}
-          />
-          {fileUploaded ? 
-            <>
-            <img src='./../src/assets/icons/small_pencile_bg_gray.svg' className='absolute bottom-0 right-0' />
+          {fileUploaded ? (
+            ''
+          ) : (
             <input
-            onChange={e => handleFileChange(e)}
-            type="file"
-            accept="image/*;capture=camera"
-            className="absolute opacity-0 h-[32px] w-[32px] rounded-full cursor-pointer bottom-0 right-0"
-            // onClick={(e) => {}}
-          />
+              onChange={e => handleFileChange(e)}
+              type="file"
+              accept="image/*;capture=camera"
+              className="absolute opacity-0 h-[142px] w-[140px] rounded-full cursor-pointer"
+              // onClick={(e) => {}}
+            />
+          )}
+
+          {fileUploaded ? (
+            <>
+              <img
+                src="./../src/assets/icons/small_pencile_bg_gray.svg"
+                className="absolute bottom-0 right-0"
+              />
+              <input
+                onChange={e => handleFileChange(e)}
+                type="file"
+                accept="image/*;capture=camera"
+                className="absolute opacity-0 h-[32px] w-[32px] rounded-full cursor-pointer bottom-0 right-0"
+                // onClick={(e) => {}}
+              />
             </>
-            
-        :
-            ""
-        }
+          ) : (
+            ''
+          )}
         </div>
         <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2">
           {fileUploaded ? 'Отличное фото!' : text}
-          <br />
+   
           <br />
         </p>
         {fileUploaded ? (
-          <button className="btn-B-GreenDefault"
-          onClick={()=>{}}
-          >Отправить заявку</button>
+          <button className="btn-B-GreenDefault" onClick={() => {
+            setPictureConfirmed(true)
+            onOpenChange(false)
+          }}>
+            Сохранить фото
+          </button>
         ) : (
           ''
         )}
