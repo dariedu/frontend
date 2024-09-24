@@ -4,5 +4,12 @@
 .formField{
   @apply outline-none shadow-none px-4 py-[18px] bg-light-gray-1 w-[328px] h-[54px]
   rounded-2xl text-light-gray-8-text font-gerbera-h3
-  placeholder:text-light-gray-8-text
+  placeholder:text-light-gray-8-text mb-2
+}
+
+.formField[data-invalid]{
+  @apply bg-light-error-back mb-0
+}
+.error{
+  @apply font-gerbera-sub2 text-light-error-red
 }
