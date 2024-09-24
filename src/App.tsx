@@ -4,7 +4,7 @@ import { YMaps } from '@pbe/react-yandex-maps';
 import './App.css';
 import ThemeToggle from './components/ui/ThemeToggle/ThemeToggle';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
-import History from './components/history/History';
+import History from './components/History/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { AddressCard } from './components/AddressCard/AddressCard';
 
