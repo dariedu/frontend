@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
-import { ChevronLeftIcon, BellIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import logoText from '../../assets/logoText.svg';
 import bell from '../../assets/icons/Notifications.svg';
 

@@ -9,15 +9,15 @@ import {
   addYears,
   subYears,
   startOfMonth,
-  endOfMonth,
+  // endOfMonth,
   startOfWeek,
-  endOfWeek,
+  // endOfWeek,
   isSameDay,
   isSameMonth,
   addDays,
 } from 'date-fns';
 import calendar from '../../assets/icons/tap_calendarActive.svg';
-import ru from 'date-fns/locale/ru';
+import { ru } from 'date-fns/locale';
 
 interface InputDateProps {
   onClose: () => void;
@@ -68,14 +68,14 @@ const InputDate: React.FC<InputDateProps> = ({ onClose }) => {
     const newDate = new Date(currentMonth);
     newDate.setMonth(monthIndex);
     setCurrentMonth(newDate);
-    setIsMonthOpen(false); // Закрываем выпадающий список
+    setIsMonthOpen(false);
   };
 
   const handleYearSelect = (year: string) => {
     const newDate = new Date(currentMonth);
     newDate.setFullYear(Number(year));
     setCurrentMonth(newDate);
-    setIsYearOpen(false); // Закрываем выпадающий список
+    setIsYearOpen(false);
   };
 
   const handleDayClick = (day: Date) => {
@@ -90,9 +90,9 @@ const InputDate: React.FC<InputDateProps> = ({ onClose }) => {
 
   const renderCalendarDays = () => {
     const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(currentMonth);
+    // const monthEnd = endOfMonth(currentMonth);
     const startDate = startOfWeek(monthStart, { locale: ru });
-    const endDate = endOfWeek(monthEnd, { locale: ru });
+    // const endDate = endOfWeek(monthEnd, { locale: ru });
 
     const days: JSX.Element[] = [];
     let day = startDate;

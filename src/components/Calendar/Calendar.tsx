@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { format, getDay, startOfWeek, addDays } from 'date-fns';
-import ru from 'date-fns/locale/ru';
+import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
-import InputDate from '../InputDate/InputDate'; // Импорт компонента InputDate
+import InputDate from '../InputDate/InputDate';
 
 interface CalendarProps {}
 
 const Calendar: React.FC<CalendarProps> = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false); // Для управления InputDate
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
