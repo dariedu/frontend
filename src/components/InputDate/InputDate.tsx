@@ -38,7 +38,7 @@ const months = [
   'Декабрь',
 ];
 
-const years = Array.from({ length: 61 }, (_, i) => 2030 - i); // Годы с 2030 по 1970
+const years = Array.from({ length: 61 }, (_, i) => 2030 - i);
 
 const InputDate: React.FC<InputDateProps> = ({ onClose }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -97,7 +97,6 @@ const InputDate: React.FC<InputDateProps> = ({ onClose }) => {
     const days: JSX.Element[] = [];
     let day = startDate;
 
-    // Гарантируем, что всегда будет 6 недель (42 дня)
     while (days.length < 42) {
       days.push(
         <div
