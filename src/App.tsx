@@ -7,6 +7,7 @@ import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
 import History from './components/History/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { AddressCard } from './components/AddressCard/AddressCard';
+import { VolunteerData } from './components/ui/VolunteerData/VolunreerData';
 
 declare global {
   interface Window {
@@ -158,6 +159,7 @@ const App: React.FC = () => {
           className="bg-transparent outline-none placeholder-gray-400 text-gray-600 w-full"
         />
       </div>
+      <VolunteerData geo='Москва' email="email"  birthday='09.09.1955' phone= "89998889988" telegram="@telegram"/>
     </>
   );
 };
