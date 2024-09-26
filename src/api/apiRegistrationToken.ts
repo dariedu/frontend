@@ -16,6 +16,7 @@ surname: string,
 phone: string,
 is_adult: boolean,
 city: string,
+birthDate: string
 consent_to_personal_data: boolean
 }
 

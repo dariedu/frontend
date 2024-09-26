@@ -4,12 +4,12 @@ import { CheckboxElement } from '../CheckboxElement/CheckboxElement';
 interface IPictureUpload {
   text: string;
   absent?: boolean;
-  pictureConfirmed: boolean,
   setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>,
   onOpenChange: Dispatch<React.SetStateAction<boolean>>,
   localeStorageName: string,
   uploadedFileLink: string,
   setUploadedFileLink: Dispatch<React.SetStateAction<string>>
+  setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -17,12 +17,12 @@ interface IPictureUpload {
 export const PictuteUpload: React.FC<IPictureUpload> = ({
   text,
   absent = false,
-  pictureConfirmed,
   setPictureConfirmed,
   onOpenChange,
   localeStorageName,
   uploadedFileLink,
-  setUploadedFileLink
+  setUploadedFileLink,
+  setTryToSubmitWithoutPic
 }) => {
 
 
@@ -33,7 +33,7 @@ export const PictuteUpload: React.FC<IPictureUpload> = ({
     let imgLink: string;
 
     if (event.target.files) {
-      imgLink = URL.createObjectURL(event.target.files[0]);
+    imgLink = URL.createObjectURL(event.target.files[0]);
     localStorage.setItem(localeStorageName, uploadedFileLink);
     setFileUploaded(true);
     setUploadedFileLink(imgLink);
@@ -101,6 +101,7 @@ export const PictuteUpload: React.FC<IPictureUpload> = ({
         {fileUploaded ? (
           <button className="btn-B-GreenDefault" onClick={() => {
             setPictureConfirmed(true)
+            setTryToSubmitWithoutPic(false)
             onOpenChange(false)
           }}>
             Сохранить фото

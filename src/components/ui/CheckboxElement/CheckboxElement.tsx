@@ -1,13 +1,13 @@
 
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 
 
 type TCheckElementProps = {
-  onCheckedChange: ()=>void,
-  children: ReactNode
+  children: JSX.Element
+  onCheckedChange?: ()=>void
 }
 
 
