@@ -11,6 +11,7 @@ import avatar from './assets/avatar.svg';
 import Search from './components/Search/Search.tsx';
 
 import Calendar from './components/Calendar/Calendar.tsx';
+import Notification from './components/ui/Notification/Notification.tsx';
 // import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
       <Search />
       <Calendar />
+      <Notification message="Подтвердите  участие в доставке сегодня" />
       {/* <InputDate /> */}
     </BrowserRouter>
   </StrictMode>,
