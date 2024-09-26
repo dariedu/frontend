@@ -81,7 +81,6 @@ const App: React.FC = () => {
         <p className="font-gerbera-sub2">Gerbera subtitle2</p>
         <p className="font-gerbera-sub3">Gerbera subtitle3</p>
       </div>
-      <ThemeToggle />
       <div className="p-4">
         {/* Три кнопки для открытия соответствующих модальных окон */}
         <div className="space-y-4">
@@ -159,7 +158,13 @@ const App: React.FC = () => {
           className="bg-transparent outline-none placeholder-gray-400 text-gray-600 w-full"
         />
       </div>
-      <VolunteerData geo='Москва' email="email"  birthday='09.09.1955' phone= "89998889988" telegram="@telegram"/>
+      <VolunteerData
+        geo="Москва"
+        email="email"
+        birthday="09.09.1955"
+        phone="89998889988"
+        telegram="@telegram"
+      />
     </>
   );
 };
