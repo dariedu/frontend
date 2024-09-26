@@ -13,6 +13,7 @@ import Search from './components/Search/Search.tsx';
 import Calendar from './components/Calendar/Calendar.tsx';
 import Notification from './components/ui/Notification/Notification.tsx';
 import DeliveryType from './components/ui/Hr/DeliveryType.tsx';
+import DeliveryInfo from './components/ui/Hr/DeliveryInfo.tsx';
 // import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')!).render(
       <Calendar />
       <Notification message="Подтвердите  участие в доставке сегодня" />
       <DeliveryType />
+      <DeliveryInfo />
       {/* <InputDate /> */}
     </BrowserRouter>
   </StrictMode>,
