@@ -20,7 +20,7 @@ const DeliveryType: React.FC = () => {
       <div className="flex items-center space-x-2">
         {/* Selected Type with Green Background */}
         <div
-          className="font-gerbera-sub2 bg-green-500 text-light-gray-white px-4 py-2 rounded-full w-[112px] h-[28px] mr-[183px]"
+          className="btn-S-GreenDefault flex items-center mr-[183px]"
           style={{
             borderRadius: '100px',
           }}
@@ -59,8 +59,8 @@ const DeliveryType: React.FC = () => {
               onClick={() => handleSelect(option)}
               className={`block w-full text-left px-4 py-2 ${
                 option === selectedType
-                  ? 'bg-green-500 text-white rounded-full'
-                  : 'text-black hover:bg-gray-100 rounded-full'
+                  ? 'btn-S-GreenDefault flex items-center'
+                  : 'font-gerbera-sub2 text-light-gray-black hover:bg-gray-100 rounded-full'
               }`}
             >
               {option}
