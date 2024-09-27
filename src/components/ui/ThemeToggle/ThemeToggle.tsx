@@ -1,5 +1,6 @@
 import * as Switch from '@radix-ui/react-switch';
 import { useState, useEffect } from 'react';
+import themeIcon from '../../../assets/icons/dark_theame.svg';
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -15,13 +16,16 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <label
-        className="text-sm font-medium text-gray-900 dark:text-gray-300"
-        htmlFor="theme-switch"
-      >
-        {theme === 'light' ? 'Светлая тема' : 'Тёмная тема'}
-      </label>
+    <div className="flex items-center space-x-4">
+      <div className="flex items-center">
+        <img src={themeIcon} alt="themeIcon" className="mr-[14px]" />
+        <label
+          className="text-left font-gerbera-h3 text-light-gray-black dark:text-gray-300 w-[211px]"
+          htmlFor="theme-switch"
+        >
+          {theme === 'light' ? 'Светлая тема' : 'Тёмная тема'}
+        </label>
+      </div>
       <Switch.Root
         id="theme-switch"
         className="w-10 h-6 bg-gray-200 rounded-full relative shadow-inner dark:bg-gray-700"

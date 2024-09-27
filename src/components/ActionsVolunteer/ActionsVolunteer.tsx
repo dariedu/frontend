@@ -1,21 +1,36 @@
 import React from 'react';
 import ThemeToggle from '../ui/ThemeToggle/ThemeToggle';
+import curatorIcon from '../../assets/icons/application_curator.svg';
+import historyIcon from '../../assets/icons/history.svg';
+import questionsIcon from '../../assets/icons/questions.svg';
+import donateIcon from '../../assets/icons/donate.svg';
+import inviteIcon from '../../assets/icons/invite_friend.svg';
+import beneficiaryIcon from '../../assets/icons/beneficiary.svg';
 
 const ActionsVolunteer: React.FC = () => {
   // Mock action items
   const actions = [
-    { label: 'Подать заявку на должность куратора', icon: '👤', link: '#' },
-    { label: 'История', icon: '🕰️', link: '#' },
-    { label: 'Вопросы и предложения', icon: '❓', link: '#' },
-    { label: 'Помочь деньгами', icon: '💰', link: '#' },
-    { label: 'Пригласить друга', icon: '🎁', link: '#', points: '+3 балла' },
-    { label: 'Предложить благополучателя', icon: '📦', link: '#' },
+    {
+      label: 'Подать заявку на должность куратора',
+      icon: curatorIcon,
+      link: '#',
+    },
+    { label: 'История', icon: historyIcon, link: '#' },
+    { label: 'Вопросы и предложения', icon: questionsIcon, link: '#' },
+    { label: 'Помочь деньгами', icon: donateIcon, link: '#' },
+    {
+      label: 'Пригласить друга',
+      icon: inviteIcon,
+      link: '#',
+      points: '+3 балла',
+    },
+    { label: 'Предложить благополучателя', icon: beneficiaryIcon, link: '#' },
   ];
 
   return (
-    <div className="space-y-4 p-4 bg-gray-100 rounded-lg w-[360px]">
+    <div className="space-y-4 bg-gray-100 rounded-[16px] w-[360px]">
       {/* Theme toggle switch */}
-      <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
+      <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow h-[66px]">
         <ThemeToggle />
       </div>
 
@@ -24,14 +39,28 @@ const ActionsVolunteer: React.FC = () => {
         <a
           key={index}
           href={action.link}
-          className="flex items-center justify-between p-4 bg-white rounded-lg shadow hover:bg-gray-50"
+          className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
         >
           <div className="flex items-center space-x-4">
-            <span>{action.icon}</span>
-            <span className="text-black">{action.label}</span>
+            {/* Check if icon is a string path (SVG), render as <img> */}
+            {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (
+              <img
+                src={action.icon}
+                alt={action.label}
+                className="w-[42px] h-[42px]" // Control the size of SVG
+              />
+            ) : (
+              // Render emoji or other text-based icons
+              <span>{action.icon}</span>
+            )}
+            <span className="font-gerbera-h3 text-light-gray-black m-0">
+              {action.label}
+            </span>
           </div>
           {action.points && (
-            <span className="text-green-500">{action.points}</span>
+            <span className="font-gerbera-sub2 text-light-brand-green w-[129px]">
+              {action.points}
+            </span>
           )}
         </a>
       ))}
