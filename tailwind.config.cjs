@@ -23,13 +23,13 @@ module.exports = {
           'gray-black': '#000000',
           'brand-green': '#38AB78',
           'gray-blyer': '#929292',
-          'gray-blyer-dark':'#767676',
+          'gray-blyer-dark': '#767676',
           'error-red': '#F93C3C',
-          'error-back': '#FFECEC'
+          'error-back': '#FFECEC',
         },
         dark: {
           // 'gray-white': '#000000',
-          // 'gray-1': '#070707',
+          'gray-1': '#070707',
           // 'gray-2': '#DFDFDF',
           // 'gray-3': '#575757',
           // 'gray-4': '#888888',
