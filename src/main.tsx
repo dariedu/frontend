@@ -38,7 +38,10 @@ createRoot(document.getElementById('root')!).render(
         <Notification message="Подтвердите  участие в доставке сегодня" />
         <DeliveryType />
         <DeliveryInfo />
-        <ActionsVolunteer />
+        <ActionsVolunteer
+          visibleActions={['Пригласить друга', 'Помочь деньгами']}
+          showThemeToggle={false}
+        />
         <div className="bg-light-gray-1 dark:bg-dark-gray-1">Example</div>
         {/* <InputDate /> */}
       </BrowserRouter>

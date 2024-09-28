@@ -7,9 +7,26 @@ import donateIcon from '../../assets/icons/donate.svg';
 import inviteIcon from '../../assets/icons/invite_friend.svg';
 import beneficiaryIcon from '../../assets/icons/beneficiary.svg';
 
-const ActionsVolunteer: React.FC = () => {
-  // Mock action items
-  const actions = [
+// Тип для действия
+interface Action {
+  label: string;
+  icon: string | JSX.Element;
+  link: string;
+  points?: string;
+}
+
+// Типы пропсов
+interface ActionsVolunteerProps {
+  visibleActions: string[]; // Список видимых действий по их label
+  showThemeToggle: boolean; // Показывать переключатель темы или нет
+}
+
+const ActionsVolunteer: React.FC<ActionsVolunteerProps> = ({
+  visibleActions,
+  showThemeToggle,
+}) => {
+  // Все действия
+  const actions: Action[] = [
     {
       label: 'Подать заявку на должность куратора',
       icon: curatorIcon,
@@ -27,15 +44,22 @@ const ActionsVolunteer: React.FC = () => {
     { label: 'Предложить благополучателя', icon: beneficiaryIcon, link: '#' },
   ];
 
+  // Фильтруем действия для отображения
+  const filteredActions = actions.filter(action =>
+    visibleActions.includes(action.label),
+  );
+
   return (
     <div className="space-y-4 bg-gray-100 rounded-[16px] w-[360px]">
       {/* Theme toggle switch */}
-      <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow h-[66px]">
-        <ThemeToggle />
-      </div>
+      {showThemeToggle && (
+        <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow h-[66px]">
+          <ThemeToggle />
+        </div>
+      )}
 
       {/* Action items */}
-      {actions.map((action, index) => (
+      {filteredActions.map((action, index) => (
         <a
           key={index}
           href={action.link}
