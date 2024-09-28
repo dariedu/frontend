@@ -15,7 +15,9 @@ import Notification from './components/ui/Notification/Notification.tsx';
 import DeliveryType from './components/ui/Hr/DeliveryType.tsx';
 import DeliveryInfo from './components/ui/Hr/DeliveryInfo.tsx';
 import ActionsVolunteer from './components/ActionsVolunteer/ActionsVolunteer.tsx';
+import Points from './components/ui/Points/Points.tsx';
 import { ThemeProvider } from './components/ui/ThemeToggle/ThemeContext.tsx';
+import Functions from './components/ui/Functions/Functions.tsx';
 // import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -42,6 +44,8 @@ createRoot(document.getElementById('root')!).render(
           visibleActions={['Пригласить друга', 'Помочь деньгами']}
           showThemeToggle={false}
         />
+        <Points points={2} />
+        <Functions />
         <div className="bg-light-gray-1 dark:bg-dark-gray-1">Example</div>
         {/* <InputDate /> */}
       </BrowserRouter>
