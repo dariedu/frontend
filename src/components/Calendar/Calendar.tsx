@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { format, getDay, startOfWeek, addDays } from 'date-fns';
+import React, { useState, useRef } from 'react';
+import { format, getDay, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
@@ -11,6 +11,13 @@ const Calendar: React.FC<CalendarProps> = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  // Начало недели всегда фиксировано на текущем выбранном дне
+  const startOfWeekDate = startOfWeek(new Date(), { locale: ru });
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
@@ -22,19 +29,19 @@ const Calendar: React.FC<CalendarProps> = () => {
   };
 
   const renderWeekDays = () => {
-    const startOfWeekDate = startOfWeek(selectedDate, { locale: ru });
-    const days = Array.from({ length: 7 }).map((_, index) =>
+    // Массив из 14 дней (2 недели)
+    const days = Array.from({ length: 14 }).map((_, index) =>
       addDays(startOfWeekDate, index),
     );
 
     return days.map((day, index) => (
-      <div key={index} className="flex flex-col items-center">
+      <div key={index} className="flex flex-col items-center w-[32px] h-[44px]">
         <span className="text-xs pb-2 text-gray-500">
           {format(day, 'EE', { locale: ru }).slice(0, 2)}
         </span>
         <button
           className={`font-gerbera-sub2 w-6 h-6 flex items-center justify-center rounded-full ${
-            getDay(selectedDate) === getDay(day)
+            isSameDay(selectedDate, day) // Выделение на основе selectedDate
               ? 'bg-light-brand-green text-white'
               : 'text-black'
           }`}
@@ -44,6 +51,27 @@ const Calendar: React.FC<CalendarProps> = () => {
         </button>
       </div>
     ));
+  };
+
+  // Обработчики для перетаскивания
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (calendarRef.current?.offsetLeft || 0));
+    setScrollLeft(calendarRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - (calendarRef.current?.offsetLeft || 0);
+    const walk = (x - startX) * 2; // скорость прокрутки
+    if (calendarRef.current) {
+      calendarRef.current.scrollLeft = scrollLeft - walk;
+    }
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -64,8 +92,8 @@ const Calendar: React.FC<CalendarProps> = () => {
 
         {/* Вертикальный месяц */}
         <div className="absolute left-0 top-14 flex items-center">
-          <div className="h-[48px] flex items-center justify-between text-xs">
-            <span className="font-gerbera-sub1 text-light-gray-4 transform rotate-[-90deg]">
+          <div className="flex items-center justify-between">
+            <span className="font-gerbera-sub1 text-light-gray-4 w-[35px] transform rotate-[-90deg] flex items-center justify-center">
               {format(selectedDate, 'LLLL', { locale: ru })}
             </span>
             <div className="border-r h-[48px] border-gray-300" />
@@ -73,7 +101,17 @@ const Calendar: React.FC<CalendarProps> = () => {
         </div>
 
         {/* Календарь */}
-        <div className="flex space-x-5 pl-10">{renderWeekDays()}</div>
+        <div
+          className="flex space-x-5 ml-7 cursor-grab"
+          style={{ width: '300px', overflowX: 'hidden' }} // Ограничиваем ширину и скрываем прокрутку
+          ref={calendarRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+        >
+          {renderWeekDays()}
+        </div>
       </div>
 
       {/* Отображение компонента FilterCurator */}

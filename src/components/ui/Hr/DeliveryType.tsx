@@ -20,7 +20,7 @@ const DeliveryType: React.FC = () => {
       <div className="flex items-center space-x-2">
         {/* Selected Type with Green Background */}
         <div
-          className="btn-S-GreenDefault flex items-center mr-[183px]"
+          className="btn-S-GreenDefault flex items-center justify-center mr-[183px]"
           style={{
             borderRadius: '100px',
           }}
