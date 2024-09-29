@@ -16,11 +16,11 @@ const functionsList: FunctionItem[] = [
 
 const Functions: React.FC = () => {
   return (
-    <div className="space-y-4 w-[360px] h-[66px]">
+    <div className="space-y-4 w-[360px]">
       {functionsList.map((item, index) => (
         <div
           key={index}
-          className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow"
+          className="flex items-center justify-between p-4 bg-white rounded-[16px] h-[66px] shadow"
         >
           <span className="font-gerbera-h3 text-light-gray-black">
             {item.label}

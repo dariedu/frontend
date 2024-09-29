@@ -18,6 +18,7 @@ import ActionsVolunteer from './components/ActionsVolunteer/ActionsVolunteer.tsx
 import Points from './components/ui/Points/Points.tsx';
 import { ThemeProvider } from './components/ui/ThemeToggle/ThemeContext.tsx';
 import Functions from './components/ui/Functions/Functions.tsx';
+import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx';
 // import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -46,6 +47,7 @@ createRoot(document.getElementById('root')!).render(
         />
         <Points points={2} />
         <Functions />
+        <ListOfVolunteers />
         {/* <InputDate /> */}
       </BrowserRouter>
     </ThemeProvider>
