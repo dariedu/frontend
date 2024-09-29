@@ -1,5 +1,6 @@
 import React from 'react';
 import pencilIcon from '../../../assets/icons/small_pencile.svg';
+import arrow_right from '../../../assets/icons/arrow_right.png';
 
 interface FunctionItem {
   label: string;
@@ -28,7 +29,7 @@ const Functions: React.FC = () => {
           {item.hasIcon ? (
             <img src={pencilIcon} alt="Edit" className="w-[42px] h-[42px]" />
           ) : (
-            <span className="text-gray-500 text-lg">›</span>
+            <img src={arrow_right} alt="arrow_right" className="w-8 h-8" />
           )}
         </div>
       ))}

@@ -46,7 +46,6 @@ createRoot(document.getElementById('root')!).render(
         />
         <Points points={2} />
         <Functions />
-        <div className="bg-light-gray-1 dark:bg-dark-gray-1">Example</div>
         {/* <InputDate /> */}
       </BrowserRouter>
     </ThemeProvider>
