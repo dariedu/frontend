@@ -19,6 +19,7 @@ import Points from './components/ui/Points/Points.tsx';
 import { ThemeProvider } from './components/ui/ThemeToggle/ThemeContext.tsx';
 import Functions from './components/ui/Functions/Functions.tsx';
 import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx';
+import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
 // import InputDate from './components/InputDate/InputDate.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -48,6 +49,22 @@ createRoot(document.getElementById('root')!).render(
         <Points points={2} />
         <Functions />
         <ListOfVolunteers />
+
+        <CardTask
+          title="Ст. Молодежная"
+          subtitle="Мск, ул. Бобруйская д.6 к.2"
+          timeOrPeriod="15:00"
+          points="+2 балла"
+          type="time-based"
+        />
+
+        <CardTask
+          title="Написать текст"
+          subtitle="Онлайн"
+          timeOrPeriod="За две недели"
+          points="+14 баллов"
+          type="period-based"
+        />
         {/* <InputDate /> */}
       </BrowserRouter>
     </ThemeProvider>
