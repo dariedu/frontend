@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
+import pencil from '../../assets/icons/small_pencile.svg';
 
 interface NextTaskProps {
   taskName: string;
@@ -25,7 +26,7 @@ const NextTask: React.FC<NextTaskProps> = ({
             alt="Task Icon"
             className="w-6 h-6"
           />
-          <Avatar.Fallback className="text-black">🖊️</Avatar.Fallback>
+          <img src={pencil} alt="pencil" />
         </Avatar.Root>
 
         {/* Название и тип задачи */}
