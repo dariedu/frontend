@@ -65,6 +65,15 @@ createRoot(document.getElementById('root')!).render(
           points="+14 баллов"
           type="period-based"
         />
+
+        <CardTask
+          title="Уборка территории"
+          subtitle="Мск, ул. Бобруйская д.6 к.2"
+          timeOrPeriod="15:00"
+          additionalTime="25.08" // Это поле не обязательно
+          points="+2 балла"
+          type="time-based"
+        />
         {/* <InputDate /> */}
       </BrowserRouter>
     </ThemeProvider>
