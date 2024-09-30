@@ -16,33 +16,37 @@ interface CardPromotionProps {
 
 const CardPromotion: React.FC<CardPromotionProps> = ({ promotions }) => {
   return (
-    <div className="space-y-4 w-[159px] h-[169px]">
+    <div className="space-y-4 w-[159px]">
       {promotions.map((promo, index) => (
         <div
           key={index}
-          className="w-full bg-white rounded-[16px] shadow-md overflow-hidden flex flex-col"
+          className="w-full bg-white rounded-[16px] shadow-md overflow-hidden flex flex-col w-[159px] h-[169px]"
         >
           {/* Image Section */}
           <div className="relative">
             <img
               src={promo.image}
               alt={promo.title}
-              className="w-full h-[120px] object-cover rounded-t-[16px]"
+              className="w-[159px] h-[112px] object-cover rounded-[16px]"
             />
             {/* Points Badge */}
-            <div className="absolute top-2 left-2 bg-light-brand-green text-white px-2 py-1 rounded-full text-xs font-gerbera-sub2">
+            <div className="absolute top-2 left-2 bg-light-brand-green text-light-gray-white px-2 py-1 rounded-full font-gerbera-sub1">
               {promo.points}
             </div>
             {/* Date Badge */}
-            <div className="absolute top-2 right-2 bg-white text-black px-2 py-1 rounded-full text-xs font-gerbera-sub2">
+            <div className="flex justify-center items-center absolute top-2 right-2 w-[28px] h-[28px] bg-light-gray-white text-light-gray-black px-2 py-1 rounded-full font-gerbera-sub2">
               {promo.date}
             </div>
           </div>
 
           {/* Text Content */}
-          <div className="p-3 space-y-1">
-            <p className="font-gerbera-h3 text-black">{promo.title}</p>
-            <p className="text-light-gray-3 text-xs">{promo.address}</p>
+          <div className="space-y-1 text-left mt-[6px]">
+            <p className="font-gerbera-sub2 text-light-gray-black">
+              {promo.title}
+            </p>
+            <p className="font-gerbera-sub1 text-light-gray-3">
+              {promo.address}
+            </p>
           </div>
         </div>
       ))}
