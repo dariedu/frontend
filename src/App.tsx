@@ -24,6 +24,7 @@ import Points from './components/ui/Points/Points.tsx';
 import Functions from './components/ui/Functions/Functions.tsx';
 import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx';
 import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
+import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCardsPromotions.tsx';
 
 declare global {
   interface Window {
@@ -246,7 +247,8 @@ const App: React.FC = () => {
         type="time-based"
       />
       {/* <InputDate /> */}
-      <CardPromotion promotions={mockPromotions} />
+      {/* <CardPromotion promotions={mockPromotions} /> */}
+      <SliderCardsPromotions promotions={mockPromotions} />
     </>
   );
 };
