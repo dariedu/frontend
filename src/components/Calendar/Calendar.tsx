@@ -5,9 +5,11 @@ import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 
-interface CalendarProps {}
+interface CalendarProps {
+  headerName: string;
+}
 
-const Calendar: React.FC<CalendarProps> = () => {
+const Calendar: React.FC<CalendarProps> = ({ headerName }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -98,7 +100,7 @@ const Calendar: React.FC<CalendarProps> = () => {
       <div className="p-4 bg-white w-[360px] rounded-lg shadow relative select-none">
         {/* Заголовок */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="font-gerbera-h1 text-lg">Другие добрые дела</h2>
+          <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
 
           {/* Иконка фильтра */}
           <button

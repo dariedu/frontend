@@ -25,6 +25,7 @@ import Functions from './components/ui/Functions/Functions.tsx';
 import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx';
 import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
 import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCardsPromotions.tsx';
+import MyPoints from './components/MyPoints/MyPoints.tsx';
 
 declare global {
   interface Window {
@@ -210,7 +211,7 @@ const App: React.FC = () => {
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
       <Search />
-      <Calendar />
+      <Calendar headerName="Другие добрые дела" />
       <Notification message="Подтвердите  участие в доставке сегодня" />
       <DeliveryType />
       <DeliveryInfo />
@@ -249,6 +250,7 @@ const App: React.FC = () => {
       {/* <InputDate /> */}
       {/* <CardPromotion promotions={mockPromotions} /> */}
       <SliderCardsPromotions />
+      <MyPoints />
     </>
   );
 };

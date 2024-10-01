@@ -82,7 +82,7 @@ const SliderCardsPromotions: React.FC = () => {
   return (
     <div
       ref={sliderRef}
-      className={`overflow-x-scroll flex space-x-4 py-2 scrollbar-hide w-[360px] ${
+      className={`overflow-x-hidden flex space-x-4 py-2 scrollbar-hide w-[360px] ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       } select-none`}
       onMouseDown={handleMouseDown}
