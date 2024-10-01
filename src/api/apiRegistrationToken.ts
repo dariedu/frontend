@@ -3,9 +3,20 @@ import axios, { AxiosResponse } from 'axios';
 
 //тут будет ссылка на файл с юрлом!
 const API_URL = process.env.VITE_API_BASE_URL as string;
+//const API_URL = 'https://skillfactory.dariedu.site/api'
 const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
 
+// {
+//   "tg_id": 9223372036854776000,
+//   "email": "user@example.com",
+//   "last_name": "string",
+//   "name": "string",
+//   "surname": "string",
+//   "phone": "string",
+//   "is_adult": true,
+//   "consent_to_personal_data": true
+// }
 
 interface IRegister {
 tg_id: number,
@@ -31,7 +42,7 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string
 }
 
-export const postRegistration = async(user: IRegister): Promise<IRegister> => {
+export const postRegistration = async(user: IRegister): Promise<IRegister|undefined> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
@@ -60,7 +71,7 @@ export const postToken = async(token: TToken): Promise<TToken> => {
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin'
+         'cross-origin-opener-policy': 'same-origin'
       }      
     }
     )

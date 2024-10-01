@@ -5,11 +5,11 @@ import './index.css';
 import { Modal } from '../ui/Modal/Modal';
 import { useState, useEffect } from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
-import { postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
+import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
 
 
-export default function RegistrationForm() {
+function  RegistrationForm() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
   const [uploadedPictureLink, setUploadedPictureLink] = useState(''); /// ссылка на загруженое фото
@@ -62,13 +62,13 @@ export default function RegistrationForm() {
   }
 
   // функция для сабмита формы
-  function onFormSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void { 
+   function onFormSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void { 
     if (pictureConfirmed) { ////если пользователь загрузил фото, продолжаем регистрацию
       e.preventDefault();
     let user = userFormFieldsInfo;
-    isAdult !== undefined ? user.is_adult = isAdult : ""; //это поле не подцепляется автоматом, поэтому подцепляем вручную
-      // console.log(user)
-    setRegistrationCompleteModal(true)
+      isAdult !== undefined ? user.is_adult = isAdult : ""; //это поле не подцепляется автоматом, поэтому подцепляем вручную
+      setRegistrationCompleteModal(true)
+      //  console.log(user)
     } else {
       e.preventDefault();
       setTryToSubmitWithoutPic(true) /// если пользователь не загрузил фото выделяем красным текст о необходимости загрузить фото!
@@ -230,13 +230,13 @@ export default function RegistrationForm() {
           )}
         </div>
 
-        <div className="flex flex-col justify-between h-min-">
+        <div className="flex flex-col justify-between h-[210px]">
           {pictureConfirmed ? (
-            <div className="flex flex-col justify-around items-center h-[160px] mb-3.5">
-              <div className=" bg-light-gray-1 rounded-full flex justify-center items-center mb-8 relative">
+            <div className="flex flex-col justify-around items-center">
+              <div className=" bg-light-gray-1 rounded-full flex justify-center items-center relative">
                 <img
                   src={uploadedPictureLink}
-                  className="h-[108px] w-[108px] rounded-full"
+                  className="h-[142px] w-[142px] rounded-full"
                 />
                 <img
                   src="./../src/assets/icons/small_pencile_bg_gray.svg"
@@ -249,7 +249,7 @@ export default function RegistrationForm() {
                   required
                 />
               </div>
-              <p className="font-gerbera-h1">Ваше фото подтверждено!</p>
+             
             </div>
           ) : (
             <div className="flex justify-between place-items-start my-4">
@@ -273,7 +273,7 @@ export default function RegistrationForm() {
 
           <button
             className={
-             !isAdult ? 'btn-B-GreenDefault my-8' : checked ? 'btn-B-GreenDefault my-8' : 'btn-B-GreenInactive  my-8'
+             !isAdult ? 'btn-B-GreenDefault' : checked ? 'btn-B-GreenDefault' : 'btn-B-GreenInactive'
             }
             onClick={e => {
               !isAdult ? "" : checked ? onFormSubmit(e) : e.preventDefault();
@@ -315,3 +315,5 @@ export default function RegistrationForm() {
     </Form.Root>
   );
 }
+
+export default RegistrationForm;
