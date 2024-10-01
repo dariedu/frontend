@@ -13,9 +13,9 @@ import CuratorIconActive from '../../assets/icons/curatorActive.svg';
 import BonusesIcon from '../../assets/icons/bonus.svg';
 import BonusesIconActive from '../../assets/icons/bonusActive.svg';
 
-interface TabBarProps {}
+interface ITabBarProps {}
 
-const TabBar: React.FC<TabBarProps> = () => {
+const TabBar: React.FC<ITabBarProps> = () => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (

@@ -1,4 +1,3 @@
-
 import axios, { AxiosResponse } from 'axios';
 
 //тут будет ссылка на файл с юрлом!
@@ -19,30 +18,32 @@ const tokenUrl = `${API_URL}/token/`;
 // }
 
 interface IRegister {
-tg_id: number,
-email: string,
-last_name: string,
-name: string,
-surname: string,
-phone: string,
-is_adult: boolean,
-city: string,
-birthDate: string
-consent_to_personal_data: boolean
+  tg_id: number;
+  email: string;
+  last_name: string;
+  name: string;
+  surname: string;
+  phone: string;
+  is_adult: boolean;
+  city: string;
+  birthDate: string;
+  consent_to_personal_data: boolean;
 }
 
-type TToken =  {
-  tg_id: number
-}
+type TToken = {
+  tg_id: number;
+};
 
 interface ITokenBlacklist {
-  refresh: string
+  refresh: string;
 }
 interface ITokenRefresh extends ITokenBlacklist {
-  access: string
+  access: string;
 }
 
-export const postRegistration = async(user: IRegister): Promise<IRegister|undefined> => {
+export const postRegistration = async (
+  user: IRegister,
+): Promise<IRegister | undefined> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
@@ -51,18 +52,17 @@ export const postRegistration = async(user: IRegister): Promise<IRegister|undefi
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin'
-      }      
-    }
-    )
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
     return JSON.parse(response.data);
   } catch (err: any) {
     console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed')
+    throw new Error('Post request postTaskAccept has failed');
   }
-}
+};
 
-export const postToken = async(token: TToken): Promise<TToken> => {
+export const postToken = async (token: TToken): Promise<TToken> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tokenUrl,
@@ -71,19 +71,20 @@ export const postToken = async(token: TToken): Promise<TToken> => {
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-         'cross-origin-opener-policy': 'same-origin'
-      }      
-    }
-    )
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
     return JSON.parse(response.data);
   } catch (err: any) {
     console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed')
+    throw new Error('Post request postTaskAccept has failed');
   }
-}
+};
 
 //Takes a token and blacklists it. Must be used with the rest_framework_simplejwt.token_blacklist app installed.
-export const postTokenBlacklist = async(refresh: ITokenBlacklist): Promise<number> => {
+export const postTokenBlacklist = async (
+  refresh: ITokenBlacklist,
+): Promise<number> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: `${tokenUrl}blacklist/`,
@@ -92,18 +93,19 @@ export const postTokenBlacklist = async(refresh: ITokenBlacklist): Promise<numbe
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin'
-      }      
-    }
-    )
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
     return response.status;
   } catch (err: any) {
     console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed')
+    throw new Error('Post request postTaskAccept has failed');
   }
-}
+};
 //Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
-export const postTokenRefresh = async(refresh: ITokenBlacklist): Promise<ITokenRefresh> => {
+export const postTokenRefresh = async (
+  refresh: ITokenBlacklist,
+): Promise<ITokenRefresh> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: `${tokenUrl}refresh/`,
@@ -112,16 +114,15 @@ export const postTokenRefresh = async(refresh: ITokenBlacklist): Promise<ITokenR
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin'
-      }      
-    }
-    )
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
     return JSON.parse(response.data);
   } catch (err: any) {
     console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed')
+    throw new Error('Post request postTaskAccept has failed');
   }
-}
+};
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
 export type { IRegister, TToken, ITokenBlacklist, ITokenRefresh };

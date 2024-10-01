@@ -2,12 +2,12 @@ import React from 'react';
 import pencilIcon from '../../../assets/icons/small_pencile.svg';
 import arrow_right from '../../../assets/icons/arrow_right.png';
 
-interface FunctionItem {
+interface IFunctionItem {
   label: string;
   hasIcon?: boolean;
 }
 
-const functionsList: FunctionItem[] = [
+const functionsList: IFunctionItem[] = [
   { label: 'Система начисления бонусов' },
   { label: 'Правила поведения волонтера' },
   { label: 'Инструкции для волонтера' },

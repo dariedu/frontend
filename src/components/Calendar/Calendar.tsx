@@ -5,11 +5,11 @@ import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 
-interface CalendarProps {
+interface ICalendarProps {
   headerName: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ headerName }) => {
+const Calendar: React.FC<ICalendarProps> = ({ headerName }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);

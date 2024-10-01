@@ -2,14 +2,14 @@ import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import pencil from '../../assets/icons/small_pencile.svg';
 
-interface NextTaskProps {
+interface INextTaskProps {
   taskName: string;
   taskType: string;
   taskDate: string;
   taskPoints: number;
 }
 
-const NextTask: React.FC<NextTaskProps> = ({
+const NextTask: React.FC<INextTaskProps> = ({
   taskName,
   taskType,
   taskDate,

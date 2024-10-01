@@ -2,12 +2,12 @@ import React from 'react';
 import { CheckboxElementRight } from '../ui/CheckboxElement/CheckboxElementRight';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
-interface FilterCuratorProps {
+interface IFilterCuratorProps {
   onClose: () => void;
   onOpenDatePicker: () => void; // Пропс для открытия InputDate
 }
 
-const FilterCurator: React.FC<FilterCuratorProps> = ({
+const FilterCurator: React.FC<IFilterCuratorProps> = ({
   onClose,
   onOpenDatePicker,
 }) => {

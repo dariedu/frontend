@@ -19,7 +19,7 @@ import {
 import calendar from '../../assets/icons/tap_calendarActive.svg';
 import { ru } from 'date-fns/locale';
 
-interface InputDateProps {
+interface IInputDateProps {
   onClose: () => void;
 }
 
@@ -40,7 +40,7 @@ const months = [
 
 const years = Array.from({ length: 61 }, (_, i) => 2030 - i);
 
-const InputDate: React.FC<InputDateProps> = ({ onClose }) => {
+const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState<Date[]>([new Date()]);
 

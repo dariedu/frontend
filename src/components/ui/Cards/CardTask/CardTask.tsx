@@ -1,7 +1,7 @@
 import React from 'react';
 import metroIcon from '../../../../assets/icons/metro_station.svg';
 
-interface CardTaskProps {
+interface ICardTaskProps {
   title: string;
   subtitle: string;
   timeOrPeriod: string;
@@ -10,7 +10,7 @@ interface CardTaskProps {
   type: 'time-based' | 'period-based';
 }
 
-const CardTask: React.FC<CardTaskProps> = ({
+const CardTask: React.FC<ICardTaskProps> = ({
   title,
   subtitle,
   timeOrPeriod,

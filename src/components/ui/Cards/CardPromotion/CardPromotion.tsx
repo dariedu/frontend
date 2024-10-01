@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Интерфейс для пропсов CardPromotion
-interface PromotionProps {
+interface IPromotionProps {
   image: string;
   points: string;
   date: string;
@@ -9,7 +9,7 @@ interface PromotionProps {
   address: string;
 }
 
-const CardPromotion: React.FC<PromotionProps> = ({
+const CardPromotion: React.FC<IPromotionProps> = ({
   image,
   points,
   date,

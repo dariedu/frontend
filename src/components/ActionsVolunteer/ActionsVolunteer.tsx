@@ -8,7 +8,7 @@ import inviteIcon from '../../assets/icons/invite_friend.svg';
 import beneficiaryIcon from '../../assets/icons/beneficiary.svg';
 
 // Тип для действия
-interface Action {
+interface IAction {
   label: string;
   icon: string | JSX.Element;
   link: string;
@@ -16,17 +16,17 @@ interface Action {
 }
 
 // Типы пропсов
-interface ActionsVolunteerProps {
+interface IActionsVolunteerProps {
   visibleActions: string[]; // Список видимых действий по их label
   showThemeToggle: boolean; // Показывать переключатель темы или нет
 }
 
-const ActionsVolunteer: React.FC<ActionsVolunteerProps> = ({
+const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   visibleActions,
   showThemeToggle,
 }) => {
   // Все действия
-  const actions: Action[] = [
+  const actions: IAction[] = [
     {
       label: 'Подать заявку на должность куратора',
       icon: curatorIcon,

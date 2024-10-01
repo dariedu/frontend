@@ -2,12 +2,12 @@ import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import avatar1 from '../../assets/avatar.svg';
 
-interface Volunteer {
+interface IVolunteer {
   volunteerName: string;
   avatar: string;
 }
 
-const volunteers: Volunteer[] = [
+const volunteers: IVolunteer[] = [
   { volunteerName: 'Осипова Юлия', avatar: avatar1 },
   { volunteerName: 'Иванов Иван', avatar: avatar1 },
   { volunteerName: 'Сидоров Алексей', avatar: avatar1 },

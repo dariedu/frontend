@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface HistoryProps {
+interface IHistoryProps {
   points: number;
   eventName: string;
   eventDate: string;
@@ -8,7 +8,7 @@ interface HistoryProps {
   description: string;
 }
 
-const History: React.FC<HistoryProps> = ({
+const History: React.FC<IHistoryProps> = ({
   points,
   eventName,
   eventDate,

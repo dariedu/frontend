@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-interface DeliveryInfoProps {}
+interface IDeliveryInfoProps {}
 
-const DeliveryInfo: React.FC<DeliveryInfoProps> = () => {
+const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
   // Mock data that will eventually come from the backend
   const [startTime, setStartTime] = useState<string>('13:00');
   const [peopleCount, setPeopleCount] = useState<number>(5);

@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
 
-interface ConfirmModalProps {
+interface IConfirmModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
@@ -13,7 +13,7 @@ interface ConfirmModalProps {
   isSingleButton?: boolean; // Флаг для управления отображением одной или двух кнопок
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+const ConfirmModal: React.FC<IConfirmModalProps> = ({
   isOpen,
   onOpenChange,
   onConfirm,

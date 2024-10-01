@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface ThemeContextProps {
+interface IThemeContextProps {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextProps>({
+const ThemeContext = createContext<IThemeContextProps>({
   theme: 'light',
   toggleTheme: () => {},
 });

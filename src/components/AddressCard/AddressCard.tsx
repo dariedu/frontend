@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 
-interface AddressCardProps {
+interface IAddressCardProps {
   address: string;
   additionalInfo: string;
   personName: string;
@@ -10,7 +10,7 @@ interface AddressCardProps {
   onSubmitClick: () => void;
 }
 
-export const AddressCard: React.FC<AddressCardProps> = ({
+export const AddressCard: React.FC<IAddressCardProps> = ({
   address,
   additionalInfo,
   personName,

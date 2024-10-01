@@ -2,11 +2,11 @@ import React from 'react';
 import search from '../../assets/icons/search.svg';
 import metro from '../../assets/icons/metro_station.svg';
 
-interface SearchProps {
+interface ISearchProps {
   placeholder?: string;
 }
 
-const Search: React.FC<SearchProps> = ({ placeholder = 'Поиск по ФИО' }) => {
+const Search: React.FC<ISearchProps> = ({ placeholder = 'Поиск по ФИО' }) => {
   return (
     <div className="bg-light-gray-white dark:bg-dark-gray-white rounded-[16px] p-4 shadow-lg max-w-md w-[360px]">
       {/* Секция с основной информацией */}

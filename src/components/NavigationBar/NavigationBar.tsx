@@ -4,13 +4,13 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import logoText from '../../assets/logoText.svg';
 import bell from '../../assets/icons/Notifications.svg';
 
-interface NavigationBarProps {
+interface INavigationBarProps {
   variant: 'volunteerForm' | 'mainScreen';
   title?: string;
   avatarUrl?: string;
 }
 
-const NavigationBar: React.FC<NavigationBarProps> = ({
+const NavigationBar: React.FC<INavigationBarProps> = ({
   variant,
   title = '',
   avatarUrl = '',

@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface PointsProps {
+interface IPointsProps {
   points: number;
 }
 
-const Points: React.FC<PointsProps> = ({ points }) => {
+const Points: React.FC<IPointsProps> = ({ points }) => {
   return (
     <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow w-[360px] h-[60px]">
       {/* Текст */}

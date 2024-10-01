@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface NotificationProps {
+interface INotificationProps {
   message: string;
 }
 
-const Notification: React.FC<NotificationProps> = ({ message }) => {
+const Notification: React.FC<INotificationProps> = ({ message }) => {
   return (
     <div className="bg-white shadow-md rounded-[16px] w-[360px] p-4 flex justify-center items-center space-x-2">
       {/* Status Indicator */}
