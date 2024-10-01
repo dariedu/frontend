@@ -8,12 +8,35 @@ import History from './components/History/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { AddressCard } from './components/AddressCard/AddressCard';
 import { VolunteerData } from './components/ui/VolunteerData/VolunreerData';
+import DetailedInfo from './components/DetailedInfo/DetailedInfo';
+import { IPromotion } from './api/apiPromotions';
 
 declare global {
   interface Window {
     Telegram: any;
   }
 }
+
+// const defaultEvent: IPromotion = {
+//   id: 11,
+//   volunteers_count: 5,
+//   category: 'Театр',
+//   name: 'Концерт в Филармонии',
+//   price: 5,
+//   description:
+//     '12 Международный фестиваль  Будущее джаза Концерт в Москве Концертный зал им Чайковского. Программа – блестящая! Виолончельный концерт Дворжака и пьесы для виолончели с оркестром Чайковского и Сен-Санса, «Испанское каприччио» Римского-Корсакова',
+//   start_date: new Date('2024-10-23T03:01:38Z'),
+//   quantity: 10,
+//   available_quantity: 10,
+//   for_curators_only: false,
+//   is_active: true,
+//   file: '',
+//   is_permanent: false,
+//   end_date: new Date('2024-10-23T03:01:38Z'),
+//   city: 'Москва',
+//   users: [0],
+//   //picture: ""
+// };
 
 const App: React.FC = () => {
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
@@ -165,6 +188,7 @@ const App: React.FC = () => {
         phone="89998889988"
         telegram="@telegram"
       />
+       <DetailedInfo />
     </>
   );
 };
