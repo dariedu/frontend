@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import RouteMap from './components/RouteMap/RouteMap';
 import { YMaps } from '@pbe/react-yandex-maps';
 import './App.css';
-import CardPromotion from './components/ui/Cards/CardPromotion/CardPromotion';
 import ConfirmModal from './components/ui/ConfirmModal/ConfirmModal';
 import History from './components/History/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
@@ -27,7 +26,7 @@ import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
 import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCardsPromotions.tsx';
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
-import { IPromotion } from './api/apiPromotions';
+import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
 
 declare global {
   interface Window {
@@ -274,7 +273,8 @@ const App: React.FC = () => {
       {/* <CardPromotion promotions={mockPromotions} /> */}
       <SliderCardsPromotions />
       <MyPoints />
-       <DetailedInfo />
+      <DetailedInfo />
+      <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
     </>
   );
 };
