@@ -26,6 +26,8 @@ import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx
 import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
 import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCardsPromotions.tsx';
 import MyPoints from './components/MyPoints/MyPoints.tsx';
+import DetailedInfo from './components/DetailedInfo/DetailedInfo';
+import { IPromotion } from './api/apiPromotions';
 
 declare global {
   interface Window {
@@ -49,6 +51,27 @@ const mockPromotions = [
     address: 'Спб, ул. Ленина д.14 к.3',
   },
 ];
+
+// const defaultEvent: IPromotion = {
+//   id: 11,
+//   volunteers_count: 5,
+//   category: 'Театр',
+//   name: 'Концерт в Филармонии',
+//   price: 5,
+//   description:
+//     '12 Международный фестиваль  Будущее джаза Концерт в Москве Концертный зал им Чайковского. Программа – блестящая! Виолончельный концерт Дворжака и пьесы для виолончели с оркестром Чайковского и Сен-Санса, «Испанское каприччио» Римского-Корсакова',
+//   start_date: new Date('2024-10-23T03:01:38Z'),
+//   quantity: 10,
+//   available_quantity: 10,
+//   for_curators_only: false,
+//   is_active: true,
+//   file: '',
+//   is_permanent: false,
+//   end_date: new Date('2024-10-23T03:01:38Z'),
+//   city: 'Москва',
+//   users: [0],
+//   //picture: ""
+// };
 
 const App: React.FC = () => {
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
@@ -251,6 +274,7 @@ const App: React.FC = () => {
       {/* <CardPromotion promotions={mockPromotions} /> */}
       <SliderCardsPromotions />
       <MyPoints />
+       <DetailedInfo />
     </>
   );
 };
