@@ -1,90 +1,106 @@
-import React, { useState, useRef, MouseEvent } from 'react';
-import * as ScrollArea from '@radix-ui/react-scroll-area';
+import React, { useRef, useState, useEffect } from 'react';
 import CardPromotion from './CardPromotion';
+import image from '../../../../assets/avatar.svg';
 
-// Тип для данных карточки
-interface Promotion {
-  id: number;
-  image: string;
-  points: string;
-  date: string;
-  title: string;
-  address: string;
-}
+// Example data for promotions
+const promotionsData = [
+  {
+    image: image,
+    points: '2 балла',
+    date: '2.10',
+    title: 'Концерт в Филармонии',
+    address: 'Мск, ул. Бобруйская д.6 к.2',
+  },
+  {
+    image: image,
+    points: '5 баллов',
+    date: '10.10',
+    title: 'Встреча в парке',
+    address: 'Спб, ул. Ленина д.14 к.3',
+  },
+  {
+    image: image,
+    points: '5 баллов',
+    date: '10.10',
+    title: 'Встреча в парке',
+    address: 'Спб, ул. Ленина д.14 к.3',
+  },
+  {
+    image: image,
+    points: '5 баллов',
+    date: '10.10',
+    title: 'Встреча в парке',
+    address: 'Спб, ул. Ленина д.14 к.3',
+  },
+  // Add more promotions as needed
+];
 
 const SliderCardsPromotions: React.FC = () => {
-  // Моковые данные для карточек
-  const [promotions, setPromotions] = useState<Promotion[]>([
-    {
-      id: 1,
-      image: 'https://example.com/image1.jpg',
-      points: '100 pts',
-      date: '12/12',
-      title: 'Promotion 1',
-      address: '123 Main St',
-    },
-    {
-      id: 2,
-      image: 'https://example.com/image2.jpg',
-      points: '200 pts',
-      date: '12/15',
-      title: 'Promotion 2',
-      address: '456 Park Ave',
-    },
-    // Добавьте больше промоций, если нужно
-  ]);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-
-  // Функция для обработки drag-to-scroll
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) return;
-
-    scrollArea.dataset.isDragging = 'true';
-    scrollArea.dataset.startX = String(e.pageX - scrollArea.offsetLeft);
-    scrollArea.dataset.scrollLeft = String(scrollArea.scrollLeft);
+  // Start dragging
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (sliderRef.current?.offsetLeft || 0));
+    setScrollLeft(sliderRef.current?.scrollLeft || 0);
   };
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const scrollArea = scrollAreaRef.current;
-    if (!scrollArea || scrollArea.dataset.isDragging !== 'true') return;
-
+  // Dragging movement
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
     e.preventDefault();
-    const startX = parseFloat(scrollArea.dataset.startX || '0');
-    const walk = (e.pageX - scrollArea.offsetLeft - startX) * 2; // скорость скроллинга
-    scrollArea.scrollLeft =
-      parseFloat(scrollArea.dataset.scrollLeft || '0') - walk;
-  };
-
-  const handleMouseUp = () => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.dataset.isDragging = 'false';
+    const x = e.pageX - (sliderRef.current?.offsetLeft || 0);
+    const walk = (x - startX) * 2; // Adjust scroll speed as needed
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = scrollLeft - walk;
     }
   };
 
+  // Stop dragging
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
+  // Add global event listeners when dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUpOrLeave);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+    };
+  }, [isDragging]);
+
   return (
-    <ScrollArea.Root className="overflow-hidden w-full">
-      <ScrollArea.Viewport
-        className="flex space-x-4"
-        style={{ width: '100%', height: 'auto' }}
-        ref={scrollAreaRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-      >
-        {promotions.map(promotion => (
-          <div key={promotion.id} className="w-[360px] shrink-0 snap-start">
-            <CardPromotion {...promotion} />
-          </div>
-        ))}
-      </ScrollArea.Viewport>
-      {/* Добавим ScrollAreaScrollbar для прокрутки */}
-      <ScrollArea.Scrollbar orientation="horizontal" className="h-2">
-        <ScrollArea.Thumb className="bg-gray-300 rounded-full" />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>
+    <div
+      ref={sliderRef}
+      className={`overflow-x-scroll flex space-x-4 py-2 scrollbar-hide w-[360px] ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      } select-none`}
+      onMouseDown={handleMouseDown}
+      onDragStart={e => e.preventDefault()}
+    >
+      {/* Render each CardPromotion */}
+      {promotionsData.map((promo, index) => (
+        <div key={index} className="flex-shrink-0">
+          <CardPromotion
+            image={promo.image}
+            points={promo.points}
+            date={promo.date}
+            title={promo.title}
+            address={promo.address}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 

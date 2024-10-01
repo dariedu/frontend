@@ -17,12 +17,13 @@ const CardPromotion: React.FC<PromotionProps> = ({
   address,
 }) => {
   return (
-    <div className="w-[159px] bg-white rounded-[16px] shadow-md overflow-hidden flex flex-col h-[169px]">
+    <div className="w-[159px] bg-white rounded-[16px] shadow-md overflow-hidden flex flex-col h-[169px] select-none">
       {/* Image Section */}
       <div className="relative">
         <img
           src={image}
           alt={title}
+          draggable={false} // Prevent default image dragging
           className="w-[159px] h-[112px] object-cover rounded-[16px]"
         />
         {/* Points Badge */}
@@ -36,7 +37,7 @@ const CardPromotion: React.FC<PromotionProps> = ({
       </div>
 
       {/* Text Content */}
-      <div className="space-y-1 text-left mt-[6px]">
+      <div className="space-y-1 text-left mt-[6px] p-[6px]">
         <p className="font-gerbera-sub2 text-light-gray-black">{title}</p>
         <p className="font-gerbera-sub1 text-light-gray-3">{address}</p>
       </div>

@@ -248,7 +248,7 @@ const App: React.FC = () => {
       />
       {/* <InputDate /> */}
       {/* <CardPromotion promotions={mockPromotions} /> */}
-      <SliderCardsPromotions promotions={mockPromotions} />
+      <SliderCardsPromotions />
     </>
   );
 };

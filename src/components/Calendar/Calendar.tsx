@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { format, getDay, startOfWeek, addDays, isSameDay } from 'date-fns';
+import React, { useState, useRef, useEffect } from 'react';
+import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
@@ -35,17 +35,21 @@ const Calendar: React.FC<CalendarProps> = () => {
     );
 
     return days.map((day, index) => (
-      <div key={index} className="flex flex-col items-center w-[32px] h-[44px]">
+      <div
+        key={index}
+        className="flex flex-col items-center w-[32px] h-[44px] select-none"
+      >
         <span className="text-xs pb-2 text-gray-500">
           {format(day, 'EE', { locale: ru }).slice(0, 2)}
         </span>
         <button
           className={`font-gerbera-sub2 w-6 h-6 flex items-center justify-center rounded-full ${
-            isSameDay(selectedDate, day) // Выделение на основе selectedDate
+            isSameDay(selectedDate, day)
               ? 'bg-light-brand-green text-white'
               : 'text-black'
           }`}
           onClick={() => handleDayClick(day)}
+          draggable={false} // Prevent default dragging on button
         >
           {format(day, 'd')}
         </button>
@@ -60,11 +64,11 @@ const Calendar: React.FC<CalendarProps> = () => {
     setScrollLeft(calendarRef.current?.scrollLeft || 0);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - (calendarRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2; // скорость прокрутки
+    const walk = (x - startX) * 1.5; // Adjust scroll speed as needed
     if (calendarRef.current) {
       calendarRef.current.scrollLeft = scrollLeft - walk;
     }
@@ -74,9 +78,24 @@ const Calendar: React.FC<CalendarProps> = () => {
     setIsDragging(false);
   };
 
+  // Add global event listeners when dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUpOrLeave);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+    };
+  }, [isDragging]);
+
   return (
     <>
-      <div className="p-4 bg-white w-[360px] rounded-lg shadow relative">
+      <div className="p-4 bg-white w-[360px] rounded-lg shadow relative select-none">
         {/* Заголовок */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-gerbera-h1 text-lg">Другие добрые дела</h2>
@@ -84,9 +103,15 @@ const Calendar: React.FC<CalendarProps> = () => {
           {/* Иконка фильтра */}
           <button
             className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-            onClick={() => setIsFilterOpen(true)} // Открываем фильтр
+            onClick={() => setIsFilterOpen(true)}
+            draggable={false} // Prevent default dragging on button
           >
-            <img src={filterIcon} alt="filter" className="w-8 h-8" />
+            <img
+              src={filterIcon}
+              alt="filter"
+              className="w-8 h-8"
+              draggable={false}
+            />
           </button>
         </div>
 
@@ -102,13 +127,13 @@ const Calendar: React.FC<CalendarProps> = () => {
 
         {/* Календарь */}
         <div
-          className="flex space-x-5 ml-7 cursor-grab"
-          style={{ width: '300px', overflowX: 'hidden' }} // Ограничиваем ширину и скрываем прокрутку
+          className={`flex space-x-5 ml-7 ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          style={{ width: '300px', overflowX: 'hidden' }}
           ref={calendarRef}
           onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
+          onDragStart={e => e.preventDefault()}
         >
           {renderWeekDays()}
         </div>
