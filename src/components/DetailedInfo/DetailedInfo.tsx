@@ -50,7 +50,29 @@ interface IDefaultInfoProps {
         result = "баллов"
       }
     return result
-  }
+}
+  
+function getHourCorrectEndingName(hour: number): string {
+  let result = "час"
+  hour % 100 == 0 ? (result = "часов") : (hour = hour % 100)
+    if (hour > 20) {
+      hour % 10 == 0 ? (result = "часов") : (hour = hour % 10)
+      if (hour == 1) {
+        result = "час"
+       } else if (hour > 1 && hour < 5) {
+         result = "часа"
+       } else if (hour > 4 && hour < 21) {
+         result = "часов"
+       }
+    } else if (hour == 1) {
+     result = "час"
+    } else if (hour > 1 && hour < 5) {
+      result = "часа"
+    } else if (hour > 4 && hour < 21) {
+      result = "часов"
+    }
+  return result
+}
 
 
 /////добавляем окончание месяцам
@@ -169,5 +191,5 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   );
 };
 
-export {getBallCorrectEndingName, getMonthCorrectEndingName}
+export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName}
 export default DetailedInfo;

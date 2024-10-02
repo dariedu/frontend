@@ -1,13 +1,13 @@
 //import { useState, useEffect } from "react";
 import * as Form from '@radix-ui/react-form';
-import { Selfie } from '../ui/Selfie/Selfie.tsx';
+import { Selfie } from '../Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from '../ui/Modal/Modal';
 import { useState, useEffect } from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
 import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
-import { UploadPic } from '../ui/UploadPic/UploadPic.tsx';
+//import { UploadPic } from '../UploadPic/UploadPic.tsx';
 
 
 function  RegistrationForm() {
