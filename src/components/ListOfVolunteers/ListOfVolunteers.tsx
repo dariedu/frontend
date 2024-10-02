@@ -9,6 +9,7 @@ interface IVolunteer {
 
 interface ListOfVolunteersProps {
   onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
+  onTakeRoute: () => void; // Новый callback для кнопки "Забрать себе"
 }
 
 const volunteers: IVolunteer[] = [
@@ -22,6 +23,7 @@ const volunteers: IVolunteer[] = [
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onSelectVolunteer,
+  onTakeRoute,
 }) => {
   const [isClickedLeft, setIsClickedLeft] = React.useState(false);
   const [isClickedRight, setIsClickedRight] = React.useState(false);
@@ -32,6 +34,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
 
   const handleClickRight = () => {
     setIsClickedRight(true);
+    onTakeRoute(); // Вызов нового callback при нажатии на "Забрать себе"
   };
 
   return (

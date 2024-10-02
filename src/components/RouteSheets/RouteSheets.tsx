@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import avatarIcon from '../../assets/route_sheets_avatar.svg'; // Updated import
+import avatarIcon from '../../assets/route_sheets_avatar.svg'; // Default avatar
 import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
-import menuIcon from '../../assets/icons/icons.png'; // Ensure menuIcon is imported
+import menuIcon from '../../assets/icons/icons.png';
+import curator from '../../assets/icons/curator.svg'; // Новый аватар для куратора
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 
@@ -11,7 +12,6 @@ interface RouteSheetsProps {
   selected?: string;
 }
 
-// Mock data
 const mockRoutes = [
   {
     address: 'ул. Бобруйская 66',
@@ -41,7 +41,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [selectedVolunteer, setSelectedVolunteer] = useState({
     name: 'Не выбран',
-    avatar: avatarIcon, // Use default avatar when none is selected
+    avatar: avatarIcon, // Default avatar
   });
 
   // Function to select a volunteer
@@ -50,6 +50,12 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
     volunteerAvatar: string,
   ) => {
     setSelectedVolunteer({ name: volunteerName, avatar: volunteerAvatar });
+    setIsListOpen(false);
+  };
+
+  // Function to take the route
+  const handleTakeRoute = () => {
+    setSelectedVolunteer({ name: 'Куратор', avatar: curator }); // Обновляем аватар и имя на "Куратор"
     setIsListOpen(false);
   };
 
@@ -102,12 +108,14 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
               onClick={() => {}}
             />
           )}
-          {/* Remove the "Завершить" button from here */}
         </div>
       </div>
       {/* List of Volunteers */}
       {isListOpen && (
-        <ListOfVolunteers onSelectVolunteer={handleVolunteerSelect} />
+        <ListOfVolunteers
+          onSelectVolunteer={handleVolunteerSelect}
+          onTakeRoute={handleTakeRoute}
+        />
       )}
       {/* RouteSheetsView component */}
       {isViewOpen && (
