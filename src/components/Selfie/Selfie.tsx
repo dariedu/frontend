@@ -1,9 +1,8 @@
 import React, { useState, type Dispatch } from 'react';
 import { CheckboxElement } from '../CheckboxElement/CheckboxElement';
 
-interface IPictureUpload {
+interface ISelfieProps {
   text: string;
-  absent?: boolean;
   setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>,
   onOpenChange: Dispatch<React.SetStateAction<boolean>>,
   localeStorageName: string,
@@ -14,9 +13,8 @@ interface IPictureUpload {
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
 // absent  нужен чтобы добавить чекбокс для отпетки, что благополучателя нет на месте, по умолчанию false
-export const PictuteUpload: React.FC<IPictureUpload> = ({
+export const Selfie: React.FC<ISelfieProps> = ({
   text,
-  absent = false,
   setPictureConfirmed,
   onOpenChange,
   localeStorageName,
@@ -43,7 +41,7 @@ export const PictuteUpload: React.FC<IPictureUpload> = ({
   };
 
   return (
-    <>
+   
       <div
         className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
         onClick={e => e.stopPropagation()}
@@ -104,21 +102,12 @@ export const PictuteUpload: React.FC<IPictureUpload> = ({
             setTryToSubmitWithoutPic(false)
             onOpenChange(false)
           }}>
-            Сохранить фото
+            Далее
           </button>
         ) : (
           ''
         )}
-        <p>
-          {absent ? (
-            <CheckboxElement>
-              <p className="font-gerbera-sub2">Благополучателя нет на месте</p>
-            </CheckboxElement>
-          ) : (
-            ''
-          )}
-        </p>
       </div>
-    </>
+   
   );
 };

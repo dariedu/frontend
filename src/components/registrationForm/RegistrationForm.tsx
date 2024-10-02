@@ -1,12 +1,13 @@
 //import { useState, useEffect } from "react";
 import * as Form from '@radix-ui/react-form';
-import { PictuteUpload } from './../ui/PictureUpload/PictureUpload';
+import { Selfie } from '../Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from '../ui/Modal/Modal';
 import { useState, useEffect } from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
 import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
+//import { UploadPic } from '../UploadPic/UploadPic.tsx';
 
 
 function  RegistrationForm() {
@@ -282,23 +283,11 @@ function  RegistrationForm() {
             Отправить заявку
           </button> 
         </div>
-       
-        {/* <Modal
-            isOpen={isParentsAgreementModalOpen}
-            onOpenChange={setIsParentsAgreementModalOpen}
-          > */}
-        {/* <PictuteUpload
-              text="Сфотографируйте согласие на обработку данных подписанное родителем"
-              pictureConfirmed={parentAgreementUploaded}
-              setPictureConfirmed={setParentAgreementUploaded}
-              onOpenChange={setIsParentsAgreementModalOpen}
-              uploadedFileLink={uploadedParentAgreementLink}
-              setUploadedFileLink={setuploadedParentAgreementLink}
-              localeStorageName="parentsAgreement"
-            />
-          </Modal> */}
+     
+        {/* <UploadPic setPictureConfirmed={setPictureConfirmed} isOpen={isModalOpen} onOpenChange={setIsModalOpen} uploadedFileLink={uploadedPictureLink}
+          setUploadedFileLink={setUploadedPictureLink} /> */}
         <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-          <PictuteUpload
+          <Selfie
             text="Сфотографируйтесь на камеру своего телефона"
             setTryToSubmitWithoutPic={setTryToSubmitWithoutPic}
             setPictureConfirmed={setPictureConfirmed}

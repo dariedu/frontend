@@ -27,6 +27,8 @@ import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCar
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
+import ProfilePic  from './components/ProfilePic/ProfilePic.tsx'
+//import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
 
 declare global {
   interface Window {
@@ -51,26 +53,6 @@ const mockPromotions = [
   },
 ];
 
-// const defaultEvent: IPromotion = {
-//   id: 11,
-//   volunteers_count: 5,
-//   category: 'Театр',
-//   name: 'Концерт в Филармонии',
-//   price: 5,
-//   description:
-//     '12 Международный фестиваль  Будущее джаза Концерт в Москве Концертный зал им Чайковского. Программа – блестящая! Виолончельный концерт Дворжака и пьесы для виолончели с оркестром Чайковского и Сен-Санса, «Испанское каприччио» Римского-Корсакова',
-//   start_date: new Date('2024-10-23T03:01:38Z'),
-//   quantity: 10,
-//   available_quantity: 10,
-//   for_curators_only: false,
-//   is_active: true,
-//   file: '',
-//   is_permanent: false,
-//   end_date: new Date('2024-10-23T03:01:38Z'),
-//   city: 'Москва',
-//   users: [0],
-//   //picture: ""
-// };
 
 const App: React.FC = () => {
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
@@ -126,19 +108,7 @@ const App: React.FC = () => {
         onCommentClick={handleCommentClick}
         onSubmitClick={handleSubmitClick}
       />
-
-      <div className="card">
-        <p className="font-gerberaLight text-Gray/3 text-H1">Gerbera-Light</p>
-        <p className="font-gerberaMedium text-Gray/4 text-H2">Gerbera-Medium</p>
-        <p className="font-gerbera text-Gray/5 text-Subtitle2">Gerbera</p>
-
-        <p className="font-gerbera-h1">Gerbera H1</p>
-        <p className="font-gerbera-h2">Gerbera H2</p>
-        <p className="font-gerbera-h3">Gerbera H3</p>
-        <p className="font-gerbera-sub1">Gerbera subtitle1</p>
-        <p className="font-gerbera-sub2">Gerbera subtitle2</p>
-        <p className="font-gerbera-sub3">Gerbera subtitle3</p>
-      </div>
+      {/* <UploadPic /> */}
       <div className="p-4">
         {/* Три кнопки для открытия соответствующих модальных окон */}
         <div className="space-y-4">
@@ -275,6 +245,9 @@ const App: React.FC = () => {
       <MyPoints />
       <DetailedInfo />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
+
+      <ProfilePic />
+
     </>
   );
 };

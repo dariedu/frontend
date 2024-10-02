@@ -4,12 +4,12 @@ import { type IPromotion } from './../../api/apiPromotions.ts';
 const defaultEvent: IPromotion = {
   id: 11,
   volunteers_count: 5,
-  category: 'Театр',
+  category: 'Мероприятие',
   name: 'Концерт в Филармонии',
-  price: 5,
+  price: 119,
   description:
     '12 Международный фестиваль  Будущее джаза Концерт в Москве Концертный зал им Чайковского. Программа – блестящая! Виолончельный концерт Дворжака и пьесы для виолончели с оркестром Чайковского и Сен-Санса, «Испанское каприччио» Римского-Корсакова',
-  start_date: new Date('2024-10-23T18:16:38Z'),
+  start_date: new Date('2024-08-23T21:16:38Z'),
   quantity: 10,
   available_quantity: 10,
   for_curators_only: false,
@@ -29,16 +29,71 @@ interface IDefaultInfoProps {
   promotion?: IPromotion;
 }
 
+  /////получаем слово 'балл' с верным окончанием
+  function getBallCorrectEndingName(price: number): string {
+    let result = "балл"
+    price % 100 == 0 ? (result = "баллов") : (price = price % 100)
+      if (price > 20) {
+        price % 10 == 0 ? (result = "баллов") : (price = price % 10)
+        if (price == 1) {
+          result = "балл"
+         } else if (price > 1 && price < 5) {
+           result = "баллa"
+         } else if (price > 4 && price < 21) {
+           result = "баллов"
+         }
+      } else if (price == 1) {
+       result = "балл"
+      } else if (price > 1 && price < 5) {
+        result = "баллa"
+      } else if (price > 4 && price < 21) {
+        result = "баллов"
+      }
+    return result
+}
+  
+function getHourCorrectEndingName(hour: number): string {
+  let result = "час"
+  hour % 100 == 0 ? (result = "часов") : (hour = hour % 100)
+    if (hour > 20) {
+      hour % 10 == 0 ? (result = "часов") : (hour = hour % 10)
+      if (hour == 1) {
+        result = "час"
+       } else if (hour > 1 && hour < 5) {
+         result = "часа"
+       } else if (hour > 4 && hour < 21) {
+         result = "часов"
+       }
+    } else if (hour == 1) {
+     result = "час"
+    } else if (hour > 1 && hour < 5) {
+      result = "часа"
+    } else if (hour > 4 && hour < 21) {
+      result = "часов"
+    }
+  return result
+}
+
+
+/////добавляем окончание месяцам
+  function getMonthCorrectEndingName(date:Date):string{
+   return date.getMonth() != 2 && date.getMonth() != 7
+    ? date.toLocaleString('RU', { month: 'long' }).slice(0, -1) + 'я'
+  : date.toLocaleString('RU', { month: 'long' }).slice(0, -1) + 'та'
+  }
+  
+
 const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   promotion = defaultEvent,
 }) => {
+
   return (
     <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8">
       <div className="flex align-middle justify-between">
         <div className="flex">
-          <div className="w-9 h-9 bg-light-brand-green rounded-full flex items-center justify-center">
+          {/* <div className="w-9 h-9 bg-light-brand-green rounded-full flex items-center justify-center">
             {promotion.price}
-          </div>
+          </div> */}
           <div className="flex flex-col ml-[14px] justify-center items-start">
             <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0">
               {promotion.name}
@@ -48,19 +103,19 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             </p>
           </div>
         </div>
-        <p className="font-gerbera-sub2 text-light-gray-3">Мероприятие</p>
+        <p className="font-gerbera-sub2 text-light-gray-3">{promotion.category}</p>
       </div>
 
       <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px]">
         <h3 className="font-gerbera-h3 text-light-gray-black">
-          Где забрать билет?
+         Как получитьбилет?
         </h3>
         <p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
           {promotion.ticket}
         </p>
       </div>
 
-      {promotion.file != undefined ? (
+      {/* {promotion.file != undefined ? (
         <div className="flex w-[215px] h-[24px] justify-start mt-[14px] items-center">
           <img
             src="./src/assets/icons/catppuccin_pdf.svg"
@@ -75,15 +130,20 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         </div>
       ) : (
         ''
-      )}
+      )} */}
       <div className="flex justify-between items-center mt-[14px]">
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
           <p className="font-gerbera-sub2 text-light-gray-black ">
             Время начала
           </p>
           <p className="font-gerbera-h3 text-light-gray-black">
-            {promotion.start_date.getHours()}:
-            {promotion.start_date.getMinutes()}
+            {promotion.is_permanent
+              ? 'В любое время'
+                : `${promotion.start_date.getDate()}
+            ${getMonthCorrectEndingName(promotion.start_date)} в
+            ${promotion.start_date.getHours() < 10 ? '0' + promotion.start_date.getHours() : promotion.start_date.getHours()}:${promotion.start_date.getMinutes()}`
+          }  
+            
           </p>
         </div>
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
@@ -91,7 +151,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             Списание баллов
           </p>
           <p className="font-gerbera-h3 text-light-brand-green ">
-            {promotion.price} балла(-ов)
+            {promotion.price} {getBallCorrectEndingName(promotion.price)} 
           </p>
         </div>
       </div>
@@ -103,7 +163,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       </div>
       {promotion.picture.length > 0 ? (
         <img
-          className="w-[314px] h-[205px] rounded-2xl mt-[14px] self-center"
+          className="w-[328px] h-[205px] rounded-2xl mt-[14px]"
           src={promotion.picture}
         />
       ) : (
@@ -131,4 +191,5 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   );
 };
 
+export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName}
 export default DetailedInfo;
