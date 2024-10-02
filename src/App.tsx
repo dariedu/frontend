@@ -28,6 +28,7 @@ import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCar
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import { IPromotion } from './api/apiPromotions';
+import { UploadPic } from './components/ui/UploadPic/UploadPic.tsx';
 
 declare global {
   interface Window {
@@ -127,19 +128,7 @@ const App: React.FC = () => {
         onCommentClick={handleCommentClick}
         onSubmitClick={handleSubmitClick}
       />
-
-      <div className="card">
-        <p className="font-gerberaLight text-Gray/3 text-H1">Gerbera-Light</p>
-        <p className="font-gerberaMedium text-Gray/4 text-H2">Gerbera-Medium</p>
-        <p className="font-gerbera text-Gray/5 text-Subtitle2">Gerbera</p>
-
-        <p className="font-gerbera-h1">Gerbera H1</p>
-        <p className="font-gerbera-h2">Gerbera H2</p>
-        <p className="font-gerbera-h3">Gerbera H3</p>
-        <p className="font-gerbera-sub1">Gerbera subtitle1</p>
-        <p className="font-gerbera-sub2">Gerbera subtitle2</p>
-        <p className="font-gerbera-sub3">Gerbera subtitle3</p>
-      </div>
+      <UploadPic />
       <div className="p-4">
         {/* Три кнопки для открытия соответствующих модальных окон */}
         <div className="space-y-4">
