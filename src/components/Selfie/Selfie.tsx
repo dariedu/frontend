@@ -41,7 +41,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
   };
 
   return (
-    <>
+   
       <div
         className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
         onClick={e => e.stopPropagation()}
@@ -107,9 +107,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
         ) : (
           ''
         )}
-        <p>
-        </p>
       </div>
-    </>
+   
   );
 };
