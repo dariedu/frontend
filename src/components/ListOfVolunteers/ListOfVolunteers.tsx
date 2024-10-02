@@ -7,6 +7,11 @@ interface IVolunteer {
   avatar: string;
 }
 
+interface ListOfVolunteersProps {
+  onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
+  onTakeRoute: () => void; // Новый callback для кнопки "Забрать себе"
+}
+
 const volunteers: IVolunteer[] = [
   { volunteerName: 'Осипова Юлия', avatar: avatar1 },
   { volunteerName: 'Иванов Иван', avatar: avatar1 },
@@ -16,7 +21,10 @@ const volunteers: IVolunteer[] = [
   { volunteerName: 'Александрова Мария', avatar: avatar1 },
 ];
 
-const ListOfVolunteers: React.FC = () => {
+const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
+  onSelectVolunteer,
+  onTakeRoute,
+}) => {
   const [isClickedLeft, setIsClickedLeft] = React.useState(false);
   const [isClickedRight, setIsClickedRight] = React.useState(false);
 
@@ -26,6 +34,7 @@ const ListOfVolunteers: React.FC = () => {
 
   const handleClickRight = () => {
     setIsClickedRight(true);
+    onTakeRoute(); // Вызов нового callback при нажатии на "Забрать себе"
   };
 
   return (
@@ -34,7 +43,10 @@ const ListOfVolunteers: React.FC = () => {
       {volunteers.map((volunteer, index) => (
         <div
           key={index}
-          className="flex items-center space-x-4 p-4 bg-light-gray-1 rounded-[16px] shadow"
+          className="flex items-center space-x-4 p-4 bg-light-gray-1 rounded-[16px] shadow cursor-pointer"
+          onClick={() =>
+            onSelectVolunteer(volunteer.volunteerName, volunteer.avatar)
+          }
         >
           {/* Аватарка */}
           <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-gray-300">
@@ -60,13 +72,17 @@ const ListOfVolunteers: React.FC = () => {
       {/* Действия кнопок */}
       <div className="flex justify-between mt-4">
         <button
-          className={`btn-M-GreenDefault ${isClickedLeft ? 'btn-M-GreenClicked' : ''}`}
+          className={`btn-M-GreenDefault ${
+            isClickedLeft ? 'btn-M-GreenClicked' : ''
+          }`}
           onClick={handleClickLeft}
         >
           Написать координатору
         </button>
         <button
-          className={`btn-M-WhiteDefault ${isClickedRight ? 'btn-M-WhiteClicked' : ''}`}
+          className={`btn-M-WhiteDefault ${
+            isClickedRight ? 'btn-M-WhiteClicked' : ''
+          }`}
           onClick={handleClickRight}
         >
           Забрать себе
