@@ -29,6 +29,8 @@ import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
 import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
+import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
+
 
 declare global {
   interface Window {
@@ -244,6 +246,8 @@ const App: React.FC = () => {
       <MyPoints />
       <DetailedInfo />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
+      <ProfilePic /> 
+      <NearestDelivery />
     </>
   );
 };
