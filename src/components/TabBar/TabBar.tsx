@@ -13,9 +13,11 @@ import CuratorIconActive from '../../assets/icons/curatorActive.svg';
 import BonusesIcon from '../../assets/icons/bonus.svg';
 import BonusesIconActive from '../../assets/icons/bonusActive.svg';
 
-interface ITabBarProps {}
+interface ITabBarProps {
+  userRole: 'curator' | 'volunteer';
+}
 
-const TabBar: React.FC<ITabBarProps> = () => {
+const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
@@ -32,11 +34,13 @@ const TabBar: React.FC<ITabBarProps> = () => {
         <Tabs.Content value="tab2" className="TabsContent">
           <p>Содержимое Календаря</p>
         </Tabs.Content>
-        <Tabs.Content value="tab3" className="TabsContent">
-          <p>Содержимое Куратора</p>
-        </Tabs.Content>
+        {userRole === 'curator' && (
+          <Tabs.Content value="tab3" className="TabsContent">
+            <p>Содержимое Куратора</p>
+          </Tabs.Content>
+        )}
         <Tabs.Content value="tab4" className="TabsContent">
-          <p>Содержимое Бонусов</p>
+          <p>Содержимое Моя копилка</p>
         </Tabs.Content>
 
         <Tabs.List className="flex justify-between bg-light-gray-white dark:bg-dark-gray-white p-2 rounded-lg relative">
@@ -87,29 +91,31 @@ const TabBar: React.FC<ITabBarProps> = () => {
           </Tabs.Trigger>
 
           {/* Вкладка "Куратор" */}
-          <Tabs.Trigger
-            value="tab3"
-            className={classNames('flex flex-col items-center p-2 relative', {
-              'text-light-brand-green': activeTab === 'tab3',
-              'text-light-gray-4': activeTab !== 'tab3',
-            })}
-          >
-            <img
-              src={activeTab === 'tab3' ? CuratorIconActive : CuratorIcon}
-              alt="Куратор"
-              className="w-6 h-6"
-            />
-            <span
-              className={classNames('mt-1 text-xs', {
+          {userRole === 'curator' && (
+            <Tabs.Trigger
+              value="tab3"
+              className={classNames('flex flex-col items-center p-2 relative', {
                 'text-light-brand-green': activeTab === 'tab3',
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
             >
-              Куратор
-            </span>
-          </Tabs.Trigger>
+              <img
+                src={activeTab === 'tab3' ? CuratorIconActive : CuratorIcon}
+                alt="Куратор"
+                className="w-6 h-6"
+              />
+              <span
+                className={classNames('mt-1 text-xs', {
+                  'text-light-brand-green': activeTab === 'tab3',
+                  'text-light-gray-4': activeTab !== 'tab3',
+                })}
+              >
+                Куратор
+              </span>
+            </Tabs.Trigger>
+          )}
 
-          {/* Вкладка "Бонусы" */}
+          {/* Вкладка "Моя копилка" */}
           <Tabs.Trigger
             value="tab4"
             className={classNames('flex flex-col items-center p-2 relative', {
@@ -119,7 +125,7 @@ const TabBar: React.FC<ITabBarProps> = () => {
           >
             <img
               src={activeTab === 'tab4' ? BonusesIconActive : BonusesIcon}
-              alt="Бонусы"
+              alt="Моя копилка"
               className="w-6 h-6"
             />
             <span
@@ -128,7 +134,7 @@ const TabBar: React.FC<ITabBarProps> = () => {
                 'text-light-gray-4': activeTab !== 'tab4',
               })}
             >
-              Бонусы
+              Моя копилка
             </span>
           </Tabs.Trigger>
         </Tabs.List>

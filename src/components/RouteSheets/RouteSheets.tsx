@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import avatarIcon from '../../assets/route_sheets_avatar.svg'; // Default avatar
-import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
+import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
-import curator from '../../assets/icons/curator.svg'; // Новый аватар для куратора
+import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 
@@ -55,7 +54,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
   // Function to take the route
   const handleTakeRoute = () => {
-    setSelectedVolunteer({ name: 'Куратор', avatar: curator }); // Обновляем аватар и имя на "Куратор"
+    setSelectedVolunteer({ name: 'Куратор', avatar: curator });
     setIsListOpen(false);
   };
 
@@ -122,7 +121,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         <RouteSheetsView
           routes={mockRoutes}
           onComplete={handleComplete}
-          isCompleted={isCompleted} // Pass isCompleted as a prop
+          isCompleted={isCompleted}
         />
       )}
     </div>

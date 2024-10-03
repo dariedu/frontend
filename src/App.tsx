@@ -27,9 +27,11 @@ import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCar
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
-import ProfilePic  from './components/ProfilePic/ProfilePic.tsx'
+import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
-import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx'
+import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
+
+
 declare global {
   interface Window {
     Telegram: any;
@@ -52,7 +54,6 @@ const mockPromotions = [
     address: 'Спб, ул. Ленина д.14 к.3',
   },
 ];
-
 
 const App: React.FC = () => {
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
@@ -193,7 +194,8 @@ const App: React.FC = () => {
         phone="89998889988"
         telegram="@telegram"
       />
-      <TabBar />
+      <TabBar userRole="curator" />
+      <TabBar userRole="volunteer" />
       <NextTask
         taskName="Написать текст"
         taskType="Онлайн"
@@ -213,7 +215,6 @@ const App: React.FC = () => {
       />
       <Points points={2} />
       <Functions />
-      <ListOfVolunteers />
 
       <CardTask
         title="Ст. Молодежная"
@@ -245,11 +246,8 @@ const App: React.FC = () => {
       <MyPoints />
       <DetailedInfo />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
-
-      {/* <ProfilePic /> */}
+      <ProfilePic /> 
       <NearestDelivery />
-
-
     </>
   );
 };
