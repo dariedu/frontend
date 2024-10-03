@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getBallCorrectEndingName, getHourCorrectEndingName } from '../DetailedInfo/DetailedInfo.tsx';
+import {getBallCorrectEndingName, getHourCorrectEndingName} from '../helperFunctions/helperFunctions'
 
 
 interface IUser {
