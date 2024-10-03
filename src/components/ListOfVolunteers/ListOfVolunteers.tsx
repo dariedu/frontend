@@ -9,7 +9,7 @@ interface IVolunteer {
 
 interface ListOfVolunteersProps {
   onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
-  onTakeRoute: () => void; // Новый callback для кнопки "Забрать себе"
+  onTakeRoute: () => void;
 }
 
 const volunteers: IVolunteer[] = [
@@ -34,7 +34,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
 
   const handleClickRight = () => {
     setIsClickedRight(true);
-    onTakeRoute(); // Вызов нового callback при нажатии на "Забрать себе"
+    onTakeRoute();
   };
 
   return (
