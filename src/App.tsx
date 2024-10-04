@@ -28,6 +28,7 @@ import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
 import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
+import SliderStories from './components/SliderStories/SliderStories.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
 import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
@@ -246,6 +247,7 @@ const App: React.FC = () => {
       <MyPoints />
       <DetailedInfo />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
+      <SliderStories />
       <ProfilePic /> 
       <NearestDelivery />
     </>
