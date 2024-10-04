@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CardStories from '../ui/Cards/CardStories/CardStories';
-import StoriesView from '../SliderStories/StoriesView';
+import SliderStoriesView from './SliderStoriesView';
 import imageStory from '../../assets/Story.jpg';
 
 // Пример данных для слайдера
@@ -12,7 +12,9 @@ const stories = [
 ];
 
 const SliderStories: React.FC = () => {
-  const [currentStory, setCurrentStory] = useState<string | null>(null);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState<number | null>(
+    null,
+  );
 
   // Начальные позиции для перетаскивания
   const [dragStart, setDragStart] = useState<number>(0);
@@ -41,28 +43,28 @@ const SliderStories: React.FC = () => {
     <>
       {/* Слайдер для историй */}
       <div
-        className="flex overflow-x-hidden space-x-4 p-4 w-[360px]"
+        className="flex overflow-x-scroll space-x-4 p-4 w-[360px]"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         style={{ cursor: 'grab', whiteSpace: 'nowrap' }}
       >
-        {stories.map(story => (
+        {stories.map((story, index) => (
           <div key={story.id} className="inline-block">
             <CardStories
               imageSrc={story.imageSrc}
               title={story.title}
-              onClick={() => setCurrentStory(story.imageSrc)}
+              onClick={() => setCurrentStoryIndex(index)}
             />
           </div>
         ))}
       </div>
 
       {/* Полноэкранное отображение истории */}
-      {currentStory && (
-        <StoriesView
-          imageSrc={currentStory}
-          onClose={() => setCurrentStory(null)}
+      {currentStoryIndex !== null && (
+        <SliderStoriesView
+          currentStoryIndex={currentStoryIndex}
+          onClose={() => setCurrentStoryIndex(null)}
         />
       )}
     </>

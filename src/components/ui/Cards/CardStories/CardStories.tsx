@@ -14,18 +14,14 @@ const CardStories: React.FC<CardStoriesProps> = ({
 }) => {
   return (
     <div
-      className="relative w-[116px] h-[160px] cursor-pointer rounded-lg overflow-hidden"
+      className="relative w-[160px] h-[240px] cursor-pointer rounded-lg overflow-hidden"
       onClick={onClick}
     >
       {/* Изображение */}
-      <img
-        src={imageSrc}
-        alt={title}
-        className="w-[116px] h-[160px] rounded-[16px] object-cover"
-      />
+      <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
 
       {/* Текст поверх картинки */}
-      <div className="absolute w-[116px] h-[160px] bottom-4 left-4 font-gerbera-sub2 text-light-gray-white px-2 py-1 rounded">
+      <div className="absolute bottom-4 left-4 text-white font-bold text-lg bg-black bg-opacity-50 px-2 py-1 rounded">
         {title}
       </div>
     </div>

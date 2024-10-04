@@ -58,6 +58,11 @@ module.exports = {
   plugins: [
     function ({ addUtilities }) {
       const newUtilities = {
+        '.font-gerbera-st': {
+          fontFamily: 'Gerbera',
+          fontSize: '24px',
+          lineHeight: '28px',
+        },
         '.font-gerbera-h1': {
           fontFamily: 'Gerbera',
           fontSize: '18px',
