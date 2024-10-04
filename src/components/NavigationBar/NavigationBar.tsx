@@ -35,7 +35,6 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
           </>
         )}
       </div>
-
       {/* Правая часть с аватаркой и иконкой */}
       {variant === 'mainScreen' && (
         <div className="flex items-center space-x-4">

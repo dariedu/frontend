@@ -11,6 +11,10 @@ const routerConfig: RouteObject[] = [
     path: '/registration',
     Component: RegistrationForm,
   },
+  {
+    path: '/main',
+    Component: ,
+  },
 ];
 
 export default routerConfig;
