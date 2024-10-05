@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
+import MainPageCurator from '../../pages/Curator/MainPageCurator';
 import './index.css';
 
 // Пример импортов для иконок
@@ -29,7 +30,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
       >
         {/* Контент вкладок */}
         <Tabs.Content value="tab1" className="TabsContent">
-          <p>Содержимое Главной</p>
+          <MainPageCurator />
         </Tabs.Content>
         <Tabs.Content value="tab2" className="TabsContent">
           <p>Содержимое Календаря</p>

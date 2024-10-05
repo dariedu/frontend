@@ -28,7 +28,9 @@ import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
 // import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 import SliderStories from './components/SliderStories/SliderStories.tsx';
-import MainPage from './pages/MainPage.tsx';
+
+import CuratorPage from './pages/Curator/CuratorPage.tsx';
+import MainPage from './pages/Curator/MainPageCurator.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
 // import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
@@ -250,7 +252,7 @@ const App: React.FC = () => {
       {/* <ProfilePic /> 
       <NearestDelivery /> */}
 
-      <MainPage />
+      <CuratorPage />
     </>
   );
 };

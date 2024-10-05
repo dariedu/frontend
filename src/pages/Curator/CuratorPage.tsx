@@ -1,5 +1,5 @@
 import React from 'react';
-import TabBar from '../components/TabBar/TabBar';
+import TabBar from '../../components/TabBar/TabBar';
 
 const CuratorPage: React.FC = () => {
   return (
