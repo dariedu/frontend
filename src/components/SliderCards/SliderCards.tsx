@@ -102,7 +102,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({ showTitle = true }) => {
   };
 
   return (
-    <div className="p-[16px] w-[360px]">
+    <div className="pt-[16px] w-[360px]">
       {/* Заголовок - отображается только если showTitle === true */}
       {showTitle && (
         <h2 className="font-gerbera-h1 text-light-gray-black text-left">
@@ -112,7 +112,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({ showTitle = true }) => {
 
       {/* Слайдер для карточек */}
       <div
-        className="flex overflow-x-hidden space-x-4 p-4 w-[360px]"
+        className="flex overflow-x-hidden space-x-4 pt-4 w-[360px]"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -124,7 +124,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({ showTitle = true }) => {
       >
         {/* Отображение карточек через map */}
         {cardTasks.map(task => (
-          <div key={task.id} className="inline-block">
+          <div key={task.id} className="">
             <CardTask
               title={task.title}
               subtitle={task.subtitle}
