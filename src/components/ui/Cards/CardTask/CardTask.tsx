@@ -7,7 +7,7 @@ interface ICardTaskProps {
   timeOrPeriod: string;
   additionalTime?: string; // Новое свойство для дополнительного времени
   points: string;
-  type: 'time-based' | 'period-based';
+  typeTask: 'time-based' | 'period-based';
 }
 
 const CardTask: React.FC<ICardTaskProps> = ({
@@ -16,7 +16,7 @@ const CardTask: React.FC<ICardTaskProps> = ({
   timeOrPeriod,
   additionalTime,
   points,
-  type,
+  typeTask,
 }) => {
   return (
     <div className="p-4 bg-light-gray-1 rounded-[16px] shadow w-[240px] h-[118px] mb-4">
@@ -34,7 +34,7 @@ const CardTask: React.FC<ICardTaskProps> = ({
       </div>
 
       {/* Conditional Rendering for Time-Based or Period-Based */}
-      {type === 'time-based' && (
+      {typeTask === 'time-based' && (
         <div className="flex items-center gap-[4px]">
           {/* Дополнительное время (если оно есть) */}
           {additionalTime && (
@@ -55,7 +55,7 @@ const CardTask: React.FC<ICardTaskProps> = ({
         </div>
       )}
 
-      {type === 'period-based' && (
+      {typeTask === 'period-based' && (
         <div className="flex items-center gap-[4px]">
           <div className="flex items-center justify-center bg-light-gray-white min-w-[75px] h-[28px] rounded-full">
             <span className="text-black font-gerbera-sub2">{timeOrPeriod}</span>

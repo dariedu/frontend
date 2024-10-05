@@ -21,16 +21,21 @@ import DeliveryInfo from './components/ui/Hr/DeliveryInfo.tsx';
 import ActionsVolunteer from './components/ActionsVolunteer/ActionsVolunteer.tsx';
 import Points from './components/ui/Points/Points.tsx';
 import Functions from './components/ui/Functions/Functions.tsx';
-import ListOfVolunteers from './components/ListOfVolunteers/ListOfVolunteers.tsx';
 import CardTask from './components/ui/Cards/CardTask/CardTask.tsx';
 import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCardsPromotions.tsx';
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
+// import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 import SliderStories from './components/SliderStories/SliderStories.tsx';
 //import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 ///import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
+
+import CuratorPage from './pages/Curator/CuratorPage.tsx';
+import MainPage from './pages/Curator/MainPageCurator.tsx';
+//import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
+// import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
 import CancelReason from './components/CancelReason/CancelReason.tsx'
 
@@ -40,22 +45,22 @@ declare global {
   }
 }
 
-const mockPromotions = [
-  {
-    image: 'https://via.placeholder.com/300',
-    points: '2 балла',
-    date: '2.10',
-    title: 'Концерт в Филармонии',
-    address: 'Мск, ул. Бобруйская д.6 к.2',
-  },
-  {
-    image: 'https://via.placeholder.com/300',
-    points: '5 баллов',
-    date: '10.10',
-    title: 'Встреча в парке',
-    address: 'Спб, ул. Ленина д.14 к.3',
-  },
-];
+// const mockPromotions = [
+//   {
+//     image: 'https://via.placeholder.com/300',
+//     points: '2 балла',
+//     date: '2.10',
+//     title: 'Концерт в Филармонии',
+//     address: 'Мск, ул. Бобруйская д.6 к.2',
+//   },
+//   {
+//     image: 'https://via.placeholder.com/300',
+//     points: '5 баллов',
+//     date: '10.10',
+//     title: 'Встреча в парке',
+//     address: 'Спб, ул. Ленина д.14 к.3',
+//   },
+// ];
 
 const App: React.FC = () => {
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
@@ -252,8 +257,12 @@ const App: React.FC = () => {
       {/* <ProfilePic />  */}
       {/* <NearestDelivery /> */}
       <SliderStories />
-   
+      {/* <ProfilePic /> 
+      <NearestDelivery /> */}
 
+      <CuratorPage />
+
+  
     </>
   );
 };
