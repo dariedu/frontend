@@ -1,6 +1,7 @@
 import { RouteObject } from 'react-router-dom';
 import RegistrationForm from './components/registrationForm/RegistrationForm';
 import App from './App';
+import MainPageCurator from './pages/Curator/MainPageCurator';
 
 const routerConfig: RouteObject[] = [
   {
@@ -12,8 +13,8 @@ const routerConfig: RouteObject[] = [
     Component: RegistrationForm,
   },
   {
-    path: '/main',
-    Component: ,
+    path: '/curator',
+    Component: MainPageCurator,
   },
 ];
 

@@ -16,7 +16,7 @@ const DeliveryType: React.FC = () => {
   };
 
   return (
-    <div className="w-[360px] p-4">
+    <div className="w-[360px] p-4 bg-light-gray-white rounded-[16px]">
       <div className="flex items-center space-x-2">
         {/* Selected Type with Green Background */}
         <div

@@ -1,5 +1,9 @@
-import React from 'react'
-import {getBallCorrectEndingName, getMonthCorrectEndingName, getPersonCorrectEndingName} from '../helperFunctions/helperFunctions'
+import React, { useState } from 'react';
+import {
+  getBallCorrectEndingName,
+  getMonthCorrectEndingName,
+  getPersonCorrectEndingName,
+} from '../helperFunctions/helperFunctions';
 
 interface IDelivery {
   id: number;
@@ -62,7 +66,7 @@ export const delivery1: IDelivery = {
       city: 'Москва',
     },
     address:
-      'поселение Внуковсекое, ул. Авиаконстраукора Петькина, д.15 к1. строение 15 кв. 222',
+      'поселение Внуковское, ул. Авиаконстраукора Петькина, д.15 к1. строение 15 кв. 222',
     link: 'null',
     subway: 'Белорусская',
     media_files: null,
@@ -70,11 +74,11 @@ export const delivery1: IDelivery = {
   },
 };
 
-interface INearestDeliveryProps{
-  delivery: IDelivery,
-  volunteer: boolean
-  deliveryFilter: TDeliveryFilter,
-  booked: boolean
+interface INearestDeliveryProps {
+  delivery: IDelivery;
+  volunteer: boolean;
+  deliveryFilter: TDeliveryFilter;
+  booked: boolean;
 }
 
 type TDeliveryFilter = 'nearest' | 'active';

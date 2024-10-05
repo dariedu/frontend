@@ -8,7 +8,7 @@ interface ISearchProps {
 
 const Search: React.FC<ISearchProps> = ({ placeholder = 'Поиск по ФИО' }) => {
   return (
-    <div className="bg-light-gray-white dark:bg-dark-gray-white rounded-[16px] p-4 shadow-lg max-w-md w-[360px]">
+    <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] max-w-md w-[360px] h-[154px]">
       {/* Секция с основной информацией */}
       <div className="flex justify-between items-center">
         <div className="flex">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import MainPageCurator from '../../pages/Curator/MainPageCurator';
+import CalendarCurator from '../../pages/Curator/CalendarPageCuratot/CalendarCurator';
 import './index.css';
 
 // Пример импортов для иконок
@@ -33,7 +34,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <MainPageCurator />
         </Tabs.Content>
         <Tabs.Content value="tab2" className="TabsContent">
-          <p>Содержимое Календаря</p>
+          <CalendarCurator />
         </Tabs.Content>
         {userRole === 'curator' && (
           <Tabs.Content value="tab3" className="TabsContent">
