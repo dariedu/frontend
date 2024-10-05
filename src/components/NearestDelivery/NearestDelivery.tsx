@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {getBallCorrectEndingName, getMonthCorrectEndingName, getPersonCorrectEndingName} from '../helperFunctions/helperFunctions'
 
 
@@ -74,18 +74,18 @@ const delivery1: IDelivery = {
 
 interface INearestDeliveryProps{
   delivery: IDelivery,
- volunteer: boolean
+  volunteer: boolean
+  deliveryFilter: TDeliveryFilter,
+  booked: boolean
 }
 
 type TDeliveryFilter = "nearest" | "active";
 
 
-const NearestDelivery: React.FC<INearestDeliveryProps> = ({delivery=delivery1, volunteer=true}) => {
+const NearestDelivery: React.FC<INearestDeliveryProps> = ({delivery=delivery1, volunteer=true, deliveryFilter='nearest', booked=false}) => {
 let deliveryDate = new Date(delivery.date)
   let curatorTelegramNik = delivery.curator.tg_username.includes("@") ? delivery.curator.tg_username.slice(1) : delivery.curator.tg_username;
 
-  const [deliveryFilter, setDeliveryFilter] = useState<TDeliveryFilter>("nearest");
-  const [booked, setBooked] = useState(false);
 
   return (
     <>

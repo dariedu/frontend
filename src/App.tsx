@@ -27,9 +27,9 @@ import SliderCardsPromotions from './components/ui/Cards/CardPromotion/SliderCar
 import MyPoints from './components/MyPoints/MyPoints.tsx';
 import DetailedInfo from './components/DetailedInfo/DetailedInfo';
 import RouteSheets from './components/RouteSheets/RouteSheets.tsx';
-import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
+//import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
-import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
+///import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
 
 declare global {
@@ -109,7 +109,7 @@ const App: React.FC = () => {
         onCommentClick={handleCommentClick}
         onSubmitClick={handleSubmitClick}
       />
-      {/* <UploadPic /> */}
+    
       <div className="p-4">
         {/* Три кнопки для открытия соответствующих модальных окон */}
         <div className="space-y-4">
@@ -246,10 +246,12 @@ const App: React.FC = () => {
       <MyPoints />
       <DetailedInfo />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
-      <ProfilePic /> 
-      <NearestDelivery />
+      {/* <ProfilePic />  */}
+      {/* <NearestDelivery /> */}
+      
     </>
   );
 };
 
 export default App;
+
