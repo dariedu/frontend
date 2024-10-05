@@ -1,6 +1,6 @@
 import React, { useState, type Dispatch } from 'react';
-import { CheckboxElement } from '../CheckboxElement/CheckboxElement';
-import { Modal } from '../Modal/Modal';
+import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
+import { Modal } from '../ui/Modal/Modal';
 
 
 interface IUploadPicProps {

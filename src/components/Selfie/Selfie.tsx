@@ -1,5 +1,4 @@
 import React, { useState, type Dispatch } from 'react';
-import { CheckboxElement } from '../CheckboxElement/CheckboxElement';
 
 interface ISelfieProps {
   text: string;
