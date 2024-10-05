@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
-import MainPageCurator from '../../pages/Curator/MainPageCurator';
+import MainPageCurator from '../../pages/Curator/MainPageCurator/MainPageCurator';
 import CalendarCurator from '../../pages/Curator/CalendarPageCuratot/CalendarCurator';
 import './index.css';
 
@@ -14,6 +14,7 @@ import CuratorIcon from '../../assets/icons/curator.svg';
 import CuratorIconActive from '../../assets/icons/curatorActive.svg';
 import BonusesIcon from '../../assets/icons/bonus.svg';
 import BonusesIconActive from '../../assets/icons/bonusActive.svg';
+import Curator from '../../pages/Curator/Curator/Curator';
 
 interface ITabBarProps {
   userRole: 'curator' | 'volunteer';
@@ -23,7 +24,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative" style={{ width: '360px' }}>
+    <div className="relative w-[360px] h-[746px]">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -38,7 +39,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         </Tabs.Content>
         {userRole === 'curator' && (
           <Tabs.Content value="tab3" className="TabsContent">
-            <p>Содержимое Куратора</p>
+            <Curator />
           </Tabs.Content>
         )}
         <Tabs.Content value="tab4" className="TabsContent">

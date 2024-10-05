@@ -2,11 +2,18 @@ import React from 'react';
 import TabBar from '../../components/TabBar/TabBar';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
-const CuratorPage: React.FC = () => {
+interface ICuratorPageProps {
+  userRole: 'curator' | 'volunteer';
+}
+
+const CuratorPage: React.FC<ICuratorPageProps> = ({ userRole }) => {
+  const variant = userRole === 'curator' ? 'mainScreen' : 'volunteerForm';
+
   return (
     <>
-      <NavigationBar variant="mainScreen" />
-      <TabBar userRole="curator" />
+      <NavigationBar variant={variant} />{' '}
+      {/* <NavigationBar variant="mainScreen" /> */}
+      <TabBar userRole={userRole} />
     </>
   );
 };
