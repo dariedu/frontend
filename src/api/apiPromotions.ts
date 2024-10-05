@@ -8,7 +8,7 @@ const promotionsUrl = `${API_URL}/promotions/`;
 
 interface IPromotion {
   picture: any;
-  address: ReactNode;
+  address: string;
   id: number;
   volunteers_count: number;
   category: string;

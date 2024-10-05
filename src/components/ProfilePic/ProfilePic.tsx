@@ -30,8 +30,12 @@ const user1: IUser = {
   volunteer_hour: 21
 }
 
-const ProfilePic: React.FC<IProfilePicProps> = ({user=user1}) => {
-  function handleFileChange(e) {}
+const ProfilePic: React.FC<IProfilePicProps> = ({ user = user1 }) => {
+  
+   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>):void {
+     setFileUploaded(true)
+     setUploadedFileLink(e.target.value)
+  }
 
   const [fileUploaded, setFileUploaded] = useState(false);
   const [uploadedFileLink, setUploadedFileLink] = useState('');
@@ -56,7 +60,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({user=user1}) => {
           ''
         ) : (
           <input
-            onChange={e => handleFileChange(e)}
+           onChange={e => handleFileChange(e)}
             type="file"
             accept="image/*;capture=camera"
             className="absolute opacity-0 h-[142px] w-[140px] rounded-full cursor-pointer"
