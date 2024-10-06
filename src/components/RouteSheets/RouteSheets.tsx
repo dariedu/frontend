@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
+import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from '../RouteSheets/RouteSheetsView';
@@ -9,6 +10,8 @@ import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 interface RouteSheetsProps {
   title: string;
   selected?: string;
+  status: 'Активная' | 'Завершенная';
+  onClose: () => void;
 }
 
 const mockRoutes = [
@@ -33,7 +36,9 @@ const mockRoutes = [
 ];
 
 const RouteSheets: React.FC<RouteSheetsProps> = ({
-  title = 'Маршрутный лист 1',
+  title = 'Маршрутный лист 1 ',
+  status,
+  onClose,
 }) => {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
@@ -65,6 +70,14 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
   return (
     <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col">
+      {/* Название доставки и стрелка назад */}
+      <div className="flex items-center mb-4">
+        <button onClick={onClose} className="mr-2">
+          <img src={leftArrowIcon} alt="back" className="w-6 h-6" />
+        </button>
+        <h2 className="font-gerbera-h1 text-lg">{status} доставка</h2>
+      </div>
+
       {/* Header Section */}
       <div className="flex flex-col">
         <div className="flex items-center justify-between w-full mb-4">
