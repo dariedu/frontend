@@ -44,7 +44,7 @@ const MainPageCurator: React.FC = () => {
         points={points}
         onDeliveryClick={openRouteSheets}
       />
-      <Search showSearchInput={false} />
+      <Search showSearchInput={false} showInfoSection={true} />
       {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
       {deliveryStatus === 'Ближайшая' && (
         <div className="">

@@ -33,7 +33,7 @@ const CalendarCurator: React.FC = () => {
 
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
-      <Search />
+      <Search showInfoSection={true} showSearchInput={true} />
       <Calendar showHeader={false} />
       {/* Передаем статус доставки, функцию для открытия RouteSheets и функцию для обновления статуса */}
       <DeliveryType
