@@ -16,6 +16,10 @@ const routerConfig: RouteObject[] = [
     path: '/curator',
     Component: CuratorPage,
   },
+  // {
+  //   path: '/volunteer',
+  //   Component: VolunteerPage,
+  // },
 ];
 
 export default routerConfig;

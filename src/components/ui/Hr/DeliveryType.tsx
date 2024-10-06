@@ -1,71 +1,114 @@
 import React, { useState } from 'react';
+import RouteSheets from '../../RouteSheets/RouteSheets';
+import DeliveryInfo from '../../ui/Hr/DeliveryInfo';
 
-const DeliveryType: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState('Активная');
+interface IDeliveryTypeProps {
+  status: 'Активная' | 'Ближайшая' | 'Завершена';
+  points?: number; // Баллы для состояния Завершена
+}
 
-  const options = ['Активная', 'Ближайшая'];
+const DeliveryType: React.FC<IDeliveryTypeProps> = ({ status, points }) => {
+  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleSelect = (type: string) => {
-    setSelectedType(type);
-    setIsOpen(false);
+  // Обработчик для кнопки открытия RouteSheets
+  const handleDeliveryClick = () => {
+    setIsRouteSheetsOpen(true);
   };
 
   return (
-    <div className="w-[360px] p-4 bg-light-gray-white rounded-[16px]">
-      <div className="flex items-center space-x-2">
-        {/* Selected Type with Green Background */}
+    <div className="w-[360px] mh-[227px] p-4 bg-light-gray-white rounded-[16px]">
+      {/* Основной блок статуса */}
+      <div className="flex items-center justify-between space-x-2">
+        {/* Показ текущего статуса */}
         <div
-          className="btn-S-GreenDefault flex items-center justify-center mr-[183px]"
-          style={{
-            borderRadius: '100px',
-          }}
+          className={`btn-S-GreenDefault flex items-center justify-center ${
+            status === 'Активная' || status === 'Завершена' ? 'mr-[10px]' : ''
+          }`}
+          style={{ borderRadius: '100px' }}
         >
-          {selectedType}
+          {status}
         </div>
 
-        {/* Dropdown Arrow Button */}
-        <button
-          onClick={toggleDropdown}
-          className="flex items-center justify-center focus:outline-none w-8 h-8"
-        >
-          <svg
-            className="w-4 h-4 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {/* Если статус "Активная", отображается кнопка "Доставка" */}
+        {status === 'Активная' && (
+          <button
+            onClick={handleDeliveryClick}
+            className="flex items-center space-x-1 text-light-gray-black focus:outline-none"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
+            <span className="font-gerbera-sub2 text-light-gray-3">
+              Доставка
+            </span>
+            <svg
+              className="w-4 h-4"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        )}
+
+        {/* Если статус "Завершена", отображается кнопка с баллами и стрелка */}
+        {status === 'Завершена' && points && (
+          <div className="flex space-x-2 items-center">
+            {/* Кнопка с баллами */}
+            <div
+              className="btn-S-GreenDefault flex items-center justify-center px-4 py-1"
+              style={{ borderRadius: '100px' }}
+            >
+              {`+${points} балла`}
+            </div>
+            {/* Кнопка со стрелкой */}
+            <button
+              onClick={handleDeliveryClick}
+              className="flex items-center text-light-gray-3 focus:outline-none"
+            >
+              <span className="font-gerbera-sub2">Доставка</span>
+              <svg
+                className="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Dropdown Options */}
-      {isOpen && (
-        <div className="absolute mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-          {options.map(option => (
+      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
+      {status === 'Ближайшая' && (
+        <div className="mt-4">
+          <DeliveryInfo />
+        </div>
+      )}
+
+      {/* Модальное окно для RouteSheets */}
+      {isRouteSheetsOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
+            <RouteSheets title="Маршрутный лист" />
             <button
-              key={option}
-              onClick={() => handleSelect(option)}
-              className={`block w-full text-left px-4 py-2 ${
-                option === selectedType
-                  ? 'btn-S-GreenDefault flex items-center'
-                  : 'font-gerbera-sub2 text-light-gray-black hover:bg-gray-100 rounded-full'
-              }`}
+              onClick={() => setIsRouteSheetsOpen(false)}
+              className="absolute top-2 right-2 w-6 h-6 text-gray-500 focus:outline-none"
             >
-              {option}
+              ✕
             </button>
-          ))}
+          </div>
         </div>
       )}
     </div>

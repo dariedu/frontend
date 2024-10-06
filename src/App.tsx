@@ -213,7 +213,7 @@ const App: React.FC = () => {
       <Search />
       <Calendar headerName="Другие добрые дела" />
       <Notification message="Подтвердите  участие в доставке сегодня" />
-      <DeliveryType />
+      <DeliveryType status="Активная" />
       <DeliveryInfo />
       <ActionsVolunteer
         visibleActions={['Пригласить друга', 'Помочь деньгами']}

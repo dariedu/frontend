@@ -8,7 +8,7 @@ const CalendarCurator: React.FC = () => {
     <div className="flex-col h-[746px] bg-light-gray-1">
       <Search />
       <Calendar showHeader={false} />
-      <DeliveryType />
+      <DeliveryType status="Завершена" points={4} />
     </div>
   );
 };
