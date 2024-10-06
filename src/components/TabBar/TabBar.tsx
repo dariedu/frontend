@@ -24,7 +24,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-[360px] h-[746px]">
+    <div className="relative w-[360px] min-h-[746px]">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}

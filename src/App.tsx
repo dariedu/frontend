@@ -210,10 +210,10 @@ const App: React.FC = () => {
       />
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
-      <Search />
+      <Search showSearchInput={true} />
       <Calendar headerName="Другие добрые дела" />
       <Notification message="Подтвердите  участие в доставке сегодня" />
-      <DeliveryType status="Активная" />
+      <DeliveryType status="Активная" points={5} />
       <DeliveryInfo />
       <ActionsVolunteer
         visibleActions={['Пригласить друга', 'Помочь деньгами']}

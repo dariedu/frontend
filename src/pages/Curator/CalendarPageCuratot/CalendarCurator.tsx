@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Calendar from '../../../components/Calendar/Calendar';
 import Search from '../../../components/Search/Search';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
+import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 
 const CalendarCurator: React.FC = () => {
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
-  >('Активная');
+  >('Ближайшая');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
   // Фиксированное количество баллов для проверки
@@ -31,7 +32,7 @@ const CalendarCurator: React.FC = () => {
   };
 
   return (
-    <div className="flex-col h-[746px] bg-light-gray-1">
+    <div className="flex-col min-h-[746px] bg-light-gray-1">
       <Search />
       <Calendar showHeader={false} />
       {/* Передаем статус доставки, функцию для открытия RouteSheets и функцию для обновления статуса */}
@@ -40,7 +41,12 @@ const CalendarCurator: React.FC = () => {
         points={points}
         onDeliveryClick={openRouteSheets}
       />
-
+      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
+      {deliveryStatus === 'Ближайшая' && (
+        <div className="">
+          <DeliveryInfo />
+        </div>
+      )}
       {/* Условный рендеринг RouteSheets */}
       {isRouteSheetsOpen && (
         <RouteSheets

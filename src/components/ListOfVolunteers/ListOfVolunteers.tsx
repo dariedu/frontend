@@ -10,6 +10,7 @@ interface IVolunteer {
 interface ListOfVolunteersProps {
   onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
   onTakeRoute: () => void;
+  showActions?: boolean; // Добавляем пропс для контроля видимости кнопок
 }
 
 const volunteers: IVolunteer[] = [
@@ -24,6 +25,7 @@ const volunteers: IVolunteer[] = [
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onSelectVolunteer,
   onTakeRoute,
+  showActions = true, // По умолчанию кнопки видны
 }) => {
   const [isClickedLeft, setIsClickedLeft] = React.useState(false);
   const [isClickedRight, setIsClickedRight] = React.useState(false);
@@ -70,24 +72,26 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       ))}
 
       {/* Действия кнопок */}
-      <div className="flex justify-between mt-4">
-        <button
-          className={`btn-M-GreenDefault ${
-            isClickedLeft ? 'btn-M-GreenClicked' : ''
-          }`}
-          onClick={handleClickLeft}
-        >
-          Написать координатору
-        </button>
-        <button
-          className={`btn-M-WhiteDefault ${
-            isClickedRight ? 'btn-M-WhiteClicked' : ''
-          }`}
-          onClick={handleClickRight}
-        >
-          Забрать себе
-        </button>
-      </div>
+      {showActions && (
+        <div className="flex justify-between mt-4">
+          <button
+            className={`btn-M-GreenDefault ${
+              isClickedLeft ? 'btn-M-GreenClicked' : ''
+            }`}
+            onClick={handleClickLeft}
+          >
+            Написать координатору
+          </button>
+          <button
+            className={`btn-M-WhiteDefault ${
+              isClickedRight ? 'btn-M-WhiteClicked' : ''
+            }`}
+            onClick={handleClickRight}
+          >
+            Забрать себе
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -136,6 +136,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         <ListOfVolunteers
           onSelectVolunteer={handleVolunteerSelect}
           onTakeRoute={handleTakeRoute}
+          showActions={true}
         />
       )}
       {/* RouteSheetsView component */}

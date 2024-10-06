@@ -3,7 +3,9 @@ import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
+import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
+import Search from '../../../components/Search/Search';
 
 const MainPageCurator: React.FC = () => {
   // Состояние для статуса доставки
@@ -34,7 +36,7 @@ const MainPageCurator: React.FC = () => {
   };
 
   return (
-    <div className="flex-col bg-light-gray-1  h-[746px]">
+    <div className="flex-col bg-light-gray-1  min-h-[746px]">
       <SliderStories />
       {/* Передаем статус, баллы и функцию открытия RouteSheets */}
       <DeliveryType
@@ -42,7 +44,13 @@ const MainPageCurator: React.FC = () => {
         points={points}
         onDeliveryClick={openRouteSheets}
       />
-
+      <Search showSearchInput={false} />
+      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
+      {deliveryStatus === 'Ближайшая' && (
+        <div className="">
+          <DeliveryInfo />
+        </div>
+      )}
       {/* Условно отображаем компоненты Calendar и SliderCards */}
       {!isRouteSheetsOpen && (
         <>

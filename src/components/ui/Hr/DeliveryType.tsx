@@ -1,5 +1,4 @@
 import React from 'react';
-import DeliveryInfo from '../../ui/Hr/DeliveryInfo';
 import arrowRightIcon from '../../../assets/icons/arrow_right.png';
 
 interface IDeliveryTypeProps {
@@ -73,13 +72,6 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
           </div>
         )}
       </div>
-
-      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
-      {status === 'Ближайшая' && (
-        <div className="mt-4">
-          <DeliveryInfo />
-        </div>
-      )}
     </div>
   );
 };
