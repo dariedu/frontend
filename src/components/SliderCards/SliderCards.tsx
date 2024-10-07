@@ -105,7 +105,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({ showTitle = true }) => {
     <div className="pt-[16px] w-[360px]">
       {/* Заголовок - отображается только если showTitle === true */}
       {showTitle && (
-        <h2 className="font-gerbera-h1 text-light-gray-black text-left">
+        <h2 className="font-gerbera-h1 text-light-gray-black text-left pl-4">
           Другие добрые дела
         </h2>
       )}

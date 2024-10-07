@@ -6,10 +6,11 @@ import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 
 interface ICalendarProps {
-  headerName: string;
+  headerName?: string; // Сделаем headerName опциональным
+  showHeader?: boolean; // Пропс для управления отображением заголовка и фильтра
 }
 
-const Calendar: React.FC<ICalendarProps> = ({ headerName }) => {
+const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -97,28 +98,30 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName }) => {
 
   return (
     <>
-      <div className="p-4 bg-white w-[360px] rounded-lg shadow relative select-none">
+      <div className="p-4 bg-white w-[360px] rounded-[16px] relative select-none">
         {/* Заголовок */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
+        {showHeader && (
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
 
-          {/* Иконка фильтра */}
-          <button
-            className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-            onClick={() => setIsFilterOpen(true)}
-            draggable={false} // Prevent default dragging on button
-          >
-            <img
-              src={filterIcon}
-              alt="filter"
-              className="w-8 h-8"
-              draggable={false}
-            />
-          </button>
-        </div>
+            {/* Иконка фильтра */}
+            <button
+              className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+              onClick={() => setIsFilterOpen(true)}
+              draggable={false} // Prevent default dragging on button
+            >
+              <img
+                src={filterIcon}
+                alt="filter"
+                className="w-8 h-8"
+                draggable={false}
+              />
+            </button>
+          </div>
+        )}
 
         {/* Вертикальный месяц */}
-        <div className="absolute left-0 top-14 flex items-center">
+        <div className="absolute left-0 flex items-center">
           <div className="flex items-center justify-between">
             <span className="font-gerbera-sub1 text-light-gray-4 w-[35px] transform rotate-[-90deg] flex items-center justify-center">
               {format(selectedDate, 'LLLL', { locale: ru })}

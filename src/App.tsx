@@ -31,13 +31,12 @@ import SliderStories from './components/SliderStories/SliderStories.tsx';
 //import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 ///import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
-
 import CuratorPage from './pages/Curator/CuratorPage.tsx';
-import MainPage from './pages/Curator/MainPageCurator.tsx';
+import MainPage from './pages/Curator/MainPageCurator/MainPageCurator.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
 // import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
-import CancelReason from './components/CancelReason/CancelReason.tsx'
+import CancelReason from './components/CancelReason/CancelReason.tsx';
 
 declare global {
   interface Window {
@@ -116,7 +115,7 @@ const App: React.FC = () => {
         onCommentClick={handleCommentClick}
         onSubmitClick={handleSubmitClick}
       />
-    
+
       <div className="p-4">
         {/* Три кнопки для открытия соответствующих модальных окон */}
         <div className="space-y-4">
@@ -211,10 +210,10 @@ const App: React.FC = () => {
       />
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
-      <Search />
+      <Search showSearchInput={true} />
       <Calendar headerName="Другие добрые дела" />
       <Notification message="Подтвердите  участие в доставке сегодня" />
-      <DeliveryType />
+      <DeliveryType status="Активная" points={5} />
       <DeliveryInfo />
       <ActionsVolunteer
         visibleActions={['Пригласить друга', 'Помочь деньгами']}
@@ -261,11 +260,8 @@ const App: React.FC = () => {
       <NearestDelivery /> */}
 
       <CuratorPage />
-
-  
     </>
   );
 };
 
 export default App;
-

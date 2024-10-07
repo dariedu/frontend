@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
+import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from '../RouteSheets/RouteSheetsView';
@@ -9,6 +10,9 @@ import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 interface RouteSheetsProps {
   title: string;
   selected?: string;
+  status: 'Активная' | 'Завершена';
+  onClose: () => void;
+  onStatusChange: (newStatus: 'Активная' | 'Завершена') => void;
 }
 
 const mockRoutes = [
@@ -33,15 +37,23 @@ const mockRoutes = [
 ];
 
 const RouteSheets: React.FC<RouteSheetsProps> = ({
-  title = 'Маршрутный лист 1',
+  title = 'Маршрутный лист 1 ',
+  status,
+  onClose,
+  onStatusChange,
 }) => {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
+
   const [selectedVolunteer, setSelectedVolunteer] = useState({
     name: 'Не выбран',
     avatar: avatarIcon, // Default avatar
   });
+
+  // Проверка, выбран ли волонтёр
+  const isVolunteerSelected =
+    selectedVolunteer.name !== 'Не выбран' &&
+    selectedVolunteer.avatar !== avatarIcon;
 
   // Function to select a volunteer
   const handleVolunteerSelect = (
@@ -60,11 +72,19 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
   // Function to mark the route as completed
   const handleComplete = () => {
-    setIsCompleted(true);
+    onStatusChange('Завершена');
   };
 
   return (
     <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col">
+      {/* Название доставки и стрелка назад */}
+      <div className="flex items-center mb-4">
+        <button onClick={onClose} className="mr-2">
+          <img src={leftArrowIcon} alt="back" className="w-6 h-6" />
+        </button>
+        <h2 className="font-gerbera-h1 text-lg">{status} доставка</h2>
+      </div>
+
       {/* Header Section */}
       <div className="flex flex-col">
         <div className="flex items-center justify-between w-full mb-4">
@@ -94,19 +114,21 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
               {selectedVolunteer.name}
             </span>
           </div>
-          {/* Menu Icon or "Завершен" text */}
-          {isCompleted ? (
-            <span className="font-gerbera-sub2 text-light-gray-white flex items-center justify-center ml-4 bg-light-gray-3 rounded-[16px] w-[112px] h-[28px]">
-              Завершен
-            </span>
-          ) : (
-            <img
-              src={menuIcon}
-              alt="menu"
-              className="w-[36px] h-[35px] cursor-pointer"
-              onClick={() => {}}
-            />
-          )}
+          {/* Menu Icon or "Завершена" text */}
+          {isVolunteerSelected ? (
+            status === 'Завершена' ? (
+              <span className="font-gerbera-sub2 text-light-gray-white flex items-center justify-center ml-4 bg-light-gray-3 rounded-[16px] w-[112px] h-[28px]">
+                Завершена
+              </span>
+            ) : (
+              <img
+                src={menuIcon}
+                alt="menu"
+                className="w-[36px] h-[35px] cursor-pointer"
+                onClick={() => {}}
+              />
+            )
+          ) : null}
         </div>
       </div>
       {/* List of Volunteers */}
@@ -114,6 +136,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         <ListOfVolunteers
           onSelectVolunteer={handleVolunteerSelect}
           onTakeRoute={handleTakeRoute}
+          showActions={true}
         />
       )}
       {/* RouteSheetsView component */}
@@ -121,7 +144,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         <RouteSheetsView
           routes={mockRoutes}
           onComplete={handleComplete}
-          isCompleted={isCompleted}
+          isCompleted={status === 'Завершена'}
         />
       )}
     </div>

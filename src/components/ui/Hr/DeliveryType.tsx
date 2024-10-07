@@ -1,73 +1,77 @@
-import React, { useState } from 'react';
+import React from 'react';
+import arrowRightIcon from '../../../assets/icons/arrow_right.png';
 
-const DeliveryType: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState('Активная');
+interface IDeliveryTypeProps {
+  status: 'Активная' | 'Ближайшая' | 'Завершена';
+  points?: number; // Баллы для состояния Завершена
+  onDeliveryClick: () => void; // Функция для открытия RouteSheets
+}
 
-  const options = ['Активная', 'Ближайшая'];
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleSelect = (type: string) => {
-    setSelectedType(type);
-    setIsOpen(false);
-  };
-
+const DeliveryType: React.FC<IDeliveryTypeProps> = ({
+  status,
+  points,
+  onDeliveryClick,
+}) => {
   return (
-    <div className="w-[360px] p-4">
-      <div className="flex items-center space-x-2">
-        {/* Selected Type with Green Background */}
+    <div className="w-[360px] mh-[227px] p-4 bg-light-gray-white rounded-[16px]">
+      {/* Основной блок статуса */}
+      <div className="flex items-center justify-between space-x-2">
+        {/* Показ текущего статуса */}
         <div
-          className="btn-S-GreenDefault flex items-center justify-center mr-[183px]"
-          style={{
-            borderRadius: '100px',
-          }}
+          className={`flex items-center justify-center ${
+            status === 'Завершена'
+              ? 'btn-S-GreenInactive'
+              : 'btn-S-GreenDefault'
+          } ${status === 'Активная' || status === 'Завершена' ? 'mr-[10px]' : ''}`}
+          style={{ borderRadius: '100px' }}
         >
-          {selectedType}
+          {status}
         </div>
 
-        {/* Dropdown Arrow Button */}
-        <button
-          onClick={toggleDropdown}
-          className="flex items-center justify-center focus:outline-none w-8 h-8"
-        >
-          <svg
-            className="w-4 h-4 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {/* Если статус "Активная", отображается кнопка "Доставка" */}
+        {status === 'Активная' && (
+          <button
+            onClick={onDeliveryClick}
+            className="flex items-center space-x-1 text-light-gray-black focus:outline-none"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
+            <span className="font-gerbera-sub2 text-light-gray-3">
+              Доставка
+            </span>
+            <img
+              src={arrowRightIcon}
+              alt="arrowRightIcon"
+              className="w-4 h-4"
             />
-          </svg>
-        </button>
-      </div>
+          </button>
+        )}
 
-      {/* Dropdown Options */}
-      {isOpen && (
-        <div className="absolute mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-          {options.map(option => (
-            <button
-              key={option}
-              onClick={() => handleSelect(option)}
-              className={`block w-full text-left px-4 py-2 ${
-                option === selectedType
-                  ? 'btn-S-GreenDefault flex items-center'
-                  : 'font-gerbera-sub2 text-light-gray-black hover:bg-gray-100 rounded-full'
-              }`}
+        {/* Если статус "Завершена", отображается кнопка с баллами и стрелка */}
+        {status === 'Завершена' && points && (
+          <div className="flex space-x-2 items-center">
+            {/* Кнопка с баллами */}
+            <div
+              className="bg-light-brand-green font-gerbera-sub2 text-light-gray-white flex items-center justify-center px-4 py-1"
+              style={{ borderRadius: '100px' }}
             >
-              {option}
+              {`+${points} балла`}
+            </div>
+            {/* Кнопка со стрелкой */}
+            <button
+              onClick={onDeliveryClick}
+              className="flex items-center text-light-gray-black focus:outline-none"
+            >
+              <span className="font-gerbera-sub2 text-light-gray-3">
+                Доставка
+              </span>
+              <img
+                src={arrowRightIcon}
+                alt="arrowRightIcon"
+                className="w-4 h-4"
+              />
             </button>
-          ))}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
