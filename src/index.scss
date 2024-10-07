@@ -27,9 +27,12 @@
   }
 }
 
+
 @layer components {
-  ///////////////////// Big-size btn
-  ////ждем когда добавят цвет неактивной кнопки!!!!!
+   #root {
+    @apply m-0 p-0 bg-light-gray-1
+  }
+   ///////////////////// Big-size btn
   .btn-B-GreenDefault {
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-brand-green text-light-gray-white;
   }
@@ -40,13 +43,13 @@
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white;
   }
   .btn-B-WhiteDefault {
-    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-brand-green;
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-brand-green;
   }
   .btn-B-GrayDefault {
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-gray-8-text;
   }
   .btn-B-WhiteClicked {
-    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-white text-light-gray-8-text;
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-gray-8-text;
   }
   ///////Medium-size btn
   .btn-M-GreenDefault {

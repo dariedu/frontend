@@ -41,7 +41,7 @@ interface IDelivery {
 
 export const delivery1: IDelivery = {
   id: 1,
-  date: '2024-10-17T12:00:00Z',
+  date: '2024-10-07T16:00:00Z',
   curator: {
     id: 9,
     tg_id: 333,
@@ -75,23 +75,36 @@ export const delivery1: IDelivery = {
 };
 
 interface INearestDeliveryProps {
-  delivery: IDelivery;
-  volunteer: boolean;
-  deliveryFilter: TDeliveryFilter;
-  booked: boolean;
+  delivery?: IDelivery;
+  volunteer?: boolean;
+  deliveryFilter?: TDeliveryFilter;
+  booked?: boolean;
 }
 
-type TDeliveryFilter = "nearest" | "active";
+type TDeliveryFilter = 'nearest' | 'active' | 'completed';
+
+const NearestDelivery: React.FC<INearestDeliveryProps> = ({
+  delivery = delivery1,
+  volunteer = true,
+  deliveryFilter = 'nearest',
+  //booked = false,
+}) => {
+  const deliveryDate = new Date(delivery.date);
+  const currentDate = new Date();
+
+  const [fullView, setFullView] = useState(false);
+
+  const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;    
 
 
-const NearestDelivery: React.FC<INearestDeliveryProps> = ({delivery=delivery1, volunteer=true, deliveryFilter='nearest', booked=false}) => {
-let deliveryDate = new Date(delivery.date)
-  let curatorTelegramNik = delivery.curator.tg_username.includes("@") ? delivery.curator.tg_username.slice(1) : delivery.curator.tg_username;
 
+  let curatorTelegramNik = delivery.curator.tg_username.includes('@')
+    ? delivery.curator.tg_username.slice(1)
+    : delivery.curator.tg_username;
 
   return (
     <>
-      <div className="w-[362px] py-8 px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg">
+      <div className="w-[362px] py-8 px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white">
         <div className="flex justify-between w-full">
           {deliveryFilter == 'nearest' ? (
             <button
@@ -112,9 +125,29 @@ let deliveryDate = new Date(delivery.date)
               Активная
             </button>
           )}
+
           <div className="flex items-center">
-            <p className="font-gerbera-sub2 text-light-gray-3 ">Доставка </p>
-            <img src="../src/assets/icons/arrow_right.png" />
+            <p
+              className="font-gerbera-sub2 text-light-gray-3 cursor-pointer"
+              onClick={() => {
+                fullView == true ? setFullView(false) : setFullView(true);
+              }}
+            >
+              Доставка{' '}
+            </p>
+            {deliveryFilter == 'nearest' ? (
+              <img
+                src="../src/assets/icons/arrow_down.png"
+                className={`${!fullView ? 'rotate-180' : ''} ml-2 cursor-pointer`}
+                onClick={() => {
+                  fullView == true ? setFullView(false) : setFullView(true);
+                }}
+              />
+            ) : deliveryFilter == 'active' ? (
+              <img src="../src/assets/icons/arrow_right.png" />
+            ) : (
+              ''
+            )}
           </div>
         </div>
         {/* /////////////////////// */}
@@ -176,57 +209,75 @@ let deliveryDate = new Date(delivery.date)
         )}
 
         {volunteer ? (
-          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
-            <div className="flex">
-              <img
-                className="h-[32px] w-[32px] rounded-full"
-                src={delivery.curator.avatar}
-              />
-              <div className="felx flex-col justify-center items-start ml-4">
-                <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
-                  {delivery.curator.name}
-                </h1>
-                <p className="font-gerbera-sub2 text-light-gray-2 text-start">
-                  Куратор
-                </p>
+          fullView ? (
+            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+              <div className="flex">
+                <img
+                  className="h-[32px] w-[32px] rounded-full"
+                  src={delivery.curator.avatar}
+                />
+                <div className="felx flex-col justify-center items-start ml-4">
+                  <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+                    {delivery.curator.name}
+                  </h1>
+                  <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+                    Куратор
+                  </p>
+                </div>
               </div>
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+                <img
+                  src="../src/assets/icons/small_sms.svg"
+                  className="w-[36px] h-[35px]"
+                />
+              </a>
             </div>
-            <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-              <img
-                src="../src/assets/icons/small_sms.svg"
-                className="w-[36px] h-[35px]"
-              />
-            </a>
-          </div>
+          ) : (
+            ''
+          )
         ) : (
           ''
         )}
-        <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col items-start justify-center px-4">
+        {/* <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col items-start justify-center px-4">
           <h1 className="font-gerbera-h3 text-light-gray-8-text">
             Пункты маршрута
           </h1>
           <p className="font-gerbera-sub1 text-light-gray-5 mt-[6px]">
             Пункт выдачи откуда забирать{' '}
           </p>
-        </div>
-        {booked ? (
-          <button
-            className="btn-B-GrayDefault mt-[20px]"
-            onClick={e => {
-              e.preventDefault();
-            }}
-          >
-            Отказаться
-          </button>
+        </div> */}
+        {fullView ? (
+          lessThenTwoHours ? (
+            <div className='w-[329px] flex justify-between'>
+              <button
+                className="btn-M-GreenDefault  mt-[20px]"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+              >
+                Подтвердить
+              </button>
+              <button
+                className="btn-M-WhiteDefault  mt-[20px]"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+              >
+                Отказаться
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn-B-GrayDefault  mt-[20px]"
+              onClick={e => {
+                e.preventDefault();
+              }}
+            >
+              Отказаться
+            </button>
+          )
         ) : (
-          <button
-            className="btn-B-GreenDefault mt-[20px]"
-            onClick={e => {
-              e.preventDefault();
-            }}
-          >
-            Записаться
-          </button>
+          ''
         )}
 
         {/* /////////////////////// */}

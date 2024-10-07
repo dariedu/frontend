@@ -1,9 +1,9 @@
 import * as Form from '@radix-ui/react-form';
-import { Selfie } from '../Selfie/Selfie.tsx';
+import { Selfie } from './../../components/Selfie/Selfie.tsx';
 import './index.css';
-import { Modal } from '../ui/Modal/Modal';
+import { Modal } from './../../components/ui/Modal/Modal.tsx';
 import { useState} from 'react';
-import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
+import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
 import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
 
@@ -17,7 +17,7 @@ async function onFormSubmit2(user: IRegister) {
   console.log(response)
 }
 
-function RegistrationForm() {
+function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
   const [uploadedPictureLink, setUploadedPictureLink] = useState(''); /// ссылка на загруженое фото
@@ -130,7 +130,7 @@ function RegistrationForm() {
 
   return (
     <Form.Root >
-      <div className="flex flex-col justify-around items-center w-fit h-fit">
+      <div className="flex flex-col justify-around items-center w-fit h-fit bg-light-gray-white">
         <div className="flex flex-col justify-around items-center w-fit h-[539px]">
           <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
           <div className="w-[360px] h-min-[364px] flex flex-col justify-between">
@@ -334,4 +334,4 @@ function RegistrationForm() {
   );
 }
 
-export default RegistrationForm;
+export default RegistrationPage;
