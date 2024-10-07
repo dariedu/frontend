@@ -16,7 +16,10 @@ import {
   isSameMonth,
   addDays,
 } from 'date-fns';
-import calendar from '../../assets/icons/tap_calendarActive.svg';
+import calendar from '../../assets/icons/filter.svg';
+import arrow_left from '../../assets/icons/arrow_left.png';
+import arrow_right from '../../assets/icons/arrow_right.png';
+import arrow_down_s from '../../assets/icons/arrow_down_s.png';
 import { ru } from 'date-fns/locale';
 
 interface IInputDateProps {
@@ -120,7 +123,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-[360px]">
       {/* Header with Input and Calendar Icon */}
       <div className="relative mt-[56px]">
         <input
@@ -149,7 +152,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             onClick={handlePrevMonth}
             className="p-2 bg-gray-100 rounded-full"
           >
-            <ChevronLeftIcon />
+            <img src={arrow_left} alt="стрелка влево" />
           </button>
           <div className="relative">
             <button
@@ -157,7 +160,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
               onClick={() => setIsMonthOpen(!isMonthOpen)}
             >
               <span>{format(currentMonth, 'LLLL', { locale: ru })}</span>
-              <ChevronRightIcon className="w-4 h-4" />
+              <img src={arrow_down_s} alt="стрелка вниз" />
             </button>
 
             {isMonthOpen && (
@@ -180,7 +183,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             onClick={handleNextMonth}
             className="p-2 bg-gray-100 rounded-full"
           >
-            <ChevronRightIcon />
+            <img src={arrow_right} alt="стрелка вправо" />
           </button>
         </div>
         {/* Year Navigation */}
@@ -189,7 +192,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             onClick={handlePrevYear}
             className="p-2 bg-gray-100 rounded-full"
           >
-            <ChevronLeftIcon />
+            <img src={arrow_left} alt="стрелка влево" />
           </button>
           <div className="relative">
             <button
@@ -197,7 +200,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
               onClick={() => setIsYearOpen(!isYearOpen)}
             >
               <span>{format(currentMonth, 'yyyy')}</span>
-              <ChevronRightIcon className="w-4 h-4" />
+              <img src={arrow_down_s} alt="стрелка вниз" />
             </button>
 
             {isYearOpen && (
@@ -220,7 +223,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             onClick={handleNextYear}
             className="p-2 bg-gray-100 rounded-full"
           >
-            <ChevronRightIcon />
+            <img src={arrow_right} alt="стрелка вправо" />
           </button>
         </div>
       </div>
@@ -240,8 +243,8 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
       <div className="grid grid-cols-7 gap-y-1">{renderCalendarDays()}</div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between mt-4">
-        <button className="text-gray-500" onClick={onClose}>
+      <div className="flex justify-end mt-4 font-gerbera-h3">
+        <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
           Закрыть
         </button>
         <button className="text-light-brand-green" onClick={onClose}>
