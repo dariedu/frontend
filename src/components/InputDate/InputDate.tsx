@@ -1,7 +1,4 @@
-// Требует доработки
-
 import React, { useState } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import {
   format,
   addMonths,
@@ -9,21 +6,24 @@ import {
   addYears,
   subYears,
   startOfMonth,
-  // endOfMonth,
   startOfWeek,
-  // endOfWeek,
   isSameDay,
   isSameMonth,
   addDays,
+  isBefore,
+  isAfter,
+  isWithinInterval,
+  startOfDay,
 } from 'date-fns';
-import calendar from '../../assets/icons/filter.svg';
-import arrow_left from '../../assets/icons/arrow_left.png';
-import arrow_right from '../../assets/icons/arrow_right.png';
-import arrow_down_s from '../../assets/icons/arrow_down_s.png';
+import calendarIcon from '../../assets/icons/filter.svg';
+import arrowLeftIcon from '../../assets/icons/arrow_left.png';
+import arrowRightIcon from '../../assets/icons/arrow_right.png';
+import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
 import { ru } from 'date-fns/locale';
 
 interface IInputDateProps {
   onClose: () => void;
+  selectionMode?: 'single' | 'range'; // New prop for selection mode
 }
 
 const months = [
@@ -43,80 +43,131 @@ const months = [
 
 const years = Array.from({ length: 61 }, (_, i) => 2030 - i);
 
-const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDates, setSelectedDates] = useState<Date[]>([new Date()]);
+const InputDate: React.FC<IInputDateProps> = ({
+  onClose,
+  selectionMode = 'single',
+}) => {
+  const [currentMonth, setCurrentMonth] = useState(startOfDay(new Date()));
+  const [selectedDates, setSelectedDates] = useState<Date[]>([
+    startOfDay(new Date()),
+  ]);
+  const [range, setRange] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
+  });
 
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
 
   const handlePrevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
+    setCurrentMonth(startOfMonth(subMonths(currentMonth, 1)));
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
+    setCurrentMonth(startOfMonth(addMonths(currentMonth, 1)));
   };
 
   const handlePrevYear = () => {
-    setCurrentMonth(subYears(currentMonth, 1));
+    setCurrentMonth(startOfMonth(subYears(currentMonth, 1)));
   };
 
   const handleNextYear = () => {
-    setCurrentMonth(addYears(currentMonth, 1));
+    setCurrentMonth(startOfMonth(addYears(currentMonth, 1)));
   };
 
   const handleMonthSelect = (month: string) => {
     const monthIndex = months.indexOf(month);
     const newDate = new Date(currentMonth);
     newDate.setMonth(monthIndex);
-    setCurrentMonth(newDate);
+    setCurrentMonth(startOfMonth(newDate));
     setIsMonthOpen(false);
   };
 
   const handleYearSelect = (year: string) => {
     const newDate = new Date(currentMonth);
     newDate.setFullYear(Number(year));
-    setCurrentMonth(newDate);
+    setCurrentMonth(startOfMonth(newDate));
     setIsYearOpen(false);
   };
 
+  // Handle click on a day in the calendar based on the selectionMode
   const handleDayClick = (day: Date) => {
-    if (selectedDates.find(selectedDay => isSameDay(selectedDay, day))) {
-      setSelectedDates(
-        selectedDates.filter(selectedDay => !isSameDay(selectedDay, day)),
-      );
-    } else {
-      setSelectedDates([...selectedDates, day]);
+    const normalizedDay = startOfDay(day);
+    if (selectionMode === 'single') {
+      setSelectedDates([normalizedDay]);
+    } else if (selectionMode === 'range') {
+      if (!range.start || (range.start && range.end)) {
+        setRange({ start: normalizedDay, end: null });
+      } else {
+        setRange({ ...range, end: normalizedDay });
+      }
     }
+  };
+
+  // Check if a day is within the selected range (including start and end)
+  const isInRange = (day: Date) => {
+    const normalizedDay = startOfDay(day);
+    if (range.start && range.end) {
+      const { start, end } =
+        range.start <= range.end
+          ? { start: range.start, end: range.end }
+          : { start: range.end, end: range.start };
+      return isWithinInterval(normalizedDay, { start, end });
+    }
+    return false;
   };
 
   const renderCalendarDays = () => {
     const monthStart = startOfMonth(currentMonth);
-    // const monthEnd = endOfMonth(currentMonth);
     const startDate = startOfWeek(monthStart, { locale: ru });
-    // const endDate = endOfWeek(monthEnd, { locale: ru });
 
     const days: JSX.Element[] = [];
-    let day = startDate;
 
-    while (days.length < 42) {
+    for (let i = 0; i < 42; i++) {
+      const day = startOfDay(addDays(startDate, i));
+
+      const isStart = range.start && isSameDay(day, range.start);
+      const isEnd = range.end && isSameDay(day, range.end);
+      const isWithinSelectedRange = isInRange(day);
+
+      const isSelectedSingle =
+        selectionMode === 'single' &&
+        selectedDates.find(selectedDay => isSameDay(selectedDay, day));
+
       days.push(
         <div
           key={day.toString()}
-          className={`w-8 h-8 flex justify-center items-center rounded-full cursor-pointer 
-                ${isSameMonth(day, currentMonth) ? 'text-black' : 'text-gray-400'}
-                ${
-                  selectedDates.find(selectedDay => isSameDay(selectedDay, day))
-                    ? 'bg-light-brand-green text-white'
-                    : ''
-                }`}
+          className={`w-8 h-8 flex justify-center items-center rounded-full cursor-pointer
+            ${isSameMonth(day, currentMonth) ? 'text-black' : 'text-gray-400'}
+            ${
+              selectionMode === 'single' && isSelectedSingle
+                ? 'bg-light-brand-green text-white'
+                : ''
+            }
+            ${
+              selectionMode === 'range' && isStart
+                ? 'bg-white text-black border border-gray-300'
+                : ''
+            }
+            ${
+              selectionMode === 'range' && isEnd && !isStart
+                ? 'bg-white text-black border border-gray-300'
+                : ''
+            }
+            ${
+              selectionMode === 'range' &&
+              isWithinSelectedRange &&
+              !isStart &&
+              !isEnd
+                ? 'bg-gray-200'
+                : ''
+            }
+            `}
           onClick={() => handleDayClick(day)}
         >
           {format(day, 'd')}
         </div>,
       );
-      day = addDays(day, 1);
     }
 
     return days;
@@ -129,17 +180,26 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
         <input
           type="text"
           value={
-            selectedDates.length ? format(selectedDates[0], 'MM/dd/yyyy') : ''
+            selectionMode === 'single'
+              ? selectedDates.length
+                ? format(selectedDates[0], 'MM/dd/yyyy')
+                : format(startOfDay(new Date()), 'MM/dd/yyyy')
+              : range.start && range.end
+                ? `${format(range.start, 'MM/dd/yyyy')} - ${format(range.end, 'MM/dd/yyyy')}`
+                : range.start
+                  ? format(range.start, 'MM/dd/yyyy')
+                  : format(startOfDay(new Date()), 'MM/dd/yyyy')
           }
-          placeholder="ММ/ДД/ГГГГ"
-          className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] "
+          placeholder={format(startOfDay(new Date()), 'MM/dd/yyyy')}
+          className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] px-4"
           readOnly
         />
         {/* Кнопка внутри инпута */}
         <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
-          <img src={calendar} alt="calendar" className="w-6 h-6" />
+          <img src={calendarIcon} alt="calendar" className="w-6 h-6" />
         </button>
       </div>
+
       <span className="w-[328px] text-left font-gerbera-sub1 text-light-gray-5 pb-[12px]">
         ММ/ДД/ГГГГ
       </span>
@@ -149,15 +209,18 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
         {/* Month Navigation */}
         <div className="flex items-center space-x-2">
           <button onClick={handlePrevMonth} className="">
-            <img src={arrow_left} alt="стрелка влево" />
+            <img src={arrowLeftIcon} alt="стрелка влево" />
           </button>
           <div className="relative">
             <button
               className="flex items-center space-x-1"
-              onClick={() => setIsMonthOpen(!isMonthOpen)}
+              onClick={() => {
+                setIsMonthOpen(!isMonthOpen);
+                setIsYearOpen(false);
+              }}
             >
               <span>{format(currentMonth, 'LLLL', { locale: ru })}</span>
-              <img src={arrow_down_s} alt="стрелка вниз" />
+              <img src={arrowDownIcon} alt="стрелка вниз" />
             </button>
 
             {isMonthOpen && (
@@ -177,21 +240,24 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             )}
           </div>
           <button onClick={handleNextMonth} className="">
-            <img src={arrow_right} alt="стрелка вправо" />
+            <img src={arrowRightIcon} alt="стрелка вправо" />
           </button>
         </div>
         {/* Year Navigation */}
         <div className="flex items-center space-x-2">
           <button onClick={handlePrevYear} className="">
-            <img src={arrow_left} alt="стрелка влево" />
+            <img src={arrowLeftIcon} alt="стрелка влево" />
           </button>
           <div className="relative">
             <button
               className="flex items-center space-x-1"
-              onClick={() => setIsYearOpen(!isYearOpen)}
+              onClick={() => {
+                setIsYearOpen(!isYearOpen);
+                setIsMonthOpen(false);
+              }}
             >
               <span>{format(currentMonth, 'yyyy')}</span>
-              <img src={arrow_down_s} alt="стрелка вниз" />
+              <img src={arrowDownIcon} alt="стрелка вниз" />
             </button>
 
             {isYearOpen && (
@@ -211,7 +277,7 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
             )}
           </div>
           <button onClick={handleNextYear} className="">
-            <img src={arrow_right} alt="стрелка вправо" />
+            <img src={arrowRightIcon} alt="стрелка вправо" />
           </button>
         </div>
       </div>

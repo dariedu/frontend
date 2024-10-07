@@ -186,7 +186,10 @@ const Calendar: React.FC<ICalendarProps> = ({
       {isDatePickerOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white rounded-t-[16px] w-[360px] shadow-lg">
-            <InputDate onClose={() => setIsDatePickerOpen(false)} />
+            <InputDate
+              onClose={() => setIsDatePickerOpen(false)}
+              selectionMode="range"
+            />
           </div>
         </div>
       )}
