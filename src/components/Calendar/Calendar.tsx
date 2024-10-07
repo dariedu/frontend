@@ -3,7 +3,6 @@ import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import FilterCurator from '../FilterCurator/FilterCurator';
-import InputDate from '../InputDate/InputDate';
 
 interface ICalendarProps {
   headerName?: string; // Сделаем headerName опциональным
@@ -152,15 +151,6 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
               onClose={() => setIsFilterOpen(false)}
               onOpenDatePicker={handleOpenDatePicker}
             />
-          </div>
-        </div>
-      )}
-
-      {/* Отображение компонента InputDate */}
-      {isDatePickerOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
-            <InputDate onClose={() => setIsDatePickerOpen(false)} />
           </div>
         </div>
       )}

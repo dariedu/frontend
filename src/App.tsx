@@ -37,6 +37,7 @@ import MainPage from './pages/Curator/MainPageCurator/MainPageCurator.tsx';
 // import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
 import CancelReason from './components/CancelReason/CancelReason.tsx';
+import InputDate from './components/InputDate/InputDate.tsx';
 
 declare global {
   interface Window {
@@ -210,7 +211,7 @@ const App: React.FC = () => {
       />
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
-      <Search showSearchInput={true} />
+      <Search showSearchInput={true} showInfoSection={true} />
       <Calendar headerName="Другие добрые дела" />
       <Notification message="Подтвердите  участие в доставке сегодня" />
       <DeliveryType status="Активная" points={5} />
@@ -251,6 +252,7 @@ const App: React.FC = () => {
       <SliderCardsPromotions />
       <MyPoints />
       <DetailedInfo />
+      <InputDate />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
       <CancelReason />
       {/* <ProfilePic />  */}
