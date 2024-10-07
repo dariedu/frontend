@@ -7,7 +7,7 @@ import History from './components/History/History';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { AddressCard } from './components/AddressCard/AddressCard';
 import { VolunteerData } from './components/ui/VolunteerData/VolunreerData';
-import RegistrationForm from './components/registrationForm/RegistrationForm.tsx';
+//import RegistrationForm from './components/registrationForm/RegistrationForm.tsx';
 import TabBar from './components/TabBar/TabBar.tsx';
 import NextTask from './components/NextTask/NextTask.tsx';
 import NavigationBar from './components/NavigationBar/NavigationBar.tsx';
@@ -106,7 +106,7 @@ const App: React.FC = () => {
       <YMaps>
         <RouteMap />
       </YMaps>
-      <RegistrationForm />
+      {/* <RegistrationForm /> */}
       <AddressCard
         address="Ул. Бобруйская д. 4 кв. 12"
         additionalInfo="3 подъезд 10 этаж кв 143 код #3214"
