@@ -2,14 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
+import arrowDownIcon from '../../assets/icons/arrow_down.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
+import InputDate from '../InputDate/InputDate';
 
 interface ICalendarProps {
-  headerName?: string; // Сделаем headerName опциональным
-  showHeader?: boolean; // Пропс для управления отображением заголовка и фильтра
+  headerName?: string;
+  showHeader?: boolean;
+  showFilterButton?: boolean;
+  showDatePickerButton?: boolean;
 }
 
-const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
+const Calendar: React.FC<ICalendarProps> = ({
+  headerName = 'Календарь',
+  showHeader = true,
+  showFilterButton = true,
+  showDatePickerButton = true,
+}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -18,20 +27,17 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  // Начало недели всегда фиксировано на текущем выбранном дне
   const startOfWeekDate = startOfWeek(new Date(), { locale: ru });
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
   };
 
-  // Обработчик для открытия окна выбора даты
   const handleOpenDatePicker = () => {
     setIsDatePickerOpen(true);
   };
 
   const renderWeekDays = () => {
-    // Массив из 14 дней (2 недели)
     const days = Array.from({ length: 14 }).map((_, index) =>
       addDays(startOfWeekDate, index),
     );
@@ -51,7 +57,7 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
               : 'text-black'
           }`}
           onClick={() => handleDayClick(day)}
-          draggable={false} // Prevent default dragging on button
+          draggable={false}
         >
           {format(day, 'd')}
         </button>
@@ -59,7 +65,6 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
     ));
   };
 
-  // Обработчики для перетаскивания
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartX(e.pageX - (calendarRef.current?.offsetLeft || 0));
@@ -70,7 +75,7 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - (calendarRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 1.5; // Adjust scroll speed as needed
+    const walk = (x - startX) * 1.5;
     if (calendarRef.current) {
       calendarRef.current.scrollLeft = scrollLeft - walk;
     }
@@ -80,7 +85,6 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
     setIsDragging(false);
   };
 
-  // Add global event listeners when dragging
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
@@ -99,23 +103,46 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
     <>
       <div className="p-4 bg-white w-[360px] rounded-[16px] relative select-none">
         {/* Заголовок */}
-        {showHeader && (
+        {(showHeader || showFilterButton || showDatePickerButton) && (
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
+            {showHeader && (
+              <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
+            )}
+            {(showFilterButton || showDatePickerButton) && (
+              <div className="flex space-x-2">
+                {/* Иконка фильтра */}
+                {showFilterButton && (
+                  <button
+                    className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+                    onClick={() => setIsFilterOpen(true)}
+                    draggable={false}
+                  >
+                    <img
+                      src={filterIcon}
+                      alt="filter"
+                      className="w-8 h-8"
+                      draggable={false}
+                    />
+                  </button>
+                )}
 
-            {/* Иконка фильтра */}
-            <button
-              className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-              onClick={() => setIsFilterOpen(true)}
-              draggable={false} // Prevent default dragging on button
-            >
-              <img
-                src={filterIcon}
-                alt="filter"
-                className="w-8 h-8"
-                draggable={false}
-              />
-            </button>
+                {/* Иконка со стрелкой вниз */}
+                {showDatePickerButton && (
+                  <button
+                    className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+                    onClick={handleOpenDatePicker}
+                    draggable={false}
+                  >
+                    <img
+                      src={arrowDownIcon}
+                      alt="arrow down"
+                      className="w-4 h-4"
+                      draggable={false}
+                    />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -151,6 +178,15 @@ const Calendar: React.FC<ICalendarProps> = ({ headerName, showHeader }) => {
               onClose={() => setIsFilterOpen(false)}
               onOpenDatePicker={handleOpenDatePicker}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Отображение компонента InputDate */}
+      {isDatePickerOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white rounded-t-[16px] w-[360px] shadow-lg">
+            <InputDate onClose={() => setIsDatePickerOpen(false)} />
           </div>
         </div>
       )}

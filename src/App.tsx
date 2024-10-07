@@ -212,7 +212,7 @@ const App: React.FC = () => {
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
       <Search showSearchInput={true} showInfoSection={true} />
-      <Calendar headerName="Другие добрые дела" />
+      <Calendar />
       <Notification message="Подтвердите  участие в доставке сегодня" />
       <DeliveryType status="Активная" points={5} />
       <DeliveryInfo />

@@ -123,16 +123,16 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="relative w-[360px]">
+    <div className="relative w-[360px] flex flex-col items-center justify-center">
       {/* Header with Input and Calendar Icon */}
-      <div className="relative mt-[56px]">
+      <div className="relative w-[328px] mt-[56px]">
         <input
           type="text"
           value={
             selectedDates.length ? format(selectedDates[0], 'MM/dd/yyyy') : ''
           }
           placeholder="ММ/ДД/ГГГГ"
-          className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] pl-4 w-full h-[48px] pr-10"
+          className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] "
           readOnly
         />
         {/* Кнопка внутри инпута */}
@@ -140,18 +140,15 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
           <img src={calendar} alt="calendar" className="w-6 h-6" />
         </button>
       </div>
-      <span className="block text-left font-gerbera-sub1 text-light-gray-5 pl-[16px] pb-[12px]">
+      <span className="w-[328px] text-left font-gerbera-sub1 text-light-gray-5 pb-[12px]">
         ММ/ДД/ГГГГ
       </span>
 
       {/* Month and Year Navigation */}
-      <div className="flex justify-between items-center mb-2 relative">
+      <div className="flex justify-between items-center mb-2 relative w-[360px] bg-light-gray-1">
         {/* Month Navigation */}
         <div className="flex items-center space-x-2">
-          <button
-            onClick={handlePrevMonth}
-            className="p-2 bg-gray-100 rounded-full"
-          >
+          <button onClick={handlePrevMonth} className="">
             <img src={arrow_left} alt="стрелка влево" />
           </button>
           <div className="relative">
@@ -179,19 +176,13 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
               </div>
             )}
           </div>
-          <button
-            onClick={handleNextMonth}
-            className="p-2 bg-gray-100 rounded-full"
-          >
+          <button onClick={handleNextMonth} className="">
             <img src={arrow_right} alt="стрелка вправо" />
           </button>
         </div>
         {/* Year Navigation */}
         <div className="flex items-center space-x-2">
-          <button
-            onClick={handlePrevYear}
-            className="p-2 bg-gray-100 rounded-full"
-          >
+          <button onClick={handlePrevYear} className="">
             <img src={arrow_left} alt="стрелка влево" />
           </button>
           <div className="relative">
@@ -219,17 +210,14 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
               </div>
             )}
           </div>
-          <button
-            onClick={handleNextYear}
-            className="p-2 bg-gray-100 rounded-full"
-          >
+          <button onClick={handleNextYear} className="">
             <img src={arrow_right} alt="стрелка вправо" />
           </button>
         </div>
       </div>
 
       {/* Weekdays */}
-      <div className="grid grid-cols-7 text-center mb-2 text-sm text-gray-500">
+      <div className="grid grid-cols-7 text-center mb-2 text-sm text-gray-500 w-[328px]">
         <span>Пн</span>
         <span>Вт</span>
         <span>Ср</span>
@@ -240,10 +228,12 @@ const InputDate: React.FC<IInputDateProps> = ({ onClose }) => {
       </div>
 
       {/* Calendar Days */}
-      <div className="grid grid-cols-7 gap-y-1">{renderCalendarDays()}</div>
+      <div className="grid grid-cols-7 gap-y-1 w-[328px]">
+        {renderCalendarDays()}
+      </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end mt-4 font-gerbera-h3">
+      <div className="flex justify-end mt-4 w-[328px] font-gerbera-h3">
         <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
           Закрыть
         </button>
