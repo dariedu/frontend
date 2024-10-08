@@ -37,7 +37,7 @@ const CancelReason = () => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2
+                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
   placeholder:text-light-gray-3"
                   placeholder="Написать причину"
                   required
@@ -59,7 +59,7 @@ const CancelReason = () => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2
+                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
   placeholder:text-light-gray-3 mb-2 "
                   placeholder="Написать причину"
                   defaultValue={localStorage.getItem('reason2') ?? ''}

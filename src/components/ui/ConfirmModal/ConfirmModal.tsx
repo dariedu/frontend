@@ -6,7 +6,7 @@ interface IConfirmModalProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   onCancel?: () => void;
-  title: string;
+  title: string | JSX.Element;
   description: string;
   confirmText: string;
   cancelText?: string; // Необязательный текст для кнопки отмены
