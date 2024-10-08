@@ -32,12 +32,12 @@ import SliderStories from './components/SliderStories/SliderStories.tsx';
 ///import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
 import CuratorPage from './pages/Curator/CuratorPage.tsx';
-import MainPage from './pages/Curator/MainPageCurator/MainPageCurator.tsx';
 //import { ProfilePic } from './components/ui/UploadPic/UploadPic.tsx';
 // import NearestDelivery from './components/NearestDelivery/NearestDelivery.tsx';
 
 import CancelReason from './components/CancelReason/CancelReason.tsx';
 import InputDate from './components/InputDate/InputDate.tsx';
+import { ProfileUser } from './components/ProfileUser/ProfileUser.tsx';
 
 declare global {
   interface Window {
@@ -262,6 +262,7 @@ const App: React.FC = () => {
       <NearestDelivery /> */}
 
       <CuratorPage />
+      <ProfileUser />
     </>
   );
 };

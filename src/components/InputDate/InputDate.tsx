@@ -174,7 +174,10 @@ const InputDate: React.FC<IInputDateProps> = ({
       }
 
       days.push(
-        <div key={day.toString()} className="relative w-full h-full m-0 p-0">
+        <div
+          key={day.toString()}
+          className="relative m-0 p-0 h-[48px] w-[48px]"
+        >
           {isWithinSelectedRange && (
             <div
               className={`absolute inset-0 bg-light-gray-2 z-0 ${
