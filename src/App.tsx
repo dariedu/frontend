@@ -252,7 +252,7 @@ const App: React.FC = () => {
       <SliderCardsPromotions />
       <MyPoints />
       <DetailedInfo />
-      <InputDate />
+      <InputDate selectionMode="single" />
       <RouteSheets title="Маршрутный лист 1" selected="Не выбран" />
       <CancelReason />
       {/* <ProfilePic />  */}
