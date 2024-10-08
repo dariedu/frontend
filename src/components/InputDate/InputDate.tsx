@@ -10,20 +10,19 @@ import {
   isSameDay,
   isSameMonth,
   addDays,
-  isBefore,
-  isAfter,
   isWithinInterval,
   startOfDay,
 } from 'date-fns';
+import { ru } from 'date-fns/locale';
+
 import calendarIcon from '../../assets/icons/filter.svg';
 import arrowLeftIcon from '../../assets/icons/arrow_left.png';
 import arrowRightIcon from '../../assets/icons/arrow_right.png';
 import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
-import { ru } from 'date-fns/locale';
 
 interface IInputDateProps {
   onClose: () => void;
-  selectionMode?: 'single' | 'range'; // New prop for selection mode
+  selectionMode?: 'single' | 'range';
 }
 
 const months = [
@@ -90,7 +89,6 @@ const InputDate: React.FC<IInputDateProps> = ({
     setIsYearOpen(false);
   };
 
-  // Handle click on a day in the calendar based on the selectionMode
   const handleDayClick = (day: Date) => {
     const normalizedDay = startOfDay(day);
     if (selectionMode === 'single') {
@@ -104,7 +102,6 @@ const InputDate: React.FC<IInputDateProps> = ({
     }
   };
 
-  // Check if a day is within the selected range (including start and end)
   const isInRange = (day: Date) => {
     const normalizedDay = startOfDay(day);
     if (range.start && range.end) {
@@ -134,38 +131,50 @@ const InputDate: React.FC<IInputDateProps> = ({
         selectionMode === 'single' &&
         selectedDates.find(selectedDay => isSameDay(selectedDay, day));
 
+      let dayClass = '';
+
+      if (isSameMonth(day, currentMonth)) {
+        dayClass += ' text-black w-[48px] h-[49px]';
+      } else {
+        dayClass += ' text-light-gray-5';
+      }
+
+      if (selectionMode === 'single' && isSelectedSingle) {
+        dayClass += ' bg-light-brand-green rounded-full text-white';
+      }
+
+      if (selectionMode === 'range') {
+        if (isStart && (!range.end || isSameDay(range.start, range.end))) {
+          // Только начальная дата выбрана или начальная и конечная даты совпадают
+          dayClass +=
+            ' bg-white text-black border border-gray-300 rounded-full';
+        } else if (isStart) {
+          dayClass +=
+            ' bg-white text-black border border-gray-300 rounded-l-full';
+        } else if (isEnd) {
+          dayClass +=
+            ' bg-white text-black border border-gray-300 rounded-r-full';
+        }
+        // Убираем фон для дней внутри диапазона из dayClass
+      }
+
       days.push(
-        <div
-          key={day.toString()}
-          className={`w-8 h-8 flex justify-center items-center rounded-full cursor-pointer
-            ${isSameMonth(day, currentMonth) ? 'text-black' : 'text-gray-400'}
-            ${
-              selectionMode === 'single' && isSelectedSingle
-                ? 'bg-light-brand-green text-white'
-                : ''
-            }
-            ${
-              selectionMode === 'range' && isStart
-                ? 'bg-white text-black border border-gray-300'
-                : ''
-            }
-            ${
-              selectionMode === 'range' && isEnd && !isStart
-                ? 'bg-white text-black border border-gray-300'
-                : ''
-            }
-            ${
-              selectionMode === 'range' &&
-              isWithinSelectedRange &&
-              !isStart &&
-              !isEnd
-                ? 'bg-gray-200'
-                : ''
-            }
-            `}
-          onClick={() => handleDayClick(day)}
-        >
-          {format(day, 'd')}
+        <div key={day.toString()} className="relative w-full h-full m-0 p-0">
+          {/* Фон для выбранного диапазона */}
+          {isWithinSelectedRange && (
+            <div
+              className={`absolute inset-0 bg-light-gray-2 z-0 ${
+                isStart ? 'rounded-l-full' : isEnd ? 'rounded-r-full' : ''
+              }`}
+            ></div>
+          )}
+          {/* День календаря */}
+          <div
+            className={`relative z-10 w-full h-full flex justify-center items-center rounded-full cursor-pointer ${dayClass}`}
+            onClick={() => handleDayClick(day)}
+          >
+            {format(day, 'd')}
+          </div>
         </div>,
       );
     }
@@ -175,7 +184,7 @@ const InputDate: React.FC<IInputDateProps> = ({
 
   return (
     <div className="relative w-[360px] flex flex-col items-center justify-center">
-      {/* Header with Input and Calendar Icon */}
+      {/* Поле ввода с иконкой календаря */}
       <div className="relative w-[328px] mt-[56px]">
         <input
           type="text"
@@ -185,7 +194,10 @@ const InputDate: React.FC<IInputDateProps> = ({
                 ? format(selectedDates[0], 'MM/dd/yyyy')
                 : format(startOfDay(new Date()), 'MM/dd/yyyy')
               : range.start && range.end
-                ? `${format(range.start, 'MM/dd/yyyy')} - ${format(range.end, 'MM/dd/yyyy')}`
+                ? `${format(range.start, 'MM/dd/yyyy')} - ${format(
+                    range.end,
+                    'MM/dd/yyyy',
+                  )}`
                 : range.start
                   ? format(range.start, 'MM/dd/yyyy')
                   : format(startOfDay(new Date()), 'MM/dd/yyyy')
@@ -204,9 +216,9 @@ const InputDate: React.FC<IInputDateProps> = ({
         ММ/ДД/ГГГГ
       </span>
 
-      {/* Month and Year Navigation */}
+      {/* Навигация по месяцу и году */}
       <div className="flex justify-between items-center mb-2 relative w-[360px] bg-light-gray-1">
-        {/* Month Navigation */}
+        {/* Навигация по месяцу */}
         <div className="flex items-center space-x-2">
           <button onClick={handlePrevMonth} className="">
             <img src={arrowLeftIcon} alt="стрелка влево" />
@@ -243,7 +255,7 @@ const InputDate: React.FC<IInputDateProps> = ({
             <img src={arrowRightIcon} alt="стрелка вправо" />
           </button>
         </div>
-        {/* Year Navigation */}
+        {/* Навигация по году */}
         <div className="flex items-center space-x-2">
           <button onClick={handlePrevYear} className="">
             <img src={arrowLeftIcon} alt="стрелка влево" />
@@ -282,7 +294,7 @@ const InputDate: React.FC<IInputDateProps> = ({
         </div>
       </div>
 
-      {/* Weekdays */}
+      {/* Дни недели */}
       <div className="grid grid-cols-7 text-center mb-2 text-sm text-gray-500 w-[328px]">
         <span>Пн</span>
         <span>Вт</span>
@@ -293,12 +305,12 @@ const InputDate: React.FC<IInputDateProps> = ({
         <span>Вс</span>
       </div>
 
-      {/* Calendar Days */}
-      <div className="grid grid-cols-7 gap-y-1 w-[328px]">
+      {/* Дни календаря */}
+      <div className="grid grid-cols-7 gap-0 w-[328px]">
         {renderCalendarDays()}
       </div>
 
-      {/* Action Buttons */}
+      {/* Кнопки действий */}
       <div className="flex justify-end mt-4 w-[328px] font-gerbera-h3">
         <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
           Закрыть
