@@ -54,7 +54,12 @@ const MainPageCurator: React.FC = () => {
       {/* Условно отображаем компоненты Calendar и SliderCards */}
       {!isRouteSheetsOpen && (
         <>
-          <Calendar headerName="Расписание доставок" showHeader={true} />
+          <Calendar
+            headerName="Расписание доставок"
+            showHeader={true}
+            showFilterButton={false}
+            showDatePickerButton={false}
+          />
           <SliderCards showTitle={false} />
           <SliderCards showTitle={true} />
         </>

@@ -3,9 +3,10 @@ import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import MainPageCurator from '../../pages/Curator/MainPageCurator/MainPageCurator';
 import CalendarCurator from '../../pages/Curator/CalendarPageCuratot/CalendarCurator';
+import MainPageVolunteer from '../../pages/Volunteer/MainPageVolunteer';
+import CalendarVolunteer from '../../pages/Volunteer/CalendarVolunteer';
 import './index.css';
 
-// Пример импортов для иконок
 import HomeIcon from '../../assets/icons/tap_home.svg';
 import HomeIconActive from '../../assets/icons/tap_homeActive.svg';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg';
@@ -31,20 +32,34 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         onValueChange={(value: string) => setActiveTab(value)}
       >
         {/* Контент вкладок */}
-        <Tabs.Content value="tab1" className="TabsContent">
-          <MainPageCurator />
-        </Tabs.Content>
-        <Tabs.Content value="tab2" className="TabsContent">
-          <CalendarCurator />
-        </Tabs.Content>
-        {userRole === 'curator' && (
-          <Tabs.Content value="tab3" className="TabsContent">
-            <Curator />
-          </Tabs.Content>
+        {userRole === 'curator' ? (
+          <>
+            <Tabs.Content value="tab1" className="TabsContent">
+              <MainPageCurator />
+            </Tabs.Content>
+            <Tabs.Content value="tab2" className="TabsContent">
+              <CalendarCurator />
+            </Tabs.Content>
+            <Tabs.Content value="tab3" className="TabsContent">
+              <Curator />
+            </Tabs.Content>
+            <Tabs.Content value="tab4" className="TabsContent">
+              <p>Содержимое Моя копилка</p>
+            </Tabs.Content>
+          </>
+        ) : (
+          <>
+            <Tabs.Content value="tab1" className="TabsContent">
+              <p>Содержимое Главная (для волонтера)</p>
+            </Tabs.Content>
+            <Tabs.Content value="tab2" className="TabsContent">
+              <p>Содержимое Календарь (для волонтера)</p>
+            </Tabs.Content>
+            <Tabs.Content value="tab3" className="TabsContent">
+              <p>Содержимое Моя копилка (для волонтера)</p>
+            </Tabs.Content>
+          </>
         )}
-        <Tabs.Content value="tab4" className="TabsContent">
-          <p>Содержимое Моя копилка</p>
-        </Tabs.Content>
 
         <Tabs.List className="flex justify-between bg-light-gray-white dark:bg-dark-gray-white p-2 rounded-lg relative">
           {/* Вкладка "Главная" */}

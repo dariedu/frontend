@@ -34,7 +34,7 @@ const CalendarCurator: React.FC = () => {
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
       <Search showInfoSection={true} showSearchInput={true} />
-      <Calendar showHeader={false} />
+      <Calendar />
       {/* Передаем статус доставки, функцию для открытия RouteSheets и функцию для обновления статуса */}
       <DeliveryType
         status={deliveryStatus}
@@ -51,9 +51,9 @@ const CalendarCurator: React.FC = () => {
       {isRouteSheetsOpen && (
         <RouteSheets
           title="Маршрутный лист 1"
-          status={deliveryStatus} // Передаем статус из состояния
+          status={deliveryStatus}
           onClose={closeRouteSheets}
-          onStatusChange={handleStatusChange} // Передаем функцию для обновления статуса
+          onStatusChange={handleStatusChange}
         />
       )}
     </div>
