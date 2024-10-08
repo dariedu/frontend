@@ -12,6 +12,8 @@ import {
   addDays,
   isWithinInterval,
   startOfDay,
+  isBefore,
+  isAfter,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -19,7 +21,7 @@ import calendarIcon from '../../assets/icons/filter.svg';
 import arrowLeftIcon from '../../assets/icons/arrow_left.png';
 import arrowRightIcon from '../../assets/icons/arrow_right.png';
 import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
-import FilterCurator from '../FilterCurator/FilterCurator'; // Импорт компонента FilterCurator
+import FilterCurator from '../FilterCurator/FilterCurator';
 
 interface IInputDateProps {
   onClose: () => void;
@@ -58,7 +60,7 @@ const InputDate: React.FC<IInputDateProps> = ({
 
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false); // Состояние для управления показом FilterCurator
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handlePrevMonth = () => {
     setCurrentMonth(startOfMonth(subMonths(currentMonth, 1)));
@@ -107,10 +109,9 @@ const InputDate: React.FC<IInputDateProps> = ({
   const isInRange = (day: Date) => {
     const normalizedDay = startOfDay(day);
     if (range.start && range.end) {
-      const { start, end } =
-        range.start <= range.end
-          ? { start: range.start, end: range.end }
-          : { start: range.end, end: range.start };
+      const { start, end } = isBefore(range.start, range.end)
+        ? { start: range.start, end: range.end }
+        : { start: range.end, end: range.start };
       return isWithinInterval(normalizedDay, { start, end });
     }
     return false;
@@ -125,8 +126,22 @@ const InputDate: React.FC<IInputDateProps> = ({
     for (let i = 0; i < 42; i++) {
       const day = startOfDay(addDays(startDate, i));
 
-      const isStart = range.start && isSameDay(day, range.start);
-      const isEnd = range.end && isSameDay(day, range.end);
+      const isStart =
+        range.start &&
+        range.end &&
+        (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
+        isBefore(range.start, range.end)
+          ? isSameDay(day, range.start)
+          : isSameDay(day, range.end);
+
+      const isEnd =
+        range.start &&
+        range.end &&
+        (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
+        isAfter(range.end, range.start)
+          ? isSameDay(day, range.end)
+          : isSameDay(day, range.start);
+
       const isWithinSelectedRange = isInRange(day);
 
       const isSelectedSingle =
@@ -160,7 +175,6 @@ const InputDate: React.FC<IInputDateProps> = ({
 
       days.push(
         <div key={day.toString()} className="relative w-full h-full m-0 p-0">
-          {/* Фон для выбранного диапазона */}
           {isWithinSelectedRange && (
             <div
               className={`absolute inset-0 bg-light-gray-2 z-0 ${
@@ -168,7 +182,6 @@ const InputDate: React.FC<IInputDateProps> = ({
               }`}
             ></div>
           )}
-          {/* День календаря */}
           <div
             className={`relative z-10 w-full h-full flex justify-center items-center rounded-full cursor-pointer ${dayClass}`}
             onClick={() => handleDayClick(day)}
@@ -207,7 +220,6 @@ const InputDate: React.FC<IInputDateProps> = ({
             className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] px-4"
             readOnly
           />
-          {/* Кнопка для календаря, видимая только для range */}
           {selectionMode === 'range' && (
             <button
               className="absolute right-2 top-1/2 transform -translate-y-1/2"
@@ -224,7 +236,6 @@ const InputDate: React.FC<IInputDateProps> = ({
 
         {/* Навигация по месяцу и году */}
         <div className="flex justify-between items-center relative w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5">
-          {/* Навигация по месяцу */}
           <div className="flex items-center space-x-2 pl-[16px]">
             <button onClick={handlePrevMonth} className="">
               <img src={arrowLeftIcon} alt="стрелка влево" />
@@ -261,7 +272,6 @@ const InputDate: React.FC<IInputDateProps> = ({
               <img src={arrowRightIcon} alt="стрелка вправо" />
             </button>
           </div>
-          {/* Навигация по году */}
           <div className="flex items-center space-x-2 pr-[16px]">
             <button onClick={handlePrevYear} className="">
               <img src={arrowLeftIcon} alt="стрелка влево" />
@@ -301,7 +311,6 @@ const InputDate: React.FC<IInputDateProps> = ({
         </div>
 
         <div className="flex flex-col items-center bg-light-gray-1 w-[360px]">
-          {/* Дни недели */}
           <div className="grid grid-cols-7 text-center mt-2 mb-2 text-sm text-gray-500 w-[328px]">
             <span>Пн</span>
             <span>Вт</span>
@@ -312,12 +321,10 @@ const InputDate: React.FC<IInputDateProps> = ({
             <span>Вс</span>
           </div>
 
-          {/* Дни календаря */}
           <div className="grid grid-cols-7 gap-0 w-[328px]">
             {renderCalendarDays()}
           </div>
 
-          {/* Кнопки действий */}
           <div className="flex justify-end mt-5 mb-12 w-[328px] font-gerbera-h3">
             <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
               Закрыть
@@ -329,7 +336,6 @@ const InputDate: React.FC<IInputDateProps> = ({
         </div>
       </div>
 
-      {/* Условный рендеринг компонента FilterCurator */}
       {isFilterOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
