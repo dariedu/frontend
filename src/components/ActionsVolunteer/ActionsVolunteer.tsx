@@ -55,11 +55,14 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   );
 
   return (
-    <div className="space-y-[4px] bg-gray-100 rounded-[16px] w-[360px]">
+    <div className="space-y-[4px] bg-light-gray-1 rounded-[16px] w-[360px]">
       {/* Переключение темы */}
       {showThemeToggle && (
-        <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow h-[66px]">
-          <ThemeToggle />
+        <div className="relative bg-light-gray-1 rounded-[16px]">
+          <div className="absolute top-0 left-0 right-0 h-[4px] bg-light-gray-1 rounded-t-[16px]"></div>
+          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px]">
+            <ThemeToggle />
+          </div>
         </div>
       )}
 
@@ -68,7 +71,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
         <a
           key={index}
           href={action.link}
-          className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
+          className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
         >
           <div className="flex items-center space-x-4">
             {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (

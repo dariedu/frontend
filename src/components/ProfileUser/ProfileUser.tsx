@@ -22,8 +22,9 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   return (
     <>
       {/* Окно профиля волонтера */}
-      <div className="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-[16px] shadow-lg w-[360px]">
-        <div className="flex items-center mb-[4px] bg-white rounded-[16px] w-full h-[60px] p-[16px]">
+      <div className="fixed z-50 top-0 left-0 bg-white rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col">
+        {/* Заголовок */}
+        <div className="flex items-center mb-[4px] bg-white rounded-t-[16px] w-full h-[60px] p-[16px] flex-shrink-0">
           <button onClick={onClose} className="mr-2">
             <img src={leftArrowIcon} alt="back" className="w-9 h-9 mr-[8px]" />
           </button>
@@ -31,7 +32,8 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
             {profileTitle}
           </h2>
         </div>
-        <div className="w-full">
+        {/* Содержимое с прокруткой */}
+        <div className="w-full flex-grow overflow-y-auto hide-scrollbar">
           <ProfilePic user={user} />
           <VolunteerData user={user} />
           {/* Логика отображения действий в зависимости от того, является ли пользователь текущим */}
@@ -51,6 +53,17 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           )}
         </div>
       </div>
+
+      {/* Стили для скрытия полосы прокрутки */}
+      <style jsx>{`
+        .hide-scrollbar {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE и Edge */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+      `}</style>
     </>
   );
 };
