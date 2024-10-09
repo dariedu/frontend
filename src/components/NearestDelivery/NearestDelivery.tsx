@@ -8,6 +8,7 @@ import RouteSheets from '../RouteSheets/RouteSheets';
 import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal'
+import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 
 // routes={[{address: "Москва улица неизвестная, дом любой, кв. самая большая",
 //   additionalInfo:"Еще информация",
@@ -94,7 +95,7 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   delivery = delivery1,
-  volunteer = true,
+  volunteer = false,
   deliveryFilter = 'active',
   //booked = false,
 }) => {
@@ -102,6 +103,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   const currentDate = new Date();
 
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
+  const [fullViewCurator, setFullViewCurator] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
@@ -112,7 +114,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false);//// модальное окно для отмены доставки
   const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] = useState(false);  //// модальное окно для подтверждения отмены доставки
   
-
+  
   const lessThenTwoHours =
     (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;
 
@@ -120,21 +122,32 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
     ? delivery.curator.tg_username.slice(1)
     : delivery.curator.tg_username;
 
+  
+  function onSelectVolunteer(volunteerName: string, volunteerAvatar: string):void {
+    console.log(volunteerName + " " + volunteerAvatar)
+  }
   return (
     <>
-      {currentStatus == 'active' ? (
+      {/* ///// раскрываем полные детали активной доставуи для волонтера///// */}
+      {currentStatus == 'active' && volunteer ? (
               fullView == true ? (
-                // <div className='m-0'>
-                  <RouteSheets title= "Маршрутный лист 1" status= 'Активная'  onClose={()=>setFullView(false)} onStatusChange={()=>{setCurrentStatus('completed')}} />
-                // </div>
-                
+                  <RouteSheets title= "Маршрутный лист 1" status= 'Активная'  onClose={()=>setFullView(false)} onStatusChange={()=>{setCurrentStatus('completed')}} />                
               ) : (
                 ''
               )
             ) : (
               ''
-            )}
-      <div className={`${currentStatus == 'active' ? fullView == true ? "hidden" : "" : ""} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white`}>
+      )} 
+        {currentStatus == 'active' && !volunteer ? (
+              fullViewCurator == true ? (
+                  <RouteSheets title= "Маршрутный лист 1" status= 'Активная'  onClose={()=>setFullView(false)} onStatusChange={()=>{setCurrentStatus('completed')}} />                
+              ) : (
+                ''
+              )
+            ) : (
+              ''
+      )} 
+      <div className={`${currentStatus == 'active' ? fullView == true ? "hidden" : "" : "" } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white dark:bg-light-gray-7-logo`}>
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
             <p className="btn-S-GreenDefault flex items-center justify-center">
@@ -154,17 +167,18 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
 
           <div className="flex items-center">
             <p
-              className="font-gerbera-sub2 text-light-gray-3 cursor-pointer"
+              className="font-gerbera-sub2 text-light-gray-3 cursor-pointer dark:text-light-gray-4 mr-2"
               onClick={() => {
-                fullView == true ? setFullView(false) : setFullView(true);
+                volunteer ? (fullView == true ? setFullView(false) : setFullView(true)) : (fullViewCurator== true ? setFullViewCurator(false) : setFullViewCurator(true))
               }}
             >
               Доставка{' '}
             </p>
-            {currentStatus == 'nearest' || currentStatus == 'completed' ? (
+            {volunteer ? (
+             currentStatus == 'nearest' || currentStatus == 'completed' ? (
               <img
                 src="../src/assets/icons/arrow_down.png"
-                className={`${!fullView ? 'rotate-180' : ''} ml-2 cursor-pointer`}
+                className={`${!fullView ? 'rotate-180' : ''} cursor-pointer`}
                 onClick={() => {
                   fullView == true ? setFullView(false) : setFullView(true);
                 }}
@@ -172,14 +186,25 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
             ) : currentStatus == 'active' ? (
               <img
                 src="../src/assets/icons/arrow_right.png"
-                className="ml-2 cursor-pointer"
+                className=" cursor-pointer"
                 onClick={() => {
                   fullView == true ? setFullView(false) : setFullView(true);
                 }}
               />
             ) : (
               ''
-            )}
+            )
+            ) : (currentStatus == 'active' ? (
+              <img
+              src="../src/assets/icons/arrow_right.png"
+              className=" cursor-pointer"
+              onClick={() => {
+                fullViewCurator== true ? setFullViewCurator(false) : setFullViewCurator(true);
+              }}
+            />
+            ) : ""     
+            )
+             }
            
           </div>
         </div>
@@ -187,10 +212,10 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         <div className="flex w-fit">
           <img src="../src/assets/icons/metro_station.svg" />
           <div className="flex flex-col justify-start items-start pl-2 w-max-[290px] pt-[20px]">
-            <h1 className="font-gerbera-h3 text-light-gray-8">
+            <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
               Ст. {delivery.location.subway}
             </h1>
-            <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px]">
+            <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px] dark:text-light-gray-3">
               {delivery.location.address}
             </p>
           </div>
@@ -198,30 +223,30 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
         {volunteer ? (currentStatus == 'completed' ? (""): (
           <div className="flex justify-between items-center mt-[14px]">
-          <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
-            <p className="font-gerbera-sub2 text-light-gray-black ">
+          <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+            <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-3">
               Время начала
             </p>
-            <p className="font-gerbera-h3 text-light-gray-black">
+            <p className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
               {`${deliveryDate.getDate()}
               ${getMonthCorrectEndingName(deliveryDate)} в
               ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
             </p>
           </div>
-          <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
-            <p className="font-gerbera-sub2 text-light-gray-black ">
+          <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+            <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-3">
               Начисление баллов
             </p>
-            <p className="font-gerbera-h3 text-light-brand-green ">
+            <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
               {'+'}
               {delivery.price} {getBallCorrectEndingName(delivery.price)}
             </p>
           </div>
         </div>
         )
-        ) : (
-          <div className="flex justify-between items-center mt-[20px]">
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
+        ) : (currentStatus == 'active' ? ("") : currentStatus == 'nearest' ? (
+        <div className="flex justify-between items-center mt-[20px]">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
               <p className="font-gerbera-sub2 text-light-gray-5 ">
                 Время начала
               </p>
@@ -235,11 +260,13 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
               <p className="font-gerbera-sub2 text-light-gray-5">Записались</p>
               <p className="font-gerbera-h3 text-light-gray-8">
                 {delivery.volunteers_taken == 0
-                  ? 'Пока никто'
+                  ? 'Пока никого'
                   : `${delivery.volunteers_taken + ' ' + getPersonCorrectEndingName(delivery.volunteers_taken)}`}
               </p>
             </div>
           </div>
+        ) : ""
+          
         )}
 
         {volunteer ? (
@@ -271,21 +298,35 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
               ''
             )
           ) : currentStatus == 'active' ? (
-            ''
+            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+            <div className="flex">
+              <img
+                className="h-[32px] w-[32px] rounded-full"
+                src={delivery.curator.avatar}
+              />
+              <div className="felx flex-col justify-center items-start ml-4">
+                <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+                  {delivery.curator.name}
+                </h1>
+                <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+                  Куратор
+                </p>
+              </div>
+            </div>
+            <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+              <img
+                src="../src/assets/icons/small_sms.svg"
+                className="w-[36px] h-[35px]"
+              />
+            </a>
+          </div>
           ) : (
             ''
           )
         ) : (
           ''
         )}
-        {/* <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col items-start justify-center px-4">
-          <h1 className="font-gerbera-h3 text-light-gray-8-text">
-            Пункты маршрута
-          </h1>
-          <p className="font-gerbera-sub1 text-light-gray-5 mt-[6px]">
-            Пункт выдачи откуда забирать{' '}
-          </p>
-        </div> */}
+
         {fullView ? (
           currentStatus == 'nearest' ? (
             lessThenTwoHours ? (
@@ -332,7 +373,9 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
           </button>
           ): " "
         ) : (
-          ''
+            !volunteer ? currentStatus == "active" ? "" : (
+              <button className='btn-B-WhiteDefault mt-[20px]' onClick={()=>setFullViewCurator(true)}>Список записавшихся волонтёров</button>
+              ) : ""
         )}
 
         {/* /////////////////////// */}
@@ -344,12 +387,13 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
       <ConfirmModal isOpen={isConfirmDeliveryModalOpen} onOpenChange={setIsConfirmDeliveryModalOpen} onConfirm={() => { setIsConfirmDeliveryModalOpen(false); setIsDeliveryConfirmedModalOpen(true) }} title={<p>Вы подтверждаете участие в доставке?</p>} description="" confirmText="Да" cancelText='Нет'  />
       <ConfirmModal isOpen={isCancelDeliveryModalOpen} onOpenChange={setIsCancelDeliveryModalOpen} onConfirm={() => { setIsDeliveryCancelledModalOpen(true); setIsCancelDeliveryModalOpen(false) }} title={<p>Уверены, что хотите отменить участие в доставке?</p>} description="" confirmText="Да" cancelText="Нет" />
       <ConfirmModal isOpen={isDeliveryCancelledModalOpen} onOpenChange={setIsDeliveryCancelledModalOpen} onConfirm={() => setIsDeliveryCancelledModalOpen(false)} title='Участие в доставке отменено' description="" confirmText="Ок" isSingleButton={true} />
-      <ConfirmModal isOpen={isDeliveryConfirmedModalOpen} onOpenChange={setIsDeliveryConfirmedModalOpen} onConfirm={()=>setIsDeliveryConfirmedModalOpen(false)} title='Участие в доставке подтверждено' description="" confirmText="Ок" isSingleButton={true} />
+      <ConfirmModal isOpen={isDeliveryConfirmedModalOpen} onOpenChange={setIsDeliveryConfirmedModalOpen} onConfirm={() => setIsDeliveryConfirmedModalOpen(false)} title='Участие в доставке подтверждено' description="" confirmText="Ок" isSingleButton={true} />
+      {/* ///// раскрываем полные детали активной доставуи для куратора///// */}
+      {currentStatus == "nearest" ? (
+      <Modal isOpen={fullViewCurator} onOpenChange={setFullViewCurator}><ListOfVolunteers  onSelectVolunteer={onSelectVolunteer}  onTakeRoute={()=>{}} showActions={true} /></Modal> 
+      ) : "" }
     </>
   );
 };
 
 export default NearestDelivery;
-{
-  delivery1;
-}
