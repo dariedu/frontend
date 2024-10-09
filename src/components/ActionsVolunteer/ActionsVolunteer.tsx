@@ -6,8 +6,8 @@ import questionsIcon from '../../assets/icons/questions.svg';
 import donateIcon from '../../assets/icons/donate.svg';
 import inviteIcon from '../../assets/icons/invite_friend.svg';
 import beneficiaryIcon from '../../assets/icons/beneficiary.svg';
+import aboutIcon from '../../assets/icons/about.svg';
 
-// Тип для действия
 interface IAction {
   label: string;
   icon: string | JSX.Element;
@@ -15,10 +15,9 @@ interface IAction {
   points?: string;
 }
 
-// Типы пропсов
 interface IActionsVolunteerProps {
-  visibleActions: string[]; // Список видимых действий по их label
-  showThemeToggle: boolean; // Показывать переключатель темы или нет
+  visibleActions: string[];
+  showThemeToggle: boolean;
 }
 
 const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
@@ -33,15 +32,21 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       link: '#',
     },
     { label: 'История', icon: historyIcon, link: '#' },
-    { label: 'Вопросы и предложения', icon: questionsIcon, link: '#' },
-    { label: 'Помочь деньгами', icon: donateIcon, link: '#' },
+    { label: 'Обо мне', icon: aboutIcon, link: '#' },
     {
       label: 'Пригласить друга',
       icon: inviteIcon,
       link: '#',
       points: '+3 балла',
     },
-    { label: 'Предложить благополучателя', icon: beneficiaryIcon, link: '#' },
+    {
+      label: 'Подать заявку на должность куратора',
+      icon: curatorIcon,
+      link: '#',
+    },
+    { label: 'Знаю того, кому нужна помощь', icon: beneficiaryIcon, link: '#' },
+    { label: 'Сделать пожертвование', icon: donateIcon, link: '#' },
+    { label: 'Вопросы и предложения', icon: questionsIcon, link: '#' },
   ];
 
   // Фильтруем действия для отображения
@@ -50,31 +55,32 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   );
 
   return (
-    <div className="space-y-4 bg-gray-100 rounded-[16px] w-[360px]">
-      {/* Theme toggle switch */}
+    <div className="space-y-[4px] bg-light-gray-1 rounded-[16px] w-[360px]">
+      {/* Переключение темы */}
       {showThemeToggle && (
-        <div className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow h-[66px]">
-          <ThemeToggle />
+        <div className="relative bg-light-gray-1 rounded-[16px]">
+          <div className="absolute top-0 left-0 right-0 h-[4px] bg-light-gray-1 rounded-t-[16px]"></div>
+          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px]">
+            <ThemeToggle />
+          </div>
         </div>
       )}
 
-      {/* Action items */}
+      {/* Действия */}
       {filteredActions.map((action, index) => (
         <a
           key={index}
           href={action.link}
-          className="flex items-center justify-between p-4 bg-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
+          className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
         >
           <div className="flex items-center space-x-4">
-            {/* Check if icon is a string path (SVG), render as <img> */}
             {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (
               <img
                 src={action.icon}
                 alt={action.label}
-                className="w-[42px] h-[42px]" // Control the size of SVG
+                className="w-[42px] h-[42px]"
               />
             ) : (
-              // Render emoji or other text-based icons
               <span>{action.icon}</span>
             )}
             <span className="font-gerbera-h3 text-light-gray-black m-0">
