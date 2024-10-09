@@ -38,6 +38,7 @@ import CuratorPage from './pages/Curator/CuratorPage.tsx';
 import CancelReason from './components/CancelReason/CancelReason.tsx';
 import InputDate from './components/InputDate/InputDate.tsx';
 import { ProfileUser } from './components/ProfileUser/ProfileUser.tsx';
+import ProfilePic from './components/ProfilePic/ProfilePic.tsx';
 
 declare global {
   interface Window {
@@ -211,7 +212,6 @@ const App: React.FC = () => {
       />
       <NavigationBar variant="volunteerForm" title="Анкета волонтера" />
       <NavigationBar variant="mainScreen" avatarUrl={avatar} />
-      <Search showSearchInput={true} showInfoSection={true} />
       <Calendar />
       <Notification message="Подтвердите  участие в доставке сегодня" />
       <DeliveryType status="Активная" points={5} />
@@ -262,7 +262,6 @@ const App: React.FC = () => {
       <NearestDelivery /> */}
 
       <CuratorPage />
-      <ProfileUser />
     </>
   );
 };

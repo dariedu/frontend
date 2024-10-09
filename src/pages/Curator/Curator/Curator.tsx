@@ -1,35 +1,32 @@
 import React, { useState } from 'react';
 import Search from '../../../components/Search/Search';
-// import ProfileOfVolunteer from '../../../components/ProfileOfVolunteer/ProfileOfVolunteer'; // Импорт компонента профиля волонтера
+import ProfileUser from '../../../components/ProfileUser/ProfileUser'; // Импорт компонента профиля волонтера
 import avatar1 from '../../../assets/avatar.svg';
 
-// Массив кураторов-заглушка
+// Массив кураторов
 const curators = [
-  { name: 'Осипова Юлия', avatar: avatar1 },
-  { name: 'Иванов Иван', avatar: avatar1 },
-  { name: 'Сидоров Алексей', avatar: avatar1 },
-  { name: 'Смирнова Анна', avatar: avatar1 },
-  { name: 'Петров Петр', avatar: avatar1 },
-  { name: 'Александрова Мария', avatar: avatar1 },
+  { id: 1, name: 'Осипова Юлия', avatar: avatar1 },
+  { id: 2, name: 'Иванов Иван', avatar: avatar1 },
+  { id: 3, name: 'Сидоров Алексей', avatar: avatar1 },
+  { id: 4, name: 'Смирнова Анна', avatar: avatar1 },
+  { id: 5, name: 'Петров Петр', avatar: avatar1 },
+  { id: 6, name: 'Александрова Мария', avatar: avatar1 },
 ];
 
 const Curator: React.FC = () => {
-  const [selectedVolunteer, setSelectedVolunteer] = useState<{
-    name: string;
-    avatar: string;
-  } | null>(null);
+  const currentUserId = 1; // ID текущего пользователя
+  const [selectedVolunteer, setSelectedVolunteer] = useState<ICurator | null>(
+    null,
+  );
 
   // Обработчик нажатия на волонтера
-  const handleVolunteerClick = (volunteer: {
-    name: string;
-    avatar: string;
-  }) => {
-    setSelectedVolunteer(volunteer);
+  const handleVolunteerClick = (volunteer: ICurator) => {
+    setSelectedVolunteer(volunteer); // Устанавливаем выбранного волонтера
   };
 
   // Обработчик закрытия профиля волонтера
   const closeProfile = () => {
-    setSelectedVolunteer(null);
+    setSelectedVolunteer(null); // Закрываем окно профиля
   };
 
   return (
@@ -37,19 +34,19 @@ const Curator: React.FC = () => {
       {/* Передаем массив кураторов и функцию нажатия в Search */}
       <Search
         curators={curators}
-        showSearchInput={true}
-        showInfoSection={false}
         onVolunteerClick={handleVolunteerClick}
+        showSearchInput={true}
+        showInfoSection={true}
       />
 
-      {/* Условное отображение компонента ProfileOfVolunteer */}
-      {/* {selectedVolunteer && (
-        <ProfileOfVolunteer
-          name={selectedVolunteer.name}
-          avatar={selectedVolunteer.avatar}
-          onClose={closeProfile}
+      {/* Условное отображение компонента ProfileUser */}
+      {selectedVolunteer && (
+        <ProfileUser
+          user={selectedVolunteer} // Передаем данные выбранного волонтера
+          currentUserId={currentUserId} // Передаем ID текущего пользователя
+          onClose={closeProfile} // Функция закрытия окна профиля
         />
-      )} */}
+      )}
     </div>
   );
 };
