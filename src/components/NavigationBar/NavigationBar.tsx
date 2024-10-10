@@ -3,7 +3,8 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import logoText from '../../assets/logoText.svg';
 import bell from '../../assets/icons/Notifications.svg';
-import ProfileUser from '../ProfileUser/ProfileUser'; // Импорт компонента профиля пользователя
+import ProfileUser from '../ProfileUser/ProfileUser';
+import { IUser } from '../../core/types';
 
 interface INavigationBarProps {
   variant: 'volunteerForm' | 'mainScreen';
@@ -16,11 +17,11 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   title = '',
   avatarUrl = '',
 }) => {
-  // Моковый текущий пользователь
-  const currentUser = {
+  // Моковый текущий пользователь с явным типом IUser
+  const currentUser: IUser = {
     id: 1,
     name: 'Марагарита',
-    avatarUrl: avatarUrl || '',
+    avatar: avatarUrl || '',
     role: 'curator',
   };
 
@@ -63,10 +64,14 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         {/* Правая часть с аватаркой и иконкой */}
         {variant === 'mainScreen' && (
           <div className="flex items-center space-x-4">
-            <img src={bell} className="w-10 h-10 text-black dark:text-white" />
+            <img
+              src={bell}
+              className="w-10 h-10 text-black dark:text-white"
+              alt="Notifications"
+            />
             <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
-                src={avatarUrl}
+                src={currentUser.avatar}
                 alt="Avatar"
                 className="w-10 h-10 object-cover rounded-full cursor-pointer"
                 onClick={handleAvatarClick} // Открытие профиля по клику
@@ -75,7 +80,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
                 className="text-black dark:text-white"
                 onClick={handleAvatarClick}
               >
-                {avatarUrl ? avatarUrl[0] : 'avatar'}
+                {currentUser.name ? currentUser.name[0] : 'A'}
               </Avatar.Fallback>
             </Avatar.Root>
           </div>
@@ -87,7 +92,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         <ProfileUser
           user={currentUser} // Передаем данные текущего пользователя в профиль
           onClose={handleCloseProfile} // Функция для закрытия профиля
-          currentUserId={1}
+          currentUserId={currentUser.id}
         />
       )}
     </>

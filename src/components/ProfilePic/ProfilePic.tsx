@@ -4,6 +4,7 @@ import {
   getHourCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import { IUser } from '../../core/types';
+import userAvatar from '../../assets/icons/photo.svg';
 
 interface IProfilePicProps {
   user: IUser;
@@ -25,11 +26,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
     <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full border-2">
       <div className="h-[105px] w-[105px] bg-light-gray-1 rounded-full flex justify-center items-center relative">
         <img
-          src={
-            fileUploaded
-              ? uploadedFileLink
-              : user.avatar || './../src/assets/icons/photo.svg'
-          }
+          src={fileUploaded ? uploadedFileLink : user.avatar || userAvatar}
           className="h-[105px] w-[105px] rounded-full object-cover"
           alt={`${user.name} ${user.last_name}`}
         />

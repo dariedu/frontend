@@ -13,7 +13,6 @@ import {
   isWithinInterval,
   startOfDay,
   isBefore,
-  isAfter,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -113,43 +112,35 @@ const InputDate: React.FC<IInputDateProps> = ({
     }
   };
 
-  const isInRange = (day: Date) => {
-    const normalizedDay = startOfDay(day);
-    if (range.start && range.end) {
-      const { start, end } = isBefore(range.start, range.end)
-        ? { start: range.start, end: range.end }
-        : { start: range.end, end: range.start };
-      return isWithinInterval(normalizedDay, { start, end });
-    }
-    return false;
-  };
-
   const renderCalendarDays = () => {
     const monthStart = startOfMonth(currentMonth);
     const startDate = startOfWeek(monthStart, { locale: ru });
 
     const days: JSX.Element[] = [];
 
+    // Определяем фактические начальную и конечную даты диапазона
+    let displayStart: Date | null = null;
+    let displayEnd: Date | null = null;
+
+    if (range.start && range.end) {
+      if (isBefore(range.start, range.end)) {
+        displayStart = range.start;
+        displayEnd = range.end;
+      } else {
+        displayStart = range.end;
+        displayEnd = range.start;
+      }
+    }
+
     for (let i = 0; i < 42; i++) {
       const day = startOfDay(addDays(startDate, i));
 
-      const isStart =
-        range.start &&
-        range.end &&
-        (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
-        (isBefore(range.start, range.end)
-          ? isSameDay(day, range.start)
-          : isSameDay(day, range.end));
-
-      const isEnd =
-        range.start &&
-        range.end &&
-        (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
-        (isAfter(range.end, range.start)
-          ? isSameDay(day, range.end)
-          : isSameDay(day, range.start));
-
-      const isWithinSelectedRange = isInRange(day);
+      const isStart = displayStart && isSameDay(day, displayStart);
+      const isEnd = displayEnd && isSameDay(day, displayEnd);
+      const isWithinSelectedRange =
+        displayStart &&
+        displayEnd &&
+        isWithinInterval(day, { start: displayStart, end: displayEnd });
 
       const isSelectedSingle =
         selectionMode === 'single' &&
@@ -168,18 +159,25 @@ const InputDate: React.FC<IInputDateProps> = ({
       }
 
       if (selectionMode === 'range') {
-        if (
-          isStart &&
-          (!range.end || isSameDay(range.start as Date, range.end))
-        ) {
+        if (range.start && !range.end && isSameDay(day, range.start)) {
+          // Только начальная дата выбрана
+          dayClass +=
+            ' bg-white text-black border border-gray-300 rounded-full';
+        } else if (isStart && isEnd) {
+          // Начальная и конечная даты совпадают
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-full';
         } else if (isStart) {
+          // Начало диапазона
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-l-full';
         } else if (isEnd) {
+          // Конец диапазона
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-r-full';
+        } else if (isWithinSelectedRange) {
+          // Дата внутри выбранного диапазона
+          dayClass += ' bg-light-gray-2';
         }
       }
 
@@ -208,9 +206,7 @@ const InputDate: React.FC<IInputDateProps> = ({
     return days;
   };
 
-  const handleOpenDatePicker = () => {
-    // Логика для открытия DatePicker
-  };
+  const handleOpenDatePicker = () => {};
 
   return (
     <>

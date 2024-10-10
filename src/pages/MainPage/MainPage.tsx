@@ -1,5 +1,5 @@
 import React from 'react';
-import RegistrationForm from '../../components/registrationForm/RegistrationForm';
+import RegistrationForm from '../Registration/RegistrationPage';
 import CuratorPage from '../Curator/CuratorPage';
 // import VolunteerPage from '../Volunteer/VolunteerPage';
 

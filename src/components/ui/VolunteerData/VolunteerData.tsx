@@ -1,5 +1,10 @@
 import React from 'react';
-
+import geoIcon from '../../../assets/icons/geo.svg';
+import emailIcon from '../../../assets/icons/email.svg';
+import birthdayIcon from '../../../assets/icons/birthday.svg';
+import phoneIcon from '../../../assets/icons/phone.svg';
+import telegramIcon from '../../../assets/icons/telegram.svg';
+import big_pencilIcon from '../../../assets/icons/big_pencil.svg';
 interface IVolunteerDataProps {
   geo: string;
   email: string;
@@ -36,13 +41,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 }) => {
   const items = [geo, email, birthday, phone, telegram];
   const iconsLinks = [
-    './../src/assets/icons/geo.svg',
-    './../src/assets/icons/email.svg',
-    './../src/assets/icons/birthday.svg',
-    './../src/assets/icons/phone.svg',
-    './../src/assets/icons/telegram.svg',
+    geoIcon,
+    emailIcon,
+    birthdayIcon,
+    phoneIcon,
+    telegramIcon,
   ];
-  const changeIconLink = './../src/assets/icons/big_pencil.svg';
+  const changeIconLink = big_pencilIcon;
 
   return (
     <>

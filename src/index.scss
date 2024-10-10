@@ -27,15 +27,14 @@
   }
 }
 
-
 @layer components {
-   #root {
-    @apply m-0 p-0 bg-light-gray-1
+  #root {
+    @apply p-0 bg-light-gray-1;
   }
   body {
-    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen
+    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen;
   }
-   ///////////////////// Big-size btn
+  ///////////////////// Big-size btn
   .btn-B-GreenDefault {
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-brand-green text-light-gray-white;
   }

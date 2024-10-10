@@ -21,7 +21,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
 
   return (
     <>
-      <div className="fixed z-50 top-0 left-0 bg-white rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col">
+      <div className="fixed z-50 top-0 bg-white rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col">
         <div className="flex items-center mb-[4px] bg-white rounded-t-[16px] w-full h-[60px] p-[16px] flex-shrink-0">
           <button onClick={onClose} className="mr-2">
             <img src={leftArrowIcon} alt="back" className="w-9 h-9 mr-[8px]" />
