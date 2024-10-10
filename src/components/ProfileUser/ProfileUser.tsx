@@ -1,11 +1,12 @@
 import React from 'react';
-import leftArrowIcon from '../../../src/assets/icons/arrow_left.png';
+import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import ProfilePic from '../ProfilePic/ProfilePic';
-import { VolunteerData } from '../ui/VolunteerData/VolunreerData';
+import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
+import { IUser } from '../../core/types';
 
 interface IProfileUserProps {
-  user: ICurator;
+  user: IUser;
   onClose: () => void;
   currentUserId: number;
 }
@@ -15,15 +16,12 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   onClose,
   currentUserId,
 }) => {
-  // Проверка на то, является ли выбранный волонтер текущим пользователем
   const isCurrentUser = user.id === currentUserId;
-  const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль волонтёра';
+  const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль пользователя';
 
   return (
     <>
-      {/* Окно профиля волонтера */}
       <div className="fixed z-50 top-0 left-0 bg-white rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col">
-        {/* Заголовок */}
         <div className="flex items-center mb-[4px] bg-white rounded-t-[16px] w-full h-[60px] p-[16px] flex-shrink-0">
           <button onClick={onClose} className="mr-2">
             <img src={leftArrowIcon} alt="back" className="w-9 h-9 mr-[8px]" />
@@ -32,11 +30,15 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
             {profileTitle}
           </h2>
         </div>
-        {/* Содержимое с прокруткой */}
         <div className="w-full flex-grow overflow-y-auto hide-scrollbar">
           <ProfilePic user={user} />
-          <VolunteerData user={user} />
-          {/* Логика отображения действий в зависимости от того, является ли пользователь текущим */}
+          <VolunteerData
+            geo="Адрес пользователя"
+            email="example@example.com"
+            birthday="01.01.1990"
+            phone="+79999999999"
+            telegram="@user"
+          />
           {isCurrentUser && (
             <ActionsVolunteer
               visibleActions={[
@@ -54,14 +56,13 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
         </div>
       </div>
 
-      {/* Стили для скрытия полосы прокрутки */}
-      <style jsx>{`
+      <style>{`
         .hide-scrollbar {
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE и Edge */
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
         .hide-scrollbar::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
+          display: none;
         }
       `}</style>
     </>

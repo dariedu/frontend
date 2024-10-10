@@ -4,6 +4,18 @@ import Search from '../../../components/Search/Search';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
+import avatar1 from '../../../assets/avatar.svg';
+import { IUser } from '../../../core/types';
+
+// Массив пользователей
+const users: IUser[] = [
+  { id: 1, name: 'Осипова Юлия', avatar: avatar1 },
+  { id: 2, name: 'Иванов Иван', avatar: avatar1 },
+  { id: 3, name: 'Сидоров Алексей', avatar: avatar1 },
+  { id: 4, name: 'Смирнова Анна', avatar: avatar1 },
+  { id: 5, name: 'Петров Петр', avatar: avatar1 },
+  { id: 6, name: 'Александрова Мария', avatar: avatar1 },
+];
 
 const CalendarCurator: React.FC = () => {
   const [deliveryStatus, setDeliveryStatus] = useState<
@@ -11,43 +23,45 @@ const CalendarCurator: React.FC = () => {
   >('Ближайшая');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
-  // Фиксированное количество баллов для проверки
   const points = 5;
 
-  // Обработчик для открытия компонента RouteSheets
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
   };
 
-  // Обработчик для закрытия компонента RouteSheets
   const closeRouteSheets = () => {
     setIsRouteSheetsOpen(false);
   };
 
-  // Функция для обновления статуса доставки
   const handleStatusChange = (
     newStatus: 'Активная' | 'Ближайшая' | 'Завершена',
   ) => {
     setDeliveryStatus(newStatus);
   };
 
+  const handleUserClick = (user: IUser) => {
+    console.log('Clicked on user:', user);
+  };
+
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
-      <Search showInfoSection={true} showSearchInput={true} />
+      <Search
+        showInfoSection={true}
+        showSearchInput={true}
+        users={users}
+        onUserClick={handleUserClick}
+      />
       <Calendar />
-      {/* Передаем статус доставки, функцию для открытия RouteSheets и функцию для обновления статуса */}
       <DeliveryType
         status={deliveryStatus}
         points={points}
         onDeliveryClick={openRouteSheets}
       />
-      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
       {deliveryStatus === 'Ближайшая' && (
-        <div className="">
+        <div>
           <DeliveryInfo />
         </div>
       )}
-      {/* Условный рендеринг RouteSheets */}
       {isRouteSheetsOpen && (
         <RouteSheets
           title="Маршрутный лист 1"

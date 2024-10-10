@@ -4,7 +4,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 interface IFilterCuratorProps {
   onClose: () => void;
-  onOpenDatePicker: () => void; // Пропс для открытия InputDate
+  onOpenDatePicker?: () => void;
 }
 
 const FilterCurator: React.FC<IFilterCuratorProps> = ({

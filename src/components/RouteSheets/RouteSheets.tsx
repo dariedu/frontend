@@ -10,7 +10,7 @@ import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 interface RouteSheetsProps {
   title: string;
   selected?: string;
-  status: 'Активная' | 'Завершена';
+  status: 'Активная' | 'Ближайшая' | 'Завершена';
   onClose: () => void;
   onStatusChange: (newStatus: 'Активная' | 'Завершена') => void;
 }

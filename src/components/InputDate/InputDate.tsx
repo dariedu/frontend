@@ -49,7 +49,10 @@ const InputDate: React.FC<IInputDateProps> = ({
   onClose,
   selectionMode = 'single',
 }) => {
-  const [currentMonth, setCurrentMonth] = useState(startOfDay(new Date()));
+  // Явно указываем тип Date
+  const [currentMonth, setCurrentMonth] = useState<Date>(
+    startOfDay(new Date()),
+  );
   const [selectedDates, setSelectedDates] = useState<Date[]>([
     startOfDay(new Date()),
   ]);
@@ -80,16 +83,20 @@ const InputDate: React.FC<IInputDateProps> = ({
 
   const handleMonthSelect = (month: string) => {
     const monthIndex = months.indexOf(month);
-    const newDate = new Date(currentMonth);
-    newDate.setMonth(monthIndex);
-    setCurrentMonth(startOfMonth(newDate));
+    if (currentMonth) {
+      const newDate = new Date(currentMonth);
+      newDate.setMonth(monthIndex);
+      setCurrentMonth(startOfMonth(newDate));
+    }
     setIsMonthOpen(false);
   };
 
   const handleYearSelect = (year: string) => {
-    const newDate = new Date(currentMonth);
-    newDate.setFullYear(Number(year));
-    setCurrentMonth(startOfMonth(newDate));
+    if (currentMonth) {
+      const newDate = new Date(currentMonth);
+      newDate.setFullYear(Number(year));
+      setCurrentMonth(startOfMonth(newDate));
+    }
     setIsYearOpen(false);
   };
 
@@ -130,17 +137,17 @@ const InputDate: React.FC<IInputDateProps> = ({
         range.start &&
         range.end &&
         (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
-        isBefore(range.start, range.end)
+        (isBefore(range.start, range.end)
           ? isSameDay(day, range.start)
-          : isSameDay(day, range.end);
+          : isSameDay(day, range.end));
 
       const isEnd =
         range.start &&
         range.end &&
         (isSameDay(day, range.start) || isSameDay(day, range.end)) &&
-        isAfter(range.end, range.start)
+        (isAfter(range.end, range.start)
           ? isSameDay(day, range.end)
-          : isSameDay(day, range.start);
+          : isSameDay(day, range.start));
 
       const isWithinSelectedRange = isInRange(day);
 
@@ -161,7 +168,10 @@ const InputDate: React.FC<IInputDateProps> = ({
       }
 
       if (selectionMode === 'range') {
-        if (isStart && (!range.end || isSameDay(range.start, range.end))) {
+        if (
+          isStart &&
+          (!range.end || isSameDay(range.start as Date, range.end))
+        ) {
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-full';
         } else if (isStart) {
@@ -198,6 +208,10 @@ const InputDate: React.FC<IInputDateProps> = ({
     return days;
   };
 
+  const handleOpenDatePicker = () => {
+    // Логика для открытия DatePicker
+  };
+
   return (
     <>
       <div className="relative w-[360px] flex flex-col items-center justify-center">
@@ -211,12 +225,12 @@ const InputDate: React.FC<IInputDateProps> = ({
                   ? format(selectedDates[0], 'MM/dd/yyyy')
                   : format(startOfDay(new Date()), 'MM/dd/yyyy')
                 : range.start && range.end
-                  ? `${format(range.start, 'MM/dd/yyyy')} - ${format(
-                      range.end,
+                  ? `${format(range.start!, 'MM/dd/yyyy')} - ${format(
+                      range.end!,
                       'MM/dd/yyyy',
                     )}`
                   : range.start
-                    ? format(range.start, 'MM/dd/yyyy')
+                    ? format(range.start!, 'MM/dd/yyyy')
                     : format(startOfDay(new Date()), 'MM/dd/yyyy')
             }
             placeholder={format(startOfDay(new Date()), 'MM/dd/yyyy')}
@@ -342,7 +356,10 @@ const InputDate: React.FC<IInputDateProps> = ({
       {isFilterOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
-            <FilterCurator onClose={() => setIsFilterOpen(false)} />
+            <FilterCurator
+              onClose={() => setIsFilterOpen(false)}
+              onOpenDatePicker={handleOpenDatePicker}
+            />
           </div>
         </div>
       )}
