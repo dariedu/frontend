@@ -1,41 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import searchIcon from '../../assets/icons/search.svg';
 import metroIcon from '../../assets/icons/metro_station.svg';
-
+import { IUser } from '../../core/types';
 interface ISearchProps {
   placeholder?: string;
   showSearchInput?: boolean;
   showInfoSection?: boolean;
-  curators: ICurator[];
-  onVolunteerClick: (volunteer: ICurator) => void;
-}
-
-interface ICurator {
-  name: string;
-  avatar: string;
-  role: 'curator' | 'volunteer'; // Добавляем роль волонтера
+  users: IUser[];
+  onUserClick: (user: IUser) => void;
 }
 
 const Search: React.FC<ISearchProps> = ({
   placeholder = 'Поиск по ФИО',
   showSearchInput = true,
   showInfoSection = true,
-  curators,
-  onVolunteerClick,
+  users,
+  onUserClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCurators, setFilteredCurators] = useState<ICurator[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
 
   useEffect(() => {
     if (searchQuery.trim() !== '') {
-      const results = curators.filter(curator =>
-        curator.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      const results = users.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
-      setFilteredCurators(results);
+      setFilteredUsers(results);
     } else {
-      setFilteredCurators([]);
+      setFilteredUsers([]);
     }
-  }, [searchQuery, curators]);
+  }, [searchQuery, users]);
 
   const infoData = {
     station: 'Ст. Молодежная',
@@ -47,7 +41,7 @@ const Search: React.FC<ISearchProps> = ({
       {showInfoSection && (
         <div className="flex justify-between items-center">
           <div className="flex">
-            <img className="mr-1" src={metroIcon} alt={'metro'} />
+            <img className="mr-1" src={metroIcon} alt="metro" />
             <div className="text-left">
               <h2 className="font-gerbera-h3 text-light-gray-8-text dark:text-dark-gray-8-text">
                 {infoData.station}
@@ -62,7 +56,11 @@ const Search: React.FC<ISearchProps> = ({
 
       {showSearchInput && (
         <div className="mt-4 bg-light-gray-1 dark:bg-dark-gray-1 rounded-[16px] px-4 py-2 h-[52px] flex items-center">
-          <img src={searchIcon} className="text-gray-400 w-6 h-6 mr-4" />
+          <img
+            src={searchIcon}
+            className="text-gray-400 w-6 h-6 mr-4"
+            alt="search"
+          />
           <input
             type="text"
             placeholder={placeholder}
@@ -73,21 +71,21 @@ const Search: React.FC<ISearchProps> = ({
         </div>
       )}
 
-      {filteredCurators.length > 0 && (
+      {filteredUsers.length > 0 && (
         <div className="mt-4 space-y-2">
-          {filteredCurators.map((curator, index) => (
+          {filteredUsers.map(user => (
             <div
-              key={index}
+              key={user.id}
               className="flex items-center space-x-4 p-2 bg-light-gray-1 rounded-[16px] shadow cursor-pointer"
-              onClick={() => onVolunteerClick(curator)}
+              onClick={() => onUserClick(user)}
             >
               <img
-                src={curator.avatar}
-                alt={curator.name}
+                src={user.avatar}
+                alt={user.name}
                 className="w-8 h-8 rounded-full"
               />
               <span className="font-gerbera-h3 text-light-gray-8-text">
-                {curator.name}
+                {user.name}
               </span>
             </div>
           ))}

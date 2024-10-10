@@ -9,7 +9,7 @@ const cardTasks = [
     subtitle: 'Мск, ул. Бобруйская д.6 к.2',
     timeOrPeriod: '15:00',
     points: '+2 балла',
-    type: 'time-based',
+    type: 'time-based' as const,
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const cardTasks = [
     subtitle: 'Онлайн',
     timeOrPeriod: 'За две недели',
     points: '+14 баллов',
-    type: 'period-based',
+    type: 'period-based' as const,
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const cardTasks = [
     timeOrPeriod: '15:00',
     additionalTime: '25.08',
     points: '+2 балла',
-    type: 'time-based',
+    type: 'time-based' as const,
   },
 ];
 
@@ -125,14 +125,18 @@ const SliderCards: React.FC<SliderCardsProps> = ({ showTitle = true }) => {
         {/* Отображение карточек через map */}
         {cardTasks.map(task => (
           <div key={task.id} className="">
-            <CardTask
-              title={task.title}
-              subtitle={task.subtitle}
-              timeOrPeriod={task.timeOrPeriod}
-              points={task.points}
-              typeTask={task.type}
-              additionalTime={task.additionalTime}
-            />
+            {task.type === 'time-based' || task.type === 'period-based' ? (
+              <CardTask
+                title={task.title}
+                subtitle={task.subtitle}
+                timeOrPeriod={task.timeOrPeriod}
+                points={task.points}
+                typeTask={task.type}
+                additionalTime={task.additionalTime}
+              />
+            ) : (
+              <div>Некорректный тип задачи</div>
+            )}
           </div>
         ))}
       </div>

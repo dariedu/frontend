@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Search from '../../../components/Search/Search';
-import ProfileUser from '../../../components/ProfileUser/ProfileUser'; // Импорт компонента профиля волонтера
+import ProfileUser from '../../../components/ProfileUser/ProfileUser';
 import avatar1 from '../../../assets/avatar.svg';
+import { IUser } from '../../../core/types';
 
-// Массив кураторов
-const curators = [
+const users: IUser[] = [
   { id: 1, name: 'Осипова Юлия', avatar: avatar1 },
   { id: 2, name: 'Иванов Иван', avatar: avatar1 },
   { id: 3, name: 'Сидоров Алексей', avatar: avatar1 },
@@ -14,37 +14,31 @@ const curators = [
 ];
 
 const Curator: React.FC = () => {
-  const currentUserId = 1; // ID текущего пользователя
-  const [selectedVolunteer, setSelectedVolunteer] = useState<ICurator | null>(
-    null,
-  );
+  const currentUserId = 1;
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-  // Обработчик нажатия на волонтера
-  const handleVolunteerClick = (volunteer: ICurator) => {
-    setSelectedVolunteer(volunteer); // Устанавливаем выбранного волонтера
+  const handleUserClick = (user: IUser) => {
+    setSelectedUser(user);
   };
 
-  // Обработчик закрытия профиля волонтера
   const closeProfile = () => {
-    setSelectedVolunteer(null); // Закрываем окно профиля
+    setSelectedUser(null);
   };
 
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
-      {/* Передаем массив кураторов и функцию нажатия в Search */}
       <Search
-        curators={curators}
-        onVolunteerClick={handleVolunteerClick}
+        users={users}
+        onUserClick={handleUserClick}
         showSearchInput={true}
         showInfoSection={true}
       />
 
-      {/* Условное отображение компонента ProfileUser */}
-      {selectedVolunteer && (
+      {selectedUser && (
         <ProfileUser
-          user={selectedVolunteer} // Передаем данные выбранного волонтера
-          currentUserId={currentUserId} // Передаем ID текущего пользователя
-          onClose={closeProfile} // Функция закрытия окна профиля
+          user={selectedUser}
+          currentUserId={currentUserId}
+          onClose={closeProfile}
         />
       )}
     </div>

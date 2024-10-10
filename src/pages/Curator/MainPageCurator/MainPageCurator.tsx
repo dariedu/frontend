@@ -6,52 +6,87 @@ import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
+import { IUser } from '../../../core/types';
+import avatar1 from '../../../assets/avatar.svg';
+
+const users: IUser[] = [
+  {
+    id: 1,
+    name: 'Василий',
+    last_name: 'Петров',
+    avatar: avatar1,
+    role: 'curator',
+    rating: {
+      id: 0,
+      level: '',
+      hours_needed: 0,
+    },
+    point: 0,
+    volunteer_hour: 0,
+  },
+  {
+    id: 2,
+    name: 'Анна',
+    last_name: 'Иванова',
+    avatar: avatar1,
+    role: 'curator',
+    rating: {
+      id: 0,
+      level: '',
+      hours_needed: 0,
+    },
+    point: 0,
+    volunteer_hour: 0,
+  },
+];
 
 const MainPageCurator: React.FC = () => {
-  // Состояние для статуса доставки
   const [deliveryStatus, setDeliveryStatus] = useState<
-    'Активная' | 'Ближайшая' | 'Завершена'
+    'Активная' | 'Завершена'
   >('Активная');
 
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
-  // Фиксированное количество баллов для проверки
   const points = 5;
 
-  // Обработчик для открытия компонента RouteSheets
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
   };
 
-  // Обработчик для закрытия компонента RouteSheets
   const closeRouteSheets = () => {
     setIsRouteSheetsOpen(false);
   };
 
-  // Функция для обновления статуса доставки
-  const handleStatusChange = (
-    newStatus: 'Активная' | 'Ближайшая' | 'Завершена',
-  ) => {
+  const handleStatusChange = (newStatus: 'Активная' | 'Завершена') => {
     setDeliveryStatus(newStatus);
   };
 
+  const handleUserClick = (user: IUser) => {
+    console.log('Selected user:', user);
+  };
+
   return (
-    <div className="flex-col bg-light-gray-1  min-h-[746px]">
+    <div className="flex-col bg-light-gray-1 min-h-[746px]">
       <SliderStories />
-      {/* Передаем статус, баллы и функцию открытия RouteSheets */}
       <DeliveryType
         status={deliveryStatus}
         points={points}
         onDeliveryClick={openRouteSheets}
       />
-      <Search showSearchInput={false} showInfoSection={true} />
-      {/* Если статус "Ближайшая", добавляется компонент DeliveryInfo */}
-      {deliveryStatus === 'Ближайшая' && (
-        <div className="">
+
+      <Search
+        showSearchInput={false}
+        showInfoSection={true}
+        users={users}
+        onUserClick={handleUserClick}
+      />
+
+      {deliveryStatus === 'Активная' && (
+        <div>
           <DeliveryInfo />
         </div>
       )}
-      {/* Условно отображаем компоненты Calendar и SliderCards */}
+
       {!isRouteSheetsOpen && (
         <>
           <Calendar
@@ -65,11 +100,10 @@ const MainPageCurator: React.FC = () => {
         </>
       )}
 
-      {/* Условный рендеринг RouteSheets */}
       {isRouteSheetsOpen && (
         <RouteSheets
           title="Маршрутный лист 1"
-          status={deliveryStatus} // Передаем статус из состояния
+          status={deliveryStatus}
           onClose={closeRouteSheets}
           onStatusChange={handleStatusChange}
         />
