@@ -77,4 +77,26 @@ function getPersonCorrectEndingName(price: number): string {
   return result
 }
 
-export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName, getPersonCorrectEndingName}
+function getVolunteerCorrectEndingName(num: number): string {
+  let result = "волонтёр"
+  num % 100 == 0 ? (result = "волонтёров") : (num = num % 100)
+    if (num > 20) {
+      num % 10 == 0 ? (result = "волонтёров") : (num = num % 10)
+      if (num == 1) {
+        result = "волонтёр"
+       } else if (num > 1 && num < 5) {
+         result = "волонтёра"
+       } else if (num > 4 && num < 21) {
+         result = "волонтёров"
+       }
+    } else if (num == 1) {
+     result = "волонтёр"
+    } else if (num > 1 && num < 5) {
+      result = "волонтёра"
+    } else if (num > 4 && num < 21) {
+      result = "волонтёров"
+    }
+  return result
+}
+
+export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName, getPersonCorrectEndingName, getVolunteerCorrectEndingName}
