@@ -4,11 +4,12 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
-  onSubmitFidback: (e:boolean) => void
+  onSubmitFidback: (e: boolean) => void
+  volunteer: boolean
 }
 
 
-const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback}) => {
+const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback, volunteer}) => {
 
 
   const [feedbacks, setFeedbacks] = useState({
@@ -47,6 +48,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
 
   return (
     <>
+      {volunteer ? (
       <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white"
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4">
@@ -74,7 +76,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
+                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3"
                   required
                   defaultValue={localStorage.getItem('fb1') ?? ''}
@@ -96,7 +98,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
+                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 "
                   defaultValue={localStorage.getItem('fb2') ?? ''}
                   onChange={e => {
@@ -113,15 +115,78 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               </Form.Message>
             </Form.Field>
           </div>
-          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive"} mt-4 mb-4  `}
+          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive"} mt-4 mb-4 `}
             onClick={(e) => {
               if (buttonActive) {
                
               }else e.preventDefault()
           }}
-          >Завершить</button>
+          >Отправить</button>
         </Form.Root>
       </div>
+      ) : (
+        <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white"
+        onClick={(e)=>e.stopPropagation()}>
+          <div className="flex items-center self-start mt-[25px] mx-4">
+            <img
+              src="../src/assets/icons/big_pencil.svg"
+              className="h-[32px] w-[32px]"
+            />
+            <p className="ml-[14px] font-gerbera-h3">
+            Поделитесь вашими впечатлениями от курирования в доставки
+            </p>
+          </div>
+  
+          <Form.Root
+             className=" flex flex-col items-center justify-center"
+            onSubmit={e => {
+              e.preventDefault();
+              handleFormSubmit()
+            }}
+           >
+            <div  className='flex flex-col px-4'>
+              <Form.Field name="fb1" className="mt-4">
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
+                Как прошла доставка? Что понравилось? А что хотели бы изменить и как?
+                </Form.Label>
+                <Form.Control asChild>
+                  <TextareaAutosize
+                    maxRows={10}
+                    className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  placeholder:text-light-gray-3"
+                    required
+                    defaultValue={localStorage.getItem('fb1') ?? ''}
+                    onChange={e => {
+                      handleFormFieldChange('fb1', e.target.value);
+                      handleInfoInput()
+                    }}
+                  />
+                </Form.Control>
+                <Form.Message
+                  match={(value) => value.length < 10}
+                  className="font-gerbera-sub2 text-light-error-red line-clamp-3"
+                >
+                  Сообщение слишком короткое, минимальное количество символов 10
+                  </Form.Message>
+                  {/* <Form.Message
+                  match="valueMissing"
+                  className="font-gerbera-sub2 text-light-error-red line-clamp-3"
+                >
+                  Для отправки отзыва введите ваше сообщение
+                </Form.Message> */}
+              </Form.Field>
+             
+            </div>
+            <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive"} mt-4 mb-4  `}
+              onClick={(e) => {
+                if (buttonActive) {
+                 
+                }else e.preventDefault()
+            }}
+            >Отправить</button>
+          </Form.Root>
+        </div>)}
+      
     </>
   );
 };

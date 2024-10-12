@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   getBallCorrectEndingName,
   getMonthCorrectEndingName,
-  getPersonCorrectEndingName,
+  getVolunteerCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import RouteSheets from '../RouteSheets/RouteSheets';
 import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
@@ -65,7 +65,7 @@ export const delivery1: IDelivery = {
   is_active: true,
   is_completed: false,
   in_execution: false,
-  volunteers_needed: 1,
+  volunteers_needed: 5,
   volunteers_taken: 3,
   delivery_assignments: [],
   route_sheet: 1,
@@ -95,8 +95,8 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   delivery = delivery1,
-  volunteer = false,
-  deliveryFilter = 'active',
+  volunteer = true,
+  deliveryFilter = 'nearest',
   //booked = false,
 }) => {
   const deliveryDate = new Date(delivery.date);
@@ -105,7 +105,8 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
   const [fullViewCurator, setFullViewCurator] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
-  const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке
+  const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
+  const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
 
   const [isConfirmDeliveryModalOpen, setIsConfirmDeliveryModalOpen] = useState(false); ///// модальное окно для подтверждения доставки 
@@ -140,14 +141,14 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
       )} 
         {currentStatus == 'active' && !volunteer ? (
               fullViewCurator == true ? (
-                  <RouteSheets title= "Маршрутный лист 1" status= 'Активная'  onClose={()=>setFullView(false)} onStatusChange={()=>{setCurrentStatus('completed')}} />                
+                  <RouteSheets title= "Маршрутный лист 1" status= 'Активная'  onClose={()=>setFullViewCurator(false)} onStatusChange={()=>{setCurrentStatus('completed')}} />                
               ) : (
                 ''
               )
             ) : (
               ''
       )} 
-      <div className={`${currentStatus == 'active' ? fullView == true ? "hidden" : "" : "" } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white dark:bg-light-gray-7-logo`}>
+      <div className={`${(currentStatus == 'active' && volunteer) ? (fullView == true ? "hidden" : "" ): (currentStatus == 'active' &&  !volunteer) ?  (fullViewCurator == true ? "hidden" : ""): ""} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white dark:bg-light-gray-7-logo`}>
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
             <p className="btn-S-GreenDefault flex items-center justify-center">
@@ -167,9 +168,9 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
 
           <div className="flex items-center">
             <p
-              className="font-gerbera-sub2 text-light-gray-3 cursor-pointer dark:text-light-gray-4 mr-2"
+              className={!volunteer && currentStatus == "nearest" ? "font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2": "font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2 cursor-pointer"}             
               onClick={() => {
-                volunteer ? (fullView == true ? setFullView(false) : setFullView(true)) : (fullViewCurator== true ? setFullViewCurator(false) : setFullViewCurator(true))
+                volunteer ? (fullView == true ? setFullView(false) : setFullView(true)) : (currentStatus== "nearest" ? "" :( fullViewCurator == true ? setFullViewCurator(false) : setFullViewCurator(true)) )
               }}
             >
               Доставка{' '}
@@ -199,27 +200,39 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
               src="../src/assets/icons/arrow_right.png"
               className=" cursor-pointer"
               onClick={() => {
-                fullViewCurator== true ? setFullViewCurator(false) : setFullViewCurator(true);
+                fullViewCurator==true ? setFullViewCurator(false) : setFullViewCurator(true);
               }}
-            />
-            ) : ""     
+            /> 
+              ) : currentStatus == 'completed' ? (
+                <img
+                src="../src/assets/icons/arrow_down.png"
+                className={`${!fullViewCurator? 'rotate-180' : ''} cursor-pointer`}
+                onClick={() => {
+                  fullViewCurator==true ? setFullViewCurator(false) : setFullViewCurator(true);
+                }}
+              />
+            ): ""
             )
              }
            
           </div>
         </div>
         {/* /////////////////////// */}
+        
+        {volunteer ? (
         <div className="flex w-fit">
-          <img src="../src/assets/icons/metro_station.svg" />
-          <div className="flex flex-col justify-start items-start pl-2 w-max-[290px] pt-[20px]">
-            <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-              Ст. {delivery.location.subway}
-            </h1>
-            <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px] dark:text-light-gray-3">
-              {delivery.location.address}
-            </p>
-          </div>
+        <img src="../src/assets/icons/metro_station.svg" />
+        <div className="flex flex-col justify-start items-start pl-2 w-max-[290px] pt-[20px]">
+          <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
+            Ст. {delivery.location.subway}
+          </h1>
+          <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px] dark:text-light-gray-3">
+            {delivery.location.address}
+          </p>
         </div>
+      </div>
+        ) : ""}
+        
         {/* /////////////////////// */}
         {volunteer ? (currentStatus == 'completed' ? (""): (
           <div className="flex justify-between items-center mt-[14px]">
@@ -260,8 +273,8 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
               <p className="font-gerbera-sub2 text-light-gray-5">Записались</p>
               <p className="font-gerbera-h3 text-light-gray-8">
                 {delivery.volunteers_taken == 0
-                  ? 'Пока никого'
-                  : `${delivery.volunteers_taken + ' ' + getPersonCorrectEndingName(delivery.volunteers_taken)}`}
+                  ? '0 из'  + `${delivery.volunteers_needed}`
+                  : `${delivery.volunteers_taken  + " из " + `${delivery.volunteers_needed}` + " " + getVolunteerCorrectEndingName(delivery.volunteers_needed)}`}
               </p>
             </div>
           </div>
@@ -270,7 +283,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         )}
 
         {volunteer ? (
-          (currentStatus == 'nearest' || currentStatus == 'completed')?  (
+          (currentStatus == 'nearest' || currentStatus == 'completed')? (
             fullView ? (
               <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
                 <div className="flex">
@@ -297,29 +310,29 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
             ) : (
               ''
             )
-          ) : currentStatus == 'active' ? (
-            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
-            <div className="flex">
-              <img
-                className="h-[32px] w-[32px] rounded-full"
-                src={delivery.curator.avatar}
-              />
-              <div className="felx flex-col justify-center items-start ml-4">
-                <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
-                  {delivery.curator.name}
-                </h1>
-                <p className="font-gerbera-sub2 text-light-gray-2 text-start">
-                  Куратор
-                </p>
-              </div>
-            </div>
-            <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-              <img
-                src="../src/assets/icons/small_sms.svg"
-                className="w-[36px] h-[35px]"
-              />
-            </a>
-          </div>
+          ) : currentStatus == 'active' ? ( ""
+          //   <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+          //   <div className="flex">
+          //     <img
+          //       className="h-[32px] w-[32px] rounded-full"
+          //       src={delivery.curator.avatar}
+          //     />
+          //     <div className="felx flex-col justify-center items-start ml-4">
+          //       <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+          //         {delivery.curator.name}
+          //       </h1>
+          //       <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+          //         Куратор
+          //       </p>
+          //     </div>
+          //   </div>
+          //   <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+          //     <img
+          //       src="../src/assets/icons/small_sms.svg"
+          //       className="w-[36px] h-[35px]"
+          //     />
+          //   </a>
+          // </div>
           ) : (
             ''
           )
@@ -371,17 +384,29 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
           >
             Поделиться впечатлениями
           </button>
-          ): " "
+          ): ""
         ) : (
-            !volunteer ? currentStatus == "active" ? "" : (
+            !volunteer ? currentStatus == "active" || currentStatus == "completed" ? "" : (
               <button className='btn-B-WhiteDefault mt-[20px]' onClick={()=>setFullViewCurator(true)}>Список записавшихся волонтёров</button>
               ) : ""
         )}
+         {!volunteer ? (currentStatus == "completed" && fullViewCurator) ? ( <button className="btn-B-GreenDefault  mt-[20px]"
+            onClick={e => {
+              e.preventDefault()
+              setIsCuratorFeedbackModalOpen(true)
+            }}
+          >
+            Поделиться впечатлениями
+          </button>)
+            : "" : ""}
 
         {/* /////////////////////// */}
       </div>
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-         <DeliveryFeedback onOpenChange={setIsModalOpen} onSubmitFidback={()=>setIsFeedbackSubmitedModalOpen(true)}/>
+        <DeliveryFeedback onOpenChange={setIsModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={true} />
+      </Modal>
+      <Modal isOpen={isCuratorFeedbackModalOpen} onOpenChange={setIsCuratorFeedbackModalOpen}>
+        <DeliveryFeedback onOpenChange={setIsCuratorFeedbackModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={false} />
       </Modal>
       <ConfirmModal isOpen={isFeedbackSubmitedModalOpen} onOpenChange={setIsFeedbackSubmitedModalOpen} onConfirm={() => setIsFeedbackSubmitedModalOpen(false)} title={<p>Спасибо, что поделились!<br /> Это важно.</p>} description="" confirmText="Закрыть" isSingleButton={true} />
       <ConfirmModal isOpen={isConfirmDeliveryModalOpen} onOpenChange={setIsConfirmDeliveryModalOpen} onConfirm={() => { setIsConfirmDeliveryModalOpen(false); setIsDeliveryConfirmedModalOpen(true) }} title={<p>Вы подтверждаете участие в доставке?</p>} description="" confirmText="Да" cancelText='Нет'  />
