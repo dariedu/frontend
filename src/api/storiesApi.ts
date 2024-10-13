@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Устанавливаем URL API
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинт для работы с историями
-const storiesEndpoint = `${API_URL}/stories/`;
+const storiesEndpoint = `${API_URL}stories/`;
 
 // Интерфейс для данных истории
-interface IStory {
+export interface IStory {
   id: number;
   link: string;
   link_name?: string;

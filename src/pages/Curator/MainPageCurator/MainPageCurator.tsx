@@ -12,10 +12,12 @@ import avatar1 from '../../../assets/avatar.svg';
 const users: IUser[] = [
   {
     id: 1,
+    tg_id: 1,
     name: 'Василий',
     last_name: 'Петров',
+    is_adult: true,
     avatar: avatar1,
-    role: 'curator',
+    is_staff: true,
     rating: {
       id: 0,
       level: '',
@@ -26,10 +28,12 @@ const users: IUser[] = [
   },
   {
     id: 2,
+    tg_id: 2,
     name: 'Анна',
     last_name: 'Иванова',
+    is_adult: true,
     avatar: avatar1,
-    role: 'curator',
+    is_staff: true,
     rating: {
       id: 0,
       level: '',
