@@ -144,7 +144,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
             ) : (
               ''
       )} 
-      <div className={`${(currentStatus == 'active' && volunteer) ? (fullView == true ? "hidden" : "" ): (currentStatus == 'active' &&  !volunteer) ?  (fullViewCurator == true ? "hidden" : ""): ""} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 shadow-lg bg-light-gray-white dark:bg-light-gray-7-logo`}>
+      <div className={`${(currentStatus == 'active' && volunteer) ? (fullView == true ? "hidden" : "" ): (currentStatus == 'active' &&  !volunteer) ?  (fullViewCurator == true ? "hidden" : ""): ""} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}>
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
             <p className="btn-S-GreenDefault flex items-center justify-center">

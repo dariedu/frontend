@@ -15,6 +15,12 @@ import BonusesIcon from '../../assets/icons/bonus.svg';
 import BonusesIconActive from '../../assets/icons/bonusActive.svg';
 import Curator from '../../pages/Curator/Curator/Curator';
 
+//////volunteer
+import MainTabVolunteer from '../../pages/Volunteer/MainTabVolunteer/MainTabVolunteer';
+import CalendarTabVolunteer from '../../pages/Volunteer/CalendarTabVolunteer/CalendarTabVolunteer';
+import BankTabVolunteer from '../../pages/Volunteer/BankTabVolunteer/BankTabVolunteer';
+//////volunteer
+
 interface ITabBarProps {
   userRole: 'curator' | 'volunteer';
 }
@@ -47,14 +53,14 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           </>
         ) : (
           <>
-            <Tabs.Content value="tab1" className="TabsContent">
-              <p>Содержимое Главная (для волонтера)</p>
+              <Tabs.Content value="tab1" className="TabsContent">
+              <MainTabVolunteer />
             </Tabs.Content>
-            <Tabs.Content value="tab2" className="TabsContent">
-              <p>Содержимое Календарь (для волонтера)</p>
-            </Tabs.Content>
-            <Tabs.Content value="tab3" className="TabsContent">
-              <p>Содержимое Моя копилка (для волонтера)</p>
+              <Tabs.Content value="tab2" className="TabsContent">
+                <CalendarTabVolunteer />
+              </Tabs.Content>
+            <Tabs.Content value="tab4" className="TabsContent">
+            <BankTabVolunteer />
             </Tabs.Content>
           </>
         )}
