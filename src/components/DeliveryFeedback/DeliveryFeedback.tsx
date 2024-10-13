@@ -6,10 +6,11 @@ interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
   onSubmitFidback: (e: boolean) => void
   volunteer: boolean
+  delivery: boolean //// true если это доствка false  если это доброе дело
 }
 
 
-const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback, volunteer}) => {
+const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback, volunteer, delivery}) => {
 
 
   const [feedbacks, setFeedbacks] = useState({
@@ -93,8 +94,14 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
                 Сообщение слишком короткое, минимальное количество символов 10
               </Form.Message>
             </Form.Field>
-            <Form.Field name="fb2" className="mt-4">
-              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 ">Как прошла доставка? что вам понравилось? что вы бы поменяли?</Form.Label>
+              <Form.Field name="fb2" className="mt-4">
+                {delivery ? (
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 ">Как прошла доставка? что вам понравилось? что вы бы поменяли?</Form.Label>
+                ): (
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 ">Как прошло ваше учачтие в добром деле? что вам понравилось? что вы бы поменяли?</Form.Label>   
+                )
+                 }
+              
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
@@ -132,9 +139,15 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               src="../src/assets/icons/big_pencil.svg"
               className="h-[32px] w-[32px]"
             />
+              {delivery ? (
             <p className="ml-[14px] font-gerbera-h3">
-            Поделитесь вашими впечатлениями от курирования в доставки
+            Поделитесь вашими впечатлениями от курирования доставки
             </p>
+              ) : (
+                <p className="ml-[14px] font-gerbera-h3">
+                Поделитесь вашими впечатлениями от курирования доброго дела
+                </p>
+            )}
           </div>
   
           <Form.Root
@@ -146,9 +159,15 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
            >
             <div  className='flex flex-col px-4'>
               <Form.Field name="fb1" className="mt-4">
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
-                Как прошла доставка? Что понравилось? А что хотели бы изменить и как?
+                  {delivery ? (
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
+                  Как прошла доставка? Что понравилось? А что хотели бы изменить и как?
+                  </Form.Label>
+                  ): (
+                    <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
+                Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как?
                 </Form.Label>
+                )}
                 <Form.Control asChild>
                   <TextareaAutosize
                     maxRows={10}

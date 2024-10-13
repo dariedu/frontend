@@ -2,6 +2,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 // import StoriesView from '../../components/SliderStories/SliderStories';
 import NearestDelivery from '../../components/NearestDelivery/NearestDelivery';
 //import TabBar from '../../components/TabBar/TabBar';
+import NearestTask from '../../components/NearestTask/NearestTask';
 
 const VolunteerPage = () => {
   return (
@@ -18,6 +19,7 @@ const VolunteerPage = () => {
      
       {/* <StoriesView /> */}
       <NearestDelivery />
+      <NearestTask/>
       {/* <TabBar /> */}
     </div>
   );
