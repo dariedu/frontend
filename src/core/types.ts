@@ -1,14 +1,23 @@
 export interface IUser {
   id: number;
-  name: string;
-  last_name?: string;
+  tg_id: number;
+  tg_username?: string | null;
+  email?: string | null;
+  last_name?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  phone?: string | null;
+  photo?: string | null;
   avatar?: string;
-  role?: 'curator' | 'volunteer';
-  rating?: {
-    id: number;
-    level: string;
-    hours_needed: number;
-  };
-  point?: number;
-  volunteer_hour?: number;
+  birthday?: number | null;
+  is_adult: boolean;
+  volunteer_hour: number;
+  point: number | null;
+  rating: number | { id: number; level: string; hours_needed: number };
+  city?: number | null;
+  is_superuser?: boolean;
+  is_staff?: boolean;
+  metier?: string | null;
+  interests?: string | null;
+  consent_to_personal_data?: boolean;
 }

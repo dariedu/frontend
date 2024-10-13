@@ -1,13 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Устанавливаем URL API
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинты для работы с пользователями
-const usersEndpoint = `${API_URL}/users/`;
+const usersEndpoint = `${API_URL}users/`;
 
 // Типизация данных пользователя
 interface IUser {
+  avatar: string;
   id: number;
   tg_id: number;
   email?: string | null;
@@ -59,6 +60,8 @@ export const getUsers = async (params?: IGetUsersParams): Promise<IUser[]> => {
 
 // Получение информации о пользователе по ID
 export const getUserById = async (id: number): Promise<IUser> => {
+  if (!id) throw new Error('Invalid userId');
+
   try {
     const response: AxiosResponse<IUser> = await axios.get(
       `${usersEndpoint}${id}/`,

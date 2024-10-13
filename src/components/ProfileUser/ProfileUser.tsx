@@ -1,21 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import ProfilePic from '../ProfilePic/ProfilePic';
 import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
-import { IUser } from '../../core/types';
+import { IUser, getUserById } from '../../api/userApi';
 
 interface IProfileUserProps {
-  user: IUser;
+  userId: number; // Передаем только ID пользователя, а данные будем загружать
   onClose: () => void;
   currentUserId: number;
 }
 
 const ProfileUser: React.FC<IProfileUserProps> = ({
-  user,
+  userId,
   onClose,
   currentUserId,
 }) => {
+  const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Загружаем данные о пользователе с бэкенда
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const fetchedUser = await getUserById(userId);
+        setUser(fetchedUser);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, [userId]);
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!user) {
+    return <div>Пользователь не найден</div>;
+  }
+
   const isCurrentUser = user.id === currentUserId;
   const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль пользователя';
 
@@ -31,13 +58,30 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           </h2>
         </div>
         <div className="w-full flex-grow overflow-y-auto hide-scrollbar">
-          <ProfilePic user={user} />
+          {/* Передаем проверенные данные в компонент ProfilePic */}
+          <ProfilePic
+            user={{
+              ...user,
+              name: user.name ?? 'Неизвестный',
+              is_adult: true,
+              point: user.point ?? 0,
+              rating:
+                typeof user.rating === 'number'
+                  ? { id: 0, level: `Уровень ${user.rating}`, hours_needed: 0 }
+                  : (user.rating ?? {
+                      id: 0,
+                      level: 'Нет уровня',
+                      hours_needed: 0,
+                    }),
+            }}
+          />
+
           <VolunteerData
-            geo="Адрес пользователя"
-            email="example@example.com"
-            birthday="01.01.1990"
-            phone="+79999999999"
-            telegram="@user"
+            geo={user.city ? `Город: ${user.city}` : 'Адрес не указан'}
+            email={user.email || 'Эл. почта не указана'}
+            birthday="01.01.1990" // Заменить на реальную дату рождения, если доступна
+            phone={user.phone || 'Телефон не указан'}
+            telegram="@user" // Заменить на реальные данные, если доступны
           />
           {isCurrentUser && (
             <ActionsVolunteer

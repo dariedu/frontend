@@ -22,13 +22,26 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
     }
   }
 
+  // Обработка значений по умолчанию
+  const userName = user.name ?? 'Неизвестный';
+  const userLastName = user.last_name ?? '';
+  const userAvatarSrc = fileUploaded
+    ? uploadedFileLink
+    : user.avatar || userAvatar;
+  const userRating =
+    typeof user.rating === 'object' && user.rating !== null
+      ? (user.rating.level ?? 'Нет уровня')
+      : `Уровень ${user.rating ?? 'Нет уровня'}`;
+  const userPoints = user.point ?? 0;
+  const userVolunteerHours = user.volunteer_hour ?? 0;
+
   return (
     <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full border-2">
       <div className="h-[105px] w-[105px] bg-light-gray-1 rounded-full flex justify-center items-center relative">
         <img
-          src={fileUploaded ? uploadedFileLink : user.avatar || userAvatar}
+          src={userAvatarSrc}
           className="h-[105px] w-[105px] rounded-full object-cover"
-          alt={`${user.name} ${user.last_name}`}
+          alt={`${userName} ${userLastName}`}
         />
         {!fileUploaded && (
           <input
@@ -41,20 +54,17 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
       </div>
       <div>
         <p className="font-gerbera-h3 text-light-gray-black ">
-          {user.name} {user.last_name}
+          {userName} {userLastName}
         </p>
-        <p className="font-gerbera-sub1 text-light-gray-4">
-          {user.rating?.level ?? 'Нет уровня'}
-        </p>
+        <p className="font-gerbera-sub1 text-light-gray-4">{userRating}</p>
       </div>
 
       <div className="w-[220px] h-[28px] flex justify-between items-center">
         <p className="w-[96px] h-[28px] bg-light-brand-green font-gerbera-sub2 text-light-gray-white rounded-2xl flex justify-center items-center">
-          {user.point ?? 0} {getBallCorrectEndingName(user.point ?? 0)}
+          {userPoints} {getBallCorrectEndingName(userPoints)}
         </p>
         <p className="w-[96px] h-[28px] bg-light-gray-1 font-gerbera-sub2 text-light-gray-8-text rounded-2xl flex justify-center items-center">
-          {user.volunteer_hour ?? 0}{' '}
-          {getHourCorrectEndingName(user.volunteer_hour ?? 0)}
+          {userVolunteerHours} {getHourCorrectEndingName(userVolunteerHours)}
         </p>
       </div>
     </div>

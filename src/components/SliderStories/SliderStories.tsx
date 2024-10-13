@@ -1,20 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import CardStories from '../ui/Cards/CardStories/CardStories';
 import SliderStoriesView from './SliderStoriesView';
-import imageStory from '../../assets/Story.jpg';
-
-// Пример данных для слайдера
-const stories = [
-  { id: 1, title: 'Расписание доставок', imageSrc: imageStory },
-  { id: 2, title: 'Расписание доставок', imageSrc: imageStory },
-  { id: 3, title: 'Расписание доставок', imageSrc: imageStory },
-  { id: 4, title: 'Расписание доставок', imageSrc: imageStory },
-];
+import { getStories, IStory } from '../../api/storiesApi';
 
 const SliderStories: React.FC = () => {
+  const [stories, setStories] = useState<IStory[]>([]); // Состояние для данных историй
   const [currentStoryIndex, setCurrentStoryIndex] = useState<number | null>(
     null,
   );
+  const [loading, setLoading] = useState<boolean>(true); // Состояние для индикации загрузки
+  const [error, setError] = useState<string | null>(null); // Состояние для обработки ошибок
+
+  // Эффект для загрузки историй при монтировании компонента
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const fetchedStories = await getStories(); // Вызов функции API
+        setStories(fetchedStories);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load stories');
+        setLoading(false);
+      }
+    };
+
+    fetchStories(); // Вызов функции загрузки историй
+  }, []);
 
   // Начальные позиции для перетаскивания
   const [dragStart, setDragStart] = useState<number>(0);
@@ -82,6 +93,14 @@ const SliderStories: React.FC = () => {
     }, 0);
   };
 
+  if (loading) {
+    return <div>Loading stories...</div>; // Индикатор загрузки
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Вывод ошибки
+  }
+
   return (
     <>
       {/* Слайдер для историй */}
@@ -99,8 +118,8 @@ const SliderStories: React.FC = () => {
         {stories.map((story, index) => (
           <div key={story.id} className="inline-block">
             <CardStories
-              imageSrc={story.imageSrc}
-              title={story.title}
+              imageSrc={story.cover || ''}
+              title={story.title || 'No title'}
               onClick={() => {
                 if (!isDragging) {
                   setCurrentStoryIndex(index);

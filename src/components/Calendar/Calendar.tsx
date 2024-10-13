@@ -65,37 +65,62 @@ const Calendar: React.FC<ICalendarProps> = ({
     ));
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  // Обработчики событий для мыши и касания
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    setStartX(e.pageX - (calendarRef.current?.offsetLeft || 0));
+    if (e.type === 'mousedown') {
+      const mouseEvent = e as React.MouseEvent;
+      setStartX(mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0));
+    } else {
+      const touchEvent = e as React.TouchEvent;
+      setStartX(
+        touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0),
+      );
+    }
     setScrollLeft(calendarRef.current?.scrollLeft || 0);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMove = (e: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
     e.preventDefault();
-    const x = e.pageX - (calendarRef.current?.offsetLeft || 0);
+    let x: number;
+    if (e.type === 'mousemove') {
+      const mouseEvent = e as MouseEvent;
+      x = mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
+    } else {
+      const touchEvent = e as TouchEvent;
+      x = touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
+    }
     const walk = (x - startX) * 1.5;
     if (calendarRef.current) {
       calendarRef.current.scrollLeft = scrollLeft - walk;
     }
   };
 
-  const handleMouseUpOrLeave = () => {
+  const handleEnd = () => {
     setIsDragging(false);
   };
 
   useEffect(() => {
     if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUpOrLeave);
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('touchmove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+      window.addEventListener('touchend', handleEnd);
+      window.addEventListener('touchcancel', handleEnd);
     } else {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchend', handleEnd);
+      window.removeEventListener('touchcancel', handleEnd);
     }
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUpOrLeave);
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchend', handleEnd);
+      window.removeEventListener('touchcancel', handleEnd);
     };
   }, [isDragging]);
 
@@ -163,7 +188,8 @@ const Calendar: React.FC<ICalendarProps> = ({
           }`}
           style={{ width: '300px', overflowX: 'hidden' }}
           ref={calendarRef}
-          onMouseDown={handleMouseDown}
+          onMouseDown={handleStart}
+          onTouchStart={handleStart}
           onDragStart={e => e.preventDefault()}
         >
           {renderWeekDays()}
