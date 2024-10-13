@@ -37,7 +37,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
 }) => {
 
   return (
-    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8">
+    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white">
       <div className="flex align-middle justify-between">
         <div className="flex">
           {/* <div className="w-9 h-9 bg-light-brand-green rounded-full flex items-center justify-center">
