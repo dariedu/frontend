@@ -10,10 +10,6 @@ import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal'
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 
-// routes={[{address: "Москва улица неизвестная, дом любой, кв. самая большая",
-//   additionalInfo:"Еще информация",
-//   personName: "Марко"
-// }]} 
   
 interface IDelivery {
   id: number;
@@ -96,7 +92,7 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   delivery = delivery1,
   volunteer = true,
-  deliveryFilter = 'nearest',
+  deliveryFilter = 'active',
   //booked = false,
 }) => {
   const deliveryDate = new Date(delivery.date);
@@ -220,9 +216,9 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
         
         {volunteer ? (
-        <div className="flex w-fit">
+        <div className="flex w-fit  pt-[10px]">
         <img src="../src/assets/icons/metro_station.svg" />
-        <div className="flex flex-col justify-start items-start pl-2 w-max-[290px] pt-[20px]">
+        <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
           <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
             Ст. {delivery.location.subway}
           </h1>
@@ -311,28 +307,6 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
               ''
             )
           ) : currentStatus == 'active' ? ( ""
-          //   <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
-          //   <div className="flex">
-          //     <img
-          //       className="h-[32px] w-[32px] rounded-full"
-          //       src={delivery.curator.avatar}
-          //     />
-          //     <div className="felx flex-col justify-center items-start ml-4">
-          //       <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
-          //         {delivery.curator.name}
-          //       </h1>
-          //       <p className="font-gerbera-sub2 text-light-gray-2 text-start">
-          //         Куратор
-          //       </p>
-          //     </div>
-          //   </div>
-          //   <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-          //     <img
-          //       src="../src/assets/icons/small_sms.svg"
-          //       className="w-[36px] h-[35px]"
-          //     />
-          //   </a>
-          // </div>
           ) : (
             ''
           )
@@ -403,10 +377,10 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
       </div>
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DeliveryFeedback onOpenChange={setIsModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={true} />
+        <DeliveryFeedback onOpenChange={setIsModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={true} delivery={true} />
       </Modal>
       <Modal isOpen={isCuratorFeedbackModalOpen} onOpenChange={setIsCuratorFeedbackModalOpen}>
-        <DeliveryFeedback onOpenChange={setIsCuratorFeedbackModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={false} />
+        <DeliveryFeedback onOpenChange={setIsCuratorFeedbackModalOpen} onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)} volunteer={false} delivery={true} />
       </Modal>
       <ConfirmModal isOpen={isFeedbackSubmitedModalOpen} onOpenChange={setIsFeedbackSubmitedModalOpen} onConfirm={() => setIsFeedbackSubmitedModalOpen(false)} title={<p>Спасибо, что поделились!<br /> Это важно.</p>} description="" confirmText="Закрыть" isSingleButton={true} />
       <ConfirmModal isOpen={isConfirmDeliveryModalOpen} onOpenChange={setIsConfirmDeliveryModalOpen} onConfirm={() => { setIsConfirmDeliveryModalOpen(false); setIsDeliveryConfirmedModalOpen(true) }} title={<p>Вы подтверждаете участие в доставке?</p>} description="" confirmText="Да" cancelText='Нет'  />
