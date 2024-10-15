@@ -54,7 +54,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         ) : (
           <>
               <Tabs.Content value="tab1" className="TabsContent">
-              <MainTabVolunteer />
+              <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
               <Tabs.Content value="tab2" className="TabsContent">
                 <CalendarTabVolunteer />

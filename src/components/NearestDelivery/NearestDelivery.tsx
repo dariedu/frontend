@@ -218,11 +218,11 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
         {volunteer ? (
         <div className="flex w-fit  pt-[10px]">
         <img src="../src/assets/icons/metro_station.svg" />
-        <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
-          <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
+        <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
+          <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
             Ст. {delivery.location.subway}
           </h1>
-          <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px] dark:text-light-gray-3">
+          <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
             {delivery.location.address}
           </p>
         </div>

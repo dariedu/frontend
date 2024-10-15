@@ -7,6 +7,8 @@ import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 
 interface ICalendarProps {
+  selectedDate: Date;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
   headerName?: string;
   showHeader?: boolean;
   showFilterButton?: boolean;
@@ -18,8 +20,10 @@ const Calendar: React.FC<ICalendarProps> = ({
   showHeader = true,
   showFilterButton = true,
   showDatePickerButton = true,
+  selectedDate,
+  setSelectedDate
 }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);

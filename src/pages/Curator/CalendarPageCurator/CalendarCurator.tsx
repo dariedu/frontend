@@ -22,6 +22,7 @@ const CalendarCurator: React.FC = () => {
     'Активная' | 'Ближайшая' | 'Завершена'
   >('Ближайшая');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const points = 5;
 
@@ -51,7 +52,7 @@ const CalendarCurator: React.FC = () => {
         users={users}
         onUserClick={handleUserClick}
       />
-      <Calendar />
+      <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <DeliveryType
         status={deliveryStatus}
         points={points}
