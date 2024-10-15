@@ -12,8 +12,8 @@ interface INavigationBarProps {
   tgId: number; // Передаем tgId как пропс
 }
 
-const tgId = 205758925; // Передаем ID
-const currentUser = 205758925; // Передаем ID
+// const tgId = 205758925; // Передаем ID
+// const currentUser = 205758925; // Передаем ID
 
 const NavigationBar: React.FC<INavigationBarProps> = ({
   variant,
@@ -28,7 +28,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const fetchedUser = await getUserById(tgId); // Используем tgId для загрузки пользователя
+        const fetchedUser = await getUserById(tgId);
         setCurrentUser(fetchedUser);
         setLoading(false);
       } catch (error) {
@@ -102,7 +102,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
       {/* Условный рендеринг компонента ProfileUser */}
       {isProfileOpen && (
         <ProfileUser
-          user={currentUser} // Передаем текущего пользователя в компонент профиля
+          userId={currentUser.id}
           onClose={handleCloseProfile}
           currentUserId={currentUser.id}
         />

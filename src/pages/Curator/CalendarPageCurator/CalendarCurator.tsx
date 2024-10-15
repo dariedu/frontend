@@ -1,30 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from '../../../components/Calendar/Calendar';
 import Search from '../../../components/Search/Search';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
-import avatar1 from '../../../assets/avatar.svg';
-import { IUser } from '../../../core/types';
-
-// Массив пользователей
-const users: IUser[] = [
-  { id: 1, name: 'Осипова Юлия', avatar: avatar1 },
-  { id: 2, name: 'Иванов Иван', avatar: avatar1 },
-  { id: 3, name: 'Сидоров Алексей', avatar: avatar1 },
-  { id: 4, name: 'Смирнова Анна', avatar: avatar1 },
-  { id: 5, name: 'Петров Петр', avatar: avatar1 },
-  { id: 6, name: 'Александрова Мария', avatar: avatar1 },
-];
+import { IUser, getUsers } from '../../../api/userApi';
 
 const CalendarCurator: React.FC = () => {
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
   >('Ближайшая');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [points, setPoints] = useState<number>(0); // Для хранения баллов
 
-  const points = 5;
+  // Получение пользователей из API
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const fetchedUsers = await getUsers();
+        setUsers(fetchedUsers);
+
+        // Рассчитываем общее количество points (баллов) пользователей
+        const totalPoints = fetchedUsers.reduce(
+          (sum, user) => sum + (user.point ?? 0),
+          0,
+        );
+        setPoints(totalPoints);
+
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch users');
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
@@ -44,6 +59,14 @@ const CalendarCurator: React.FC = () => {
     console.log('Clicked on user:', user);
   };
 
+  if (loading) {
+    return <div>Загрузка пользователей...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
       <Search
@@ -55,7 +78,7 @@ const CalendarCurator: React.FC = () => {
       <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <DeliveryType
         status={deliveryStatus}
-        points={points}
+        points={points} // Передаем полученные points
         onDeliveryClick={openRouteSheets}
       />
       {deliveryStatus === 'Ближайшая' && (
