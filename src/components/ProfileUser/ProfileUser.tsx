@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import ProfilePic from '../ProfilePic/ProfilePic';
 import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
@@ -18,6 +19,13 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
 }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const location = useLocation(); // Получаем объект location
+  const query = new URLSearchParams(location.search); // Извлекаем query параметры
+
+  // const tgId = query.get('tg_id'); // Получаем tg_id из query
+  const tgUsername = query.get('tg_nickname'); // Получаем tg_username из query
+  const phone = query.get('phone_number'); // Получаем phone из query
 
   // Загружаем данные о пользователе с бэкенда
   useEffect(() => {
@@ -80,8 +88,8 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
             geo={user.city ? `Город: ${user.city}` : 'Адрес не указан'}
             email={user.email || 'Эл. почта не указана'}
             birthday="01.01.1990" // Заменить на реальную дату рождения, если доступна
-            phone={user.phone || 'Телефон не указан'}
-            telegram="@user" // Заменить на реальные данные, если доступны
+            phone={phone || 'Телефон не указан'} // Используем номер из query параметров
+            telegram={`@${tgUsername}`} // Используем никнейм из query параметров
           />
           {isCurrentUser && (
             <ActionsVolunteer

@@ -23,7 +23,7 @@ const Search: React.FC<ISearchProps> = ({
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       const results = users.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        (user.name ?? '').toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredUsers(results);
     } else {
@@ -81,7 +81,7 @@ const Search: React.FC<ISearchProps> = ({
             >
               <img
                 src={user.avatar}
-                alt={user.name}
+                alt={user.name ?? 'аватар'}
                 className="w-8 h-8 rounded-full"
               />
               <span className="font-gerbera-h3 text-light-gray-8-text">

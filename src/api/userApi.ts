@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { IUser } from '../core/types';
 
 // Устанавливаем URL API
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
@@ -6,51 +7,10 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 // Эндпоинты для работы с пользователями
 const usersEndpoint = `${API_URL}users/`;
 
-// Типизация данных пользователя
-interface IUser {
-  avatar: string;
-  id: number;
-  tg_id: number;
-  email?: string | null;
-  last_name?: string | null;
-  name?: string | null;
-  surname?: string | null;
-  phone?: string | null;
-  photo?: string | null;
-  volunteer_hour: number;
-  point?: number | null;
-  rating: number;
-  city?: number | null;
-  is_superuser: boolean;
-  is_staff: boolean;
-}
-
-// Типизация данных для запроса (схема UserRequest)
-type TUserRequest = {
-  email?: string | null;
-  last_name?: string | null;
-  name?: string | null;
-  surname?: string | null;
-  phone?: string | null;
-  photo?: string | null;
-  point?: number | null;
-  city?: number | null;
-};
-
-// Типизация для параметров фильтрации
-interface IGetUsersParams {
-  city?: number;
-  is_staff?: boolean;
-  is_superuser?: boolean;
-  rating?: number;
-}
-
 // Получение списка пользователей с возможными фильтрами
-export const getUsers = async (params?: IGetUsersParams): Promise<IUser[]> => {
+export const getUsers = async (): Promise<IUser[]> => {
   try {
-    const response: AxiosResponse<IUser[]> = await axios.get(usersEndpoint, {
-      params: params,
-    });
+    const response: AxiosResponse<IUser[]> = await axios.get(usersEndpoint);
     return response.data;
   } catch (error: any) {
     console.error('Error fetching users:', error);
@@ -73,18 +33,20 @@ export const getUserById = async (id: number): Promise<IUser> => {
   }
 };
 
-// Обновление всей информации о пользователе
+// Обновление информации о пользователе (метод PUT)
 export const updateUser = async (
   id: number,
-  userData: TUserRequest,
+  userData: Partial<IUser>,
 ): Promise<IUser> => {
+  if (!id) throw new Error('Invalid userId');
+
   try {
     const response: AxiosResponse<IUser> = await axios.put(
       `${usersEndpoint}${id}/`,
       userData,
       {
         headers: {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
         },
       },
     );
@@ -95,18 +57,20 @@ export const updateUser = async (
   }
 };
 
-// Частичное обновление информации о пользователе
+// Частичное обновление информации о пользователе (метод PATCH)
 export const patchUser = async (
   id: number,
-  userData: Partial<TUserRequest>,
+  userData: Partial<IUser>,
 ): Promise<IUser> => {
+  if (!id) throw new Error('Invalid userId');
+
   try {
     const response: AxiosResponse<IUser> = await axios.patch(
       `${usersEndpoint}${id}/`,
       userData,
       {
         headers: {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
         },
       },
     );
@@ -117,5 +81,5 @@ export const patchUser = async (
   }
 };
 
-// Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IUser, TUserRequest };
+// Экспорт интерфейсов для использования в других частях проекта
+export type { IUser };

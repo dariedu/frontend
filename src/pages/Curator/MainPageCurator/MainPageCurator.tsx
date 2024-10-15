@@ -50,6 +50,7 @@ const MainPageCurator: React.FC = () => {
   >('Активная');
 
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const points = 5;
 
@@ -98,6 +99,8 @@ const MainPageCurator: React.FC = () => {
             showHeader={true}
             showFilterButton={false}
             showDatePickerButton={false}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
           />
           <SliderCards showTitle={false} />
           <SliderCards showTitle={true} />
