@@ -73,8 +73,8 @@ export const task1: ITask = {
       id: 1,
       city: 'Москва',
     },
-    address: '',
-    subway: 'Онлайн',
+    address: 'есть ли адрес',
+    subway: 'Белорусская',
     media_files: null,
   },
 };
@@ -89,7 +89,7 @@ type TTaskFilter = 'nearest' | 'active' | 'completed';
 
 const NearestTask: React.FC<INearestTaskProps> = ({
   task = task1,
-  volunteer = false,
+  volunteer = true,
   taskFilter = 'active',
   //booked = false,
 }) => {
@@ -217,33 +217,34 @@ const NearestTask: React.FC<INearestTaskProps> = ({
           </div>
         </div>
         {/* /////////////////////// */}
-
         {volunteer ? (
-          <div className="flex w-fit mt-[10px]">
+
+           <div className="flex w-fit mt-[10px]">
             <img
-              src={
-                task.location.subway?.toLocaleLowerCase() == 'онлайн'
-                  ? '../src/assets/icons/onlineIcon.svg'
-                  : '../src/assets/icons/metro_station.svg'
-              }
-            />
-            <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
-              <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                {task.location.subway}
-              </h1>
+                src={
+                  task.location.subway && task.location.subway.length != 0
+                    ? '../src/assets/icons/metro_station.svg'
+                    : '../src/assets/icons/onlineIcon.svg'
+                }
+              />
+            <div className="flex flex-col justify-center items-start pl-2 max-w-[170px]">
+            <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+                  {task.location.subway && task.location.subway.length != 0
+                    ? task.location.subway
+                    : 'Онлайн'}
+                </h1>
               {task.location.address && task.location.address.length != 0 ? (
-                <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-max-[290px] dark:text-light-gray-3">
+                <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
                   {task.location.address}
                 </p>
               ) : (
                 ''
               )}
             </div>
-          </div>
+          </div>       
         ) : (
           ''
         )}
-
         {/* /////////////////////// */}
         {volunteer ? (
           taskFilter == 'completed' ? (

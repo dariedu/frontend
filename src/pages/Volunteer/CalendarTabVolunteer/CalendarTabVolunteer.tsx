@@ -1,4 +1,4 @@
-
+import {useState} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
 import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
 import NearestTask from "../../../components/NearestTask/NearestTask";
@@ -8,13 +8,14 @@ import NearestTask from "../../../components/NearestTask/NearestTask";
 
 
 const CalendarTabVolunteer = () => {
-
-let hasTasks: boolean = false;
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  
+let hasTasks: boolean = true;
 
   return (
     <>
       <div className="mt-2 mb-4 flex flex-col items-center" >
-        <Calendar />
+        <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         {hasTasks ? (
           <>
             <NearestDelivery />
