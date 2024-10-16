@@ -3,7 +3,7 @@ import React from 'react';
 
 interface IModalProps{
   isOpen: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
   children: React.ReactNode
 }
 

@@ -1,13 +1,15 @@
-import React, { useState, type Dispatch } from 'react';
+import React, { useState, useRef, type Dispatch } from 'react';
+import { Modal } from '../ui/Modal/Modal';
+import Webcam from 'react-webcam';
 
 interface ISelfieProps {
   text: string;
-  setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>,
-  onOpenChange: Dispatch<React.SetStateAction<boolean>>,
-  localeStorageName: string,
-  uploadedFileLink: string,
-  setUploadedFileLink: Dispatch<React.SetStateAction<string>>
-  setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>
+  setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>;
+  onOpenChange: Dispatch<React.SetStateAction<boolean>>;
+  uploadedFileLink: string;
+  setUploadedFileLink: Dispatch<React.SetStateAction<string>>;
+  setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>;
+  localeStorageName: string;
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -19,28 +21,29 @@ export const Selfie: React.FC<ISelfieProps> = ({
   localeStorageName,
   uploadedFileLink,
   setUploadedFileLink,
-  setTryToSubmitWithoutPic
+  setTryToSubmitWithoutPic,
 }) => {
-
-
   const [fileUploaded, setFileUploaded] = useState(false);
+  const webcamRef: React.MutableRefObject<null | Webcam> = useRef(null);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [url, setUrl] = useState('');
 
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let imgLink: string;
-
-    if (event.target.files) {
-    imgLink = URL.createObjectURL(event.target.files[0]);
-    localStorage.setItem(localeStorageName, uploadedFileLink);
-    setFileUploaded(true);
-    setUploadedFileLink(imgLink);
-    }
-    
-    
+  const makePhoto = React.useCallback(async () => {
+    if (webcamRef.current && webcamRef.current != null) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        setUrl(imageSrc);
+      }
+      }
+    }, [webcamRef]);
+  
+  const deletePhoto = () => {
+    setUrl("")
   };
 
-  return (
-   
+
+ return (
+    <>
       <div
         className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
         onClick={e => e.stopPropagation()}
@@ -57,56 +60,69 @@ export const Selfie: React.FC<ISelfieProps> = ({
                 ? 'h-[142px] w-[140px] size-fit rounded-full '
                 : 'h-[72px] w-[72px] cursor-pointer'
             }
-            // onClick={() => {
-            //   navigator.mediaDevices.getUserMedia({ audio: false, video: true }  ) } }
+            onClick={() =>
+              isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+            }
           />
-          {fileUploaded ? (
-            ''
-          ) : (
-            <input
-              onChange={e => handleFileChange(e)}
-              type="file"
-              accept="image/*;capture=camera"
-              className="absolute opacity-0 h-[142px] w-[140px] rounded-full cursor-pointer"
-              // onClick={(e) => {}}
-            />
-          )}
-
-          {fileUploaded ? (
-            <>
-              <img
-                src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                className="absolute bottom-0 right-0"
-              />
-              <input
-                onChange={e => handleFileChange(e)}
-                type="file"
-                accept="image/*;capture=camera"
-                className="absolute opacity-0 h-[32px] w-[32px] rounded-full cursor-pointer bottom-0 right-0"
-                // onClick={(e) => {}}
-              />
-            </>
-          ) : (
-            ''
-          )}
         </div>
         <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2">
           {fileUploaded ? 'Отличное фото!' : text}
-   
+
           <br />
         </p>
         {fileUploaded ? (
-          <button className="btn-B-GreenDefault" onClick={() => {
-            setPictureConfirmed(true)
-            setTryToSubmitWithoutPic(false)
-            onOpenChange(false)
-          }}>
+          <button
+            className="btn-B-GreenDefault"
+            onClick={() => {
+              setPictureConfirmed(true);
+              setTryToSubmitWithoutPic(false);
+              onOpenChange(false);
+            }}
+          >
             Далее
           </button>
         ) : (
           ''
         )}
       </div>
-   
+      <Modal isOpen={isEnabled} onOpenChange={setIsEnabled}>
+        <div
+          className="w-full min-h-[600px] bg-light-gray-white flex flex-col justify-between items-center py-8 rounded-t-2xl"
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            mirrored={true}
+            screenshotFormat="image/jpeg"
+            screenshotQuality={1}
+            forceScreenshotSourceSize={true}
+            className='relative'
+          />
+            {url && (<img src={url} alt="pic" className='absolute'/>)}
+          <div className="flex justify-between w-[350px] h-[40px]">
+            <button className="btn-S-GreenDefault outline-none" onClick={makePhoto}>
+              Сделать фото
+            </button>
+            <button className="btn-S-GreenDefault outline-none" onClick={deletePhoto}>
+              Удалить
+            </button>
+            <button
+              className="btn-S-GreenClicked outline-none"
+              onClick={() => {
+                setFileUploaded(true);
+                setUploadedFileLink(url);
+                localStorage.setItem(localeStorageName, uploadedFileLink);
+                setIsEnabled(false)
+              }}
+            >
+              Сохранить фото
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };

@@ -8,8 +8,6 @@ import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.t
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
 
 
-
-
 async function onFormSubmit2(user: IRegister) { 
   const response = await postRegistration(user);
   console.log(JSON.stringify(user))
@@ -130,10 +128,10 @@ function RegistrationPage() {
 
   return (
     <Form.Root >
-      <div className="flex flex-col justify-around items-center w-fit h-fit bg-light-gray-white">
-        <div className="flex flex-col justify-around items-center w-fit h-[539px]">
+      <div className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white">
+        <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[520px] max-h-[559px] pt-[24px] pb-[28px]">
           <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
-          <div className="w-[360px] h-min-[364px] flex flex-col justify-between">
+          <div className="w-[328px] h-min-[360px] flex flex-col justify-between">
             <Form.Field name="last_name" className='flex flex-col items-center'>
               <Form.Control asChild>
                 <input
@@ -260,7 +258,7 @@ function RegistrationPage() {
           )}
         </div>
 
-        <div className="flex flex-col justify-between h-[210px]">
+        <div className="flex flex-col justify-between h-[254px]">
           {pictureConfirmed ? (
             <div className="flex flex-col justify-around items-center">
               <div className=" bg-light-gray-1 rounded-full flex justify-center items-center relative">
@@ -271,12 +269,7 @@ function RegistrationPage() {
                 <img
                   src="./../src/assets/icons/small_pencile_bg_gray.svg"
                   className="absolute bottom-0 right-0"
-                />
-                <input
-                  type="file"
-                  accept="image/*;capture=camera"
-                  className="absolute opacity-0 h-[32px] w-[32px] rounded-full cursor-pointer bottom-0 right-0"
-                  required
+                  onClick={() => { setIsModalOpen(true) }}
                 />
               </div>
              
@@ -303,7 +296,7 @@ function RegistrationPage() {
 
           <button
             className={
-             !isAdult ? 'btn-B-GreenDefault' : checked ? 'btn-B-GreenDefault' : 'btn-B-GreenInactive'
+             !isAdult ? 'btn-B-GreenDefault mb-8' : checked ? 'btn-B-GreenDefault mb-8' : 'btn-B-GreenInactive mb-8'
             }
             onClick={e => {
               !isAdult ? onFormSubmit(e) : checked ? onFormSubmit(e) : e.preventDefault();
@@ -312,9 +305,6 @@ function RegistrationPage() {
             Отправить заявку
           </button> 
         </div>
-     
-        {/* <UploadPic setPictureConfirmed={setPictureConfirmed} isOpen={isModalOpen} onOpenChange={setIsModalOpen} uploadedFileLink={uploadedPictureLink}
-          setUploadedFileLink={setUploadedPictureLink} /> */}
         <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
           <Selfie
             text="Сфотографируйтесь на камеру своего телефона"

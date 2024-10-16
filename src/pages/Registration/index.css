@@ -13,3 +13,7 @@
 .error{
   @apply font-gerbera-sub2 text-light-error-red w-[328px]
 }
+
+/* .bgImage{
+  background-image: url(uploadedPictureLink)
+} */
