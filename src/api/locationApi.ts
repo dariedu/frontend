@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Устанавливаем URL API
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинт для работы с локациями
 const locationsEndpoint = `${API_URL}/locations/`;

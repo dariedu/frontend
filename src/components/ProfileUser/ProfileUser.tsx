@@ -1,57 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import leftArrowIcon from '../../assets/icons/arrow_left.png';
+import React, { useContext } from 'react';
+import { UserContext } from '../../core/UserContext';
 import ProfilePic from '../ProfilePic/ProfilePic';
 import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
-import { IUser, getUserById } from '../../api/userApi';
+import leftArrowIcon from '../../assets/icons/arrow_left.png';
 
 interface IProfileUserProps {
-  userId: number; // Передаем только ID пользователя, а данные будем загружать
+  userId: number;
   onClose: () => void;
   currentUserId: number;
 }
 
 const ProfileUser: React.FC<IProfileUserProps> = ({
-  userId,
   onClose,
   currentUserId,
 }) => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const location = useLocation(); // Получаем объект location
-  const query = new URLSearchParams(location.search); // Извлекаем query параметры
-
-  // const tgId = query.get('tg_id'); // Получаем tg_id из query
-  const tgUsername = query.get('tg_nickname'); // Получаем tg_username из query
-  const phone = query.get('phone_number'); // Получаем phone из query
-
-  // Загружаем данные о пользователе с бэкенда
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const fetchedUser = await getUserById(userId);
-        setUser(fetchedUser);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setLoading(false);
-      }
-    };
-
-    loadUser();
-  }, [userId]);
+  const { currentUser, loading } = useContext(UserContext); // Получаем пользователя и состояние загрузки
 
   if (loading) {
     return <div>Загрузка...</div>;
   }
 
-  if (!user) {
+  if (!currentUser) {
     return <div>Пользователь не найден</div>;
   }
 
-  const isCurrentUser = user.id === currentUserId;
+  const isCurrentUser = currentUser.id === currentUserId;
   const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль пользователя';
 
   return (
@@ -66,57 +40,26 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           </h2>
         </div>
         <div className="w-full flex-grow overflow-y-auto hide-scrollbar">
-          {/* Передаем проверенные данные в компонент ProfilePic */}
-          <ProfilePic
-            user={{
-              ...user,
-              name: user.name ?? 'Неизвестный',
-              is_adult: true,
-              point: user.point ?? 0,
-              rating:
-                typeof user.rating === 'number'
-                  ? { id: 0, level: `Уровень ${user.rating}`, hours_needed: 0 }
-                  : (user.rating ?? {
-                      id: 0,
-                      level: 'Нет уровня',
-                      hours_needed: 0,
-                    }),
-            }}
-          />
-
+          <ProfilePic user={currentUser} />
           <VolunteerData
-            geo={user.city ? `Город: ${user.city}` : 'Адрес не указан'}
-            email={user.email || 'Эл. почта не указана'}
-            birthday="01.01.1990" // Заменить на реальную дату рождения, если доступна
-            phone={phone || 'Телефон не указан'} // Используем номер из query параметров
-            telegram={`@${tgUsername}`} // Используем никнейм из query параметров
+            geo={
+              currentUser.city
+                ? `Город: ${currentUser.city}`
+                : 'Адрес не указан'
+            }
+            email={currentUser.email || 'Эл. почта не указана'}
+            birthday="01.01.1990"
+            phone={currentUser.phone || 'Телефон не указан'}
+            telegram={currentUser.tg_username || 'Telegram не указан'}
           />
           {isCurrentUser && (
             <ActionsVolunteer
-              visibleActions={[
-                'История',
-                'Обо мне',
-                'Пригласить друга',
-                'Подать заявку на должность куратора',
-                'Знаю того, кому нужна помощь',
-                'Сделать пожертвование',
-                'Вопросы и предложения',
-              ]}
+              visibleActions={['История', 'Обо мне', 'Пригласить друга']}
               showThemeToggle={true}
             />
           )}
         </div>
       </div>
-
-      <style>{`
-        .hide-scrollbar {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </>
   );
 };

@@ -5,12 +5,16 @@ import { IUser } from '../core/types';
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинты для работы с пользователями
-const usersEndpoint = `${API_URL}users/`;
+const usersEndpoint = `${API_URL}/users/`;
 
 // Получение списка пользователей с возможными фильтрами
-export const getUsers = async (): Promise<IUser[]> => {
+export const getUsers = async (access: string): Promise<IUser[]> => {
   try {
-    const response: AxiosResponse<IUser[]> = await axios.get(usersEndpoint);
+    const response: AxiosResponse<IUser[]> = await axios.get(usersEndpoint, {
+      headers: {
+        Authorization: `Bearer ${access}`, // Добавляем токен авторизации
+      },
+    });
     return response.data;
   } catch (error: any) {
     console.error('Error fetching users:', error);
@@ -19,12 +23,20 @@ export const getUsers = async (): Promise<IUser[]> => {
 };
 
 // Получение информации о пользователе по ID
-export const getUserById = async (id: number): Promise<IUser> => {
+export const getUserById = async (
+  id: number,
+  access: string,
+): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
   try {
     const response: AxiosResponse<IUser> = await axios.get(
       `${usersEndpoint}${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`, // Добавляем токен авторизации
+        },
+      },
     );
     return response.data;
   } catch (error: any) {

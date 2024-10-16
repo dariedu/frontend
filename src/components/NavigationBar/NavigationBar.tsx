@@ -1,44 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../../core/UserContext';
 import * as Avatar from '@radix-ui/react-avatar';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import logoText from '../../assets/logoText.svg';
 import bell from '../../assets/icons/Notifications.svg';
 import ProfileUser from '../ProfileUser/ProfileUser';
-import { IUser, getUserById } from '../../api/userApi'; // Подключаем функцию для получения пользователя
 
 interface INavigationBarProps {
   variant: 'volunteerForm' | 'mainScreen';
   title?: string;
-  tgId: number; // Передаем tgId как пропс
 }
-
-// const tgId = 205758925; // Передаем ID
-// const currentUser = 205758925; // Передаем ID
 
 const NavigationBar: React.FC<INavigationBarProps> = ({
   variant,
   title = '',
-  tgId,
 }) => {
+  const { currentUser, loading } = useContext(UserContext); // Достаем данные из контекста
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // Загружаем данные пользователя по tgId
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const fetchedUser = await getUserById(tgId);
-        setCurrentUser(fetchedUser);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading user:', error);
-        setLoading(false);
-      }
-    };
+  if (loading) return <div>Загрузка...</div>;
 
-    loadUser();
-  }, [tgId]);
+  if (!currentUser) return <div>Пользователь не найден</div>;
 
   // Обработчик клика по аватарке
   const handleAvatarClick = () => {
@@ -50,14 +32,9 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
     setIsProfileOpen(false);
   };
 
-  if (loading) return <div>Загрузка...</div>;
-
-  if (!currentUser) return <div>Пользователь не найден</div>;
-
   return (
     <>
       <div className="relative w-[360px] p-4 bg-light-gray-white dark:bg-dark-gray-white rounded-[16px] flex items-center justify-between">
-        {/* Левая часть с иконкой или логотипом */}
         <div className="flex items-center space-x-2">
           {variant === 'volunteerForm' ? (
             <>
@@ -73,7 +50,6 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
           )}
         </div>
 
-        {/* Правая часть с аватаркой и иконкой */}
         {variant === 'mainScreen' && currentUser && (
           <div className="flex items-center space-x-4">
             <img
@@ -99,7 +75,6 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         )}
       </div>
 
-      {/* Условный рендеринг компонента ProfileUser */}
       {isProfileOpen && (
         <ProfileUser
           userId={currentUser.id}

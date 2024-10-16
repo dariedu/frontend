@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Базовый URL для API
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинты для работы с запросами сообщений
 const requestMessagesEndpoint = `${API_URL}/request_messages/`;
