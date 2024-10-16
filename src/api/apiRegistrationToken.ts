@@ -1,31 +1,28 @@
 import axios, { AxiosResponse } from 'axios';
 
-//тут будет ссылка на файл с юрлом!
-//const API_URL = process.env.VITE_API_BASE_URL as string;
-const API_URL = 'https://skillfactory.dariedu.site/api'
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
 
-
-
 interface IRegister {
-  tg_id: number
-  tg_username: string
-  email: string
-  last_name: string
-  name: string
-  surname: string
-  phone: string
-  photo: string
-  birthday: string
-  is_adult: boolean | null
-  interests: string
+  tg_id: number;
+  tg_username: string;
+  email: string;
+  last_name: string;
+  name: string;
+  surname: string;
+  phone: string;
+  photo: string;
+  birthday: string;
+  is_adult: boolean | null;
+  interests: string;
   // city: string
-  consent_to_personal_data: boolean
+  consent_to_personal_data: boolean;
 }
 
 type TToken = {
   tg_id: number;
+  access?: string;
 };
 
 interface ITokenBlacklist {
@@ -35,41 +32,16 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
-// export const postRegistration = async (user: IRegister) => {
-//   try {
-
-//     const response = await fetch(tasksUrl,
-//       {
-//         method: 'POST',
-//         headers: {
-//           Accept: "application/json",
-//           'Content-Type': "application/json"
-//         },
-//         body: JSON.stringify(user)
-//       }
-//     );
-//     if (response.ok === true) {
-//       const user = await response.json();
-//       return user;
-//     }
-//   } catch (err) {
-     
-//    console.error('Post request postTaskAccept has failed', err);
-//     throw new Error('Post request postTaskAccept has failed');
-//     return(err)
-//   }
-// };
-
 export const postRegistration = async (user: IRegister): Promise<IRegister> => {
   try {
     const response: AxiosResponse<string> = await axios({
       method: 'post',
       url: tasksUrl,
       headers: {
-        'accept': 'application/json',
+        accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(user)
+      data: JSON.stringify(user),
     });
     return JSON.parse(response.data);
   } catch (err) {
@@ -80,20 +52,26 @@ export const postRegistration = async (user: IRegister): Promise<IRegister> => {
 
 export const postToken = async (token: TToken): Promise<TToken> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<any> = await axios({
       url: tokenUrl,
       method: 'POST',
-      data: JSON.stringify(token),
+      data: {
+        tg_id: token.tg_id,
+      },
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
     });
-    return JSON.parse(response.data);
+
+    // Логируем весь ответ от сервера для проверки
+    console.log('Ответ от сервера:', response.data);
+
+    return response.data; // Убедитесь, что ответ сервера парсится Axios автоматически
   } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
+    console.error('Ошибка в запросе токена:', err);
+    throw new Error('Запрос токена завершился неудачей');
   }
 };
 
@@ -137,6 +115,18 @@ export const postTokenRefresh = async (
   } catch (err: any) {
     console.error('Post request postTaskAccept has failed', err);
     throw new Error('Post request postTaskAccept has failed');
+  }
+};
+
+export const getToken = async (tg_id: number) => {
+  try {
+    const tokenData = await postToken({
+      tg_id,
+    });
+    console.log('Token:', tokenData);
+    return tokenData;
+  } catch (error) {
+    console.error('Error fetching token:', error);
   }
 };
 

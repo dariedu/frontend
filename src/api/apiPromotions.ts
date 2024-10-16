@@ -3,7 +3,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 //тут будет ссылка на файл с юрлом!
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const promotionsUrl = `${API_URL}/promotions/`;
 
 interface IPromotion {

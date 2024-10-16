@@ -3,7 +3,7 @@ import { ILocation } from './locationApi';
 import { TAddress, TAddressRequest } from './addressApi';
 
 // Устанавливаем URL API
-const API_URL = process.env.VITE_API_BASE_URL as string;
+const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинты для работы с маршрутными листами
 const routeSheetsEndpoint = `${API_URL}/route_sheets/`;

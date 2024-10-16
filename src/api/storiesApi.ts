@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинт для работы с историями
-const storiesEndpoint = `${API_URL}stories/`;
+const storiesEndpoint = `${API_URL}/stories/`;
 
 // Интерфейс для данных истории
 export interface IStory {
