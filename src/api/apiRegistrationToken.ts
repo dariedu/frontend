@@ -33,45 +33,25 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
-// export const postRegistration = async (user: IRegister): Promise<IRegister> => {
-
-//   var options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Accept: "application/json",
-//     },
-//     body: JSON.stringify(user),
-//   }
-//   fetch(tasksUrl, options)
-//     .then((response) => response.json())
-//     .then((result) => {
-//      return result;
-//     })
-//     .catch((error) => {
-//       console.error(error)
-//         throw new Error('Post request postTaskAccept has failed');
-//     }
-//     ); 
-  
-// };
-
-
-export const postRegistration = async (user: IRegister): Promise<IRegister> => {
+export const postRegistration = async (
+  formData: FormData,
+): Promise<IRegister> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<IRegister> = await axios({
       url: tasksUrl,
       method: 'POST',
       headers: {
-        'accept': 'application/json',
-        "Content-Type": " multipart/form-data",
+        accept: 'application/json',
       },
-      data: user,
+      data: formData,
     });
-    return JSON.parse(response.data);
-  } catch (err) {
-   console.error('Post request postRegistration has failed', err);
-     throw new Error('Post request postRegistration has failed');
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postRegistration has failed', err);
+    if (err.response) {
+      console.error('Server responded with:', err.response.data);
+    }
+    throw new Error('Post request postRegistration has failed');
   }
 };
 
@@ -86,21 +66,16 @@ export const postToken = async (token: TToken): Promise<TToken> => {
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin',
       },
     });
 
-    // Логируем весь ответ от сервера для проверки
-    console.log('Ответ от сервера:', response.data);
-
-    return response.data; // Убедитесь, что ответ сервера парсится Axios автоматически
+    return response.data;
   } catch (err: any) {
     console.error('Ошибка в запросе токена:', err);
     throw new Error('Запрос токена завершился неудачей');
   }
 };
 
-//Takes a token and blacklists it. Must be used with the rest_framework_simplejwt.token_blacklist app installed.
 export const postTokenBlacklist = async (
   refresh: ITokenBlacklist,
 ): Promise<number> => {

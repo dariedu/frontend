@@ -12,7 +12,7 @@ export const getUsers = async (access: string): Promise<IUser[]> => {
   try {
     const response: AxiosResponse<IUser[]> = await axios.get(usersEndpoint, {
       headers: {
-        Authorization: `Bearer ${access}`, // Добавляем токен авторизации
+        Authorization: `Bearer ${access}`,
       },
     });
     return response.data;
@@ -34,7 +34,7 @@ export const getUserById = async (
       `${usersEndpoint}${id}/`,
       {
         headers: {
-          Authorization: `Bearer ${access}`, // Добавляем токен авторизации
+          Authorization: `Bearer ${access}`,
         },
       },
     );
@@ -90,6 +90,34 @@ export const patchUser = async (
   } catch (error: any) {
     console.error('Error patching user:', error);
     throw new Error('Failed to patch user');
+  }
+};
+
+export const getUserByTelegramId = async (
+  tgId: number,
+  accessToken: string,
+): Promise<IUser> => {
+  try {
+    const response: AxiosResponse<IUser[]> = await axios.get(
+      `${API_URL}/users/`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          tg_id: tgId,
+        },
+      },
+    );
+    const users = response.data;
+    if (users.length > 0) {
+      return users[0];
+    } else {
+      throw new Error('Пользователь не найден');
+    }
+  } catch (error) {
+    console.error('Ошибка при получении пользователя по Telegram ID:', error);
+    throw error;
   }
 };
 

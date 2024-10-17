@@ -2,49 +2,61 @@ import * as Form from '@radix-ui/react-form';
 import { Selfie } from './../../components/Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from './../../components/ui/Modal/Modal.tsx';
-import { useState} from 'react';
+import { useState } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
-import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.ts';
-import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
-
-
+import {
+  postRegistration,
+  type IRegister,
+} from '../../api/apiRegistrationToken.ts';
+import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
   const [uploadedPictureLink, setUploadedPictureLink] = useState(''); /// ссылка на загруженое фото
-  const [registrationCompleteModal, setRegistrationCompleteModal] = useState(false);
-  const [checked, setChecked] = useState(false) // активируем кнопку отпарвки, если согласились с офертой для взрослых
+  const [registrationCompleteModal, setRegistrationCompleteModal] =
+    useState(false);
+  const [checked, setChecked] = useState(false); // активируем кнопку отпарвки, если согласились с офертой для взрослых
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
   const [data, setData] = useState<IRegister | undefined>();
- // const [blob, setBlob] = useState<undefined| Blob>();
+  const [photoBlob, setPhotoBlob] = useState<Blob | null>(null);
+  // const [blob, setBlob] = useState<undefined| Blob>();
 
-  type TRegister = Omit<IRegister, "is_adult" | "tg_id" | "tg_username" | 'photo' | 'phone' | "city">;
+  type TRegister = Omit<
+    IRegister,
+    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'city'
+  >;
 
   const [userFormFieldsInfo, setUserFormFieldsInfo] = useState<TRegister>({
-    email: localStorage.getItem("email") ?? "",
-    last_name: localStorage.getItem("last_name") ?? "",
-    name: localStorage.getItem("name") ?? "",
-    surname: localStorage.getItem("surname") ?? "",
-   // phone: localStorage.getItem("phone") ?? "",
+    email: localStorage.getItem('email') ?? '',
+    last_name: localStorage.getItem('last_name') ?? '',
+    name: localStorage.getItem('name') ?? '',
+    surname: localStorage.getItem('surname') ?? '',
+    // phone: localStorage.getItem("phone") ?? "",
     //photo: "",
-    birthday: localStorage.getItem("birthday") ?? "",
+    birthday: localStorage.getItem('birthday') ?? '',
     //interests: "",
     consent_to_personal_data: false,
     //city: localStorage.getItem("city") ?? "",
-  })
+  });
 
- ////При загрузке страницы, если isAdult пуст, то проверяем localStorage, если там есть birthDate то она подцепится в форму и соотвественно надо обновить isAdult
+  ////При загрузке страницы, если isAdult пуст, то проверяем localStorage, если там есть birthDate то она подцепится в форму и соотвественно надо обновить isAdult
   if (isAdult == null) {
-    if (localStorage.getItem("birthday") !== undefined && localStorage.getItem("birthday") !== "" && localStorage.getItem("birthday") !== null) {
-      setIsAdult(getAgeFromBirthDate(JSON.stringify(localStorage.getItem("birthday"))))
+    if (
+      localStorage.getItem('birthday') !== undefined &&
+      localStorage.getItem('birthday') !== '' &&
+      localStorage.getItem('birthday') !== null
+    ) {
+      setIsAdult(
+        getAgeFromBirthDate(JSON.stringify(localStorage.getItem('birthday'))),
+      );
     }
   }
- 
-   type TKeys = keyof typeof userFormFieldsInfo;
 
-  ///определяем есть ли пользователю 18 лет по введенной дате рождения 
+  type TKeys = keyof typeof userFormFieldsInfo;
+
+  ///определяем есть ли пользователю 18 лет по введенной дате рождения
   function getAgeFromBirthDate(birthDateString: string): boolean {
     const today = new Date();
     const birthDate = new Date(birthDateString);
@@ -56,113 +68,119 @@ function RegistrationPage() {
     ) {
       age--;
     }
-      let result = age >= 18
-      setIsAdult(result)
-      return result
+    let result = age >= 18;
+    setIsAdult(result);
+    return result;
   }
-  
- 
+
   // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
-  function handleFormFieldChange(fieldName:TKeys, value: string | boolean ) {
+  function handleFormFieldChange(fieldName: TKeys, value: string | boolean) {
     setUserFormFieldsInfo({
       ...userFormFieldsInfo,
-      [fieldName]: value
-    })
-    if (fieldName == "birthday" && typeof value == 'string') {
-      localStorage.setItem("birthday", value)
-      setIsAdult(getAgeFromBirthDate(value))
-      localStorage.setItem("isAdult", JSON.stringify(getAgeFromBirthDate(value)))
+      [fieldName]: value,
+    });
+    if (fieldName == 'birthday' && typeof value == 'string') {
+      localStorage.setItem('birthday', value);
+      setIsAdult(getAgeFromBirthDate(value));
+      localStorage.setItem(
+        'isAdult',
+        JSON.stringify(getAgeFromBirthDate(value)),
+      );
     } else {
       if (typeof value == 'boolean')
-    localStorage.setItem(fieldName, JSON.stringify(value))
-    else
-    localStorage.setItem(fieldName, value)
+        localStorage.setItem(fieldName, JSON.stringify(value));
+      else localStorage.setItem(fieldName, value);
     }
-  
   }
 
   async function fetchRegistration(user: IRegister) {
     try {
       const response = await postRegistration(user);
       if (response) {
-        setData(response)
-         console.log(data + " this is response from registration page")
-      } 
+        setData(response);
+        console.log(data + ' this is response from registration page');
+      }
     } catch (e) {
-      console.log(e)
- }
+      console.log(e);
+    }
   }
-  
+
   // function onDateChange(e:React.ChangeEvent<HTMLInputElement>):void {
   //   localStorage.setItem("birthday", e.target.value)
   //   setIsAdult(getAgeFromBirthDate(e.target.value))
   //   localStorage.setItem("isAdult", JSON.stringify(getAgeFromBirthDate(e.target.value)))
   // }
 
-//тип с переменными, которые пользователь не может изменить напрямую
+  //тип с переменными, которые пользователь не может изменить напрямую
   type TUserUnchangableValues = {
-    tg_id: number
-    tg_username: string
-    is_adult: boolean | null, 
-    phone: string,
-     photo: string;
+    tg_id: number;
+    tg_username: string;
+    is_adult: boolean | null;
+    phone: string;
+    photo: string;
     city: number;
-   }
+  };
   //////функция для сабмита формы
-   function onFormSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void { 
-    if (pictureConfirmed) { ////если пользователь загрузил фото, продолжаем регистрацию
+  function onFormSubmit(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ): void {
+    if (pictureConfirmed) {
       e.preventDefault();
-      const userUnchangableValues:TUserUnchangableValues = {
-      tg_id:33356,
-      tg_username:'mgdata',
-      is_adult: isAdult, 
-      phone: "9086851174",
-      photo: uploadedPictureLink,
-      city: 1
+      const userUnchangableValues: TUserUnchangableValues = {
+        tg_id: 33356,
+        tg_username: 'mgdata',
+        is_adult: isAdult,
+        phone: '9086851174',
+        city: 1,
+      };
+
+      const user: IRegister = {
+        ...userUnchangableValues,
+        ...userFormFieldsInfo,
+      };
+
+      const formData = new FormData();
+
+      Object.keys(user).forEach(key => {
+        const value = user[key as keyof IRegister];
+        if (value !== undefined && value !== null) {
+          formData.append(key, value as any);
+        }
+      });
+
+      if (photoBlob) {
+        formData.append('photo', photoBlob, 'selfie.jpg');
+      } else {
+        console.error('Photo Blob is null');
+        return;
       }
 
-      const user: IRegister = Object.assign(userUnchangableValues, userFormFieldsInfo);
-      
-      // const formData = new FormData();
-
-      // for (let key in user) {
-      //   formData.set(key, user[key])
-      // }
-
-      // if (blob) {
-      //   console.log(blob)
-      //   formData.set('photo', blob, 'selfie.jpg')
-      // }
-      fetchRegistration(user)
-  // fetchRegistration(formData)
-        // for(let [name, value] of formData) {
-        //   console.log(`${name} = ${value}`); // key1=value1, потом key2=value2
-        // }
-      // console.log(JSON.stringify(user))
+      fetchRegistration(formData);
 
       setRegistrationCompleteModal(true);
     } else {
       e.preventDefault();
-      setTryToSubmitWithoutPic(true) /// если пользователь не загрузил фото выделяем красным текст о необходимости загрузить фото!
+      setTryToSubmitWithoutPic(true);
     }
   }
 
-
   return (
-    <Form.Root >
+    <Form.Root>
       <div className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white">
         <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[520px] max-h-[559px] pt-[24px] pb-[28px]">
           <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
           <div className="w-[328px] h-min-[360px] flex flex-col justify-between">
-            <Form.Field name="last_name" className='flex flex-col items-center'>
+            <Form.Field name="last_name" className="flex flex-col items-center">
               <Form.Control asChild>
                 <input
                   className="formField"
                   placeholder="Фамилия"
                   type="text"
                   required
-                  defaultValue={localStorage.getItem("last_name") ??  ""}
-                  onChange={(e) => {handleFormFieldChange("last_name", e.target.value )}}
+                  defaultValue={localStorage.getItem('last_name') ?? ''}
+                  onChange={e => {
+                    handleFormFieldChange('last_name', e.target.value);
+                  }}
                 />
               </Form.Control>
               <Form.Message match="valueMissing" className="error">
@@ -170,17 +188,17 @@ function RegistrationPage() {
               </Form.Message>
             </Form.Field>
 
-            <Form.Field name="name" className='flex flex-col items-center'>
+            <Form.Field name="name" className="flex flex-col items-center">
               <Form.Control asChild>
                 <input
                   className="formField"
                   placeholder="Имя"
                   type="text"
                   required
-                  defaultValue={localStorage.getItem("name") ?? ""}
-                  onChange={(e) => {
-                    handleFormFieldChange("name", e.target.value)
-                    }}
+                  defaultValue={localStorage.getItem('name') ?? ''}
+                  onChange={e => {
+                    handleFormFieldChange('name', e.target.value);
+                  }}
                 />
               </Form.Control>
               <Form.Message match="valueMissing" className="error">
@@ -188,34 +206,35 @@ function RegistrationPage() {
               </Form.Message>
             </Form.Field>
 
-            <Form.Field name="surname" className='flex flex-col items-center'>
-
+            <Form.Field name="surname" className="flex flex-col items-center">
               <Form.Control asChild>
                 <input
                   className="formField"
                   placeholder="Отчество"
                   type="text"
                   required
-                  defaultValue={ localStorage.getItem("surname") ?? ""}
-                  onChange={(e) => {
-                  handleFormFieldChange("surname", e.target.value)
-                }}
+                  defaultValue={localStorage.getItem('surname') ?? ''}
+                  onChange={e => {
+                    handleFormFieldChange('surname', e.target.value);
+                  }}
                 />
               </Form.Control>
               <Form.Message match="valueMissing" className="error">
-              Пожалуйста, введите ваше отчество
+                Пожалуйста, введите ваше отчество
               </Form.Message>
             </Form.Field>
 
-            <Form.Field name="birthday" className='flex flex-col items-center'>
+            <Form.Field name="birthday" className="flex flex-col items-center">
               <Form.Control asChild>
                 <input
                   name="age"
                   className="formField"
                   placeholder="Дата рождения"
                   type="date"
-                  onChange={(e) => handleFormFieldChange('birthday', e.target.value)}
-                  defaultValue={localStorage.getItem("birthday") ?? ""}
+                  onChange={e =>
+                    handleFormFieldChange('birthday', e.target.value)
+                  }
+                  defaultValue={localStorage.getItem('birthday') ?? ''}
                   required
                 />
               </Form.Control>
@@ -224,7 +243,7 @@ function RegistrationPage() {
               </Form.Message>
             </Form.Field>
 
-            <Form.Field name="email" className='flex flex-col items-center'>
+            <Form.Field name="email" className="flex flex-col items-center">
               <Form.Control asChild>
                 <input
                   name="email"
@@ -232,8 +251,10 @@ function RegistrationPage() {
                   placeholder="Email"
                   type="email"
                   required
-                  defaultValue={localStorage.getItem("email") ??  ""}
-                  onChange={(e) => { handleFormFieldChange( "email", e.target.value )}}
+                  defaultValue={localStorage.getItem('email') ?? ''}
+                  onChange={e => {
+                    handleFormFieldChange('email', e.target.value);
+                  }}
                 />
               </Form.Control>
               <Form.Message match="valueMissing" className="error">
@@ -245,14 +266,14 @@ function RegistrationPage() {
             </Form.Field>
 
             <div>
-              <Form.Field name="city" className='flex flex-col items-center'>
+              <Form.Field name="city" className="flex flex-col items-center">
                 <Form.Control asChild>
                   <input
                     className="formField"
                     placeholder="Город проживания"
                     type="select"
                     required
-                    defaultValue={localStorage.getItem("city") ??  ""}
+                    defaultValue={localStorage.getItem('city') ?? ''}
                     //onChange={(e) => { handleFormFieldChange( "city", e.target.value )}}
                   />
                 </Form.Control>
@@ -262,12 +283,16 @@ function RegistrationPage() {
               </Form.Field>
             </div>
           </div>
-          {(isAdult !== undefined && isAdult != false) ? (
-            <CheckboxElement onCheckedChange={() => {
-              handleFormFieldChange("consent_to_personal_data", checked? false: true )
-              checked ? setChecked(false) : setChecked(true)
-             }
-            }>
+          {isAdult !== undefined && isAdult != false ? (
+            <CheckboxElement
+              onCheckedChange={() => {
+                handleFormFieldChange(
+                  'consent_to_personal_data',
+                  checked ? false : true,
+                );
+                checked ? setChecked(false) : setChecked(true);
+              }}
+            >
               <label className="font-gerbera-sub2 text-light-gray-6 w-[261px]">
                 Я принимаю условия{' '}
                 <a href="*" className="text-light-brand-green font-normal">
@@ -291,10 +316,11 @@ function RegistrationPage() {
                 <img
                   src="./../src/assets/icons/small_pencile_bg_gray.svg"
                   className="absolute bottom-0 right-0"
-                  onClick={() => { setIsModalOpen(true) }}
+                  onClick={() => {
+                    setIsModalOpen(true);
+                  }}
                 />
               </div>
-             
             </div>
           ) : (
             <div className="flex justify-between place-items-start my-4">
@@ -302,8 +328,15 @@ function RegistrationPage() {
                 <h3 className="font-gerbera-h3 text-light-gray-black">
                   Загрузите свое фото
                 </h3>
-                <p className={!tryToSubmitWithoutPic ?"font-gerbera-sub1 text-light-gray-6 text-left" : "font-gerbera-sub1 text-light-error-red  text-left"}>
-                Для продолжения регистрации, пожалуйста, сфотографируйтесь на камеру вашего телефона
+                <p
+                  className={
+                    !tryToSubmitWithoutPic
+                      ? 'font-gerbera-sub1 text-light-gray-6 text-left'
+                      : 'font-gerbera-sub1 text-light-error-red  text-left'
+                  }
+                >
+                  Для продолжения регистрации, пожалуйста, сфотографируйтесь на
+                  камеру вашего телефона
                 </p>
               </div>
               <img
@@ -318,14 +351,22 @@ function RegistrationPage() {
 
           <button
             className={
-             !isAdult ? 'btn-B-GreenDefault mb-8' : checked ? 'btn-B-GreenDefault mb-8' : 'btn-B-GreenInactive mb-8'
+              !isAdult
+                ? 'btn-B-GreenDefault mb-8'
+                : checked
+                  ? 'btn-B-GreenDefault mb-8'
+                  : 'btn-B-GreenInactive mb-8'
             }
             onClick={e => {
-              !isAdult ? onFormSubmit(e) : checked ? onFormSubmit(e) : e.preventDefault();
+              !isAdult
+                ? onFormSubmit(e)
+                : checked
+                  ? onFormSubmit(e)
+                  : e.preventDefault();
             }}
           >
             Отправить заявку
-          </button> 
+          </button>
         </div>
         <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
           <Selfie
@@ -336,13 +377,21 @@ function RegistrationPage() {
             uploadedFileLink={uploadedPictureLink}
             setUploadedFileLink={setUploadedPictureLink}
             localeStorageName="avatarPic"
-           // blob={blob}
+            // blob={blob}
             //setBlob={setBlob}
           />
         </Modal>
-        <ConfirmModal isOpen={registrationCompleteModal} onOpenChange={setRegistrationCompleteModal}
-          onConfirm={() => {setRegistrationCompleteModal(false) }} title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов" description="" confirmText='Ок' isSingleButton={true} >
-        </ConfirmModal>
+        <ConfirmModal
+          isOpen={registrationCompleteModal}
+          onOpenChange={setRegistrationCompleteModal}
+          onConfirm={() => {
+            setRegistrationCompleteModal(false);
+          }}
+          title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
+          description=""
+          confirmText="Ок"
+          isSingleButton={true}
+        ></ConfirmModal>
       </div>
     </Form.Root>
   );
