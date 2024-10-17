@@ -11,7 +11,7 @@ const CalendarCurator: React.FC = () => {
   const { currentUser, loading } = useContext(UserContext);
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
-  >('Ближайшая');
+  >('Завершена');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [points] = useState<number>(currentUser?.point ?? 0);
