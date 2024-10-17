@@ -1,45 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import Calendar from '../../../components/Calendar/Calendar';
 import Search from '../../../components/Search/Search';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
-import { IUser, getUsers } from '../../../api/userApi';
+import { UserContext } from '../../../core/UserContext';
+import { IUser } from '../../../core/types';
 
 const CalendarCurator: React.FC = () => {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { currentUser, loading } = useContext(UserContext);
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
-  >('Ближайшая');
+  >('Завершена');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [points, setPoints] = useState<number>(0); // Для хранения баллов
+  const [points] = useState<number>(currentUser?.point ?? 0);
 
-  // Получение пользователей из API
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const fetchedUsers = await getUsers();
-        setUsers(fetchedUsers);
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
-        // Рассчитываем общее количество points (баллов) пользователей
-        const totalPoints = fetchedUsers.reduce(
-          (sum, user) => sum + (user.point ?? 0),
-          0,
-        );
-        setPoints(totalPoints);
-
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch users');
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  if (!currentUser) {
+    return <div>Пользователь не найден</div>;
+  }
 
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
@@ -59,26 +42,18 @@ const CalendarCurator: React.FC = () => {
     console.log('Clicked on user:', user);
   };
 
-  if (loading) {
-    return <div>Загрузка пользователей...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
       <Search
         showInfoSection={true}
         showSearchInput={true}
-        users={users}
+        users={[currentUser]}
         onUserClick={handleUserClick}
       />
       <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <DeliveryType
         status={deliveryStatus}
-        points={points} // Передаем полученные points
+        points={points}
         onDeliveryClick={openRouteSheets}
       />
       {deliveryStatus === 'Ближайшая' && (

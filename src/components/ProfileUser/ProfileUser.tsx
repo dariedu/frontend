@@ -15,7 +15,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   onClose,
   currentUserId,
 }) => {
-  const { currentUser, loading } = useContext(UserContext); // Получаем пользователя и состояние загрузки
+  const { currentUser, loading } = useContext(UserContext);
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -60,6 +60,19 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           )}
         </div>
       </div>
+
+      <style>{`
+        /* Скрываем вертикальную полосу прокрутки */
+        .hide-scrollbar {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE и Edge */
+        }
+
+        /* Для WebKit-браузеров (Chrome, Safari) */
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </>
   );
 };

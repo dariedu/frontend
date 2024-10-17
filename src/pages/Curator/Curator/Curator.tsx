@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Search from '../../../components/Search/Search';
 import ProfileUser from '../../../components/ProfileUser/ProfileUser';
-import { IUser, getUsers } from '../../../api/userApi';
+import { UserContext } from '../../../core/UserContext';
+import { IUser } from '../../../core/types';
 
 const Curator: React.FC = () => {
-  const currentUserId = 1; // Пример ID текущего пользователя
-  const [users, setUsers] = useState<IUser[]>([]);
+  const { currentUser, loading } = useContext(UserContext);
+  const currentUserId = currentUser?.id || 1;
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Получение данных пользователей из API при загрузке компонента
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const usersData = await getUsers();
-        setUsers(usersData);
-        setLoading(false);
-      } catch (err) {
-        setError('Не удалось загрузить данные пользователей');
-        setLoading(false);
-      }
-    };
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
-    fetchUsers();
-  }, []);
+  if (!currentUser) {
+    return <div>Пользователь не найден</div>;
+  }
 
   const handleUserClick = (user: IUser) => {
     setSelectedUser(user);
@@ -34,18 +25,10 @@ const Curator: React.FC = () => {
     setSelectedUser(null);
   };
 
-  if (loading) {
-    return <div>Загрузка...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="flex-col min-h-[746px] bg-light-gray-1">
       <Search
-        users={users}
+        users={[currentUser]}
         onUserClick={handleUserClick}
         showSearchInput={true}
         showInfoSection={true}
