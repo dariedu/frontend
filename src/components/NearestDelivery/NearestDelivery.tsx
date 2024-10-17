@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   getBallCorrectEndingName,
   getMonthCorrectEndingName,
@@ -9,41 +9,10 @@ import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal'
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-
+import { type IDelivery } from '../../api/apiDeliveries';
+//import DeliveryInfo from '../ui/Hr/DeliveryInfo';
+import { DeliveryContext } from '../../core/DeliveryContext';
   
-interface IDelivery {
-  id: number;
-  date: string;
-  curator: {
-    id: number;
-    tg_id: number;
-    tg_username: string;
-    last_name: string;
-    name: string;
-    avatar: string;
-  };
-  price: number;
-  is_free: boolean;
-  is_active: boolean;
-  is_completed: boolean;
-  in_execution: boolean;
-  volunteers_needed: number;
-  volunteers_taken: number;
-  delivery_assignments: string[];
-  route_sheet: number;
-  location: {
-    id: number;
-    city: {
-      id: number;
-      city: string;
-    };
-    address: string;
-    link: string;
-    subway: string;
-    media_files: null | string;
-    description: string;
-  };
-}
 
 export const delivery1: IDelivery = {
   id: 1,
@@ -111,6 +80,11 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false);//// модальное окно для отмены доставки
   const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] = useState(false);  //// модальное окно для подтверждения отмены доставки
   
+
+  const {deliveries, isLoading} = useContext(DeliveryContext); // Данные из контекста
+  delivery = deliveries[0]
+  
+  if (isLoading) return <div>Loading</div>
   
   const lessThenTwoHours =
     (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;

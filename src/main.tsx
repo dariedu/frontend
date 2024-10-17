@@ -9,18 +9,21 @@ import routerConfig from './routesConfig.ts';
 import RegistrationPage from './pages/Registration/RegistrationPage';
 import CuratorPage from './pages/Curator/CuratorPage';
 import VolunteerPage from './pages/Volunteer/VolunteerPage';
+import { DeliveryProvider } from './core/DeliveryContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <Router>
         <UserProvider>
-          <Routes>
-            <Route path={routerConfig[0].path} element={<App />} />
-            <Route path={routerConfig[1].path} element={<RegistrationPage />} />
-            <Route path={routerConfig[2].path} element={<CuratorPage />} />
-            <Route path={routerConfig[3].path} element={<VolunteerPage />} />
-          </Routes>
+          <DeliveryProvider>
+             <Routes>
+              <Route path={routerConfig[0].path} element={<App />} />
+              <Route path={routerConfig[1].path} element={<RegistrationPage />} />
+              <Route path={routerConfig[2].path} element={<CuratorPage />} />
+              <Route path={routerConfig[3].path} element={<VolunteerPage />} />
+             </Routes>
+         </DeliveryProvider>
         </UserProvider>
       </Router>
     </ThemeProvider>

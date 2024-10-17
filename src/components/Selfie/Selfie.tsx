@@ -10,6 +10,8 @@ interface ISelfieProps {
   setUploadedFileLink: Dispatch<React.SetStateAction<string>>;
   setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>;
   localeStorageName: string;
+  // blob: undefined | Blob
+  //setBlob:Dispatch<React.SetStateAction<Blob>>
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -22,17 +24,21 @@ export const Selfie: React.FC<ISelfieProps> = ({
   uploadedFileLink,
   setUploadedFileLink,
   setTryToSubmitWithoutPic,
+  // blob,
+  //setBlob
 }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const webcamRef: React.MutableRefObject<null | Webcam> = useRef(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [url, setUrl] = useState('');
+  const imageRef:React.MutableRefObject<HTMLImageElement|null> = useRef(null)
 
   const makePhoto = React.useCallback(async () => {
     if (webcamRef.current && webcamRef.current != null) {
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
         setUrl(imageSrc);
+        //setBlob(new Blob([imageSrc]))
       }
       }
     }, [webcamRef]);
@@ -40,6 +46,10 @@ export const Selfie: React.FC<ISelfieProps> = ({
   const deletePhoto = () => {
     setUrl("")
   };
+
+  // function onLoadPhoto(e){
+  //   setBlob(e.target.value.toBlob())
+  // }
 
 
  return (
@@ -101,7 +111,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
             forceScreenshotSourceSize={true}
             className='relative'
           />
-            {url && (<img src={url} alt="pic" className='absolute'/>)}
+         {url && (<img ref={imageRef} src={url} alt="pic" className='absolute'/>)}
           <div className="flex justify-between w-[350px] h-[40px]">
             <button className="btn-S-GreenDefault outline-none" onClick={makePhoto}>
               Сделать фото
