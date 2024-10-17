@@ -8,12 +8,6 @@ import {postRegistration, type IRegister} from '../../api/apiRegistrationToken.t
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
 
 
-async function onFormSubmit2(user: IRegister) { 
-  const response = await postRegistration(user);
-  console.log(JSON.stringify(user))
-  console.log("request sent")
-  console.log(response)
-}
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -23,8 +17,10 @@ function RegistrationPage() {
   const [checked, setChecked] = useState(false) // активируем кнопку отпарвки, если согласились с офертой для взрослых
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
+  const [data, setData] = useState<IRegister | undefined>();
+ // const [blob, setBlob] = useState<undefined| Blob>();
 
-  type TRegister = Omit<IRegister, "is_adult" | "tg_id" | "tg_username" | 'photo' | 'phone'>;
+  type TRegister = Omit<IRegister, "is_adult" | "tg_id" | "tg_username" | 'photo' | 'phone' | "city">;
 
   const [userFormFieldsInfo, setUserFormFieldsInfo] = useState<TRegister>({
     email: localStorage.getItem("email") ?? "",
@@ -34,7 +30,7 @@ function RegistrationPage() {
    // phone: localStorage.getItem("phone") ?? "",
     //photo: "",
     birthday: localStorage.getItem("birthday") ?? "",
-    interests: "",
+    //interests: "",
     consent_to_personal_data: false,
     //city: localStorage.getItem("city") ?? "",
   })
@@ -82,9 +78,21 @@ function RegistrationPage() {
     else
     localStorage.setItem(fieldName, value)
     }
-    console.log(userFormFieldsInfo)
+  
   }
 
+  async function fetchRegistration(user: IRegister) {
+    try {
+      const response = await postRegistration(user);
+      if (response) {
+        setData(response)
+         console.log(data + " this is response from registration page")
+      } 
+    } catch (e) {
+      console.log(e)
+ }
+  }
+  
   // function onDateChange(e:React.ChangeEvent<HTMLInputElement>):void {
   //   localStorage.setItem("birthday", e.target.value)
   //   setIsAdult(getAgeFromBirthDate(e.target.value))
@@ -97,7 +105,8 @@ function RegistrationPage() {
     tg_username: string
     is_adult: boolean | null, 
     phone: string,
-    photo: string;
+     photo: string;
+    city: number;
    }
   //////функция для сабмита формы
    function onFormSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void { 
@@ -108,17 +117,30 @@ function RegistrationPage() {
       tg_username:'mgdata',
       is_adult: isAdult, 
       phone: "9086851174",
-      photo: ""
+      photo: uploadedPictureLink,
+      city: 1
       }
 
-      const user:IRegister = Object.assign(userUnchangableValues, userFormFieldsInfo);
+      const user: IRegister = Object.assign(userUnchangableValues, userFormFieldsInfo);
       
-      console.log(JSON.stringify(user))
-      onFormSubmit2(user)
+      // const formData = new FormData();
+
+      // for (let key in user) {
+      //   formData.set(key, user[key])
+      // }
+
+      // if (blob) {
+      //   console.log(blob)
+      //   formData.set('photo', blob, 'selfie.jpg')
+      // }
+      fetchRegistration(user)
+  // fetchRegistration(formData)
+        // for(let [name, value] of formData) {
+        //   console.log(`${name} = ${value}`); // key1=value1, потом key2=value2
+        // }
+      // console.log(JSON.stringify(user))
+
       setRegistrationCompleteModal(true);
-      
-  
-      
     } else {
       e.preventDefault();
       setTryToSubmitWithoutPic(true) /// если пользователь не загрузил фото выделяем красным текст о необходимости загрузить фото!
@@ -314,6 +336,8 @@ function RegistrationPage() {
             uploadedFileLink={uploadedPictureLink}
             setUploadedFileLink={setUploadedPictureLink}
             localeStorageName="avatarPic"
+           // blob={blob}
+            //setBlob={setBlob}
           />
         </Modal>
         <ConfirmModal isOpen={registrationCompleteModal} onOpenChange={setRegistrationCompleteModal}

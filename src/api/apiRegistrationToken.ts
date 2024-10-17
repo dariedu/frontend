@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-const tasksUrl = `${API_URL}/registration/`;
+//const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
+const tasksUrl = ` https://skillfactory.dariedu.site/api/registration/`;
 
 interface IRegister {
   tg_id: number;
@@ -15,8 +16,8 @@ interface IRegister {
   photo: string;
   birthday: string;
   is_adult: boolean | null;
-  interests: string;
-  // city: string
+  //interests: string;
+  city: number;
   consent_to_personal_data: boolean;
 }
 
@@ -32,21 +33,45 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
+// export const postRegistration = async (user: IRegister): Promise<IRegister> => {
+
+//   var options = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Accept: "application/json",
+//     },
+//     body: JSON.stringify(user),
+//   }
+//   fetch(tasksUrl, options)
+//     .then((response) => response.json())
+//     .then((result) => {
+//      return result;
+//     })
+//     .catch((error) => {
+//       console.error(error)
+//         throw new Error('Post request postTaskAccept has failed');
+//     }
+//     ); 
+  
+// };
+
+
 export const postRegistration = async (user: IRegister): Promise<IRegister> => {
   try {
     const response: AxiosResponse<string> = await axios({
-      method: 'post',
       url: tasksUrl,
+      method: 'POST',
       headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
+        'accept': 'application/json',
+        "Content-Type": " multipart/form-data",
       },
-      data: JSON.stringify(user),
+      data: user,
     });
     return JSON.parse(response.data);
   } catch (err) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
+   console.error('Post request postRegistration has failed', err);
+     throw new Error('Post request postRegistration has failed');
   }
 };
 

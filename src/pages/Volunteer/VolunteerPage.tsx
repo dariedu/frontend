@@ -5,7 +5,7 @@ import TabBar from '../../components/TabBar/TabBar';
 const VolunteerPage = () => {
   return (
     <div>
-      {/* <NavigationBar variant ="mainScreen"  title = ''  avatarUrl = ''/> */}
+     
       <NavigationBar variant="mainScreen" title="Волонтёр" />
       {/* <img
         className="w-[130px] h-[26px] absolute top-0 left-0"
