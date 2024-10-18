@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 const tokenUrl = `${API_URL}/token/`;
 const tasksUrl = ` https://skillfactory.dariedu.site/api/registration/`;
 
-interface IRegister {
+interface IUserRegistered {
   tg_id: number;
   tg_username: string;
   email: string;
@@ -13,13 +13,14 @@ interface IRegister {
   name: string;
   surname: string;
   phone: string;
-  photo: string;
+  photo: Blob;
   birthday: string;
   is_adult: boolean | null;
   //interests: string;
   city: number;
   consent_to_personal_data: boolean;
 }
+type TRegisterationFormData = FormData
 
 type TToken = {
   tg_id: number;
@@ -33,9 +34,9 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
-export const postRegistration = async (
-  formData: FormData,
-): Promise<IRegister> => {
+
+////// работает корректно //////////
+export const postRegistration = async (user: TRegisterationFormData): Promise<boolean|undefined> => {
   try {
     const response: AxiosResponse<IRegister> = await axios({
       url: tasksUrl,
@@ -45,15 +46,19 @@ export const postRegistration = async (
       },
       data: formData,
     });
-    return response.data;
-  } catch (err: any) {
-    console.error('Post request postRegistration has failed', err);
-    if (err.response) {
-      console.error('Server responded with:', err.response.data);
+    if (response.data) {
+   return true
     }
+    //return JSON.parse(response.data);
+  } catch (err) {
+    return false
+    console.error('Post request postRegistration has failed', err);
+
     throw new Error('Post request postRegistration has failed');
   }
 };
+////// работает корректно //////////
+
 
 export const postToken = async (token: TToken): Promise<TToken> => {
   try {
@@ -131,4 +136,4 @@ export const getToken = async (tg_id: number) => {
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IRegister, TToken, ITokenBlacklist, ITokenRefresh };
+export type { IUserRegistered, TRegisterationFormData, TToken, ITokenBlacklist, ITokenRefresh };
