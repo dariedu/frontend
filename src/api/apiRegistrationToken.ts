@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 const tokenUrl = `${API_URL}/token/`;
 const tasksUrl = ` https://skillfactory.dariedu.site/api/registration/`;
 
-interface IRegister {
+interface IUserRegistered {
   tg_id: number;
   tg_username: string;
   email: string;
@@ -13,13 +13,14 @@ interface IRegister {
   name: string;
   surname: string;
   phone: string;
-  photo: string;
+  photo: Blob;
   birthday: string;
   is_adult: boolean | null;
   //interests: string;
   city: number;
   consent_to_personal_data: boolean;
 }
+type TRegisterationFormData = FormData
 
 type TToken = {
   tg_id: number;
@@ -33,31 +34,8 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
-// export const postRegistration = async (user: IRegister): Promise<IRegister> => {
-
-//   var options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Accept: "application/json",
-//     },
-//     body: JSON.stringify(user),
-//   }
-//   fetch(tasksUrl, options)
-//     .then((response) => response.json())
-//     .then((result) => {
-//      return result;
-//     })
-//     .catch((error) => {
-//       console.error(error)
-//         throw new Error('Post request postTaskAccept has failed');
-//     }
-//     ); 
-  
-// };
-
-
-export const postRegistration = async (user: IRegister): Promise<IRegister> => {
+////// работает корректно //////////
+export const postRegistration = async (user: TRegisterationFormData): Promise<boolean|undefined> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
@@ -68,12 +46,18 @@ export const postRegistration = async (user: IRegister): Promise<IRegister> => {
       },
       data: user,
     });
-    return JSON.parse(response.data);
+    if (response.data) {
+   return true
+    }
+    //return JSON.parse(response.data);
   } catch (err) {
-   console.error('Post request postRegistration has failed', err);
-     throw new Error('Post request postRegistration has failed');
+    return false
+    console.error('Post request postRegistration has failed', err);
+    throw new Error('Post request postRegistration has failed');
   }
 };
+////// работает корректно //////////
+
 
 export const postToken = async (token: TToken): Promise<TToken> => {
   try {
@@ -156,4 +140,4 @@ export const getToken = async (tg_id: number) => {
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IRegister, TToken, ITokenBlacklist, ITokenRefresh };
+export type { IUserRegistered, TRegisterationFormData, TToken, ITokenBlacklist, ITokenRefresh };
