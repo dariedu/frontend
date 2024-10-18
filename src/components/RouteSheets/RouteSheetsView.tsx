@@ -15,12 +15,14 @@ interface IRouteSheetsViewProps {
   routes: IRoute[];
   onComplete: () => void;
   isCompleted: boolean;
+  isVolunteerSelected: boolean; // Добавили этот проп
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes = [],
   onComplete,
   isCompleted,
+  isVolunteerSelected,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
 
@@ -70,8 +72,11 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
       {/* Complete Button - Render only if not completed */}
       {!isCompleted && (
         <button
-          className="btn-M-GreenDefault w-full mt-4"
+          className={`btn-M-GreenDefault w-full mt-4 ${
+            !isVolunteerSelected ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           onClick={handleCompleteClick} // По клику открываем модалку
+          disabled={!isVolunteerSelected} // Отключаем кнопку, если волонтёр не выбран
         >
           Завершить
         </button>

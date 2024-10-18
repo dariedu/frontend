@@ -34,17 +34,17 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
+
 ////// работает корректно //////////
 export const postRegistration = async (user: TRegisterationFormData): Promise<boolean|undefined> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<IRegister> = await axios({
       url: tasksUrl,
       method: 'POST',
       headers: {
-        'accept': 'application/json',
-        "Content-Type": " multipart/form-data",
+        accept: 'application/json',
       },
-      data: user,
+      data: formData,
     });
     if (response.data) {
    return true
@@ -53,6 +53,7 @@ export const postRegistration = async (user: TRegisterationFormData): Promise<bo
   } catch (err) {
     return false
     console.error('Post request postRegistration has failed', err);
+
     throw new Error('Post request postRegistration has failed');
   }
 };
@@ -70,21 +71,16 @@ export const postToken = async (token: TToken): Promise<TToken> => {
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin',
       },
     });
 
-    // Логируем весь ответ от сервера для проверки
-    console.log('Ответ от сервера:', response.data);
-
-    return response.data; // Убедитесь, что ответ сервера парсится Axios автоматически
+    return response.data;
   } catch (err: any) {
     console.error('Ошибка в запросе токена:', err);
     throw new Error('Запрос токена завершился неудачей');
   }
 };
 
-//Takes a token and blacklists it. Must be used with the rest_framework_simplejwt.token_blacklist app installed.
 export const postTokenBlacklist = async (
   refresh: ITokenBlacklist,
 ): Promise<number> => {

@@ -10,6 +10,7 @@ interface IVolunteer {
 interface ListOfVolunteersProps {
   onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
   onTakeRoute: () => void;
+  onClose: () => void; // Добавляем onClose
   showActions?: boolean; // Добавляем пропс для контроля видимости кнопок
 }
 
@@ -40,7 +41,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   };
 
   return (
-    <div className="space-y-4 bg-light-gray-white rounded-[16px] w-[360px] p-4">
+    <div className="space-y-4 bg-light-gray-white rounded-[16px] w-full p-4">
       {/* Список волонтёров */}
       {volunteers.map((volunteer, index) => (
         <div

@@ -31,7 +31,7 @@ const Curator: React.FC = () => {
         users={[currentUser]}
         onUserClick={handleUserClick}
         showSearchInput={true}
-        showInfoSection={true}
+        showInfoSection={false}
       />
 
       {selectedUser && (

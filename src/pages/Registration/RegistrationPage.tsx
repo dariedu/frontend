@@ -2,20 +2,22 @@ import * as Form from '@radix-ui/react-form';
 import { Selfie } from './../../components/Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from './../../components/ui/Modal/Modal.tsx';
-import { useState} from 'react';
+import { useState } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
+
 import {postRegistration, type TRegisterationFormData, IUserRegistered } from '../../api/apiRegistrationToken.ts';
 import ConfirmModal  from '../../components/ui/ConfirmModal/ConfirmModal.tsx'
-
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
   const [uploadedPictureLink, setUploadedPictureLink] = useState(''); /// ссылка на загруженое фото
-  const [registrationCompleteModal, setRegistrationCompleteModal] = useState(false);
-  const [checked, setChecked] = useState(false) // активируем кнопку отпарвки, если согласились с офертой для взрослых
+  const [registrationCompleteModal, setRegistrationCompleteModal] =
+    useState(false);
+  const [checked, setChecked] = useState(false); // активируем кнопку отпарвки, если согласились с офертой для взрослых
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
+
   const [requestForRegistrationSubmited, setRequestForRegistrationSubmited] = useState<'start' | 'submitSuccess' | 'submitFailed'>('start');
   //const [res, setRes] = useState<boolean>();
   const [blob, setBlob] = useState<Blob>(new Blob());
@@ -33,14 +35,20 @@ function RegistrationPage() {
 
   ////При загрузке страницы, если isAdult пуст, то проверяем localStorage, если там есть birthDate то она подцепится в форму и соотвественно надо обновить isAdult
   if (isAdult == null) {
-    if (localStorage.getItem("birthday") !== undefined && localStorage.getItem("birthday") !== "" && localStorage.getItem("birthday") !== null) {
-      setIsAdult(getAgeFromBirthDate(JSON.stringify(localStorage.getItem("birthday"))))
+    if (
+      localStorage.getItem('birthday') !== undefined &&
+      localStorage.getItem('birthday') !== '' &&
+      localStorage.getItem('birthday') !== null
+    ) {
+      setIsAdult(
+        getAgeFromBirthDate(JSON.stringify(localStorage.getItem('birthday'))),
+      );
     }
   }
- 
+
   type TKeys = keyof typeof userFormFieldsInfo;
 
-  ///определяем есть ли пользователю 18 лет по введенной дате рождения 
+  ///определяем есть ли пользователю 18 лет по введенной дате рождения
   function getAgeFromBirthDate(birthDateString: string): boolean {
     const today = new Date();
     const birthDate = new Date(birthDateString);
@@ -52,35 +60,39 @@ function RegistrationPage() {
     ) {
       age--;
     }
+
     let result = age >= 18
     setIsAdult(result)
     return result
   }
-  
- 
+
   // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
   function handleFormFieldChange(fieldName: TKeys, value: string | boolean) {
     setUserFormFieldsInfo({
       ...userFormFieldsInfo,
-      [fieldName]: value
-    })
-    if (fieldName == "birthday" && typeof value == 'string') {
-      localStorage.setItem("birthday", value)
-      setIsAdult(getAgeFromBirthDate(value))
-      localStorage.setItem("isAdult", JSON.stringify(getAgeFromBirthDate(value)))
+      [fieldName]: value,
+    });
+    if (fieldName == 'birthday' && typeof value == 'string') {
+      localStorage.setItem('birthday', value);
+      setIsAdult(getAgeFromBirthDate(value));
+      localStorage.setItem(
+        'isAdult',
+        JSON.stringify(getAgeFromBirthDate(value)),
+      );
     } else {
       if (typeof value == 'boolean')
+
         localStorage.setItem(fieldName, JSON.stringify(value))
       else
         localStorage.setItem(fieldName, value)
     }
-  
   }
 
   async function fetchRegistration(user: TRegisterationFormData) {
     try {
       const response = await postRegistration(user)
       if (response) {
+        
         //setRes(response)
         setRequestForRegistrationSubmited('submitSuccess') ///// устанавливаем дата, чтобы знать, что отображать на экране
         // console.log(data + " this is response from registration page")
@@ -131,10 +143,9 @@ function RegistrationPage() {
       setRegistrationCompleteModal(true)
     } else {
       e.preventDefault();
-      setTryToSubmitWithoutPic(true) /// если пользователь не загрузил фото выделяем красным текст о необходимости загрузить фото!
+      setTryToSubmitWithoutPic(true);
     }
   }
-
 
   return (
     <>

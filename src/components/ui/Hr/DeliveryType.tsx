@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import arrowRightIcon from '../../../assets/icons/arrow_right.png';
 import pencile from '../../../assets/icons/pencile.svg';
+import ConfirmModal from '../ConfirmModal/ConfirmModal'; // Импортируем модальное окно
 
 interface IDeliveryTypeProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена';
@@ -13,22 +14,40 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
   points,
   onDeliveryClick,
 }) => {
-  const [showFeedbackButton, setShowFeedbackButton] = useState(false); // Управление видимостью кнопки
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false); // Управление видимостью формы
-  const [feedback, setFeedback] = useState(''); // Для хранения текста комментария
+  const [showFeedbackButton, setShowFeedbackButton] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Управляем состоянием модального окна
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false); // Отмечаем, был ли отправлен отзыв
+  const [routeSheetShown, setRouteSheetShown] = useState(false); // Для отображения маршрутного листа после отправки отзыва
+  const [showRouteSheet, setShowRouteSheet] = useState(false); // Управляем видимостью маршрутного листа
 
   // Обработчик для клика по кнопке, если статус "Завершена"
   const handleCompletedClick = () => {
-    if (status === 'Завершена' && !showFeedbackForm) {
-      setShowFeedbackButton(true); // Показать кнопку "Поделиться впечатлениями"
+    if (status === 'Завершена' && !feedbackSubmitted) {
+      setShowFeedbackButton(true);
+    } else if (feedbackSubmitted) {
+      setRouteSheetShown(true); // Показываем маршрутный лист после отправки отзыва
+      setShowRouteSheet(true); // Отображаем маршрутный лист
     } else {
       onDeliveryClick();
     }
   };
 
   const handleFeedbackButtonClick = () => {
-    setShowFeedbackButton(false); // Скрыть кнопку "Поделиться впечатлениями"
-    setShowFeedbackForm(true); // Показать форму для комментария
+    setShowFeedbackButton(false);
+    setShowFeedbackForm(true);
+  };
+
+  const handleFeedbackSubmit = () => {
+    setShowFeedbackForm(false);
+    setIsModalOpen(true); // Открываем модальное окно при отправке
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setFeedbackSubmitted(true); // Помечаем, что отзыв был отправлен
+    setShowRouteSheet(false); // Скрываем маршрутный лист после закрытия модального окна
   };
 
   // Классы для статуса
@@ -48,8 +67,9 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
           {status}
         </div>
 
-        {/* Кнопка для статуса "Активная" */}
-        {status === 'Активная' && (
+        {/* Кнопка для статуса "Активная" или для завершенного маршрутного листа */}
+        {(status === 'Активная' ||
+          (status === 'Завершена' && showRouteSheet)) && (
           <button
             onClick={onDeliveryClick}
             className="flex items-center space-x-1 text-light-gray-black focus:outline-none"
@@ -66,7 +86,7 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
         )}
 
         {/* Кнопка для статуса "Завершена", если форма еще не открыта */}
-        {status === 'Завершена' && !showFeedbackForm && (
+        {status === 'Завершена' && !showFeedbackForm && !routeSheetShown && (
           <button
             onClick={handleCompletedClick}
             className="flex items-center text-light-gray-black focus:outline-none"
@@ -120,12 +140,23 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
           />
           <button
             className="btn-B-WhiteClicked bg-light-gray-3 text-light-gray-white font-gerbera-h3"
+            onClick={handleFeedbackSubmit}
             disabled={!feedback.trim()}
           >
             Отправить
           </button>
         </div>
       )}
+      {/* Модальное окно с подтверждением */}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onConfirm={handleModalClose} // Закрытие модального окна по нажатию "Закрыть"
+        title="Спасибо, что поделились!"
+        description="Это важно."
+        confirmText="Закрыть"
+        isSingleButton={true} // Только одна кнопка
+      />
     </div>
   );
 };
