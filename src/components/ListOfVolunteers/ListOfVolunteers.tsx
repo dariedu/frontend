@@ -40,7 +40,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   };
 
   return (
-    <div className="space-y-4 bg-light-gray-white rounded-[16px] w-[360px] p-4">
+    <div className="space-y-4 bg-light-gray-white rounded-[16px] w-full p-4">
       {/* Список волонтёров */}
       {volunteers.map((volunteer, index) => (
         <div

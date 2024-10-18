@@ -8,7 +8,7 @@ import InputDate from '../InputDate/InputDate';
 
 interface ICalendarProps {
   selectedDate: Date;
-  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   headerName?: string;
   showHeader?: boolean;
   showFilterButton?: boolean;
@@ -21,9 +21,8 @@ const Calendar: React.FC<ICalendarProps> = ({
   showFilterButton = true,
   showDatePickerButton = true,
   selectedDate,
-  setSelectedDate
+  setSelectedDate,
 }) => {
-  
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);

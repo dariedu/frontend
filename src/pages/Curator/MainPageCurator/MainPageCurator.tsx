@@ -73,27 +73,25 @@ const MainPageCurator: React.FC = () => {
   return (
     <div className="flex-col bg-light-gray-1 min-h-[746px]">
       <SliderStories />
-      <DeliveryType
-        status={deliveryStatus}
-        points={points}
-        onDeliveryClick={openRouteSheets}
-      />
+      <div className="flex-col bg-light-gray-white rounded-[16px]">
+        <DeliveryType
+          status={deliveryStatus}
+          points={points}
+          onDeliveryClick={openRouteSheets}
+        />
+        <Search
+          showSearchInput={false}
+          showInfoSection={true}
+          users={users}
+          onUserClick={handleUserClick}
+        />
 
-      <Search
-        showSearchInput={false}
-        showInfoSection={true}
-        users={users}
-        onUserClick={handleUserClick}
-      />
-
-      {deliveryStatus === 'Активная' && (
-        <div>
-          <DeliveryInfo />
-        </div>
-      )}
-
-      {!isRouteSheetsOpen && (
-        <>
+        {deliveryStatus === 'Активная' && (
+          <div>
+            <DeliveryInfo />
+          </div>
+        )}
+        {!isRouteSheetsOpen && (
           <Calendar
             headerName="Расписание доставок"
             showHeader={true}
@@ -102,11 +100,14 @@ const MainPageCurator: React.FC = () => {
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
           />
+        )}
+      </div>
+      {!isRouteSheetsOpen && (
+        <>
           <SliderCards showTitle={false} />
           <SliderCards showTitle={true} />
         </>
       )}
-
       {isRouteSheetsOpen && (
         <RouteSheets
           title="Маршрутный лист 1"

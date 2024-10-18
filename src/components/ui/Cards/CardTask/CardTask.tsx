@@ -1,11 +1,12 @@
 import React from 'react';
 import metroIcon from '../../../../assets/icons/metro_station.svg';
+import onlineIcon from '../../../../assets/icons/onlineIcon.svg';
 
 interface ICardTaskProps {
   title: string;
   subtitle: string;
   timeOrPeriod: string;
-  additionalTime?: string; // Новое свойство для дополнительного времени
+  additionalTime?: string;
   points: string;
   typeTask: 'time-based' | 'period-based';
 }
@@ -18,12 +19,14 @@ const CardTask: React.FC<ICardTaskProps> = ({
   points,
   typeTask,
 }) => {
+  const icon = subtitle === 'Онлайн' ? onlineIcon : metroIcon;
+
   return (
     <div className="p-4 bg-light-gray-1 rounded-[16px] shadow w-[240px] h-[118px] mb-4">
       <div className="flex items-center mb-[24px]">
         {/* Task Icon */}
         <div className="flex items-center justify-center w-10 h-10 rounded-full pr-[1px]">
-          <img src={metroIcon} alt="task-icon" className="w-10 h-10" />
+          <img src={icon} alt="task-icon" className="w-10 h-10" />
         </div>
 
         {/* Task Details */}

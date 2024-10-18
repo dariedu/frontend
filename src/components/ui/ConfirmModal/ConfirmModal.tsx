@@ -9,8 +9,8 @@ interface IConfirmModalProps {
   title: string | JSX.Element;
   description: string;
   confirmText: string;
-  cancelText?: string; // Необязательный текст для кнопки отмены
-  isSingleButton?: boolean; // Флаг для управления отображением одной или двух кнопок
+  cancelText?: string;
+  isSingleButton?: boolean;
 }
 
 const ConfirmModal: React.FC<IConfirmModalProps> = ({
