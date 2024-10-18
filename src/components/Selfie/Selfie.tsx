@@ -1,6 +1,8 @@
 import React, { useState, useRef, type Dispatch } from 'react';
 import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
+//import ReactCrop from 'react-image-crop';
+
 
 interface ISelfieProps {
   text: string;
@@ -11,7 +13,7 @@ interface ISelfieProps {
   setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>;
   localeStorageName: string;
   // blob: undefined | Blob
-  //setBlob:Dispatch<React.SetStateAction<Blob>>
+setBlob:Dispatch<React.SetStateAction<Blob>>
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -24,8 +26,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
   uploadedFileLink,
   setUploadedFileLink,
   setTryToSubmitWithoutPic,
-  // blob,
-  //setBlob
+  setBlob
 }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const webcamRef: React.MutableRefObject<null | Webcam> = useRef(null);
@@ -38,7 +39,6 @@ export const Selfie: React.FC<ISelfieProps> = ({
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
         setUrl(imageSrc);
-        //setBlob(new Blob([imageSrc]))
       }
       }
     }, [webcamRef]);
@@ -47,9 +47,21 @@ export const Selfie: React.FC<ISelfieProps> = ({
     setUrl("")
   };
 
-  // function onLoadPhoto(e){
-  //   setBlob(e.target.value.toBlob())
-  // }
+  function savePicture() {
+    setFileUploaded(true);
+    setUploadedFileLink(url);
+    localStorage.setItem(localeStorageName, uploadedFileLink);
+    setIsEnabled(false)
+
+    
+fetch(url)
+  .then(res => res.blob())
+  .then(blob => {
+    setBlob(blob)
+    console.log(blob)
+  });
+    
+  }
 
 
  return (
@@ -97,7 +109,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
       </div>
       <Modal isOpen={isEnabled} onOpenChange={setIsEnabled}>
         <div
-          className="w-full min-h-[600px] bg-light-gray-white flex flex-col justify-between items-center py-8 rounded-t-2xl"
+          className="w-full h-fit bg-light-gray-white flex flex-col justify-between items-center py-8 rounded-t-2xl"
           onClick={e => {
             e.stopPropagation();
           }}
@@ -109,10 +121,10 @@ export const Selfie: React.FC<ISelfieProps> = ({
             screenshotFormat="image/jpeg"
             screenshotQuality={1}
             forceScreenshotSourceSize={true}
-            className='relative'
+           className='relative '
           />
          {url && (<img ref={imageRef} src={url} alt="pic" className='absolute'/>)}
-          <div className="flex justify-between w-[350px] h-[40px]">
+          <div className="flex justify-between w-[350px] h-[40px] mt-4">
             <button className="btn-S-GreenDefault outline-none" onClick={makePhoto}>
               Сделать фото
             </button>
@@ -121,12 +133,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
             </button>
             <button
               className="btn-S-GreenClicked outline-none"
-              onClick={() => {
-                setFileUploaded(true);
-                setUploadedFileLink(url);
-                localStorage.setItem(localeStorageName, uploadedFileLink);
-                setIsEnabled(false)
-              }}
+              onClick={savePicture}
             >
               Сохранить фото
             </button>
