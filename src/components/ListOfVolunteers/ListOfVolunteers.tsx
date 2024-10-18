@@ -10,6 +10,7 @@ interface IVolunteer {
 interface ListOfVolunteersProps {
   onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
   onTakeRoute: () => void;
+  onClose: () => void; // Добавляем onClose
   showActions?: boolean; // Добавляем пропс для контроля видимости кнопок
 }
 

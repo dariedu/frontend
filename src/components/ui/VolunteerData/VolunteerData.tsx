@@ -1,45 +1,94 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import geoIcon from '../../../assets/icons/geo.svg';
 import emailIcon from '../../../assets/icons/email.svg';
 import birthdayIcon from '../../../assets/icons/birthday.svg';
 import phoneIcon from '../../../assets/icons/phone.svg';
 import telegramIcon from '../../../assets/icons/telegram.svg';
 import big_pencilIcon from '../../../assets/icons/big_pencil.svg';
-interface IVolunteerDataProps {
-  geo: string;
-  email: string;
-  birthday: string;
-  phone: string;
-  telegram: string;
-}
+import { UserContext } from '../../../core/UserContext';
+import { patchUser } from '../../../api/userApi';
 
-// interface ICreateComponentProps{
-//   item: string,
-//   iconsLink: string,
-//   changeIconLink?: string,
-//   keys: number
-// }
+export const VolunteerData: React.FC = () => {
+  const { currentUser, token } = useContext(UserContext);
 
-// const CreateComponent:React.FC<ICreateComponentProps> = ({ item, iconsLink, changeIconLink, keys }) => {
-//   console.log(keys)
-//   return (
-//     <div className='w-[360px] h-[66px] flex items-center justify-between px-3.5 ' key={keys} >
-//       <div className='inline-flex items-center justify-start'>
-//       <img src={iconsLink} className='w-[42px] h-[42px]'/>
-//         <p className='ml-3.5'>{item}</p>
-//       </div>
-//       {changeIconLink ? <img src={changeIconLink} className='w-[42px] h-[42px] cursor-pointer' /> : "" }
-//     </div>
-//   )}
+  if (!currentUser) {
+    return <div>Пользователь не найден</div>;
+  }
 
-export const VolunteerData: React.FC<IVolunteerDataProps> = ({
-  geo,
-  email,
-  birthday,
-  phone,
-  telegram,
-}) => {
-  const items = [geo, email, birthday, phone, telegram];
+  // Преобразуем city (geo) и tg_username (telegram)
+  const {
+    email,
+    birthday,
+    phone,
+    tg_username: telegram,
+    city: geo,
+  } = currentUser;
+
+  // Обрабатываем city, если это идентификатор (необходимо преобразование в название города)
+  const geoDisplay = geo ? `Город ID: ${geo}` : 'Город не указан'; // Замените на реальное отображение города
+
+  const [formData, setFormData] = useState({
+    geo: geoDisplay, // Используем обработанное значение города
+    email: email || '',
+    birthday: birthday ? new Date(birthday).toLocaleDateString() : '', // Преобразование даты
+    phone: phone || '',
+  });
+
+  const [isEditing, setIsEditing] = useState({
+    geo: false,
+    email: false,
+    birthday: false,
+    phone: false,
+  });
+
+  // Обработчик для изменения значений полей
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: keyof typeof formData,
+  ) => {
+    setFormData({
+      ...formData,
+      [field]: e.target.value,
+    });
+  };
+
+  // Функция для переключения режима редактирования
+  const toggleEdit = (field: keyof typeof isEditing) => {
+    setIsEditing(prev => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  // Функция для отправки обновленных данных на сервер
+  const handleSave = async (field: keyof typeof formData) => {
+    if (!currentUser || !token) return;
+
+    try {
+      // Отправляем обновленные данные на бэкенд
+      const updatedUser = await patchUser(currentUser.id, {
+        [field]: formData[field],
+      });
+
+      console.log('Пользователь успешно обновлен:', updatedUser);
+
+      // Выключаем режим редактирования
+      setIsEditing(prev => ({
+        ...prev,
+        [field]: false,
+      }));
+    } catch (error) {
+      console.error('Ошибка при обновлении пользователя:', error);
+    }
+  };
+
+  const items = [
+    formData.geo,
+    formData.email,
+    formData.birthday,
+    formData.phone,
+    telegram,
+  ];
   const iconsLinks = [
     geoIcon,
     emailIcon,
@@ -50,41 +99,51 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   const changeIconLink = big_pencilIcon;
 
   return (
-    <>
-      <div className="w-[360px] h-[410px] bg-light-gray-white flex flex-col justify-between">
-        {items.map((item, index) => {
-          if (index === 4) {
-            return (
-              <div
-                className="w-[360px] h-[66px] flex items-center justify-between px-3.5 "
-                key={index}
-              >
-                <div className="inline-flex items-center justify-start">
-                  <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
-                  <p className="ml-3.5">{item}</p>
-                </div>
+    <div className="w-[360px] h-[410px] bg-light-gray-white flex flex-col justify-between">
+      {items.map((item, index) => {
+        const field = Object.keys(isEditing)[index] as keyof typeof formData;
+
+        // Если это поле telegram (последний элемент), не делаем его редактируемым
+        if (index === 4) {
+          return (
+            <div
+              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              key={index}
+            >
+              <div className="inline-flex items-center justify-start">
+                <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
+                <p className="ml-3.5">{item}</p>
               </div>
-            );
-            //  return < CreateComponent item = { item } iconsLink = { iconsLinks[index]} keys = { index } />
-          } else {
-            return (
-              <div
-                className="w-[360px] h-[66px] flex items-center justify-between px-3.5 "
-                key={index}
-              >
-                <div className="inline-flex items-center justify-start">
-                  <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
-                  <p className="ml-3.5">{item}</p>
-                </div>
-                <img
-                  src={changeIconLink}
-                  className="w-[42px] h-[42px] cursor-pointer"
-                />
+            </div>
+          );
+        } else {
+          return (
+            <div
+              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              key={index}
+            >
+              <div className="inline-flex items-center justify-start">
+                <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
+                {isEditing[field] ? (
+                  <input
+                    className="ml-3.5 p-1 border rounded"
+                    value={formData[field]}
+                    onChange={e => handleInputChange(e, field)}
+                    onBlur={() => handleSave(field)} // Сохраняем изменения при потере фокуса
+                  />
+                ) : (
+                  <p className="ml-3.5">{formData[field]}</p>
+                )}
               </div>
-            );
-          }
-        })}
-      </div>
-    </>
+              <img
+                src={changeIconLink}
+                className="w-[42px] h-[42px] cursor-pointer"
+                onClick={() => toggleEdit(field)}
+              />
+            </div>
+          );
+        }
+      })}
+    </div>
   );
 };
