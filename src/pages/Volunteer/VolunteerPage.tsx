@@ -1,24 +1,29 @@
+import React, { useContext, useEffect } from 'react';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-// import StoriesView from '../../components/SliderStories/SliderStories';
 import TabBar from '../../components/TabBar/TabBar';
+import { DeliveryContext } from '../../core/DeliveryContext';
 
-const VolunteerPage = () => {
+const VolunteerPage: React.FC = () => {
+  const { fetchDeliveries, isLoading, deliveries } =
+    useContext(DeliveryContext);
+
+  useEffect(() => {
+    fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы волонтера
+  }, [fetchDeliveries]);
+
+  if (isLoading) {
+    return <div>Загрузка доставок...</div>;
+  }
+
   return (
     <div>
-     
       <NavigationBar variant="mainScreen" title="Волонтёр" />
-      {/* <img
-        className="w-[130px] h-[26px] absolute top-0 left-0"
-        src="./src/assets/icons/mainLogo.gif"
-      />
-       <img
-          className="w-[130px] h-[26px] relative"
-          src="./src/assets/icons/mainLogo.png"
-        />   */}
-
-      {/* <StoriesView /> */}
-
       <TabBar userRole="volunteer" />
+      {/* <div>
+        {deliveries.map(delivery => (
+          <div key={delivery.id}>{delivery.location.address}</div>
+        ))}
+      </div> */}
     </div>
   );
 };
