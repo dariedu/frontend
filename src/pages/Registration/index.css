@@ -14,6 +14,8 @@
   @apply font-gerbera-sub2 text-light-error-red w-[328px]
 }
 
-/* .bgImage{
-  background-image: url(uploadedPictureLink)
-} */
+.bgImage{
+background-image: url( "../../src/assets/icons/tap_calendar.svg");
+background-repeat: no-repeat;
+background-position: 90%;
+}
