@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import arrowRightIcon from '../../../assets/icons/arrow_right.png';
 import pencile from '../../../assets/icons/pencile.svg';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
-import { DeliveryContext } from '../../../core/DeliveryContext'; // Импортируем контекст
+import { DeliveryContext } from '../../../core/DeliveryContext';
 
 interface IDeliveryTypeProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена'; // Добавляем статус как обязательный пропс

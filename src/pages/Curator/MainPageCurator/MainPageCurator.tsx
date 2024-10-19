@@ -62,7 +62,7 @@ const MainPageCurator: React.FC = () => {
 
   const points = 5;
 
-  // Данные маршрутных листов (замените на реальные данные)
+  // Данные маршрутных листов
   const routeSheetsData: RouteSheet[] = [
     { id: 1, title: 'Маршрутный лист 1' },
     { id: 2, title: 'Маршрутный лист 2' },
@@ -135,6 +135,9 @@ const MainPageCurator: React.FC = () => {
     return <div>Загрузка доставок...</div>;
   }
 
+  const station = currentDelivery?.location?.subway || 'Станция не указана';
+  const address = currentDelivery?.location?.address || 'Адрес не указан';
+
   return (
     <div className="flex-col bg-light-gray-1 min-h-[746px]">
       <SliderStories />
@@ -149,6 +152,8 @@ const MainPageCurator: React.FC = () => {
           showInfoSection={true}
           users={users}
           onUserClick={handleUserClick}
+          station={station} // Передача станции метро в Search
+          address={address} // Передача адреса в Search
         />
 
         {deliveryStatus === 'Ближайшая' && (

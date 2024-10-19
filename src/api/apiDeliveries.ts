@@ -50,14 +50,14 @@ const getHeaders = (access: string) => ({
 export const getAllDeliveries = async (
   is_active: string,
   is_completed: string,
-  accessToken: string, // добавим токен доступа
+  accessToken: string,
 ): Promise<IDelivery[]> => {
   try {
-    const response: AxiosResponse<IDelivery[]> = await axios({
+    const response = await axios({
       url: `${deliveriesUrl}?is_active=${is_active}&is_completed=${is_completed}`,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`, // передаем токен в заголовке
+        Authorization: `Bearer ${accessToken}`, // Правильное добавление токена
         accept: 'application/json',
       },
     });

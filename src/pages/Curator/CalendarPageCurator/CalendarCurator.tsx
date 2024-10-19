@@ -5,6 +5,7 @@ import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import { UserContext } from '../../../core/UserContext';
+import { DeliveryContext } from '../../../core/DeliveryContext'; // Импортируем DeliveryContext
 import { IUser } from '../../../core/types';
 
 interface RouteSheet {
@@ -15,11 +16,18 @@ interface RouteSheet {
 
 const CalendarCurator: React.FC = () => {
   const { currentUser, loading } = useContext(UserContext);
+  const {
+    deliveries,
+    isLoading: deliveriesLoading,
+    fetchDeliveries,
+  } = useContext(DeliveryContext); // Данные о доставках из DeliveryContext
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
   >('Активная');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [points] = useState<number>(currentUser?.point ?? 0);
+
+  const [currentDelivery, setCurrentDelivery] = useState<any>(null); // Для хранения текущей доставки
 
   // Данные маршрутных листов
   const routeSheetsData: RouteSheet[] = [
@@ -45,6 +53,28 @@ const CalendarCurator: React.FC = () => {
     }
   }, [completedRouteSheets]);
 
+  // Поиск ближайшей доставки из списка
+  const getNearestDelivery = (deliveries: any[]) => {
+    const today = new Date();
+
+    const upcomingDeliveries = deliveries
+      .filter(d => d.date && new Date(d.date) >= today)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    return upcomingDeliveries.length > 0 ? upcomingDeliveries[0] : null;
+  };
+
+  useEffect(() => {
+    fetchDeliveries(); // Загружаем доставки при монтировании компонента
+  }, [fetchDeliveries]);
+
+  useEffect(() => {
+    if (!deliveriesLoading && deliveries.length > 0) {
+      const nearestDelivery = getNearestDelivery(deliveries); // Ищем ближайшую доставку
+      setCurrentDelivery(nearestDelivery); // Устанавливаем текущую доставку
+    }
+  }, [deliveriesLoading, deliveries]);
+
   const handleUserClick = (user: IUser) => {
     console.log('Clicked on user:', user);
   };
@@ -57,13 +87,16 @@ const CalendarCurator: React.FC = () => {
     setIsRouteSheetsOpen(false);
   };
 
-  if (loading) {
+  if (loading || deliveriesLoading) {
     return <div>Загрузка...</div>;
   }
 
-  if (!currentUser) {
-    return <div>Пользователь не найден</div>;
+  if (!currentUser || !currentDelivery) {
+    return <div>Пользователь или доставка не найдены</div>;
   }
+
+  const station = currentDelivery?.location?.subway || 'Станция не указана';
+  const address = currentDelivery?.location?.address || 'Адрес не указан';
 
   return (
     <div className="flex-col min-h-[672px] bg-light-gray-1">
@@ -73,6 +106,8 @@ const CalendarCurator: React.FC = () => {
           showSearchInput={true}
           users={[currentUser]}
           onUserClick={handleUserClick}
+          station={station} // Передаем станцию метро
+          address={address} // Передаем адрес доставки
         />
         <Calendar
           selectedDate={selectedDate}

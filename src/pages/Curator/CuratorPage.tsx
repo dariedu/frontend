@@ -4,8 +4,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { DeliveryContext } from '../../core/DeliveryContext';
 
 const CuratorPage: React.FC = () => {
-  const { fetchDeliveries, isLoading, deliveries } =
-    useContext(DeliveryContext);
+  const { fetchDeliveries, isLoading } = useContext(DeliveryContext);
 
   useEffect(() => {
     fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы куратора

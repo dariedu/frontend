@@ -1,19 +1,22 @@
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 import { type IDelivery } from '../api/apiDeliveries';
-import { delivery1 } from '../components/DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
 import { getAllDeliveries } from '../api/apiDeliveries';
 import { UserContext } from './UserContext';
 
 interface IDeliveryContext {
   deliveries: IDelivery[];
   isLoading: boolean;
-  fetchDeliveries: () => Promise<void>; // добавляем fetchDeliveries в интерфейс
+  filteredDeliveries: IDelivery[]; // Добавляем фильтрованные доставки
+  setFilteredDeliveriesByDate: (deliveries: IDelivery[]) => void; // Добавляем функцию для фильтрации
+  fetchDeliveries: () => Promise<void>;
 }
 
 const defaultDeliveryContext: IDeliveryContext = {
-  deliveries: [delivery1],
+  deliveries: [],
   isLoading: true,
-  fetchDeliveries: async () => {}, // по умолчанию пустая функция
+  filteredDeliveries: [], // По умолчанию пустой массив
+  setFilteredDeliveriesByDate: () => {}, // По умолчанию пустая функция
+  fetchDeliveries: async () => {},
 };
 
 export const DeliveryContext = createContext<IDeliveryContext>(
@@ -24,6 +27,7 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
+  const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const token: string | null = useContext(UserContext)?.token;
@@ -35,7 +39,7 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     try {
-      let response = await getAllDeliveries('false', 'false', token); // передаем токен
+      let response = await getAllDeliveries('false', 'false', token);
       setDeliveries(response);
       setIsLoading(false);
     } catch (e) {
@@ -43,9 +47,19 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const setFilteredDeliveriesByDate = (deliveries: IDelivery[]) => {
+    setFilteredDeliveries(deliveries); // Сохраняем отфильтрованные доставки
+  };
+
   return (
     <DeliveryContext.Provider
-      value={{ deliveries, isLoading, fetchDeliveries }}
+      value={{
+        deliveries,
+        isLoading,
+        filteredDeliveries, // Добавляем в контекст
+        setFilteredDeliveriesByDate, // Добавляем функцию для фильтрации в контекст
+        fetchDeliveries,
+      }}
     >
       {children}
     </DeliveryContext.Provider>
