@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-//const tasksUrl = `${API_URL}/registration/`;
+
+const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
-const tasksUrl = ` https://skillfactory.dariedu.site/api/registration/`;
 
 interface IUserRegistered {
   tg_id: number;
@@ -20,7 +20,7 @@ interface IUserRegistered {
   city: number;
   consent_to_personal_data: boolean;
 }
-type TRegisterationFormData = FormData
+type TRegisterationFormData = FormData;
 
 type TToken = {
   tg_id: number;
@@ -34,31 +34,32 @@ interface ITokenRefresh extends ITokenBlacklist {
   access: string;
 }
 
-
 ////// работает корректно //////////
-export const postRegistration = async (user: TRegisterationFormData): Promise<boolean|undefined> => {
+export const postRegistration = async (
+  user: TRegisterationFormData,
+): Promise<boolean | undefined> => {
   try {
-    const response: AxiosResponse<IRegister> = await axios({
+    const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
       method: 'POST',
       headers: {
         accept: 'application/json',
+        'Content-Type': ' multipart/form-data',
       },
-      data: formData,
+      data: user,
     });
     if (response.data) {
-   return true
+      return true;
     }
     //return JSON.parse(response.data);
   } catch (err) {
-    return false
+    return false;
     console.error('Post request postRegistration has failed', err);
-
     throw new Error('Post request postRegistration has failed');
   }
 };
-////// работает корректно //////////
 
+////// работает корректно //////////
 
 export const postToken = async (token: TToken): Promise<TToken> => {
   try {
@@ -136,4 +137,10 @@ export const getToken = async (tg_id: number) => {
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IUserRegistered, TRegisterationFormData, TToken, ITokenBlacklist, ITokenRefresh };
+export type {
+  IUserRegistered,
+  TRegisterationFormData,
+  TToken,
+  ITokenBlacklist,
+  ITokenRefresh,
+};
