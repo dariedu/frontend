@@ -63,6 +63,9 @@ const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
           showActions={false}
           onSelectVolunteer={handleSelectVolunteer}
           onTakeRoute={handleTakeRoute}
+          onClose={function (): void {
+            throw new Error('Function not implemented.');
+          }}
         />
       )}
     </div>
