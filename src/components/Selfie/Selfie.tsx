@@ -58,7 +58,6 @@ fetch(url)
   .then(res => res.blob())
   .then(blob => {
     setBlob(blob)
-    console.log(blob)
   });
     
   }

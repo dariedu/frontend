@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-const tasksUrl = `${API_URL}/registration/`;
+//const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
-
+const tasksUrl = 'https://skillfactory.dariedu.site/api/registration/';
 interface IUserRegistered {
   tg_id: number;
   tg_username: string;
@@ -20,6 +20,7 @@ interface IUserRegistered {
   city: number;
   consent_to_personal_data: boolean;
 }
+
 type TRegisterationFormData = FormData;
 
 type TToken = {
@@ -37,7 +38,7 @@ interface ITokenRefresh extends ITokenBlacklist {
 ////// работает корректно //////////
 export const postRegistration = async (
   user: TRegisterationFormData,
-): Promise<boolean | undefined> => {
+): Promise<boolean|undefined> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
@@ -49,11 +50,11 @@ export const postRegistration = async (
       data: user,
     });
     if (response.data) {
-      return true;
+      return true
     }
     //return JSON.parse(response.data);
   } catch (err) {
-    return false;
+
     console.error('Post request postRegistration has failed', err);
     throw new Error('Post request postRegistration has failed');
   }

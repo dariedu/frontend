@@ -25,6 +25,7 @@ import FilterCurator from '../FilterCurator/FilterCurator';
 interface IInputDateProps {
   onClose: () => void;
   selectionMode?: 'single' | 'range';
+  setCurrentDate: (v:Date[]) => void
 }
 
 const months = [
@@ -47,8 +48,11 @@ const years = Array.from({ length: 61 }, (_, i) => 2030 - i);
 const InputDate: React.FC<IInputDateProps> = ({
   onClose,
   selectionMode = 'single',
+  setCurrentDate
 }) => {
-  // Явно указываем тип Date
+
+
+  //Явно указываем тип Date
   const [currentMonth, setCurrentMonth] = useState<Date>(
     startOfDay(new Date()),
   );
@@ -59,11 +63,11 @@ const InputDate: React.FC<IInputDateProps> = ({
     start: null,
     end: null,
   });
-
+  setCurrentDate(selectedDates)//////
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  
   const handlePrevMonth = () => {
     setCurrentMonth(startOfMonth(subMonths(currentMonth, 1)));
   };
@@ -112,12 +116,13 @@ const InputDate: React.FC<IInputDateProps> = ({
     }
   };
 
-  const renderCalendarDays = () => {
+  
+  
+    const renderCalendarDays = () => {
+    const days: JSX.Element[] = [];
     const monthStart = startOfMonth(currentMonth);
     const startDate = startOfWeek(monthStart, { locale: ru });
-
-    const days: JSX.Element[] = [];
-
+    
     // Определяем фактические начальную и конечную даты диапазона
     let displayStart: Date | null = null;
     let displayEnd: Date | null = null;
@@ -134,7 +139,7 @@ const InputDate: React.FC<IInputDateProps> = ({
 
     for (let i = 0; i < 42; i++) {
       const day = startOfDay(addDays(startDate, i));
-
+     
       const isStart = displayStart && isSameDay(day, displayStart);
       const isEnd = displayEnd && isSameDay(day, displayEnd);
       const isWithinSelectedRange =
@@ -202,7 +207,6 @@ const InputDate: React.FC<IInputDateProps> = ({
         </div>,
       );
     }
-
     return days;
   };
 
@@ -210,10 +214,13 @@ const InputDate: React.FC<IInputDateProps> = ({
 
   return (
     <>
-      <div className="relative w-[360px] flex flex-col items-center justify-center">
+      <div className="relative w-[360px] flex flex-col items-center justify-center bg-light-gray-white rounded-t-2xl  h-[570px]" onClick={(e) => {
+        e.stopPropagation()
+       
+       }}>
         {/* Поле ввода с иконкой календаря */}
         <div className="relative w-[328px] mt-[56px]">
-          <input
+          <input 
             type="text"
             value={
               selectionMode === 'single'
