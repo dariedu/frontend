@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { format, startOfWeek, addDays, isSameDay, isSameMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import arrowDownIcon from '../../assets/icons/arrow_down.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
+import { DeliveryContext } from '../../core/DeliveryContext'; // Импортируем контекст доставок
 
 interface ICalendarProps {
   selectedDate: Date;
@@ -23,6 +24,9 @@ const Calendar: React.FC<ICalendarProps> = ({
   selectedDate,
   setSelectedDate,
 }) => {
+  const { deliveries, setFilteredDeliveriesByDate } =
+    useContext(DeliveryContext); // Получаем доставки из контекста и функцию для фильтрации по дате
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
@@ -34,6 +38,12 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
+    // Фильтрация доставок по выбранной дате и сохранение их в контексте
+    const filteredDeliveries = deliveries.filter(delivery => {
+      const deliveryDate = new Date(delivery.date);
+      return isSameDay(deliveryDate, day) && isSameMonth(deliveryDate, day);
+    });
+    setFilteredDeliveriesByDate(filteredDeliveries); // Сохраняем отфильтрованные доставки для дальнейшего использования
   };
 
   const handleOpenDatePicker = () => {

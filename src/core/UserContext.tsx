@@ -8,13 +8,15 @@ import { useLocation } from 'react-router-dom';
 interface IUserContext {
   currentUser: IUser | null;
   token: string | null;
-  loading: boolean;
+  isLoading: boolean;
+  error: string | null;
 }
 
 const defaultUserContext: IUserContext = {
   currentUser: null,
   token: null,
-  loading: true,
+  isLoading: true,
+  error: null,
 };
 
 // Создаем сам контекст
@@ -25,7 +27,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -33,6 +36,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Функция для получения токена и пользователя
   const fetchUserAndToken = async () => {
+    setIsLoading(true);
+    setError(null);
+
     try {
       if (tgId) {
         console.log(`Получаем токен для tg_id: ${tgId}`);
@@ -52,13 +58,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           if (user) {
             const fetchedUser = await getUserById(user.id, tokenData.access);
             setCurrentUser(fetchedUser);
+          } else {
+            console.error('Пользователь не найден');
+            setError('Пользователь не найден');
           }
+        } else {
+          console.error('Токен доступа отсутствует');
+          setError('Токен доступа отсутствует');
         }
+      } else {
+        console.error('tg_id отсутствует в параметрах URL');
+        setError('tg_id отсутствует в параметрах URL');
       }
-      setLoading(false);
     } catch (error) {
       console.error('Ошибка при получении данных пользователя:', error);
-      setLoading(false);
+      setError('Ошибка при получении данных пользователя');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +83,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [tgId]);
 
   return (
-    <UserContext.Provider value={{ currentUser, token, loading }}>
+    <UserContext.Provider value={{ currentUser, token, isLoading, error }}>
       {children}
     </UserContext.Provider>
   );

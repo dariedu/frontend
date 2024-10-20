@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
@@ -8,6 +8,7 @@ import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { IUser } from '../../../core/types';
 import avatar1 from '../../../assets/avatar.svg';
+import { DeliveryContext } from '../../../core/DeliveryContext';
 
 const users: IUser[] = [
   {
@@ -44,16 +45,37 @@ const users: IUser[] = [
   },
 ];
 
-const MainPageCurator: React.FC = () => {
-  const [deliveryStatus, setDeliveryStatus] = useState<
-    'Активная' | 'Завершена'
-  >('Активная');
+interface RouteSheet {
+  id: number;
+  title: string;
+}
 
+const MainPageCurator: React.FC = () => {
+  const { deliveries, isLoading, error, fetchDeliveries } =
+    useContext(DeliveryContext);
+  const [currentDelivery, setCurrentDelivery] = useState<any>(null);
+  const [deliveryStatus, setDeliveryStatus] = useState<
+    'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'
+  >('Нет доставок');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const points = 5;
 
+  // Данные маршрутных листов
+  const routeSheetsData: RouteSheet[] = [
+    { id: 1, title: 'Маршрутный лист 1' },
+    { id: 2, title: 'Маршрутный лист 2' },
+    { id: 3, title: 'Маршрутный лист 3' },
+    { id: 4, title: 'Маршрутный лист 4' },
+  ];
+
+  // Состояние завершенных маршрутных листов
+  const [completedRouteSheets, setCompletedRouteSheets] = useState<boolean[]>(
+    Array(routeSheetsData.length).fill(false),
+  );
+
+  // Обработчик для открытия маршрутных листов
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
   };
@@ -62,35 +84,96 @@ const MainPageCurator: React.FC = () => {
     setIsRouteSheetsOpen(false);
   };
 
-  const handleStatusChange = (newStatus: 'Активная' | 'Завершена') => {
-    setDeliveryStatus(newStatus);
-  };
-
   const handleUserClick = (user: IUser) => {
     console.log('Selected user:', user);
   };
+
+  // Вычисление статуса доставки на основе данных из API
+  const computeStatus = (delivery: any) => {
+    if (!delivery || !delivery.date) return 'Ближайшая'; // Проверка на наличие даты
+
+    const today = new Date();
+    const deliveryDate = new Date(delivery.date);
+
+    if (delivery.is_completed) {
+      return 'Завершена';
+    } else if (deliveryDate.toDateString() === today.toDateString()) {
+      return 'Активная'; // Если доставка начинается сегодня, она активна
+    } else {
+      return 'Ближайшая'; // Если доставка еще не началась
+    }
+  };
+
+  // Функция для поиска ближайшей доставки
+  const getNearestDelivery = (deliveries: any[]) => {
+    const today = new Date();
+
+    // Фильтруем и сортируем доставки по дате
+    const upcomingDeliveries = deliveries
+      .filter(d => d.date && new Date(d.date) >= today)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    if (upcomingDeliveries.length > 0) {
+      return upcomingDeliveries[0]; // Берем ближайшую доставку
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    fetchDeliveries(); // Загружаем доставки при монтировании компонента
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && deliveries.length > 0) {
+      const nearestDelivery = getNearestDelivery(deliveries); // Ищем ближайшую доставку
+      setCurrentDelivery(nearestDelivery); // Устанавливаем текущую доставку
+      setDeliveryStatus(computeStatus(nearestDelivery)); // Вычисляем статус текущей доставки
+    } else if (!isLoading && deliveries.length === 0) {
+      setDeliveryStatus('Нет доставок');
+    } else {
+      setCurrentDelivery(null);
+      setDeliveryStatus('Ближайшая');
+    }
+  }, [isLoading, deliveries]);
+
+  const station = currentDelivery?.location?.subway || 'Станция не указана';
+  const address = currentDelivery?.location?.address || 'Адрес не указан';
 
   return (
     <div className="flex-col bg-light-gray-1 min-h-[746px]">
       <SliderStories />
       <div className="flex-col bg-light-gray-white rounded-[16px]">
-        <DeliveryType
-          status={deliveryStatus}
-          points={points}
-          onDeliveryClick={openRouteSheets}
-        />
+        {/* Проверяем состояние загрузки */}
+        {isLoading ? (
+          <div>Загрузка доставок...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : deliveries.length === 0 ? (
+          <div>Доставок в ближайшее время нет</div>
+        ) : (
+          // Отображаем доставки
+          <DeliveryType
+            status={deliveryStatus}
+            points={points}
+            onDeliveryClick={openRouteSheets} // Открытие маршрутных листов
+          />
+        )}
+
         <Search
           showSearchInput={false}
           showInfoSection={true}
           users={users}
           onUserClick={handleUserClick}
+          station={station} // Передача станции метро в Search
+          address={address} // Передача адреса в Search
         />
 
-        {deliveryStatus === 'Активная' && (
+        {deliveryStatus === 'Ближайшая' && (
           <div>
             <DeliveryInfo />
           </div>
         )}
+
         {!isRouteSheetsOpen && (
           <Calendar
             headerName="Расписание доставок"
@@ -110,10 +193,11 @@ const MainPageCurator: React.FC = () => {
       )}
       {isRouteSheetsOpen && (
         <RouteSheets
-          title="Маршрутный лист 1"
           status={deliveryStatus}
-          onClose={closeRouteSheets}
-          onStatusChange={handleStatusChange}
+          onClose={closeRouteSheets} // Закрытие маршрутных листов
+          routeSheetsData={routeSheetsData} // Передача данных о маршрутных листах
+          completedRouteSheets={completedRouteSheets} // Состояние завершенных маршрутов
+          setCompletedRouteSheets={setCompletedRouteSheets} // Функция для обновления завершенных маршрутов
         />
       )}
     </div>

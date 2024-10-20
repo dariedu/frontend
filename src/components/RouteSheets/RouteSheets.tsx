@@ -14,7 +14,7 @@ interface RouteSheet {
 }
 
 interface RouteSheetsProps {
-  status: 'Активная' | 'Ближайшая' | 'Завершена';
+  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   routeSheetsData: RouteSheet[];
   onClose: () => void;
   completedRouteSheets: boolean[]; // Передаём состояние завершения маршрутных листов

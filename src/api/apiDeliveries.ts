@@ -50,21 +50,24 @@ const getHeaders = (access: string) => ({
 export const getAllDeliveries = async (
   is_active: string,
   is_completed: string,
-  accessToken: string, // добавим токен доступа
+  accessToken: string,
 ): Promise<IDelivery[]> => {
   try {
-    const response: AxiosResponse<IDelivery[]> = await axios({
+    const response = await axios({
       url: `${deliveriesUrl}?is_active=${is_active}&is_completed=${is_completed}`,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`, // передаем токен в заголовке
+        Authorization: `Bearer ${accessToken}`,
         accept: 'application/json',
       },
     });
     return response.data;
   } catch (err: any) {
-    console.error('Get request getAllDeliveries has failed', err);
-    throw new Error('Get request getAllDeliveries has failed');
+    console.error(
+      'Get request getAllDeliveries has failed',
+      err.response || err,
+    );
+    throw err; // Пробрасываем ошибку выше
   }
 };
 
