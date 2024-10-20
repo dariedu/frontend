@@ -5,7 +5,7 @@ import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import { DeliveryContext } from '../../../core/DeliveryContext';
 
 interface IDeliveryTypeProps {
-  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'; // Добавляем статус как обязательный пропс
+  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   points?: number;
   onDeliveryClick: () => void;
 }
@@ -15,7 +15,7 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
   points,
   onDeliveryClick,
 }) => {
-  const { deliveries, isLoading } = useContext(DeliveryContext); // Получаем доставки из контекста
+  const { deliveries, isLoading } = useContext(DeliveryContext);
   const [currentDelivery, setCurrentDelivery] = useState(deliveries[0] || null);
 
   const [showFeedbackButton, setShowFeedbackButton] = useState(false);
@@ -28,7 +28,6 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
 
   useEffect(() => {
     if (!isLoading && deliveries.length > 0) {
-      // Предположим, что вы хотите работать с первой активной доставкой
       setCurrentDelivery(deliveries[0]);
     }
   }, [isLoading, deliveries]);
@@ -37,8 +36,8 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
     if (status === 'Завершена' && !feedbackSubmitted) {
       setShowFeedbackButton(true);
     } else if (feedbackSubmitted) {
-      setRouteSheetShown(true); // Показываем маршрутный лист после отправки отзыва
-      setShowRouteSheet(true); // Отображаем маршрутный лист
+      setRouteSheetShown(true);
+      setShowRouteSheet(true);
     } else {
       onDeliveryClick();
     }
@@ -51,13 +50,13 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
 
   const handleFeedbackSubmit = () => {
     setShowFeedbackForm(false);
-    setIsModalOpen(true); // Открываем модальное окно при отправке
+    setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setFeedbackSubmitted(true); // Помечаем, что отзыв был отправлен
-    setShowRouteSheet(false); // Скрываем маршрутный лист после закрытия модального окна
+    setFeedbackSubmitted(true);
+    setShowRouteSheet(false);
   };
 
   const statusClass =

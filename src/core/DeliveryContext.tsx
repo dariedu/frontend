@@ -4,6 +4,7 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
+  useRef,
 } from 'react';
 import { type IDelivery } from '../api/apiDeliveries';
 import { getAllDeliveries } from '../api/apiDeliveries';
@@ -41,6 +42,8 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
 
   const { token, isLoading: isUserLoading } = useContext(UserContext);
 
+  const hasFetched = useRef(false);
+
   const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
@@ -62,8 +65,9 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (!isUserLoading && token) {
+    if (!isUserLoading && token && !hasFetched.current) {
       fetchDeliveries();
+      hasFetched.current = true;
     }
   }, [isUserLoading, token]);
 
