@@ -12,14 +12,14 @@ declare global {
 }
 
 const App: React.FC = () => {
-  const { currentUser, loading } = useContext(UserContext);
+  const { currentUser, isLoading } = useContext(UserContext);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     tg.ready();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <div>Загрузка...</div>;
   }
 

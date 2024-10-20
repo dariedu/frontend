@@ -17,6 +17,7 @@ interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   routeSheetsData: RouteSheet[];
   onClose: () => void;
+  onStatusChange: () => void;
   completedRouteSheets: boolean[]; // Передаём состояние завершения маршрутных листов
   setCompletedRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>; // Функция для обновления состояния
 }
@@ -35,19 +36,23 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   status,
   routeSheetsData,
   onClose,
+  onStatusChange,
   completedRouteSheets,
   setCompletedRouteSheets,
 }) => {
+  // Ограничиваем количество маршрутных листов до 4
+  const limitedRouteSheetsData = routeSheetsData.slice(0, 4);
+
   // Состояние для каждого маршрутного листа
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(
-    Array(routeSheetsData.length).fill(false),
+    Array(limitedRouteSheetsData.length).fill(false),
   );
 
   // Состояние для выбранного волонтёра в каждом маршрутном листе
   const [selectedVolunteers, setSelectedVolunteers] = useState<
     { name: string; avatar: string }[]
   >(
-    Array(routeSheetsData.length).fill({
+    Array(limitedRouteSheetsData.length).fill({
       name: 'Не выбран',
       avatar: avatarIcon,
     }),
@@ -55,7 +60,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
   // Состояние для отображения списка волонтёров для каждого маршрутного листа
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(
-    Array(routeSheetsData.length).fill(false),
+    Array(limitedRouteSheetsData.length).fill(false),
   );
 
   // Функция для переключения отображения маршрутного листа
@@ -110,6 +115,8 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
     setCompletedRouteSheets(prev =>
       prev.map((completed, idx) => (idx === index ? true : completed)),
     );
+
+    onStatusChange();
   };
 
   return (
@@ -124,7 +131,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
       {/* Список маршрутных листов */}
       <div className="flex flex-col">
-        {routeSheetsData.map((routeSheet, index) => {
+        {limitedRouteSheetsData.map((routeSheet, index) => {
           const isVolunteerSelected =
             selectedVolunteers[index].name !== 'Не выбран';
 
@@ -132,8 +139,9 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
             <div key={routeSheet.id} className="mb-4 p-2 border rounded-lg">
               {/* Заголовок маршрутного листа */}
               <div className="flex items-center justify-between w-full mb-2">
+                {/* Название "Маршрутный лист X" */}
                 <span className="font-gerbera-h3 text-light-gray-5">
-                  {routeSheet.title}
+                  {`Маршрутный лист ${index + 1}`}
                 </span>
                 {/* Иконка стрелки для открытия/закрытия */}
                 <div

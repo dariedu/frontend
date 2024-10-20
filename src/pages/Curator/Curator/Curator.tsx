@@ -5,11 +5,11 @@ import { UserContext } from '../../../core/UserContext';
 import { IUser } from '../../../core/types';
 
 const Curator: React.FC = () => {
-  const { currentUser, loading } = useContext(UserContext);
+  const { currentUser, isLoading } = useContext(UserContext);
   const currentUserId = currentUser?.id || 1;
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-  if (loading) {
+  if (isLoading) {
     return <div>Загрузка...</div>;
   }
 

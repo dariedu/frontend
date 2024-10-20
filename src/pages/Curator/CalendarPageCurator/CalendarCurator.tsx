@@ -155,6 +155,9 @@ const CalendarCurator: React.FC = () => {
           onClose={handleCloseRouteSheets}
           completedRouteSheets={completedRouteSheets}
           setCompletedRouteSheets={setCompletedRouteSheets}
+          onStatusChange={function (): void {
+            throw new Error('Function not implemented.');
+          }}
         />
       )}
     </div>

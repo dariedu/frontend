@@ -198,6 +198,9 @@ const MainPageCurator: React.FC = () => {
           routeSheetsData={routeSheetsData} // Передача данных о маршрутных листах
           completedRouteSheets={completedRouteSheets} // Состояние завершенных маршрутов
           setCompletedRouteSheets={setCompletedRouteSheets} // Функция для обновления завершенных маршрутов
+          onStatusChange={function (): void {
+            throw new Error('Function not implemented.');
+          }}
         />
       )}
     </div>

@@ -4,12 +4,11 @@ import TabBar from '../../components/TabBar/TabBar';
 import { DeliveryContext } from '../../core/DeliveryContext';
 
 const VolunteerPage: React.FC = () => {
-  const { fetchDeliveries, isLoading, deliveries } =
-    useContext(DeliveryContext);
+  const { fetchDeliveries, isLoading } = useContext(DeliveryContext);
 
   useEffect(() => {
     fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы волонтера
-  }, [fetchDeliveries]);
+  }, []);
 
   if (isLoading) {
     return <div>Загрузка доставок...</div>;
