@@ -1,6 +1,3 @@
-
-
-
 .formField{
   @apply outline-none shadow-none px-4 py-[18px] bg-light-gray-1 w-[328px] h-[54px]
   rounded-2xl text-light-gray-8-text font-gerbera-h3
@@ -11,7 +8,16 @@
   @apply bg-light-error-back mb-0
 }
 .error{
-  @apply font-gerbera-sub2 text-light-error-red w-[328px]
+  @apply font-gerbera-sub2 text-light-error-red w-[328px] pb-1
+}
+.formFieldBirthday{
+  @apply outline-none shadow-none px-4 py-[18px] bg-light-gray-1 w-[328px] h-[54px]
+  rounded-2xl text-light-gray-8-text font-gerbera-h3
+  placeholder:text-light-gray-8-text mb-2 
+}
+
+.formFieldBirthday[data-invalid]{
+  @apply bg-light-error-back
 }
 
 .bgImage{

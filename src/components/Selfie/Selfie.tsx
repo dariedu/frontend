@@ -70,25 +70,35 @@ fetch(url)
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-1 rounded-full flex justify-center items-center mb-8 relative">
+         {fileUploaded ? (
+           <>
+           <img
+          src={uploadedFileLink}
+          className='h-[142px] w-[140px] size-fit rounded-full'
+               onClick={(e) => { e.preventDefault }} />  
+              <img
+               src="./../src/assets/icons/small_pencile_bg_gray.svg"
+              className="absolute bottom-0 right-0"
+            onClick={() =>isEnabled ? setIsEnabled(false) : setIsEnabled(true)}
+               />
+           </>
+         ): (
           <img
-            src={
-              fileUploaded
-                ? `${uploadedFileLink}`
-                : './../src/assets/icons/photo.svg'
-            }
-            className={
-              fileUploaded
-                ? 'h-[142px] w-[140px] size-fit rounded-full '
-                : 'h-[72px] w-[72px] cursor-pointer'
-            }
-            onClick={() =>
-              isEnabled ? setIsEnabled(false) : setIsEnabled(true)
-            }
-          />
-        </div>
+          src='./../src/assets/icons/photo.svg'
+          className='h-[72px] w-[72px] cursor-pointer'
+          onClick={() =>isEnabled ? setIsEnabled(false) : setIsEnabled(true)}
+        />
+          )}
+       </div>
+       {/* <img
+                      src="./../src/assets/icons/small_pencile_bg_gray.svg"
+                      className="absolute bottom-0 right-0"
+                      onClick={() => {
+                        setIsModalOpen(true);
+                      }}
+                    /> */}
         <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2">
           {fileUploaded ? 'Отличное фото!' : text}
-
           <br />
         </p>
         {fileUploaded ? (
@@ -123,19 +133,31 @@ fetch(url)
            className='relative '
           />
          {url && (<img ref={imageRef} src={url} alt="pic" className='absolute'/>)}
-          <div className="flex justify-between w-[350px] h-[40px] mt-4">
+         <div className="flex justify-between w-[240px] h-[40px] mt-4">
+           {url.length !== 0 ? (
+          <button className="btn-S-GreenDefault outline-none" onClick={deletePhoto}>
+          Удалить
+       </button>
+           ): (
             <button className="btn-S-GreenDefault outline-none" onClick={makePhoto}>
-              Сделать фото
-            </button>
-            <button className="btn-S-GreenDefault outline-none" onClick={deletePhoto}>
-              Удалить
-            </button>
+            Сделать фото
+          </button> 
+           )}
+           {url.length !== 0 ? (
+           <button
+           className="btn-S-GreenClicked outline-none"
+           onClick={savePicture}
+         >
+           Сохранить фото
+         </button>
+           ) : (
             <button
-              className="btn-S-GreenClicked outline-none"
-              onClick={savePicture}
-            >
-              Сохранить фото
-            </button>
+            className="btn-S-GreenInactive outline-none"
+            onClick={(e)=>{e.preventDefault()}}
+          >
+            Сохранить фото
+          </button>
+           )}
           </div>
         </div>
       </Modal>
