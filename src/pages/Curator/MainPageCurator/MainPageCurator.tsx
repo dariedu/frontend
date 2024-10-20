@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { isSameDay, parseISO } from 'date-fns';
 import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
@@ -90,17 +91,24 @@ const MainPageCurator: React.FC = () => {
 
   // Вычисление статуса доставки на основе данных из API
   const computeStatus = (delivery: any) => {
-    if (!delivery || !delivery.date) return 'Ближайшая'; // Проверка на наличие даты
+    if (!delivery || !delivery.date) return 'Нет доставок';
 
     const today = new Date();
-    const deliveryDate = new Date(delivery.date);
+    const deliveryDate = parseISO(delivery.date);
+
+    console.log('Сегодняшняя дата:', today);
+    console.log('Дата доставки:', deliveryDate);
+    console.log('deliveryDate.toDateString():', deliveryDate.toDateString());
+    console.log('today.toDateString():', today.toDateString());
 
     if (delivery.is_completed) {
       return 'Завершена';
-    } else if (deliveryDate.toDateString() === today.toDateString()) {
-      return 'Активная'; // Если доставка начинается сегодня, она активна
+    } else if (isSameDay(deliveryDate, today)) {
+      return 'Активная';
+    } else if (deliveryDate > today) {
+      return 'Ближайшая';
     } else {
-      return 'Ближайшая'; // Если доставка еще не началась
+      return 'Нет доставок';
     }
   };
 
