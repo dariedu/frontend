@@ -15,8 +15,9 @@ const App: React.FC = () => {
   const { currentUser, isLoading } = useContext(UserContext);
 
   useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+    }
   }, []);
 
   if (isLoading) {
