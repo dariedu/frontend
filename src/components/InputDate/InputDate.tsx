@@ -63,7 +63,7 @@ const InputDate: React.FC<IInputDateProps> = ({
     start: null,
     end: null,
   });
-  setCurrentDate(selectedDates)//////
+  ///setCurrentDate(selectedDates)//////
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -349,7 +349,7 @@ const InputDate: React.FC<IInputDateProps> = ({
             <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
               Закрыть
             </button>
-            <button className="text-light-brand-green" onClick={onClose}>
+            <button className="text-light-brand-green" onClick={() => { onClose(); setCurrentDate(selectedDates) }}>
               Подтвердить
             </button>
           </div>
