@@ -39,11 +39,7 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const {
-    token,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useContext(UserContext);
+  const { token, isLoading: isUserLoading } = useContext(UserContext);
 
   const fetchDeliveries = async () => {
     setIsLoading(true);
