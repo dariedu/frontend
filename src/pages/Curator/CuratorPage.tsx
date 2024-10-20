@@ -8,7 +8,7 @@ const CuratorPage: React.FC = () => {
 
   useEffect(() => {
     fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы куратора
-  }, [fetchDeliveries]);
+  }, []);
 
   if (isLoading) {
     return <div>Загрузка доставок...</div>;

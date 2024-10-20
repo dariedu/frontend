@@ -51,12 +51,12 @@ interface RouteSheet {
 }
 
 const MainPageCurator: React.FC = () => {
-  const { deliveries, isLoading, fetchDeliveries } =
+  const { deliveries, isLoading, error, fetchDeliveries } =
     useContext(DeliveryContext);
   const [currentDelivery, setCurrentDelivery] = useState<any>(null);
   const [deliveryStatus, setDeliveryStatus] = useState<
-    'Активная' | 'Ближайшая' | 'Завершена'
-  >('Ближайшая');
+    'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'
+  >('Нет доставок');
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
@@ -121,19 +121,20 @@ const MainPageCurator: React.FC = () => {
 
   useEffect(() => {
     fetchDeliveries(); // Загружаем доставки при монтировании компонента
-  }, [fetchDeliveries]);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && deliveries.length > 0) {
       const nearestDelivery = getNearestDelivery(deliveries); // Ищем ближайшую доставку
       setCurrentDelivery(nearestDelivery); // Устанавливаем текущую доставку
       setDeliveryStatus(computeStatus(nearestDelivery)); // Вычисляем статус текущей доставки
+    } else if (!isLoading && deliveries.length === 0) {
+      setDeliveryStatus('Нет доставок');
+    } else {
+      setCurrentDelivery(null);
+      setDeliveryStatus('Ближайшая');
     }
   }, [isLoading, deliveries]);
-
-  if (isLoading || !currentDelivery) {
-    return <div>Загрузка доставок...</div>;
-  }
 
   const station = currentDelivery?.location?.subway || 'Станция не указана';
   const address = currentDelivery?.location?.address || 'Адрес не указан';
@@ -142,11 +143,22 @@ const MainPageCurator: React.FC = () => {
     <div className="flex-col bg-light-gray-1 min-h-[746px]">
       <SliderStories />
       <div className="flex-col bg-light-gray-white rounded-[16px]">
-        <DeliveryType
-          status={deliveryStatus}
-          points={points}
-          onDeliveryClick={openRouteSheets} // Открытие маршрутных листов
-        />
+        {/* Проверяем состояние загрузки */}
+        {isLoading ? (
+          <div>Загрузка доставок...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : deliveries.length === 0 ? (
+          <div>Доставок в ближайшее время нет</div>
+        ) : (
+          // Отображаем доставки
+          <DeliveryType
+            status={deliveryStatus}
+            points={points}
+            onDeliveryClick={openRouteSheets} // Открытие маршрутных листов
+          />
+        )}
+
         <Search
           showSearchInput={false}
           showInfoSection={true}

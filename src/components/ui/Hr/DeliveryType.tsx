@@ -5,7 +5,7 @@ import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import { DeliveryContext } from '../../../core/DeliveryContext';
 
 interface IDeliveryTypeProps {
-  status: 'Активная' | 'Ближайшая' | 'Завершена'; // Добавляем статус как обязательный пропс
+  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'; // Добавляем статус как обязательный пропс
   points?: number;
   onDeliveryClick: () => void;
 }

@@ -15,19 +15,27 @@ interface RouteSheet {
 }
 
 const CalendarCurator: React.FC = () => {
-  const { currentUser, loading } = useContext(UserContext);
+  const {
+    currentUser,
+    isLoading: isUserLoading,
+    error: userError,
+  } = useContext(UserContext);
   const {
     deliveries,
     isLoading: deliveriesLoading,
-    fetchDeliveries,
+    error: deliveriesError,
   } = useContext(DeliveryContext); // Данные о доставках из DeliveryContext
+
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена'
   >('Активная');
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [points] = useState<number>(currentUser?.point ?? 0);
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [points, setPoints] = useState<number>(0);
 
   const [currentDelivery, setCurrentDelivery] = useState<any>(null); // Для хранения текущей доставки
+
+  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
   // Данные маршрутных листов
   const routeSheetsData: RouteSheet[] = [
@@ -37,12 +45,15 @@ const CalendarCurator: React.FC = () => {
     { id: 4, title: 'Маршрутный лист 4' },
   ];
 
-  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
-
   // Состояние завершения маршрутных листов
   const [completedRouteSheets, setCompletedRouteSheets] = useState<boolean[]>(
     Array(routeSheetsData.length).fill(false),
   );
+
+  // Обновляем очки при изменении currentUser
+  useEffect(() => {
+    setPoints(currentUser?.point ?? 0);
+  }, [currentUser]);
 
   // Следим за изменениями в completedRouteSheets и обновляем deliveryStatus
   useEffect(() => {
@@ -64,14 +75,13 @@ const CalendarCurator: React.FC = () => {
     return upcomingDeliveries.length > 0 ? upcomingDeliveries[0] : null;
   };
 
+  // Обновляем текущую доставку при изменении списка доставок
   useEffect(() => {
-    fetchDeliveries(); // Загружаем доставки при монтировании компонента
-  }, [fetchDeliveries]);
-
-  useEffect(() => {
-    if (!deliveriesLoading && deliveries.length > 0) {
+    if (!deliveriesLoading && deliveries && deliveries.length > 0) {
       const nearestDelivery = getNearestDelivery(deliveries); // Ищем ближайшую доставку
       setCurrentDelivery(nearestDelivery); // Устанавливаем текущую доставку
+    } else {
+      setCurrentDelivery(null); // Если доставок нет, сбрасываем текущую доставку
     }
   }, [deliveriesLoading, deliveries]);
 
@@ -87,14 +97,24 @@ const CalendarCurator: React.FC = () => {
     setIsRouteSheetsOpen(false);
   };
 
-  if (loading || deliveriesLoading) {
-    return <div>Загрузка...</div>;
+  // Обработка состояний загрузки и ошибок
+  if (isUserLoading || deliveriesLoading) {
+    return <div>Загрузка данных...</div>;
   }
 
-  if (!currentUser || !currentDelivery) {
-    return <div>Пользователь или доставка не найдены</div>;
+  if (userError) {
+    return <div>Ошибка загрузки данных пользователя: {userError}</div>;
   }
 
+  if (deliveriesError) {
+    return <div>Ошибка загрузки доставок: {deliveriesError}</div>;
+  }
+
+  if (!currentUser) {
+    return <div>Пользователь не найден</div>;
+  }
+
+  // Получаем данные о станции и адресе
   const station = currentDelivery?.location?.subway || 'Станция не указана';
   const address = currentDelivery?.location?.address || 'Адрес не указан';
 

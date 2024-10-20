@@ -57,14 +57,17 @@ export const getAllDeliveries = async (
       url: `${deliveriesUrl}?is_active=${is_active}&is_completed=${is_completed}`,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`, // Правильное добавление токена
+        Authorization: `Bearer ${accessToken}`,
         accept: 'application/json',
       },
     });
     return response.data;
   } catch (err: any) {
-    console.error('Get request getAllDeliveries has failed', err);
-    throw new Error('Get request getAllDeliveries has failed');
+    console.error(
+      'Get request getAllDeliveries has failed',
+      err.response || err,
+    );
+    throw err; // Пробрасываем ошибку выше
   }
 };
 

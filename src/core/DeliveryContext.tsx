@@ -1,4 +1,10 @@
-import React, { createContext, useState, ReactNode, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from 'react';
 import { type IDelivery } from '../api/apiDeliveries';
 import { getAllDeliveries } from '../api/apiDeliveries';
 import { UserContext } from './UserContext';
@@ -6,16 +12,18 @@ import { UserContext } from './UserContext';
 interface IDeliveryContext {
   deliveries: IDelivery[];
   isLoading: boolean;
-  filteredDeliveries: IDelivery[]; // Добавляем фильтрованные доставки
-  setFilteredDeliveriesByDate: (deliveries: IDelivery[]) => void; // Добавляем функцию для фильтрации
+  error: string | null;
+  filteredDeliveries: IDelivery[];
+  setFilteredDeliveriesByDate: (deliveries: IDelivery[]) => void;
   fetchDeliveries: () => Promise<void>;
 }
 
 const defaultDeliveryContext: IDeliveryContext = {
   deliveries: [],
-  isLoading: true,
-  filteredDeliveries: [], // По умолчанию пустой массив
-  setFilteredDeliveriesByDate: () => {}, // По умолчанию пустая функция
+  isLoading: false,
+  error: null,
+  filteredDeliveries: [],
+  setFilteredDeliveriesByDate: () => {},
   fetchDeliveries: async () => {},
 };
 
@@ -28,36 +36,49 @@ export const DeliveryProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const token: string | null = useContext(UserContext)?.token;
+  const {
+    token,
+    isLoading: isUserLoading,
+    error: userError,
+  } = useContext(UserContext);
 
   const fetchDeliveries = async () => {
-    if (!token) {
-      console.error('Токен недоступен');
-      return;
-    }
+    setIsLoading(true);
+    setError(null);
 
     try {
-      let response = await getAllDeliveries('false', 'false', token);
+      const response = await getAllDeliveries('false', 'false', token!);
       setDeliveries(response);
-      setIsLoading(false);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Ошибка получения доставок с сервера', e);
+      setError('Ошибка получения доставок с сервера');
+      setDeliveries([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const setFilteredDeliveriesByDate = (deliveries: IDelivery[]) => {
-    setFilteredDeliveries(deliveries); // Сохраняем отфильтрованные доставки
+    setFilteredDeliveries(deliveries);
   };
+
+  useEffect(() => {
+    if (!isUserLoading && token) {
+      fetchDeliveries();
+    }
+  }, [isUserLoading, token]);
 
   return (
     <DeliveryContext.Provider
       value={{
         deliveries,
         isLoading,
-        filteredDeliveries, // Добавляем в контекст
-        setFilteredDeliveriesByDate, // Добавляем функцию для фильтрации в контекст
+        error,
+        filteredDeliveries,
+        setFilteredDeliveriesByDate,
         fetchDeliveries,
       }}
     >
