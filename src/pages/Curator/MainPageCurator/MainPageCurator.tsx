@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { isSameDay, parseISO, isAfter } from 'date-fns';
 import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
@@ -51,8 +52,7 @@ interface RouteSheet {
 }
 
 const MainPageCurator: React.FC = () => {
-  const { deliveries, isLoading, error, fetchDeliveries } =
-    useContext(DeliveryContext);
+  const { deliveries, isLoading, error } = useContext(DeliveryContext);
   const [currentDelivery, setCurrentDelivery] = useState<any>(null);
   const [deliveryStatus, setDeliveryStatus] = useState<
     'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'
@@ -90,17 +90,19 @@ const MainPageCurator: React.FC = () => {
 
   // Вычисление статуса доставки на основе данных из API
   const computeStatus = (delivery: any) => {
-    if (!delivery || !delivery.date) return 'Ближайшая'; // Проверка на наличие даты
+    if (!delivery || !delivery.date) return 'Нет доставок';
 
     const today = new Date();
-    const deliveryDate = new Date(delivery.date);
+    const deliveryDate = parseISO(delivery.date);
 
     if (delivery.is_completed) {
       return 'Завершена';
-    } else if (deliveryDate.toDateString() === today.toDateString()) {
-      return 'Активная'; // Если доставка начинается сегодня, она активна
+    } else if (isSameDay(deliveryDate, today)) {
+      return 'Активная';
+    } else if (isAfter(deliveryDate, today)) {
+      return 'Ближайшая';
     } else {
-      return 'Ближайшая'; // Если доставка еще не началась
+      return 'Нет доставок';
     }
   };
 
@@ -108,31 +110,27 @@ const MainPageCurator: React.FC = () => {
   const getNearestDelivery = (deliveries: any[]) => {
     const today = new Date();
 
-    // Фильтруем и сортируем доставки по дате
     const upcomingDeliveries = deliveries
-      .filter(d => d.date && new Date(d.date) >= today)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      .filter(d => {
+        const deliveryDate = parseISO(d.date);
+        return isAfter(deliveryDate, today) || isSameDay(deliveryDate, today);
+      })
+      .sort((a, b) => {
+        const dateA = parseISO(a.date);
+        const dateB = parseISO(b.date);
+        return dateA.getTime() - dateB.getTime();
+      });
 
-    if (upcomingDeliveries.length > 0) {
-      return upcomingDeliveries[0]; // Берем ближайшую доставку
-    }
-    return null;
+    return upcomingDeliveries.length > 0 ? upcomingDeliveries[0] : null;
   };
 
   useEffect(() => {
-    fetchDeliveries(); // Загружаем доставки при монтировании компонента
-  }, []);
-
-  useEffect(() => {
     if (!isLoading && deliveries.length > 0) {
-      const nearestDelivery = getNearestDelivery(deliveries); // Ищем ближайшую доставку
-      setCurrentDelivery(nearestDelivery); // Устанавливаем текущую доставку
-      setDeliveryStatus(computeStatus(nearestDelivery)); // Вычисляем статус текущей доставки
+      const nearestDelivery = getNearestDelivery(deliveries);
+      setCurrentDelivery(nearestDelivery);
+      setDeliveryStatus(computeStatus(nearestDelivery));
     } else if (!isLoading && deliveries.length === 0) {
       setDeliveryStatus('Нет доставок');
-    } else {
-      setCurrentDelivery(null);
-      setDeliveryStatus('Ближайшая');
     }
   }, [isLoading, deliveries]);
 
