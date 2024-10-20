@@ -228,7 +228,7 @@ const Calendar: React.FC<ICalendarProps> = ({
             <InputDate
               onClose={() => setIsDatePickerOpen(false)}
               selectionMode="range"
-              setCurrentDate={function (v: Date[]): void {
+              setCurrentDate={function (): void {
                 throw new Error('Function not implemented.');
               }}
             />
