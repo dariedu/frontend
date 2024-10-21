@@ -22,7 +22,7 @@ import arrowRightIcon from '../../assets/icons/arrow_right.png';
 import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import { Modal } from '../ui/Modal/Modal';
-
+import './inputDate.css';
 
 interface IInputDateProps {
   onClose: () => void;
@@ -284,7 +284,7 @@ const InputDate: React.FC<IInputDateProps> = ({
                       <div
                         key={month}
                         onClick={() => handleMonthSelect(month)}
-                        className="cursor-pointer p-2 pl-[30px] hover:bg-light-gray-2"
+                        className={String(month).toLocaleLowerCase() == format(currentMonth, 'LLLL', { locale: ru }) ? "bgImageInputDate cursor-pointer p-2 pl-[35px]" : "cursor-pointer p-2 pl-[35px]" }
                       >
                         {month}
                       </div>
@@ -319,11 +319,11 @@ const InputDate: React.FC<IInputDateProps> = ({
                 <Modal isOpen={isYearOpen} onOpenChange={setIsYearOpen} noColor={true} >
                   <div className="fixed w-[360px]  bg-light-gray-1 rounded-t-2xl mb-[20px]">
                   <div className="mx-4 pt-[12px] bg-light-gray-1 h-[386px] overflow-y-auto">
-                    {years.map(year => (
-                      <div
-                        key={year}
-                        onClick={() => handleYearSelect(year.toString())}
-                        className="cursor-pointer p-2 pl-[30px] hover:bg-light-gray-2"
+                      {years.map(year => (
+                        <div
+                          key={year}
+                          onClick={() => handleYearSelect(year.toString())}
+                          className={String(year) == format(currentMonth, 'yyyy') ? "bgImageInputDate cursor-pointer p-2 pl-[35px]" : "cursor-pointer p-2 pl-[35px]" }
                       >
                         {year}
                       </div>
