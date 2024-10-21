@@ -48,19 +48,19 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
               <Curator />
             </Tabs.Content>
             <Tabs.Content value="tab4" className="TabsContent">
-              <p>Содержимое Моя копилка</p>
+              <BankTabVolunteer />
             </Tabs.Content>
           </>
         ) : (
           <>
-              <Tabs.Content value="tab1" className="TabsContent">
+            <Tabs.Content value="tab1" className="TabsContent">
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
-              <Tabs.Content value="tab2" className="TabsContent">
-                <CalendarTabVolunteer />
-              </Tabs.Content>
+            <Tabs.Content value="tab2" className="TabsContent">
+              <CalendarTabVolunteer />
+            </Tabs.Content>
             <Tabs.Content value="tab4" className="TabsContent">
-            <BankTabVolunteer />
+              <BankTabVolunteer />
             </Tabs.Content>
           </>
         )}
