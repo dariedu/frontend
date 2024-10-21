@@ -43,8 +43,10 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           <ProfilePic user={currentUser} />
           <VolunteerData
             geo={
-              currentUser.city
-                ? `Город: ${currentUser.city}`
+              currentUser.city &&
+              typeof currentUser.city === 'object' &&
+              'city' in currentUser.city
+                ? `Город: ${currentUser.city.city}`
                 : 'Город не указан'
             }
             email={currentUser.email || 'Эл. почта не указана'}
