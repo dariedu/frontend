@@ -21,6 +21,8 @@ import arrowLeftIcon from '../../assets/icons/arrow_left.png';
 import arrowRightIcon from '../../assets/icons/arrow_right.png';
 import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
+import { Modal } from '../ui/Modal/Modal';
+
 
 interface IInputDateProps {
   onClose: () => void;
@@ -189,17 +191,17 @@ const InputDate: React.FC<IInputDateProps> = ({
       days.push(
         <div
           key={day.toString()}
-          className="relative m-0 p-0 h-[48px] w-[48px]"
+          className="h-[48px] w-[48px]"
         >
           {isWithinSelectedRange && (
             <div
-              className={`absolute inset-0 bg-light-gray-2 z-0 ${
+              className={`bg-light-gray-2 z-0 ${
                 isStart ? 'rounded-l-full' : isEnd ? 'rounded-r-full' : ''
               }`}
             ></div>
           )}
           <div
-            className={`relative z-10 w-full h-full flex justify-center items-center rounded-full cursor-pointer ${dayClass}`}
+            className={`w-full h-full flex justify-center items-center rounded-full cursor-pointer ${dayClass}`}
             onClick={() => handleDayClick(day)}
           >
             {format(day, 'd')}
@@ -214,12 +216,12 @@ const InputDate: React.FC<IInputDateProps> = ({
 
   return (
     <>
-      <div className="relative w-[360px] flex flex-col items-center justify-center bg-light-gray-white rounded-t-2xl  h-[570px]" onClick={(e) => {
+      <div className="w-[360px] flex flex-col items-center justify-center bg-light-gray-white rounded-t-2xl h-[570px]" onClick={(e) => {
         e.stopPropagation()
        
        }}>
         {/* Поле ввода с иконкой календаря */}
-        <div className="relative w-[328px] mt-[56px]">
+        <div className="w-[328px] mt-[56px]">
           <input 
             type="text"
             value={
@@ -242,7 +244,7 @@ const InputDate: React.FC<IInputDateProps> = ({
           />
           {selectionMode === 'range' && (
             <button
-              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              className="right-2 top-1/2 transform -translate-y-1/2"
               onClick={() => setIsFilterOpen(true)} // Открыть FilterCurator
             >
               <img src={calendarIcon} alt="calendar" className="w-6 h-6" />
@@ -255,10 +257,13 @@ const InputDate: React.FC<IInputDateProps> = ({
         </span>
 
         {/* Навигация по месяцу и году */}
-        <div className="flex justify-between items-center relative w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5">
-          <div className="flex items-center space-x-2 pl-[16px]">
+        <div className={(isYearOpen || isMonthOpen) ?
+          "flex justify-around py-[23px] items-center w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5 rounded-t-2xl"
+          : "py-[23px] flex justify-between items-center w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5 rounded-t-2xl"
+        }>
+          <div className={isMonthOpen ? "pl-[25px] w-[164px] text-center" : isYearOpen ? "pl-[25px] w-[164px] text-center" : "flex items-center space-x-2 pl-[16px]"}>
             <button onClick={handlePrevMonth} className="">
-              <img src={arrowLeftIcon} alt="стрелка влево" />
+              {(isYearOpen || isMonthOpen) ? "" : <img src={arrowLeftIcon} alt="стрелка влево" /> }
             </button>
             <div className="relative">
               <button
@@ -268,35 +273,37 @@ const InputDate: React.FC<IInputDateProps> = ({
                   setIsYearOpen(false);
                 }}
               >
-                <span>{format(currentMonth, 'LLLL', { locale: ru })}</span>
-                <img src={arrowDownIcon} alt="стрелка вниз" />
+                <span className={isYearOpen ? 'text-light-gray-4': "" }>{format(currentMonth, 'LLLL', { locale: ru })[0].toLocaleUpperCase()+format(currentMonth, 'LLLL', { locale: ru }).slice(1)}</span>
+                {isYearOpen ? "" : <img src={arrowDownIcon} alt="стрелка вниз" /> }
               </button>
-
               {isMonthOpen && (
-                <div className="fixed top-0 left-0 w-[360px] h-[336px] bg-white z-10 overflow-y-auto">
-                  <div className="p-4">
+                <Modal isOpen={isMonthOpen} onOpenChange={setIsMonthOpen} noColor={true}>
+                   <div className="fixed w-[360px] bg-light-gray-1 rounded-t-2xl mb-[20px]">
+                   <div className="mx-4 pt-[12px] bg-light-gray-1 h-[386px] overflow-y-auto">
                     {months.map(month => (
                       <div
                         key={month}
                         onClick={() => handleMonthSelect(month)}
-                        className="cursor-pointer p-2 hover:bg-light-gray-2"
+                        className="cursor-pointer p-2 pl-[30px] hover:bg-light-gray-2"
                       >
                         {month}
                       </div>
                     ))}
                   </div>
                 </div>
+                </Modal>
+               
               )}
             </div>
-            <button onClick={handleNextMonth} className="">
-              <img src={arrowRightIcon} alt="стрелка вправо" />
+            <button onClick={handleNextMonth} >
+            {(isYearOpen || isMonthOpen) ? "" : <img src={arrowRightIcon} alt="стрелка вправо" /> }
             </button>
           </div>
-          <div className="flex items-center space-x-2 pr-[16px]">
+          <div className={isYearOpen ? "text-center mr-[9px]" : isMonthOpen ? "text-center mr-[40px]" : "flex items-center space-x-2"}>
             <button onClick={handlePrevYear} className="">
-              <img src={arrowLeftIcon} alt="стрелка влево" />
+            {(isYearOpen || isMonthOpen) ? "" : <img src={arrowLeftIcon} alt="стрелка влево" />}
             </button>
-            <div className="relative">
+            <div >
               <button
                 className="flex items-center space-x-1"
                 onClick={() => {
@@ -304,28 +311,30 @@ const InputDate: React.FC<IInputDateProps> = ({
                   setIsMonthOpen(false);
                 }}
               >
-                <span>{format(currentMonth, 'yyyy')}</span>
-                <img src={arrowDownIcon} alt="стрелка вниз" />
+                <span className={isMonthOpen ? 'text-light-gray-4': "" }>{format(currentMonth, 'yyyy')}</span>
+                {isMonthOpen ? "" : <img src={arrowDownIcon} alt="стрелка вниз" /> }
               </button>
 
               {isYearOpen && (
-                <div className="fixed top-0 left-0 w-[360px] h-[336px] bg-white z-10 overflow-y-auto">
-                  <div className="p-4">
+                <Modal isOpen={isYearOpen} onOpenChange={setIsYearOpen} noColor={true} >
+                  <div className="fixed w-[360px]  bg-light-gray-1 rounded-t-2xl mb-[20px]">
+                  <div className="mx-4 pt-[12px] bg-light-gray-1 h-[386px] overflow-y-auto">
                     {years.map(year => (
                       <div
                         key={year}
                         onClick={() => handleYearSelect(year.toString())}
-                        className="cursor-pointer p-2 hover:bg-light-gray-2"
+                        className="cursor-pointer p-2 pl-[30px] hover:bg-light-gray-2"
                       >
                         {year}
                       </div>
                     ))}
                   </div>
                 </div>
+                </Modal>
               )}
             </div>
             <button onClick={handleNextYear} className="">
-              <img src={arrowRightIcon} alt="стрелка вправо" />
+            {(isYearOpen || isMonthOpen) ? "" : <img src={arrowRightIcon} alt="стрелка вправо" /> }
             </button>
           </div>
         </div>
@@ -357,8 +366,8 @@ const InputDate: React.FC<IInputDateProps> = ({
       </div>
 
       {isFilterOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
+        <div className="inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className=" bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
             <FilterCurator
               onClose={() => setIsFilterOpen(false)}
               onOpenDatePicker={handleOpenDatePicker}
