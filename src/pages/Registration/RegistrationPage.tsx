@@ -15,7 +15,7 @@ import {
   IUserRegistered,
 } from '../../api/apiRegistrationToken.ts';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
-
+import InputOptions from './InputOptions.tsx';
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -35,6 +35,12 @@ function RegistrationPage() {
  const [concentOpenModal, setConcentOpenModal] = useState(false) /// открываем окно с условиями обработки персональных данных
   //const [birthdayMissing, setBirthdayMissing] = useState(false);
 
+  ///// данные для инпута для выбора города
+
+  const [clickedCity, setClickedCity] = useState(false);
+  const cityOptions = ["Москва", "","Ростов-на-Дону", "другой"];
+  const [cityId, setCityId] = useState<number>(0);
+  ///// данные для инпута для выбора города
   ///определяем есть ли пользователю 18 лет по введенной дате рождения
   function getAgeFromBirthDate(birthDateString: string): boolean {
     const today = new Date();
@@ -74,7 +80,7 @@ function RegistrationPage() {
 
   type TRegister = Omit<
     IUserRegistered,
-    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'birthday'
+    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'birthday' | 'city'
   >;
 
   const [userFormFieldsInfo, setUserFormFieldsInfo] = useState<TRegister>({
@@ -83,7 +89,7 @@ function RegistrationPage() {
     name: localStorage.getItem('name') ?? '',
     surname: localStorage.getItem('surname') ?? '',
     // birthday: localStorage.getItem('birthday') ?? '',
-    city: 1,
+    //city: 0,
     consent_to_personal_data: false,
   });
 
@@ -132,7 +138,6 @@ function RegistrationPage() {
     }
   }
 
-
   //тип с переменными, которые пользователь не может изменить напрямую
   type TUserUnchangableValues = {
     tg_id: number;
@@ -141,6 +146,7 @@ function RegistrationPage() {
     phone: string;
     photo: string;
     birthday: string;
+    city: number;
   };
   //////функция для сабмита формы
   function onFormSubmit(
@@ -152,21 +158,23 @@ function RegistrationPage() {
         is_adult: isAdult,
         phone: '9086851174',
         photo: '',
-        birthday: ""
+        birthday: "",
+        city: 0
       };
       /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
      const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
-    // let cityIndex = 1; //// будет функция для вычисления города
-      user.birthday = `${birthDate.slice(6,10)}-${birthDate.slice(3,5)}-${birthDate.slice(0,2)}`
-      console.log(user)
+    
+    user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`
+    user.city = cityId + 1
+ 
       ///// создаем объект форм дата
       const formData = new FormData();
       ///// перебираем юзера переносим все поля в форм дата
       for (let key in user) {
-        if (key == 'photo') {
-          formData.set('photo', blob, `selfie-${user.tg_id}.jpeg`);
+        if (key == "photo") {
+          formData.set("photo", blob, `selfie-${user.tg_id}.jpeg`);
           // setUrl(window.URL.createObjectURL(blob)) //// для тестирования скачивая фото из блоб на компьютер
-        } else if( key == 'consent_to_personal_data') {
+        } else if( key == "consent_to_personal_data") {
           if (isAdult) {///// еще одна проверка, если взвослый то отображаем согласился ли он предоставить персональные даннеы, если до 18 то ставим false
             formData.set("consent_to_personal_data", String(user.consent_to_personal_data))
           } else {
@@ -324,30 +332,9 @@ function RegistrationPage() {
                     className="flex flex-col items-center"
                   >
                   <Form.Control asChild>
-    {/* <Select.Root  onValueChange={(e) => { handleFormFieldChange('city', e.target.value)}}>
-		<Select.Trigger className='formField'>
-			<Select.Value placeholder="Выберете город проживания"/>
-			<Select.Icon className="SelectIcon">
-				<ChevronDownIcon />
-			</Select.Icon>
-		</Select.Trigger>
-		<Select.Portal>
-        <Select.Content defaultValue="1" className="SelectContent">
-				<Select.Viewport className="SelectViewport" >
-					<Select.Group defaultValue='1'>
-						<Select.SelectItem value="1" className='formField'>Москва</Select.SelectItem>
-						<Select.SelectItem value="2" className='formField'>Санкт-Петербург</Select.SelectItem>
-					</Select.Group>
-			</Select.Viewport>
-			</Select.Content>
-		</Select.Portal>
-	</Select.Root> */}
 
-                    <select
+                    {/* <select
                        className="formField"
-                       //placeholder="Город проживания"
-                      // type="select"
-                      
                       defaultValue={localStorage.getItem('city') ?? ''}
                       onChange={(e) => {
                         handleFormFieldChange('city', String(e.target.value))
@@ -356,7 +343,8 @@ function RegistrationPage() {
                     >
                       <option value={1} selected>Москва</option>
                       <option value={2} >Санкт-Петербург</option>
-                    </select>
+                    </select> */}
+                    <InputOptions options={cityOptions} clicked={clickedCity} setClicked={setClickedCity} choiceMade={cityId} setChoiceMade={setCityId} />
                     </Form.Control>
                     {/* <Form.Message match="valueMissing" className="error">
                       Пожалуйста выберете город проживания
@@ -389,19 +377,20 @@ function RegistrationPage() {
             <div className="flex flex-col justify-between h-[254px]">
               {pictureConfirmed ? (
                 <div className="flex flex-col justify-around items-center">
-                  <div className=" bg-light-gray-1 rounded-full flex justify-center items-center relative">
+                  <div className=" bg-light-gray-1 rounded-full flex justify-center items-center">
                     <img
                       src={uploadedPictureLink}
                       className="h-[142px] w-[142px] rounded-full"
                     />
-                    <img
+                   
+                </div>
+                 <img
                       src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                      className="absolute bottom-0 right-0"
+                      className="fixed mt-[105px] ml-[100px]"
                       onClick={() => {
                         setIsModalOpen(true);
                       }}
                     />
-                  </div>
                 </div>
               ) : (
                 <div className="flex justify-between place-items-start my-4">
