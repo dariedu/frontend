@@ -18,11 +18,6 @@ const CuratorPage: React.FC = () => {
     <>
       <NavigationBar variant="mainScreen" title="Куратор" />
       <TabBar userRole="curator" />
-      {/* <div>
-        {deliveries.map(delivery => (
-          <div key={delivery.id}>{delivery.location.address}</div>
-        ))}
-      </div> */}
     </>
   );
 };

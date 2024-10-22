@@ -3,7 +3,6 @@ import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import MainPageCurator from '../../pages/Curator/MainPageCurator/MainPageCurator';
 import CalendarCurator from '../../pages/Curator/CalendarPageCurator/CalendarCurator';
-import './index.css';
 
 import HomeIcon from '../../assets/icons/tap_home.svg';
 import HomeIconActive from '../../assets/icons/tap_homeActive.svg';
@@ -29,7 +28,18 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-[360px] min-h-[746px]">
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
+        backgroundColor: '#fff', // Фон панели
+        boxShadow: '0 -1px 5px rgba(0, 0, 0, 0.1)', // Тень для панели
+        width: '360px',
+      }}
+    >
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -65,11 +75,11 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           </>
         )}
 
-        <Tabs.List className="flex justify-between bg-light-gray-white dark:bg-dark-gray-white p-2 rounded-lg relative">
+        <Tabs.List className="flex justify-between p-2">
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"
-            className={classNames('flex flex-col items-center p-2 relative', {
+            className={classNames('flex flex-col items-center p-2', {
               'text-light-brand-green': activeTab === 'tab1',
               'text-light-gray-4': activeTab !== 'tab1',
             })}
@@ -92,7 +102,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Календарь" */}
           <Tabs.Trigger
             value="tab2"
-            className={classNames('flex flex-col items-center p-2 relative', {
+            className={classNames('flex flex-col items-center p-2', {
               'text-light-brand-green': activeTab === 'tab2',
               'text-light-gray-4': activeTab !== 'tab2',
             })}
@@ -116,7 +126,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {userRole === 'curator' && (
             <Tabs.Trigger
               value="tab3"
-              className={classNames('flex flex-col items-center p-2 relative', {
+              className={classNames('flex flex-col items-center p-2', {
                 'text-light-brand-green': activeTab === 'tab3',
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
@@ -140,7 +150,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Моя копилка" */}
           <Tabs.Trigger
             value="tab4"
-            className={classNames('flex flex-col items-center p-2 relative', {
+            className={classNames('flex flex-col items-center p-2', {
               'text-light-brand-green': activeTab === 'tab4',
               'text-light-gray-4': activeTab !== 'tab4',
             })}

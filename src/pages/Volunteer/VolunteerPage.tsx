@@ -18,11 +18,6 @@ const VolunteerPage: React.FC = () => {
     <div>
       <NavigationBar variant="mainScreen" title="Волонтёр" />
       <TabBar userRole="volunteer" />
-      {/* <div>
-        {deliveries.map(delivery => (
-          <div key={delivery.id}>{delivery.location.address}</div>
-        ))}
-      </div> */}
     </div>
   );
 };
