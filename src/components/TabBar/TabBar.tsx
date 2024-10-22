@@ -3,6 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import MainPageCurator from '../../pages/Curator/MainPageCurator/MainPageCurator';
 import CalendarCurator from '../../pages/Curator/CalendarPageCurator/CalendarCurator';
+import './index.css';
 
 import HomeIcon from '../../assets/icons/tap_home.svg';
 import HomeIconActive from '../../assets/icons/tap_homeActive.svg';
@@ -28,7 +29,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <>
+    <div className="relative w-[360px] min-h-[100vh]">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -37,38 +38,66 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         {/* Контент вкладок */}
         {userRole === 'curator' ? (
           <>
-            <Tabs.Content value="tab1" className="TabsContent">
+            <Tabs.Content
+              value="tab1"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <MainPageCurator />
             </Tabs.Content>
-            <Tabs.Content value="tab2" className="TabsContent">
+            <Tabs.Content
+              value="tab2"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <CalendarCurator />
             </Tabs.Content>
-            <Tabs.Content value="tab3" className="TabsContent">
+            <Tabs.Content
+              value="tab3"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <Curator />
             </Tabs.Content>
-            <Tabs.Content value="tab4" className="TabsContent">
+            <Tabs.Content
+              value="tab4"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <BankTabVolunteer />
             </Tabs.Content>
           </>
         ) : (
           <>
-            <Tabs.Content value="tab1" className="TabsContent">
+            <Tabs.Content
+              value="tab1"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
-            <Tabs.Content value="tab2" className="TabsContent">
+            <Tabs.Content
+              value="tab2"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <CalendarTabVolunteer />
             </Tabs.Content>
-            <Tabs.Content value="tab4" className="TabsContent">
+            <Tabs.Content
+              value="tab4"
+              className="TabsContent"
+              style={{ minHeight: '80vh' }}
+            >
               <BankTabVolunteer />
             </Tabs.Content>
           </>
         )}
 
-        <Tabs.List className="flex justify-between p-2">
+        <Tabs.List className="flex justify-between bg-light-gray-white dark:bg-dark-gray-white p-2 rounded-lg relative">
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"
-            className={classNames('flex flex-col items-center p-2', {
+            className={classNames('flex flex-col items-center p-2 relative', {
               'text-light-brand-green': activeTab === 'tab1',
               'text-light-gray-4': activeTab !== 'tab1',
             })}
@@ -91,7 +120,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Календарь" */}
           <Tabs.Trigger
             value="tab2"
-            className={classNames('flex flex-col items-center p-2', {
+            className={classNames('flex flex-col items-center p-2 relative', {
               'text-light-brand-green': activeTab === 'tab2',
               'text-light-gray-4': activeTab !== 'tab2',
             })}
@@ -115,7 +144,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {userRole === 'curator' && (
             <Tabs.Trigger
               value="tab3"
-              className={classNames('flex flex-col items-center p-2', {
+              className={classNames('flex flex-col items-center p-2 relative', {
                 'text-light-brand-green': activeTab === 'tab3',
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
@@ -139,7 +168,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Моя копилка" */}
           <Tabs.Trigger
             value="tab4"
-            className={classNames('flex flex-col items-center p-2', {
+            className={classNames('flex flex-col items-center p-2 relative', {
               'text-light-brand-green': activeTab === 'tab4',
               'text-light-gray-4': activeTab !== 'tab4',
             })}
@@ -160,7 +189,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           </Tabs.Trigger>
         </Tabs.List>
       </Tabs.Root>
-    </>
+    </div>
   );
 };
 

@@ -16,14 +16,10 @@ const CuratorPage: React.FC = () => {
 
   return (
     <div className="page-container">
-      {/* Контент страницы, который можно прокручивать */}
       <div className="page-content">
         <NavigationBar variant="mainScreen" title="Куратор" />
-        {/* Дополнительный контент можно добавить здесь */}
       </div>
-
-      {/* Фиксированный TabBar внизу */}
-      <div className="fixed-tab-bar">
+      <div className="">
         <TabBar userRole="curator" />
       </div>
     </div>
