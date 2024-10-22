@@ -32,7 +32,8 @@ function RegistrationPage() {
   const calendarRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
   const [concentOpenModal, setConcentOpenModal] = useState(false); /// открываем окно с условиями обработки персональных данных
-  //const [birthdayMissing, setBirthdayMissing] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
+
 
   ///// данные для инпута для выбора города
   const [clickedCity, setClickedCity] = useState(false);
@@ -221,291 +222,295 @@ function RegistrationPage() {
     setRegistrationCompleteModal(true);
   }
 
+
+  // :  requestForRegistrationSubmited == 'submitFailed' ? (
+  //   <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
+  //     <img src="./../src/assets/icons/AwaitConfirmRegistrationLogo.svg"></img>
+  //     <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center">
+  //       Упс.. что-то пошло не так
+  //     </h1>
+  //   </div>
+  // )
+
   return (
     <>
-      {/* {requestForRegistrationSubmited == 'submitSuccess' ? (
+       {registrationComplete? (
         <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
           <img src="./../src/assets/icons/AwaitConfirmRegistrationLogo.svg"></img>
           <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center">
-            Мы обрабатываем вашу заявку, в ближайшее время с вами свяжется
-            координатор
+            Благодарим за регистрацию!<br/>
+            Теперь вы можете перейти на главную страницу
           </h1>
-        </div>
-      ) :  requestForRegistrationSubmited == 'submitFailed' ? (
-        <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
-          <img src="./../src/assets/icons/AwaitConfirmRegistrationLogo.svg"></img>
-          <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center">
-            Упс.. что-то пошло не так
-          </h1>
-        </div>
-      ) : ( */}
-
-      <Form.Root
-        action=""
-        onSubmit={e => {
-          e.preventDefault();
-          onFormSubmit();
-        }}
-      >
-        <div
-          className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white"
-          onClick={() => {
-            setClickedCity(false);
-          }}
-        >
-          <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[520px] max-h-[559px] pt-[24px] pb-[28px]">
-            <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
-            <div className="w-[328px] h-min-[360px] flex flex-col justify-between">
-              <Form.Field
-                name="last_name"
-                className="flex flex-col items-center"
-              >
-                <Form.Control asChild>
-                  <input
-                    className="formField"
-                    placeholder="Фамилия"
-                    type="text"
-                    required
-                    defaultValue={localStorage.getItem('last_name') ?? ''}
-                    onChange={e => {
-                      handleFormFieldChange('last_name', e.target.value);
-                    }}
-                  />
-                </Form.Control>
-                <Form.Message match="valueMissing" className="error">
-                  Пожалуйста, введите вашу фамилию
-                </Form.Message>
-              </Form.Field>
-
-              <Form.Field name="name" className="flex flex-col items-center">
-                <Form.Control asChild>
-                  <input
-                    className="formField"
-                    placeholder="Имя"
-                    type="text"
-                    required
-                    defaultValue={localStorage.getItem('name') ?? ''}
-                    onChange={e => {
-                      handleFormFieldChange('name', e.target.value);
-                    }}
-                  />
-                </Form.Control>
-                <Form.Message match="valueMissing" className="error">
-                  Пожалуйста, введите ваше имя
-                </Form.Message>
-              </Form.Field>
-              <Form.Field name="surname" className="flex flex-col items-center">
-                <Form.Control asChild>
-                  <input
-                    className="formField"
-                    placeholder="Отчество"
-                    type="text"
-                    required
-                    defaultValue={localStorage.getItem('surname') ?? ''}
-                    onChange={e => {
-                      handleFormFieldChange('surname', e.target.value);
-                    }}
-                  />
-                </Form.Control>
-                <Form.Message match="valueMissing" className="error">
-                  Пожалуйста, введите ваше отчество
-                </Form.Message>
-              </Form.Field>
-              <Form.Field
-                name="birthday"
-                className="flex flex-col items-center"
-              >
-                <Form.Control asChild>
-                  <input
-                    ref={calendarRef}
-                    name="age"
-                    className="formFieldBirthday bgImage"
-                    placeholder="Дата рождения"
-                    type="text"
-                    onClick={e => {
-                      e.preventDefault();
-                      setOpenCalendar(true);
-                    }}
-                    defaultValue={localStorage.getItem('birthday') ?? ''}
-                    onChange={() => {
-                      localStorage.removeItem('birthday');
-                      localStorage.removeItem('isAdult');
-                      setIsAdult(null);
-                    }}
-                    required
-                  />
-                </Form.Control>
-                <Form.Message match="valueMissing" className="error">
-                  Пожалуйста введите дату рождения
-                </Form.Message>
-              </Form.Field>
-
-              <Form.Field name="email" className="flex flex-col items-center">
-                <Form.Control asChild>
-                  <input
-                    name="email"
-                    className="formField"
-                    placeholder="Email"
-                    type="email"
-                    required
-                    defaultValue={localStorage.getItem('email') ?? ''}
-                    onChange={e => {
-                      handleFormFieldChange('email', e.target.value);
-                    }}
-                  />
-                </Form.Control>
-                <Form.Message match="valueMissing" className="error">
-                  Пожалуйста введите ваш имейл
-                </Form.Message>
-                <Form.Message match="typeMismatch" className="error">
-                  Неверный имейл
-                </Form.Message>
-              </Form.Field>
-              <div>
-                <InputOptions
-                  options={cityOptions}
-                  clicked={clickedCity}
-                  setClicked={setClickedCity}
-                  choiceMade={cityIndex}
-                  setChoiceMade={setCityIndex}
-                />
-              </div>
-            </div>
-            {isAdult !== null && isAdult !== false ? (
-              <CheckboxElement
-                onCheckedChange={() => {
-                  handleFormFieldChange(
-                    'consent_to_personal_data',
-                    checked ? false : true,
-                  );
-                  checked ? setChecked(false) : setChecked(true);
+        </div>) : (
+          <>
+             <Form.Root
+                action=""
+                onSubmit={e => {
+                  e.preventDefault();
+                  onFormSubmit();
                 }}
               >
-                <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] text-left">
-                  Я принимаю условия{' '}
-                  <b
-                    className="text-light-brand-green font-normal text-left cursor-pointer"
-                    onClick={() => {
-                      setConcentOpenModal(true);
+                <div
+                  className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white"
+                  onClick={() => {
+                    setClickedCity(false);
+                  }}
+                >
+                  <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[520px] max-h-[559px] pt-[24px] pb-[28px]">
+                    <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
+                    <div className="w-[328px] h-min-[360px] flex flex-col justify-between">
+                      <Form.Field
+                        name="last_name"
+                        className="flex flex-col items-center"
+                      >
+                        <Form.Control asChild>
+                          <input
+                            className="formField"
+                            placeholder="Фамилия"
+                            type="text"
+                            required
+                            defaultValue={localStorage.getItem('last_name') ?? ''}
+                            onChange={e => {
+                              handleFormFieldChange('last_name', e.target.value);
+                            }}
+                          />
+                        </Form.Control>
+                        <Form.Message match="valueMissing" className="error">
+                          Пожалуйста, введите вашу фамилию
+                        </Form.Message>
+                      </Form.Field>
+        
+                      <Form.Field name="name" className="flex flex-col items-center">
+                        <Form.Control asChild>
+                          <input
+                            className="formField"
+                            placeholder="Имя"
+                            type="text"
+                            required
+                            defaultValue={localStorage.getItem('name') ?? ''}
+                            onChange={e => {
+                              handleFormFieldChange('name', e.target.value);
+                            }}
+                          />
+                        </Form.Control>
+                        <Form.Message match="valueMissing" className="error">
+                          Пожалуйста, введите ваше имя
+                        </Form.Message>
+                      </Form.Field>
+                      <Form.Field name="surname" className="flex flex-col items-center">
+                        <Form.Control asChild>
+                          <input
+                            className="formField"
+                            placeholder="Отчество"
+                            type="text"
+                            required
+                            defaultValue={localStorage.getItem('surname') ?? ''}
+                            onChange={e => {
+                              handleFormFieldChange('surname', e.target.value);
+                            }}
+                          />
+                        </Form.Control>
+                        <Form.Message match="valueMissing" className="error">
+                          Пожалуйста, введите ваше отчество
+                        </Form.Message>
+                      </Form.Field>
+                      <Form.Field
+                        name="birthday"
+                        className="flex flex-col items-center"
+                      >
+                        <Form.Control asChild>
+                          <input
+                            ref={calendarRef}
+                            name="age"
+                            className="formFieldBirthday bgImage"
+                            placeholder="Дата рождения"
+                            type="text"
+                            onClick={e => {
+                              e.preventDefault();
+                              setOpenCalendar(true);
+                            }}
+                            defaultValue={localStorage.getItem('birthday') ?? ''}
+                            onChange={() => {
+                              localStorage.removeItem('birthday');
+                              localStorage.removeItem('isAdult');
+                              setIsAdult(null);
+                            }}
+                            required
+                          />
+                        </Form.Control>
+                        <Form.Message match="valueMissing" className="error">
+                          Пожалуйста введите дату рождения
+                        </Form.Message>
+                      </Form.Field>
+        
+                      <Form.Field name="email" className="flex flex-col items-center">
+                        <Form.Control asChild>
+                          <input
+                            name="email"
+                            className="formField"
+                            placeholder="Email"
+                            type="email"
+                            required
+                            defaultValue={localStorage.getItem('email') ?? ''}
+                            onChange={e => {
+                              handleFormFieldChange('email', e.target.value);
+                            }}
+                          />
+                        </Form.Control>
+                        <Form.Message match="valueMissing" className="error">
+                          Пожалуйста введите ваш имейл
+                        </Form.Message>
+                        <Form.Message match="typeMismatch" className="error">
+                          Неверный имейл
+                        </Form.Message>
+                      </Form.Field>
+                      <div>
+                        <InputOptions
+                          options={cityOptions}
+                          clicked={clickedCity}
+                          setClicked={setClickedCity}
+                          choiceMade={cityIndex}
+                          setChoiceMade={setCityIndex}
+                        />
+                      </div>
+                    </div>
+                    {isAdult !== null && isAdult !== false ? (
+                      <CheckboxElement
+                        onCheckedChange={() => {
+                          handleFormFieldChange(
+                            'consent_to_personal_data',
+                            checked ? false : true,
+                          );
+                          checked ? setChecked(false) : setChecked(true);
+                        }}
+                      >
+                        <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] text-left">
+                          Я принимаю условия{' '}
+                          <b
+                            className="text-light-brand-green font-normal text-left cursor-pointer"
+                            onClick={() => {
+                              setConcentOpenModal(true);
+                            }}
+                          >
+                            договора-оферты.
+                          </b>
+                        </label>
+                      </CheckboxElement>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+        
+                  <div className="flex flex-col justify-between h-[254px]">
+                    {pictureConfirmed ? (
+                      <div className="flex flex-col justify-around items-center">
+                        <div className=" bg-light-gray-1 rounded-full flex justify-center items-center">
+                          <img
+                            src={uploadedPictureLink}
+                            className="h-[142px] w-[142px] rounded-full"
+                          />
+                        </div>
+                        <img
+                          src="./../src/assets/icons/small_pencile_bg_gray.svg"
+                          className="relative -mt-[25px] ml-[70px]"
+                          onClick={() => {
+                            setIsModalOpen(true);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex justify-between place-items-start my-4">
+                        <div className="w-[235px] h-[72px] flex flex-col justify-between items-start">
+                          <h3 className="font-gerbera-h3 text-light-gray-black">
+                            Сделайте свое фото
+                          </h3>
+                          <p
+                            className={
+                              !tryToSubmitWithoutPic
+                                ? 'font-gerbera-sub1 text-light-gray-6 text-left'
+                                : 'font-gerbera-sub1 text-light-error-red  text-left'
+                            }
+                          >
+                            Чтобы продолжить регистрацию, сделайте, пожалуйста, фото на
+                            камеру телефона так, чтобы было хорошо видно ваше лицо
+                          </p>
+                        </div>
+                        <img
+                          src="./../src/assets/icons/photo.svg"
+                          className="h-[35px] w-[38px] cursor-pointer"
+                          onClick={() => {
+                            setIsModalOpen(true);
+                          }}
+                        />
+                      </div>
+                    )}
+                    <button
+                      type="submit"
+                      className={
+                        !isAdult
+                          ? 'btn-B-GreenDefault mb-8'
+                          : checked
+                            ? 'btn-B-GreenDefault mb-8'
+                            : 'btn-B-GreenInactive mb-8'
+                      }
+                      onClick={e => {
+                        if (isAdult && !checked) {
+                          e.preventDefault();
+                        } else {
+                          if (!pictureConfirmed) {
+                            setTryToSubmitWithoutPic(true);
+                            e.preventDefault();
+                          } else {
+                            setTryToSubmitWithoutPic(true);
+                          }
+                        }
+                      }}
+                    >
+                      Отправить заявку
+                    </button>
+                  </div>
+                  <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+                    <Selfie
+                      text="Сфотографируйтесь на камеру своего телефона"
+                      setTryToSubmitWithoutPic={setTryToSubmitWithoutPic}
+                      setPictureConfirmed={setPictureConfirmed}
+                      onOpenChange={setIsModalOpen}
+                      uploadedFileLink={uploadedPictureLink}
+                      setUploadedFileLink={setUploadedPictureLink}
+                      localeStorageName="avatarPic"
+                      setBlob={setBlob}
+                    />
+                  </Modal>
+                  <ConfirmModal
+                    isOpen={registrationCompleteModal}
+                    onOpenChange={setRegistrationCompleteModal}
+                    onConfirm={() => {
+                      setRegistrationComplete(true)
+                      setRegistrationCompleteModal(false);
                     }}
-                  >
-                    договора-оферты.
-                  </b>
-                </label>
-              </CheckboxElement>
-            ) : (
-              ''
-            )}
-          </div>
-
-          <div className="flex flex-col justify-between h-[254px]">
-            {pictureConfirmed ? (
-              <div className="flex flex-col justify-around items-center">
-                <div className=" bg-light-gray-1 rounded-full flex justify-center items-center">
-                  <img
-                    src={uploadedPictureLink}
-                    className="h-[142px] w-[142px] rounded-full"
-                  />
+                    title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
+                    description=""
+                    confirmText="Ок"
+                    isSingleButton={true}
+                  ></ConfirmModal>
                 </div>
-                <img
-                  src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                  className="relative -mt-[25px] ml-[70px]"
-                  onClick={() => {
-                    setIsModalOpen(true);
+              </Form.Root>
+              <Modal isOpen={openCalendar} onOpenChange={setOpenCalendar}>
+                <InputDate
+                onClose={() => {
+                    setOpenCalendar(false);
                   }}
+                  selectionMode="single"
+                  setCurrentDate={calcBirthday}
                 />
-              </div>
-            ) : (
-              <div className="flex justify-between place-items-start my-4">
-                <div className="w-[235px] h-[72px] flex flex-col justify-between items-start">
-                  <h3 className="font-gerbera-h3 text-light-gray-black">
-                    Сделайте свое фото
-                  </h3>
-                  <p
-                    className={
-                      !tryToSubmitWithoutPic
-                        ? 'font-gerbera-sub1 text-light-gray-6 text-left'
-                        : 'font-gerbera-sub1 text-light-error-red  text-left'
-                    }
-                  >
-                    Чтобы продолжить регистрацию, сделайте, пожалуйста, фото на
-                    камеру телефона так, чтобы было хорошо видно ваше лицо
-                  </p>
-                </div>
-                <img
-                  src="./../src/assets/icons/photo.svg"
-                  className="h-[35px] w-[38px] cursor-pointer"
-                  onClick={() => {
-                    setIsModalOpen(true);
-                  }}
-                />
-              </div>
-            )}
-            <button
-              type="submit"
-              className={
-                !isAdult
-                  ? 'btn-B-GreenDefault mb-8'
-                  : checked
-                    ? 'btn-B-GreenDefault mb-8'
-                    : 'btn-B-GreenInactive mb-8'
-              }
-              onClick={e => {
-                if (isAdult && !checked) {
-                  e.preventDefault();
-                } else {
-                  if (!pictureConfirmed) {
-                    setTryToSubmitWithoutPic(true);
-                    e.preventDefault();
-                  } else {
-                    setTryToSubmitWithoutPic(true);
-                  }
-                }
-              }}
-            >
-              Отправить заявку
-            </button>
-          </div>
-          <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-            <Selfie
-              text="Сфотографируйтесь на камеру своего телефона"
-              setTryToSubmitWithoutPic={setTryToSubmitWithoutPic}
-              setPictureConfirmed={setPictureConfirmed}
-              onOpenChange={setIsModalOpen}
-              uploadedFileLink={uploadedPictureLink}
-              setUploadedFileLink={setUploadedPictureLink}
-              localeStorageName="avatarPic"
-              setBlob={setBlob}
-            />
-          </Modal>
-          <ConfirmModal
-            isOpen={registrationCompleteModal}
-            onOpenChange={setRegistrationCompleteModal}
-            onConfirm={() => {
-              setRegistrationCompleteModal(false);
-            }}
-            title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
-            description=""
-            confirmText="Ок"
-            isSingleButton={true}
-          ></ConfirmModal>
-        </div>
-      </Form.Root>
-      <Modal isOpen={openCalendar} onOpenChange={setOpenCalendar}>
-        <InputDate
-          onClose={() => {
-            setOpenCalendar(false);
-          }}
-          selectionMode="single"
-          setCurrentDate={calcBirthday}
-        />
-      </Modal>
-      <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
-        <ConcentToPersonalData />
-      </Modal>
-      {/* )}  */}
+              </Modal>
+              <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
+                <ConcentToPersonalData />
+              </Modal>
+          </>
+        )}
     </>
-  );
+        )
 }
 
 export default RegistrationPage;
