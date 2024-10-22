@@ -1,28 +1,21 @@
 import * as Form from '@radix-ui/react-form';
-//import * as Select from "@radix-ui/react-select";
 import { Selfie } from './../../components/Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from './../../components/ui/Modal/Modal.tsx';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
 import InputDate from '../../components/InputDate/InputDate.tsx';
 import ConcentToPersonalData from './ConcentToPersonalData.tsx';
-
-
-import {
-  postRegistration,
-  type TRegisterationFormData,
-  IUserRegistered,
-} from '../../api/apiRegistrationToken.ts';
+import { postRegistration, type TRegisterationFormData, IUserRegistered} from '../../api/apiRegistrationToken.ts';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 import InputOptions from './InputOptions.tsx';
+import { fetchCities, type TCity} from '../../api/cityApi.ts';
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
   const [uploadedPictureLink, setUploadedPictureLink] = useState(''); /// ссылка на загруженое фото
-  const [registrationCompleteModal, setRegistrationCompleteModal] =
-    useState(false);
+  const [registrationCompleteModal, setRegistrationCompleteModal] = useState(false);
   const [checked, setChecked] = useState(false); // активируем кнопку отпарвки, если согласились с офертой для взрослых
    const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
@@ -36,11 +29,34 @@ function RegistrationPage() {
   //const [birthdayMissing, setBirthdayMissing] = useState(false);
 
   ///// данные для инпута для выбора города
-
   const [clickedCity, setClickedCity] = useState(false);
-  const cityOptions = ["Москва", "","Ростов-на-Дону", "другой"];
-  const [cityId, setCityId] = useState<number>(0);
+  const [cityOptions, setCityOptions] = useState<[number, string][]>([[1,"Москва"], [3, "Ростов-на-Дону"], [4, "другой"]])
+  const [cityOptionsIndex, setCityOptionsIndex] = useState<number>(0);
   ///// данные для инпута для выбора города
+
+
+////// запрашиваем города и пушим их в cityOptions для формирования инпута
+async function reqCiliesList() {
+  let arr:[number, string][] = [];
+  try {
+  const result: TCity[] = await fetchCities();
+    if (result) {
+      result.forEach((res) => { arr.push([res.id, res.city])})
+    }
+    }catch (err) {
+console.error(err, 'reqCiliesList has failed, registrationPage')
+  } finally {
+    if (arr.length > 0) {
+      setCityOptions(arr)
+    }
+  }
+  }
+  /////запрашиваем города один раз при загрузке страницы
+  useEffect(() => {
+    reqCiliesList();
+  }, [])
+
+
   ///определяем есть ли пользователю 18 лет по введенной дате рождения
   function getAgeFromBirthDate(birthDateString: string): boolean {
     const today = new Date();
@@ -88,8 +104,6 @@ function RegistrationPage() {
     last_name: localStorage.getItem('last_name') ?? '',
     name: localStorage.getItem('name') ?? '',
     surname: localStorage.getItem('surname') ?? '',
-    // birthday: localStorage.getItem('birthday') ?? '',
-    //city: 0,
     consent_to_personal_data: false,
   });
 
@@ -118,23 +132,19 @@ function RegistrationPage() {
       ...userFormFieldsInfo,
       [fieldName]: value,
     });
-   
       if (typeof value == 'boolean')
         localStorage.setItem(fieldName, JSON.stringify(value));
       else localStorage.setItem(fieldName, value);
-    
   }
 
   async function fetchRegistration(user: TRegisterationFormData) {
     try {
       const response = await postRegistration(user);
       if (response == true) {
-        //setRequestForRegistrationSubmited('submitSuccess'); ///// устанавливаем дата, чтобы знать, что отображать на экране
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
       } 
     } catch (e) {
       console.log('запрос fetchRegistration  прошел с ошибкой', e);
-    //  setRequestForRegistrationSubmited('submitFailed');
     }
   }
 
@@ -149,9 +159,7 @@ function RegistrationPage() {
     city: number;
   };
   //////функция для сабмита формы
-  function onFormSubmit(
-
-  ){
+  function onFormSubmit(){
       const userUnchangableValues: TUserUnchangableValues = {
         tg_id: 123456,
         tg_username: 'mgdata',
@@ -160,13 +168,12 @@ function RegistrationPage() {
         photo: '',
         birthday: "",
         city: 0
-      };
-      /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
-     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
+    };
     
+ /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
+    const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`
-    user.city = cityId + 1
- 
+    user.city = cityOptions[cityOptionsIndex][0]
       ///// создаем объект форм дата
       const formData = new FormData();
       ///// перебираем юзера переносим все поля в форм дата
@@ -253,7 +260,6 @@ function RegistrationPage() {
                     Пожалуйста, введите ваше имя
                   </Form.Message>
                 </Form.Field>
-
                 <Form.Field
                   name="surname"
                   className="flex flex-col items-center"
@@ -274,11 +280,9 @@ function RegistrationPage() {
                     Пожалуйста, введите ваше отчество
                   </Form.Message>
                 </Form.Field>
-
                 <Form.Field
                   name="birthday"
-                  className="flex flex-col items-center"
-                >
+                  className="flex flex-col items-center">
                 <Form.Control asChild>
                   <input
                     ref={calendarRef}
@@ -325,31 +329,8 @@ function RegistrationPage() {
                     Неверный имейл
                   </Form.Message>
                 </Form.Field>
-
                 <div>
-                  <Form.Field
-                    name="city"
-                    className="flex flex-col items-center"
-                  >
-                  <Form.Control asChild>
-
-                    {/* <select
-                       className="formField"
-                      defaultValue={localStorage.getItem('city') ?? ''}
-                      onChange={(e) => {
-                        handleFormFieldChange('city', String(e.target.value))
-                        // localStorage.setItem("city", e.target.value)
-                      }}
-                    >
-                      <option value={1} selected>Москва</option>
-                      <option value={2} >Санкт-Петербург</option>
-                    </select> */}
-                    <InputOptions options={cityOptions} clicked={clickedCity} setClicked={setClickedCity} choiceMade={cityId} setChoiceMade={setCityId} />
-                    </Form.Control>
-                    {/* <Form.Message match="valueMissing" className="error">
-                      Пожалуйста выберете город проживания
-                    </Form.Message> */}
-                  </Form.Field>
+                <InputOptions options={cityOptions} clicked={clickedCity} setClicked={setClickedCity} choiceMade={cityOptionsIndex} setChoiceMade={setCityOptionsIndex} />
                 </div>
               </div>
               {isAdult !== null && isAdult !== false ? (
@@ -364,7 +345,7 @@ function RegistrationPage() {
                 >
                   <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] text-left">
                     Я принимаю условия{' '}
-                  <b  className="text-light-brand-green font-normal text-left cursor-pointer" onClick={() => { setConcentOpenModal(true) }}>
+                  <b  className="text-light-brand-green font-normal text-left cursor-pointer" onClick={() => {setConcentOpenModal(true) }}>
                       договора-оферты.
                     </b>
                   </label>
@@ -418,7 +399,6 @@ function RegistrationPage() {
                   />
                 </div>
               )}
-
             <button
                 type='submit'
                 className={
@@ -439,8 +419,7 @@ function RegistrationPage() {
                     setTryToSubmitWithoutPic(true)
                   }
                 }   
-               }}                   
-            
+               }}
               >
                 Отправить заявку
               </button>
@@ -477,7 +456,6 @@ function RegistrationPage() {
       <Modal isOpen={concentOpenModal}  onOpenChange={setConcentOpenModal}>
           <ConcentToPersonalData/>
       </Modal>
-
       {/* )}  */}
     </>
   );
