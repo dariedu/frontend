@@ -28,18 +28,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        backgroundColor: '#fff', // Фон панели
-        boxShadow: '0 -1px 5px rgba(0, 0, 0, 0.1)', // Тень для панели
-        width: '360px',
-      }}
-    >
+    <>
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -171,7 +160,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           </Tabs.Trigger>
         </Tabs.List>
       </Tabs.Root>
-    </div>
+    </>
   );
 };
 

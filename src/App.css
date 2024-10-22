@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: 100%;
 }
 
 .logo {
@@ -39,4 +40,34 @@
 
 .read-the-docs {
   color: #888;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Контейнер занимает 100% высоты окна */
+  overflow: hidden;
+}
+
+.page-content {
+  flex: 1;
+  overflow-y: auto; /* Прокрутка контента */
+  padding-bottom: 50px; /* Отступ для TabBar */
+}
+
+.fixed-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
 }
