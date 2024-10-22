@@ -12,6 +12,7 @@ import arrowDownIcon from '../../assets/icons/arrow_down.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 import { DeliveryContext } from '../../core/DeliveryContext';
+
 interface ICalendarProps {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
@@ -43,7 +44,7 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
-    // Фильтрация доставок по выбранной дате и сохранение их в контексте
+
     const filteredDeliveries = deliveries.filter(delivery => {
       const deliveryDate = new Date(delivery.date);
       return isSameDay(deliveryDate, day) && isSameMonth(deliveryDate, day);
@@ -83,7 +84,7 @@ const Calendar: React.FC<ICalendarProps> = ({
     ));
   };
 
-  // Обработчики событий для мыши и касания
+  // Используем useCallback для обработчиков событий
   const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
     if (e.type === 'mousedown') {

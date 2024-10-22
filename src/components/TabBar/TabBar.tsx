@@ -29,7 +29,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-[360px] min-h-[746px]">
+    <div className="relative w-[360px] min-h-[100vh]">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -38,28 +38,56 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         {/* Контент вкладок */}
         {userRole === 'curator' ? (
           <>
-            <Tabs.Content value="tab1" className="TabsContent">
+            <Tabs.Content
+              value="tab1"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <MainPageCurator />
             </Tabs.Content>
-            <Tabs.Content value="tab2" className="TabsContent">
+            <Tabs.Content
+              value="tab2"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <CalendarCurator />
             </Tabs.Content>
-            <Tabs.Content value="tab3" className="TabsContent">
+            <Tabs.Content
+              value="tab3"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <Curator />
             </Tabs.Content>
-            <Tabs.Content value="tab4" className="TabsContent">
+            <Tabs.Content
+              value="tab4"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <BankTabVolunteer />
             </Tabs.Content>
           </>
         ) : (
           <>
-            <Tabs.Content value="tab1" className="TabsContent">
+            <Tabs.Content
+              value="tab1"
+              className="TabsContent"
+              style={{ minHeight: '90' }}
+            >
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
-            <Tabs.Content value="tab2" className="TabsContent">
+            <Tabs.Content
+              value="tab2"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <CalendarTabVolunteer />
             </Tabs.Content>
-            <Tabs.Content value="tab4" className="TabsContent">
+            <Tabs.Content
+              value="tab4"
+              className="TabsContent"
+              style={{ minHeight: '90vh' }}
+            >
               <BankTabVolunteer />
             </Tabs.Content>
           </>

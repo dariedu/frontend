@@ -138,7 +138,7 @@ const MainPageCurator: React.FC = () => {
   const address = currentDelivery?.location?.address || 'Адрес не указан';
 
   return (
-    <div className="flex-col bg-light-gray-1 min-h-[746px]">
+    <div className="flex-col bg-light-gray-1 min-h-[80vh]">
       <SliderStories />
       <div className="flex-col bg-light-gray-white rounded-[16px]">
         {/* Проверяем состояние загрузки */}

@@ -26,7 +26,8 @@ const Curator: React.FC = () => {
   };
 
   return (
-    <div className="flex-col min-h-[672px] bg-light-gray-1">
+
+    <div className="flex-col min-h-[80vh] bg-light-gray-1">
       <Search
         users={[currentUser]}
         onUserClick={handleUserClick}

@@ -1,7 +1,7 @@
 import React from 'react';
 import RegistrationForm from '../Registration/RegistrationPage';
 import CuratorPage from '../Curator/CuratorPage';
-// import VolunteerPage from '../Volunteer/VolunteerPage';
+import VolunteerPage from '../Volunteer/VolunteerPage';
 
 // Пример данных о пользователе (их нужно заменить на реальные данные из вашего источника)
 const user = {
@@ -21,7 +21,7 @@ const MainPage: React.FC = () => {
   }
 
   // Если пользователь - волонтер
-  // return <VolunteerPage />;
+  return <VolunteerPage />;
 };
 
 export default MainPage;

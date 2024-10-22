@@ -2,8 +2,11 @@ import React, { useContext } from 'react';
 import { UserContext } from '../../core/UserContext';
 import ProfilePic from '../ProfilePic/ProfilePic';
 import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
-import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
+import ThemeToggle from '../ui/ThemeToggle/ThemeToggle';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
+import historyIcon from '../../assets/icons/history.svg';
+import aboutIcon from '../../assets/icons/about.svg';
+import inviteIcon from '../../assets/icons/invite_friend.svg';
 
 interface IProfileUserProps {
   userId: number;
@@ -59,12 +62,67 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
             telegram={currentUser.tg_username || 'Telegram не указан'}
           />
 
-          {isCurrentUser && (
-            <ActionsVolunteer
-              visibleActions={['История', 'Обо мне', 'Пригласить друга']}
-              showThemeToggle={true}
-            />
-          )}
+          {/* Переключатель темы */}
+          <div className="space-y-[4px] bg-light-gray-1 rounded-[16px] w-[360px]">
+            <div className="relative bg-light-gray-1 rounded-[16px]">
+              <div className="absolute top-0 left-0 right-0 h-[4px] bg-light-gray-1 rounded-t-[16px]"></div>
+              <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px]">
+                <ThemeToggle />
+              </div>
+            </div>
+
+            {/* Блоки "История", "Обо мне" и "Пригласить друга" */}
+            <a
+              href="#"
+              className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={historyIcon}
+                  alt="История"
+                  className="w-[42px] h-[42px]"
+                />
+                <span className="font-gerbera-h3 text-light-gray-black m-0">
+                  История
+                </span>
+              </div>
+            </a>
+
+            <a
+              href="#"
+              className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={aboutIcon}
+                  alt="Обо мне"
+                  className="w-[42px] h-[42px]"
+                />
+                <span className="font-gerbera-h3 text-light-gray-black m-0">
+                  Обо мне
+                </span>
+              </div>
+            </a>
+
+            <a
+              href="#"
+              className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow hover:bg-gray-50 h-[66px]"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={inviteIcon}
+                  alt="Пригласить друга"
+                  className="w-[42px] h-[42px]"
+                />
+                <span className="font-gerbera-h3 text-light-gray-black m-0">
+                  Пригласить друга
+                </span>
+                <span className="font-gerbera-sub2 text-light-brand-green w-[129px]">
+                  +3 балла
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 

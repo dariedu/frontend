@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import closeIcon from '../../assets/icons/closeIcon.svg';
-import imageStory from '../../assets/Story.jpg';
+import storyImage1 from '../../assets/Text.png';
+import storyImage2 from '../../assets/Text (1).png';
 
 // Пример данных для сторис
 const stories = [
@@ -9,28 +10,14 @@ const stories = [
     title: 'Поиск волонеров',
     date: '31 сент.',
     text: 'Не хватает волонтёров на доставку',
-    imageSrc: imageStory,
+    imageSrc: storyImage1,
   },
   {
     id: 2,
     title: 'Событие 2',
     date: '1 окт.',
     text: 'Описание события 2',
-    imageSrc: imageStory,
-  },
-  {
-    id: 3,
-    title: 'Событие 3',
-    date: '2 окт.',
-    text: 'Описание события 3',
-    imageSrc: imageStory,
-  },
-  {
-    id: 4,
-    title: 'Событие 4',
-    date: '3 окт.',
-    text: 'Описание события 4',
-    imageSrc: imageStory,
+    imageSrc: storyImage2,
   },
 ];
 
@@ -57,7 +44,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-light-gray-white bg-opacity-80 flex justify-center items-center z-50">
       <div className="relative w-full h-full max-w-[360px] bg-white rounded-lg overflow-hidden">
         {/* Прогресс-бар и кнопка закрытия */}
         <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
@@ -86,7 +73,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
           <img
             src={stories[currentIndex].imageSrc}
             alt={stories[currentIndex].title}
-            className="w-[360px] h-[634px] object-cover"
+            className="w-[360px] h-[634px] rounded-[16px] object-cover"
           />
 
           {/* Текст поверх картинки */}
@@ -99,14 +86,6 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             </p>
             <p className="font-gerbera-h1">{stories[currentIndex].text}</p>
           </div>
-
-          {/* Кнопка "Записаться" */}
-          <button
-            className="w-[328px] h-[48px] text-center bg-light-brand-green font-gerbera-h3 text-white rounded-full mt-4"
-            onClick={() => alert('Записаться')}
-          >
-            Записаться
-          </button>
         </div>
 
         {/* Обработка прокрутки для листания сторис */}
