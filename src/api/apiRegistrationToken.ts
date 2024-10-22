@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-//const tasksUrl = `${API_URL}/registration/`;
+const tasksUrl = `${API_URL}/registration/`;
 const tokenUrl = `${API_URL}/token/`;
-const tasksUrl = 'https://skillfactory.dariedu.site/api/registration/';
+
 interface IUserRegistered {
   tg_id: number;
   tg_username: string;
