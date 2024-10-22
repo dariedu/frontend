@@ -8,30 +8,35 @@ import big_pencilIcon from '../../../assets/icons/big_pencil.svg';
 import { UserContext } from '../../../core/UserContext';
 import { patchUser } from '../../../api/userApi';
 
-export const VolunteerData: React.FC = () => {
+interface IVolunteerDataProps {
+  geo: string;
+  email: string;
+  birthday: string;
+  phone: string;
+  telegram: string;
+}
+
+export const VolunteerData: React.FC<IVolunteerDataProps> = ({
+  geo,
+  email,
+  phone,
+  telegram,
+}) => {
   const { currentUser, token } = useContext(UserContext);
 
   if (!currentUser) {
     return <div>Пользователь не найден</div>;
   }
 
-  // Преобразуем city (geo) и tg_username (telegram)
-  const {
-    email,
-    birthday,
-    phone,
-    tg_username: telegram,
-    city: geo,
-  } = currentUser;
-
-  // Обрабатываем city, если это идентификатор (необходимо преобразование в название города)
-  const geoDisplay = geo ? `Город ID: ${geo}` : 'Город не указан'; // Замените на реальное отображение города
+  const birthdayFormatted = currentUser.birthday
+    ? new Date(currentUser.birthday).toLocaleDateString()
+    : 'Дата рождения не указана';
 
   const [formData, setFormData] = useState({
-    geo: geoDisplay, // Используем обработанное значение города
-    email: email || '',
-    birthday: birthday ? new Date(birthday).toLocaleDateString() : '', // Преобразование даты
-    phone: phone || '',
+    geo,
+    email,
+    birthday: birthdayFormatted,
+    phone,
   });
 
   const [isEditing, setIsEditing] = useState({
@@ -129,7 +134,7 @@ export const VolunteerData: React.FC = () => {
                     className="ml-3.5 p-1 border rounded"
                     value={formData[field]}
                     onChange={e => handleInputChange(e, field)}
-                    onBlur={() => handleSave(field)} // Сохраняем изменения при потере фокуса
+                    onBlur={() => handleSave(field)}
                   />
                 ) : (
                   <p className="ml-3.5">{formData[field]}</p>

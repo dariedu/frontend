@@ -14,7 +14,7 @@ export interface IUser {
   volunteer_hour: number;
   point: number | null;
   rating: number | { id: number; level: string; hours_needed: number };
-  city?: number | null;
+  city?: { id: number; city: string } | null;
   is_superuser?: boolean;
   is_staff?: boolean;
   metier?: string | null;

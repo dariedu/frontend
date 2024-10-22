@@ -15,9 +15,9 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   onClose,
   currentUserId,
 }) => {
-  const { currentUser, loading } = useContext(UserContext);
+  const { currentUser, isLoading } = useContext(UserContext);
 
-  if (loading) {
+  if (isLoading) {
     return <div>Загрузка...</div>;
   }
 
@@ -43,15 +43,22 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
           <ProfilePic user={currentUser} />
           <VolunteerData
             geo={
-              currentUser.city
-                ? `Город: ${currentUser.city}`
-                : 'Адрес не указан'
+              currentUser.city &&
+              typeof currentUser.city === 'object' &&
+              'city' in currentUser.city
+                ? `Город: ${currentUser.city.city}`
+                : 'Город не указан'
             }
             email={currentUser.email || 'Эл. почта не указана'}
-            birthday="01.01.1990"
+            birthday={
+              currentUser.birthday
+                ? new Date(currentUser.birthday).toLocaleDateString()
+                : 'Дата рождения не указана'
+            }
             phone={currentUser.phone || 'Телефон не указан'}
             telegram={currentUser.tg_username || 'Telegram не указан'}
           />
+
           {isCurrentUser && (
             <ActionsVolunteer
               visibleActions={['История', 'Обо мне', 'Пригласить друга']}

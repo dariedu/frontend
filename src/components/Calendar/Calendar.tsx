@@ -1,11 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
+import { format, startOfWeek, addDays, isSameDay, isSameMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import filterIcon from '../../assets/icons/filter.svg';
 import arrowDownIcon from '../../assets/icons/arrow_down.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
-
+import { DeliveryContext } from '../../core/DeliveryContext';
 interface ICalendarProps {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
@@ -23,17 +29,26 @@ const Calendar: React.FC<ICalendarProps> = ({
   selectedDate,
   setSelectedDate,
 }) => {
+  const { deliveries, setFilteredDeliveriesByDate } =
+    useContext(DeliveryContext);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
 
   const startOfWeekDate = startOfWeek(new Date(), { locale: ru });
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
+    // Фильтрация доставок по выбранной дате и сохранение их в контексте
+    const filteredDeliveries = deliveries.filter(delivery => {
+      const deliveryDate = new Date(delivery.date);
+      return isSameDay(deliveryDate, day) && isSameMonth(deliveryDate, day);
+    });
+    setFilteredDeliveriesByDate(filteredDeliveries);
   };
 
   const handleOpenDatePicker = () => {
@@ -69,40 +84,44 @@ const Calendar: React.FC<ICalendarProps> = ({
   };
 
   // Обработчики событий для мыши и касания
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
     if (e.type === 'mousedown') {
       const mouseEvent = e as React.MouseEvent;
-      setStartX(mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0));
+      startX.current =
+        mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
     } else {
       const touchEvent = e as React.TouchEvent;
-      setStartX(
-        touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0),
-      );
+      startX.current =
+        touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
     }
-    setScrollLeft(calendarRef.current?.scrollLeft || 0);
-  };
+    scrollLeft.current = calendarRef.current?.scrollLeft || 0;
+  }, []);
 
-  const handleMove = (e: MouseEvent | TouchEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    let x: number;
-    if (e.type === 'mousemove') {
-      const mouseEvent = e as MouseEvent;
-      x = mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
-    } else {
-      const touchEvent = e as TouchEvent;
-      x = touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
-    }
-    const walk = (x - startX) * 1.5;
-    if (calendarRef.current) {
-      calendarRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
+  const handleMove = useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      let x: number;
+      if (e.type === 'mousemove') {
+        const mouseEvent = e as MouseEvent;
+        x = mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
+      } else {
+        const touchEvent = e as TouchEvent;
+        x =
+          touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
+      }
+      const walk = (x - startX.current) * 1.5;
+      if (calendarRef.current) {
+        calendarRef.current.scrollLeft = scrollLeft.current - walk;
+      }
+    },
+    [isDragging],
+  );
 
-  const handleEnd = () => {
+  const handleEnd = useCallback(() => {
     setIsDragging(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (isDragging) {
@@ -125,7 +144,7 @@ const Calendar: React.FC<ICalendarProps> = ({
       window.removeEventListener('touchend', handleEnd);
       window.removeEventListener('touchcancel', handleEnd);
     };
-  }, [isDragging]);
+  }, [isDragging, handleMove, handleEnd]);
 
   return (
     <>
@@ -218,6 +237,9 @@ const Calendar: React.FC<ICalendarProps> = ({
             <InputDate
               onClose={() => setIsDatePickerOpen(false)}
               selectionMode="range"
+              setCurrentDate={function (): void {
+                throw new Error('Function not implemented.');
+              }}
             />
           </div>
         </div>

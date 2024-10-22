@@ -218,21 +218,20 @@ const NearestTask: React.FC<INearestTaskProps> = ({
         </div>
         {/* /////////////////////// */}
         {volunteer ? (
-
-           <div className="flex w-fit mt-[10px]">
+          <div className="flex w-fit mt-[10px]">
             <img
-                src={
-                  task.location.subway && task.location.subway.length != 0
-                    ? '../src/assets/icons/metro_station.svg'
-                    : '../src/assets/icons/onlineIcon.svg'
-                }
-              />
+              src={
+                task.location.subway && task.location.subway.length != 0
+                  ? '../src/assets/icons/metro_station.svg'
+                  : '../src/assets/icons/onlineIcon.svg'
+              }
+            />
             <div className="flex flex-col justify-center items-start pl-2 max-w-[170px]">
-            <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                  {task.location.subway && task.location.subway.length != 0
-                    ? task.location.subway
-                    : 'Онлайн'}
-                </h1>
+              <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+                {task.location.subway && task.location.subway.length != 0
+                  ? task.location.subway
+                  : 'Онлайн'}
+              </h1>
               {task.location.address && task.location.address.length != 0 ? (
                 <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
                   {task.location.address}
@@ -241,7 +240,7 @@ const NearestTask: React.FC<INearestTaskProps> = ({
                 ''
               )}
             </div>
-          </div>       
+          </div>
         ) : (
           ''
         )}
@@ -535,6 +534,9 @@ const NearestTask: React.FC<INearestTaskProps> = ({
             onSelectVolunteer={onSelectVolunteer}
             onTakeRoute={() => {}}
             showActions={true}
+            onClose={function (): void {
+              throw new Error('Function not implemented.');
+            }}
           />
         </Modal>
       ) : (

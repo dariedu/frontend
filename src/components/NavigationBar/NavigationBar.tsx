@@ -15,10 +15,10 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   variant,
   title = '',
 }) => {
-  const { currentUser, loading } = useContext(UserContext); // Достаем данные из контекста
+  const { currentUser, isLoading } = useContext(UserContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  if (loading) return <div>Загрузка...</div>;
+  if (isLoading) return <div>Загрузка...</div>;
 
   if (!currentUser) return <div>Пользователь не найден</div>;
 

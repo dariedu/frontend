@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import searchIcon from '../../assets/icons/search.svg';
 import metroIcon from '../../assets/icons/metro_station.svg';
 import { IUser } from '../../core/types';
+
 interface ISearchProps {
   placeholder?: string;
   showSearchInput?: boolean;
   showInfoSection?: boolean;
   users: IUser[];
   onUserClick: (user: IUser) => void;
+  station?: string; // Новый пропс для станции метро
+  address?: string; // Новый пропс для адреса
 }
 
 const Search: React.FC<ISearchProps> = ({
@@ -16,6 +19,8 @@ const Search: React.FC<ISearchProps> = ({
   showInfoSection = true,
   users,
   onUserClick,
+  station = 'Станция не указана', // Установка значений по умолчанию
+  address = 'Адрес не указан',
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
@@ -31,11 +36,6 @@ const Search: React.FC<ISearchProps> = ({
     }
   }, [searchQuery, users]);
 
-  const infoData = {
-    station: 'Ст. Молодежная',
-    address: 'Мск, ул. Бобруйская д.6 к.2',
-  };
-
   return (
     <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] max-w-md w-[360px]">
       {showInfoSection && (
@@ -44,10 +44,10 @@ const Search: React.FC<ISearchProps> = ({
             <img className="mr-1" src={metroIcon} alt="metro" />
             <div className="text-left">
               <h2 className="font-gerbera-h3 text-light-gray-8-text dark:text-dark-gray-8-text">
-                {infoData.station}
+                {station}
               </h2>
               <p className="font-gerbera-sub1 text-sm text-light-gray-4 dark:text-dark-gray-4">
-                {infoData.address}
+                {address}
               </p>
             </div>
           </div>

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import arrowRightIcon from '../../../assets/icons/arrow_right.png';
 import pencile from '../../../assets/icons/pencile.svg';
-import ConfirmModal from '../ConfirmModal/ConfirmModal'; // Импортируем модальное окно
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
+import { DeliveryContext } from '../../../core/DeliveryContext';
 
 interface IDeliveryTypeProps {
-  status: 'Активная' | 'Ближайшая' | 'Завершена';
+  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   points?: number;
   onDeliveryClick: () => void;
 }
@@ -14,21 +15,29 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
   points,
   onDeliveryClick,
 }) => {
+  const { deliveries, isLoading } = useContext(DeliveryContext);
+  const [currentDelivery, setCurrentDelivery] = useState(deliveries[0] || null);
+
   const [showFeedbackButton, setShowFeedbackButton] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // Управляем состоянием модального окна
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false); // Отмечаем, был ли отправлен отзыв
-  const [routeSheetShown, setRouteSheetShown] = useState(false); // Для отображения маршрутного листа после отправки отзыва
-  const [showRouteSheet, setShowRouteSheet] = useState(false); // Управляем видимостью маршрутного листа
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [routeSheetShown, setRouteSheetShown] = useState(false);
+  const [showRouteSheet, setShowRouteSheet] = useState(false);
 
-  // Обработчик для клика по кнопке, если статус "Завершена"
+  useEffect(() => {
+    if (!isLoading && deliveries.length > 0) {
+      setCurrentDelivery(deliveries[0]);
+    }
+  }, [isLoading, deliveries]);
+
   const handleCompletedClick = () => {
     if (status === 'Завершена' && !feedbackSubmitted) {
       setShowFeedbackButton(true);
     } else if (feedbackSubmitted) {
-      setRouteSheetShown(true); // Показываем маршрутный лист после отправки отзыва
-      setShowRouteSheet(true); // Отображаем маршрутный лист
+      setRouteSheetShown(true);
+      setShowRouteSheet(true);
     } else {
       onDeliveryClick();
     }
@@ -41,20 +50,23 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
 
   const handleFeedbackSubmit = () => {
     setShowFeedbackForm(false);
-    setIsModalOpen(true); // Открываем модальное окно при отправке
+    setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setFeedbackSubmitted(true); // Помечаем, что отзыв был отправлен
-    setShowRouteSheet(false); // Скрываем маршрутный лист после закрытия модального окна
+    setFeedbackSubmitted(true);
+    setShowRouteSheet(false);
   };
 
-  // Классы для статуса
   const statusClass =
     status === 'Завершена'
       ? 'btn-S-GreenInactive'
       : 'btn-S-GreenDefault mr-[10px]';
+
+  if (isLoading || !currentDelivery) {
+    return <div>Загрузка доставок...</div>;
+  }
 
   return (
     <div className="w-[360px] mh-[227px] p-4 bg-light-gray-white rounded-[16px]">
