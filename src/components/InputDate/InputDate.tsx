@@ -239,7 +239,7 @@ const InputDate: React.FC<IInputDateProps> = ({
                     : format(startOfDay(new Date()), 'MM/dd/yyyy')
             }
             placeholder={format(startOfDay(new Date()), 'MM/dd/yyyy')}
-            className="font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] px-4"
+            className="outline-none font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] px-4"
             readOnly
           />
           {selectionMode === 'range' && (
