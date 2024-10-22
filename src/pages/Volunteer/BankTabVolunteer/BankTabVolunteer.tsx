@@ -8,7 +8,7 @@ import inviteIcon from '../../../assets/icons/invite_friend.svg';
 const BankTabVolunteer = () => {
   return (
     <>
-      <div className="mt-2 mb-4">
+      <div className="mt-2 mb-4 min-h-[80vh]">
         <div className="w-[360px] h-[130px] flex flex-col justify-between">
           <Points points={10} />
 
