@@ -56,13 +56,18 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   const [isAllRoutesCompleted, setIsAllRoutesCompleted] = useState(false);
   const [isDeliveryCompletedModalOpen, setIsDeliveryCompletedModalOpen] =
     useState(false);
+  const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false); // Для отслеживания завершения доставки
 
   useEffect(() => {
-    if (completedRouteSheets.every(completed => completed)) {
+    // Проверяем завершены ли все маршрутные листы
+    if (
+      completedRouteSheets.every(completed => completed) &&
+      !deliveryCompletedOnce
+    ) {
       setIsAllRoutesCompleted(true);
-      setIsDeliveryCompletedModalOpen(true);
+      setIsDeliveryCompletedModalOpen(true); // Показываем модальное окно
     }
-  }, [completedRouteSheets]);
+  }, [completedRouteSheets, deliveryCompletedOnce]);
 
   const handleComplete = (index: number) => {
     setCompletedRouteSheets(prev =>
@@ -71,8 +76,9 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   };
 
   const handleConfirmDeliveryCompletion = () => {
-    setIsDeliveryCompletedModalOpen(false);
-    onStatusChange();
+    setIsDeliveryCompletedModalOpen(false); // Закрываем модалку
+    setDeliveryCompletedOnce(true); // Устанавливаем флаг завершения, чтобы не показывать снова
+    onStatusChange(); // Меняем статус доставки на "Завершена"
   };
 
   // Функция для выбора волонтёра и закрытия списка волонтеров
@@ -207,7 +213,8 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         })}
       </div>
 
-      {isAllRoutesCompleted && (
+      {/* Модальное окно должно появляться только один раз при завершении доставки */}
+      {isAllRoutesCompleted && isDeliveryCompletedModalOpen && (
         <ConfirmModal
           title="Доставка завершена"
           description="+4 балла"
