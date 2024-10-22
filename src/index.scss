@@ -34,6 +34,21 @@
   body {
     @apply m-0 p-0 bg-light-gray-1 w-screen h-screen;
   }
+  
+  html{
+   ::-webkit-scrollbar {
+    @apply w-[10px] 
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-light-gray-1 rounded-2xl
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-light-gray-2 rounded-2xl
+  }
+  }
+  
   ///////////////////// Big-size btn
   .btn-B-GreenDefault {
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-brand-green text-light-gray-white;

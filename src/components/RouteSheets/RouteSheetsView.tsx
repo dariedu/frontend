@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import avatar from '../../assets/avatar.svg';
 import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
-import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface IRoute {
   address: string;
@@ -24,21 +23,6 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   isCompleted,
   isVolunteerSelected,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
-
-  const handleCompleteClick = () => {
-    setIsModalOpen(true); // Открыть модалку по клику
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false); // Закрыть модалку
-  };
-
-  const handleConfirm = () => {
-    onComplete(); // Выполнение действия завершения маршрута
-    setIsModalOpen(false); // Закрытие модалки после подтверждения
-  };
-
   return (
     <div>
       {/* Route Details */}
@@ -75,24 +59,11 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           className={`btn-M-GreenDefault w-full mt-4 ${
             !isVolunteerSelected ? 'opacity-50 cursor-not-allowed' : ''
           }`}
-          onClick={handleCompleteClick} // По клику открываем модалку
-          disabled={!isVolunteerSelected} // Отключаем кнопку, если волонтёр не выбран
+          onClick={onComplete}
+          disabled={!isVolunteerSelected}
         >
           Завершить
         </button>
-      )}
-
-      {/* Модальное окно ConfirmModal */}
-      {isModalOpen && (
-        <ConfirmModal
-          title="Доставка завершена"
-          description="+4 балла"
-          confirmText="Ok"
-          onConfirm={handleConfirm} // Завершение маршрута при подтверждении
-          isOpen={isModalOpen}
-          onOpenChange={handleModalClose}
-          isSingleButton={true}
-        />
       )}
     </div>
   );

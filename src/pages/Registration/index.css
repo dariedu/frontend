@@ -25,3 +25,10 @@ background-image: url( "../../src/assets/icons/tap_calendar.svg");
 background-repeat: no-repeat;
 background-position: 90%;
 }
+
+
+.bgImageInputOptions{
+  background-image: url( "../../src/assets/icons/greenTickForCalendar.svg");
+  background-repeat: no-repeat;
+  background-position: 2%;
+  }
