@@ -41,28 +41,28 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             <Tabs.Content
               value="tab1"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <MainPageCurator />
             </Tabs.Content>
             <Tabs.Content
               value="tab2"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <CalendarCurator />
             </Tabs.Content>
             <Tabs.Content
               value="tab3"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <Curator />
             </Tabs.Content>
             <Tabs.Content
               value="tab4"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <BankTabVolunteer />
             </Tabs.Content>
@@ -72,21 +72,21 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             <Tabs.Content
               value="tab1"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
             <Tabs.Content
               value="tab2"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <CalendarTabVolunteer />
             </Tabs.Content>
             <Tabs.Content
               value="tab4"
               className="TabsContent"
-              style={{ minHeight: '80vh' }}
+              style={{ minHeight: '100vh' }}
             >
               <BankTabVolunteer />
             </Tabs.Content>
