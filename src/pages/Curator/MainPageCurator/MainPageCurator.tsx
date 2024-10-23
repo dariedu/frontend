@@ -19,7 +19,7 @@ const users: IUser[] = [
     last_name: 'Петров',
     is_adult: true,
     avatar: avatar1,
-    is_staff: true,
+    is_staff: false,
     rating: {
       id: 0,
       level: '',
@@ -35,7 +35,7 @@ const users: IUser[] = [
     last_name: 'Иванова',
     is_adult: true,
     avatar: avatar1,
-    is_staff: true,
+    is_staff: false,
     rating: {
       id: 0,
       level: '',

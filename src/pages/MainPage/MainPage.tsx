@@ -6,7 +6,7 @@ import VolunteerPage from '../Volunteer/VolunteerPage';
 // Пример данных о пользователе (их нужно заменить на реальные данные из вашего источника)
 const user = {
   id: null, // или id пользователя, если зарегистрирован
-  is_staff: false, // true если curator, false если volunteer
+  is_staff: true, // true если curator, false если volunteer
 };
 
 const MainPage: React.FC = () => {
