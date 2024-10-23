@@ -29,10 +29,10 @@ const App: React.FC = () => {
     return <RegistrationPage />;
   } else if (currentUser.is_staff) {
     // Пользователь зарегистрирован и является сотрудником
-    return <CuratorPage />;
+    return <VolunteerPage />;
   } else {
     // Пользователь зарегистрирован, но не является сотрудником
-    return <VolunteerPage />;
+    return <CuratorPage />;
   }
 };
 
