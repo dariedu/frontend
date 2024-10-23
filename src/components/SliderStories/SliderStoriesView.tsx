@@ -19,6 +19,20 @@ const stories = [
     text: 'Описание события 2',
     imageSrc: storyImage2,
   },
+  {
+    id: 3,
+    title: 'Поиск волонеров',
+    date: '31 сент.',
+    text: 'Не хватает волонтёров на доставку',
+    imageSrc: storyImage1,
+  },
+  {
+    id: 4,
+    title: 'Событие 2',
+    date: '1 окт.',
+    text: 'Описание события 2',
+    imageSrc: storyImage2,
+  },
 ];
 
 interface SliderStoriesViewProps {
