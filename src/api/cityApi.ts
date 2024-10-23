@@ -2,10 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 // Устанавливаем URL API
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
-
 // Эндпоинт для работы с городами
 const citiesEndpoint = `${API_URL}/cities/`;
-
 // Тип данных для города
 type TCity = {
   id: number;
@@ -20,7 +18,6 @@ export const fetchCities = async (): Promise<TCity[]> => {
         'Content-Type': 'application/json',
       },
     });
-
     return response.data;
   } catch (error: any) {
     console.error('Ошибка при загрузке списка городов:', error);
