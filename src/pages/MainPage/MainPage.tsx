@@ -17,11 +17,11 @@ const MainPage: React.FC = () => {
 
   // Если пользователь - куратор
   if (user.is_staff) {
-    return <CuratorPage />;
+    return <VolunteerPage />;
   }
 
   // Если пользователь - волонтер
-  return <VolunteerPage />;
+  return <CuratorPage />;
 };
 
 export default MainPage;
