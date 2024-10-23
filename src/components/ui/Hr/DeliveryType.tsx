@@ -8,12 +8,14 @@ interface IDeliveryTypeProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   points?: number;
   onDeliveryClick: () => void;
+  showArrowButton?: boolean; // Новый пропс
 }
 
 const DeliveryType: React.FC<IDeliveryTypeProps> = ({
   status,
   points,
   onDeliveryClick,
+  showArrowButton = true, // Значение по умолчанию
 }) => {
   const { deliveries, isLoading } = useContext(DeliveryContext);
   const [currentDelivery, setCurrentDelivery] = useState(deliveries[0] || null);
@@ -81,38 +83,42 @@ const DeliveryType: React.FC<IDeliveryTypeProps> = ({
 
         {/* Кнопка для статуса "Активная" или для завершенного маршрутного листа */}
         {(status === 'Активная' ||
-          (status === 'Завершена' && showRouteSheet)) && (
-          <button
-            onClick={onDeliveryClick}
-            className="flex items-center space-x-1 text-light-gray-black focus:outline-none"
-          >
-            <span className="font-gerbera-sub2 text-light-gray-3">
-              Доставка
-            </span>
-            <img
-              src={arrowRightIcon}
-              alt="arrowRightIcon"
-              className="w-4 h-4"
-            />
-          </button>
-        )}
+          (status === 'Завершена' && showRouteSheet)) &&
+          showArrowButton && ( // Условие для показа кнопки
+            <button
+              onClick={onDeliveryClick}
+              className="flex items-center space-x-1 text-light-gray-black focus:outline-none"
+            >
+              <span className="font-gerbera-sub2 text-light-gray-3">
+                Доставка
+              </span>
+              <img
+                src={arrowRightIcon}
+                alt="arrowRightIcon"
+                className="w-4 h-4"
+              />
+            </button>
+          )}
 
         {/* Кнопка для статуса "Завершена", если форма еще не открыта */}
-        {status === 'Завершена' && !showFeedbackForm && !routeSheetShown && (
-          <button
-            onClick={handleCompletedClick}
-            className="flex items-center text-light-gray-black focus:outline-none"
-          >
-            <span className="font-gerbera-sub2 text-light-gray-3">
-              {points ? `+${points} балла` : 'Доставка'}
-            </span>
-            <img
-              src={arrowRightIcon}
-              alt="arrowRightIcon"
-              className="w-4 h-4"
-            />
-          </button>
-        )}
+        {status === 'Завершена' &&
+          !showFeedbackForm &&
+          !routeSheetShown &&
+          showArrowButton && (
+            <button
+              onClick={handleCompletedClick}
+              className="flex items-center text-light-gray-black focus:outline-none"
+            >
+              <span className="font-gerbera-sub2 text-light-gray-3">
+                {points ? `+${points} балла` : 'Доставка'}
+              </span>
+              <img
+                src={arrowRightIcon}
+                alt="arrowRightIcon"
+                className="w-4 h-4"
+              />
+            </button>
+          )}
       </div>
 
       {/* Показ кнопки "Поделиться впечатлениями", если статус завершен и форма еще не открыта */}

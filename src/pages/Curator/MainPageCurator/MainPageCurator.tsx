@@ -154,6 +154,7 @@ const MainPageCurator: React.FC = () => {
             status={deliveryStatus}
             points={points}
             onDeliveryClick={openRouteSheets} // Открытие маршрутных листов
+            showArrowButton={false}
           />
         )}
 
