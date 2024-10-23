@@ -72,7 +72,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             <Tabs.Content
               value="tab1"
               className="TabsContent"
-              style={{ minHeight: '90' }}
+              style={{ minHeight: '90vh' }}
             >
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
