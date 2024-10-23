@@ -38,7 +38,7 @@ interface ITokenRefresh extends ITokenBlacklist {
 ////// работает корректно //////////
 export const postRegistration = async (
   user: TRegisterationFormData,
-): Promise<boolean|undefined> => {
+): Promise<boolean | undefined> => {
   try {
     const response: AxiosResponse<string> = await axios({
       url: tasksUrl,
@@ -50,11 +50,10 @@ export const postRegistration = async (
       data: user,
     });
     if (response.data) {
-      return true
+      return true;
     }
     //return JSON.parse(response.data);
   } catch (err) {
-
     console.error('Post request postRegistration has failed', err);
     throw new Error('Post request postRegistration has failed');
   }
