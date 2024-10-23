@@ -64,15 +64,15 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   };
 
   // Обработчики сенсорных событий
-  const onTouchStart = (e: React.TouchEvent) => {
+  const onTouchStartHandler = (e: React.TouchEvent) => {
     touchStartX.current = e.changedTouches[0].clientX;
   };
 
-  const onTouchMove = (e: React.TouchEvent) => {
+  const onTouchMoveHandler = (e: React.TouchEvent) => {
     touchEndX.current = e.changedTouches[0].clientX;
   };
 
-  const onTouchEnd = () => {
+  const onTouchEndHandler = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const distance = touchStartX.current - touchEndX.current;
     if (distance > minSwipeDistance) {
@@ -87,20 +87,20 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   };
 
   // Обработчики мышиных событий
-  const onMouseDown = (e: React.MouseEvent) => {
+  const onMouseDownHandler = (e: React.MouseEvent) => {
     mouseStartX.current = e.clientX;
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('mousemove', onMouseMoveHandler);
+    window.addEventListener('mouseup', onMouseUpHandler);
   };
 
-  const onMouseMove = (e: MouseEvent) => {
+  const onMouseMoveHandler = (e: MouseEvent) => {
     mouseEndX.current = e.clientX;
   };
 
-  const onMouseUp = () => {
+  const onMouseUpHandler = () => {
     if (!mouseStartX.current || !mouseEndX.current) {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('mousemove', onMouseMoveHandler);
+      window.removeEventListener('mouseup', onMouseUpHandler);
       return;
     }
     const distance = mouseStartX.current - mouseEndX.current;
@@ -113,8 +113,8 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
     }
     mouseStartX.current = null;
     mouseEndX.current = null;
-    window.removeEventListener('mousemove', onMouseMove);
-    window.removeEventListener('mouseup', onMouseUp);
+    window.removeEventListener('mousemove', onMouseMoveHandler);
+    window.removeEventListener('mouseup', onMouseUpHandler);
   };
 
   // Обработчик клавиатурных событий для доступности
@@ -134,19 +134,19 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onMouseDown={onMouseDown}
+      className="fixed inset-0 bg-light-gray-white bg-opacity-80 flex justify-center items-center z-50"
+      onTouchStart={onTouchStartHandler}
+      onTouchMove={onTouchMoveHandler}
+      onTouchEnd={onTouchEndHandler}
+      onMouseDown={onMouseDownHandler}
     >
       <div className="relative w-full h-full max-w-[360px] bg-white rounded-lg overflow-hidden">
         {/* Прогресс-бар и кнопка закрытия */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
+        <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
           {/* Прогресс-бар */}
           <div className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mr-4">
             <div
-              className="h-full bg-red-500 transition-all duration-300"
+              className="h-full bg-light-gray-white transition-all duration-300"
               style={{
                 width: `${((currentIndex + 1) / stories.length) * 100}%`,
               }}
@@ -156,30 +156,30 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
           {/* Кнопка закрытия */}
           <button
             onClick={onClose}
-            className="w-8 h-8 flex justify-center items-center rounded-full bg-gray-700"
+            className="w-8 h-8 flex justify-center items-center rounded-full"
           >
-            <img src={closeIcon} alt="Close" className="w-4 h-4" />
+            <img src={closeIcon} alt="Close" className="w-8 h-8" />
           </button>
         </div>
 
         {/* Контент сторис */}
-        <div className="flex flex-col items-center mt-16">
+        <div className="flex flex-col items-center mt-[40px]">
           {/* Изображение */}
           <img
             src={stories[currentIndex].imageSrc}
             alt={stories[currentIndex].title}
-            className="w-full h-auto rounded-lg object-cover"
+            className="w-[360px] h-[634px] rounded-[16px] object-cover"
           />
 
           {/* Текст поверх картинки */}
-          <div className="text-white absolute top-24 left-4 right-4">
-            <div className="flex bg-red-500 w-28 h-7 items-center justify-center font-sans text-sm rounded-full mb-4">
+          <div className="text-white absolute top-[120px] left-[15px]">
+            <div className="flex bg-light-brand-green w-[112px] h-[28px] items-center justify-center font-gerbera-sub2 text-light-gray-white rounded-full mb-[14px]">
               {stories[currentIndex].date}
             </div>
-            <p className="text-xl font-semibold">
+            <p className="font-gerbera-st text-left">
               {stories[currentIndex].title}
             </p>
-            <p className="text-md">{stories[currentIndex].text}</p>
+            <p className="font-gerbera-h1">{stories[currentIndex].text}</p>
           </div>
         </div>
 
