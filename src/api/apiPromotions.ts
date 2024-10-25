@@ -7,25 +7,30 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const promotionsUrl = `${API_URL}/promotions/`;
 
 interface IPromotion {
-  picture: any;
-  address: string;
   id: number;
   volunteers_count: number;
-  category: string;
+  category: {
+    id: number,
+    name: string
+  };
+  city: {
+    id: number,
+    city: string
+  };
+  address: string | null;
   name: string;
   price: number;
   description?: string;
-  start_date: Date;
+  start_date: string;
   quantity: number;
   available_quantity: number;
   for_curators_only: boolean;
   is_active: boolean;
-  file?: string;
+  ticket_file: string|null;
+  about_tickets: string | null
   is_permanent: boolean;
-  end_date?: Date;
-  city: string;
-  users: number[];
-  ticket?: string;
+  end_date?: string | null;
+  picture: null|string;
 }
 
 function parseObject(obj: string): IPromotion {
@@ -36,31 +41,28 @@ function parseObject(obj: string): IPromotion {
   });
   return result;
 }
+// ?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}
 
 export const getAllPromotions = async (
-  category?: string,
-  city?: number,
-  is_active: boolean = false,
-  start_date?: Date,
+  // category?: string,
+  // city?: number,
+  // is_active: boolean = false,
+  // start_date?: Date,
 ): Promise<IPromotion[]> => {
   try {
-    const response: AxiosResponse<string[]> = await axios({
-      url: `${promotionsUrl}?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}`,
+    const response: AxiosResponse<IPromotion[]> = await axios({
+      url: promotionsUrl,
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'cross-origin-opener-policy': 'same-origin',
       },
     });
-
-    const result: IPromotion[] = [];
-    response.data.forEach(i => {
-      result.push(parseObject(i));
-    });
+    const result:IPromotion[] = [];
+    response.data.forEach(i => result.push(i))
     return result;
   } catch (err: any) {
-    console.error('Get request getMyTasks has failed', err);
-    throw new Error('Get request getMyTasks has failed');
+    console.error('Get request getAllPromotions has failed', err);
+    throw new Error('Get request getAllPromotions has failed');
   }
 };
 
@@ -78,8 +80,8 @@ export const postPromotionRedeem = async (
     });
     return parseObject(response.data);
   } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
+    console.error('Post request postPromotionRedeem has failed', err);
+    throw new Error('Post request postPromotionRedeem has failed');
   }
 };
 
@@ -97,8 +99,8 @@ export const postPromotionCancel = async (
     });
     return parseObject(response.data);
   } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
+    console.error('Post request postPromotionCancel has failed', err);
+    throw new Error('Post request postPromotionCancel has failed');
   }
 };
 

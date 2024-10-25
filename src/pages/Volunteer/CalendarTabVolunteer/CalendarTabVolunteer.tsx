@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
-import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
+//import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
 import NearestTask from "../../../components/NearestTask/NearestTask";
 //import Logo from "./../../../assets/icons/Logo.svg"
 //C:\Users\gonch\Desktop\IT shit\telegram_app\frontend\src\assets\icons\Logo.svg
@@ -18,7 +18,7 @@ let hasTasks: boolean = true;
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         {hasTasks ? (
           <>
-            <NearestDelivery />
+            {/* <NearestDelivery /> */}
             <NearestTask />
           </>
         ): (
