@@ -10,7 +10,7 @@ export const CheckboxElementRight: React.FC<TCheckElementProps> = ({
   children,
 }) => {
   return (
-    <div className="flex justify-between w-[336px] items-center text-light-gray-5 ">
+    <div className="flex justify-between w-[315px] items-center text-light-gray-5 ">
       {children}
       <Checkbox.Root className="bg-light-gray-1 rounded-full w-6 h-6 flex justify-center items-center mr-4">
         <Checkbox.Indicator>
