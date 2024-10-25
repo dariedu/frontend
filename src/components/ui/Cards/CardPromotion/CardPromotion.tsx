@@ -9,10 +9,14 @@ import { type IPromotion } from '../../../../api/apiPromotions';
 
 // Интерфейс для пропсов CardPromotion
 interface IPromotionProps {
-  promotion: IPromotion;
+  promotion: IPromotion
+  optional: boolean
+  reserved: boolean
+  makeReservationFunc?: (chosenId: number) => void
+  cancelPromotion?: (chosenId: number) => void
 }
 
-const CardPromotion: React.FC<IPromotionProps> = ({ promotion }) => {
+const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserved, makeReservationFunc, cancelPromotion}) => {
   const [openFullView, setOpenFullView] = useState(false);
 
   const eventDate: Date = new Date(promotion.start_date);
@@ -65,7 +69,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion }) => {
         </div>
       </div>
         <Modal isOpen={openFullView} onOpenChange={setOpenFullView}>
-           <DetailedInfo promotion={promotion} />
+           <DetailedInfo onOpenChange={setOpenFullView} optional={optional} promotion={promotion} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion} />
         </Modal>
     </>
   );

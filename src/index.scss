@@ -37,16 +37,15 @@
   
   html{
    ::-webkit-scrollbar {
-    @apply w-[10px] 
+    @apply w-[8px] 
   }
-  
   ::-webkit-scrollbar-track {
     @apply bg-light-gray-1 rounded-2xl
   }
-  
   ::-webkit-scrollbar-thumb {
     @apply bg-light-gray-2 rounded-2xl
   }
+  
   }
   
   ///////////////////// Big-size btn

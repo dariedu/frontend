@@ -4,26 +4,37 @@ import { getBallCorrectEndingName, getMonthCorrectEndingName } from '../helperFu
 
 
 interface IDefaultInfoProps {
-  promotion: IPromotion;
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  optional: boolean
+  promotion: IPromotion
+  reserved: boolean 
+  confirmed?: boolean
+  makeReservationFunc?: (chosenId: number) => void
+  cancelPromotion?: (chosenId: number) => void
 }
 
  
 
 const DetailedInfo: React.FC<IDefaultInfoProps> = ({
+  onOpenChange,
+  optional,
   promotion,
+  reserved,
+  makeReservationFunc,
+  cancelPromotion
 }) => {
 
-  const eventDate:Date = new Date(promotion.start_date);
+  const eventDate: Date = new Date(promotion.start_date);
+  const currentDate = new Date()
+  const promotionDate = new Date(promotion.start_date)
+  const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
 
   return (
-    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white">
+    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white" onClick={e=>e.stopPropagation()}>
       <div className="flex align-middle justify-between">
         <div className="flex">
-          {/* <div className="w-9 h-9 bg-light-brand-green rounded-full flex items-center justify-center">
-            {promotion.price}
-          </div> */}
           <div className="flex flex-col ml-[14px] justify-center items-start">
-            <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0">
+            <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
             <p className="w-[162px] font-gerbera-sub1 text-light-gray-4 text-start">
@@ -31,18 +42,27 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             </p>
           </div>
         </div>
-        <p className="font-gerbera-sub2 text-light-gray-3">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
+        <p className="font-gerbera-sub2 text-light-gray-3 mr-2">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
       </div>
-
-      <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px]">
+      {optional ? "" : (
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px]">
         <h3 className="font-gerbera-h3 text-light-gray-black">
          Как получить билет?
         </h3>
+        {promotion.is_permanent ?
+          (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
+          {promotion.about_tickets}
+          </p>) : lessThenOneHour ? (
         <p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
-          {promotion.ticket_file}
+        {promotion.about_tickets}
         </p>
+        ) : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
+          За один час до мероприятия тут будет информация о вашем билете
+          </p>)}
+        
       </div>
-
+      )}
+    
       {/* {promotion.file != undefined ? (
         <div className="flex w-[215px] h-[24px] justify-start mt-[14px] items-center">
           <img
@@ -97,24 +117,45 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       ) : (
         ''
       )} */}
-      <div className="flex justify-between items-center mt-[14px]">
+      {!reserved ? (
+        <div className="flex justify-between items-center mt-[14px]">
         <button
-          onClick={e => {
-            e.preventDefault();
+          onClick={() => {
+            if (makeReservationFunc) {
+              makeReservationFunc(promotion.id)
+              onOpenChange(false)
+            }
           }}
           className="btn-M-GreenDefault"
         >
           Забронировать
         </button>
         <button
-          onClick={e => {
-            e.preventDefault();
+          onClick={(e) => {
+              e.preventDefault();
+              onOpenChange(false)
           }}
           className="btn-M-WhiteDefault"
         >
           Отменить
         </button>
       </div>
+      ) : (
+       <div className="flex justify-between items-center mt-[14px]">
+       <button
+         onClick={() => {
+          if (cancelPromotion) {
+            cancelPromotion(promotion.id)
+            onOpenChange(false)
+          }
+         }}
+         className="btn-B-WhiteDefault"
+       >
+         Отказаться
+       </button>
+     </div>
+      )}
+     
     </div>
   );
 };

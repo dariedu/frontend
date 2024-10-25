@@ -7,30 +7,34 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const promotionsUrl = `${API_URL}/promotions/`;
 
 interface IPromotion {
-  id: number;
-  volunteers_count: number;
+  id: number
+  volunteers_count: number
   category: {
-    id: number,
+    id: number
     name: string
   };
   city: {
-    id: number,
+    id: number
     city: string
   };
-  address: string | null;
-  name: string;
-  price: number;
-  description?: string;
-  start_date: string;
-  quantity: number;
-  available_quantity: number;
-  for_curators_only: boolean;
-  is_active: boolean;
-  ticket_file: string|null;
+  address: string | null
+  name: string
+  price: number
+  description?: string
+  start_date: string
+  quantity: number
+  available_quantity: number
+  for_curators_only: boolean
+  is_active: boolean
+  ticket_file: string|null
   about_tickets: string | null
-  is_permanent: boolean;
-  end_date?: string | null;
-  picture: null|string;
+  is_permanent: boolean
+  end_date?: string | null
+  picture: null|string
+}
+type TPromotionCategory = {
+  id: number
+  name: string
 }
 
 function parseObject(obj: string): IPromotion {
@@ -41,8 +45,8 @@ function parseObject(obj: string): IPromotion {
   });
   return result;
 }
-// ?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}
-
+// ?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}\
+//////запросить все поощрения
 export const getAllPromotions = async (
   // category?: string,
   // city?: number,
@@ -66,8 +70,10 @@ export const getAllPromotions = async (
   }
 };
 
+////// заброинровать поощрение
 export const postPromotionRedeem = async (
   promotionId: number,
+  promotion:IPromotion
 ): Promise<IPromotion> => {
   try {
     const response: AxiosResponse<string> = await axios({
@@ -77,6 +83,7 @@ export const postPromotionRedeem = async (
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
+      data: JSON.stringify(promotion)
     });
     return parseObject(response.data);
   } catch (err: any) {
@@ -85,8 +92,11 @@ export const postPromotionRedeem = async (
   }
 };
 
+
+////// отмеинть поощрение
 export const postPromotionCancel = async (
   promotionId: number,
+  promotion:IPromotion
 ): Promise<IPromotion> => {
   try {
     const response: AxiosResponse<string> = await axios({
@@ -96,6 +106,7 @@ export const postPromotionCancel = async (
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
+      data: JSON.stringify(promotion)
     });
     return parseObject(response.data);
   } catch (err: any) {
@@ -104,5 +115,25 @@ export const postPromotionCancel = async (
   }
 };
 
+/////запросить категорий поощрений
+export const getPromotionsCategories = async(): Promise<TPromotionCategory[]> => {
+  try {
+    const response: AxiosResponse<TPromotionCategory[]> = await axios({
+      url: `${promotionsUrl}promo_categories/`,
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
+    const result:TPromotionCategory[] = [];
+    response.data.forEach((i) => result.push(i))
+    return result
+  } catch (err: any) {
+    console.error('Get request getPromotionsCategories has failed', err);
+    throw new Error('Get request getPromotionsCategories has failed');
+  }
+};
+
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IPromotion };
+export type { IPromotion, TPromotionCategory};

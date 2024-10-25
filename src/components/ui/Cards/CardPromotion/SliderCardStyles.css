@@ -1,0 +1,16 @@
+
+    .sliderPromotionsScrollbar::-webkit-scrollbar {
+   @apply hidden
+ }
+ 
+ .sliderPromotionsScrollbar::-webkit-scrollbar-track {
+   @apply hidden
+ }
+ 
+ .sliderPromotionsScrollbar::-webkit-scrollbar-thumb {
+   @apply hidden
+ }
+ 
+
+  
+

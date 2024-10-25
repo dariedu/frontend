@@ -1,0 +1,15 @@
+
+  .filterPromotionsClass::-webkit-scrollbar {
+  @apply w-[8px] 
+}
+
+.filterPromotionsClass::-webkit-scrollbar-track {
+  @apply bg-light-gray-1 rounded-2xl
+}
+
+.filterPromotionsClass::-webkit-scrollbar-thumb {
+  @apply bg-light-gray-2 rounded-2xl
+}
+
+
+
