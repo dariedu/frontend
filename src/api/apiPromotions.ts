@@ -6,13 +6,15 @@ import axios, { AxiosResponse } from 'axios';
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const promotionsUrl = `${API_URL}/promotions/`;
 
+type TPromotionCategory = {
+  id: number
+  name: string
+}
+
 interface IPromotion {
   id: number
   volunteers_count: number
-  category: {
-    id: number
-    name: string
-  };
+  category: TPromotionCategory;
   city: {
     id: number
     city: string
@@ -31,10 +33,6 @@ interface IPromotion {
   is_permanent: boolean
   end_date?: string | null
   picture: null|string
-}
-type TPromotionCategory = {
-  id: number
-  name: string
 }
 
 function parseObject(obj: string): IPromotion {

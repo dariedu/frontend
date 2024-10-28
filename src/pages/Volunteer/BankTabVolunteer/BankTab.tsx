@@ -1,12 +1,12 @@
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Points from "../../../components/ui/Points/Points";
 import ActionsVolunteer from "../../../components/ActionsVolunteer/ActionsVolunteer";
 import SliderCardsPromotions from "../../../components/ui/Cards/CardPromotion/SliderCardsPromotions";
 import FilterPromotions from "../../../components/FilterPromotions/FilterPromotions";
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { getAllPromotions, getPromotionsCategories, postPromotionCancel, postPromotionRedeem, type IPromotion, type TPromotionCategory} from '../../../api/apiPromotions';
-
+import { UserContext } from '../../../core/UserContext';
 
 
 const BankTab:React.FC = () => {
@@ -14,7 +14,24 @@ const BankTab:React.FC = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [promotionsAll, setPromotionsAll] = useState<IPromotion[]>([]); //// абсолютно все доступные промоушены
   const [promotionCategory, setPpromotionCategory] = useState<TPromotionCategory[]>([]) /// запрашиваем категории промоушенов
- 
+  const [filterCategories, setFilterCategories] = useState<TPromotionCategory[]>([]) /// устанавливаем категории для фильтра
+
+  //// функция вызывается при нажатии на фильтр
+  function handleCategoryChoice(obj: TPromotionCategory) {
+    let copy = Object.assign([], filterCategories);
+    if (copy.includes(obj)) {
+    let filtered = copy.filter(i=>{return i!=obj})
+    setFilterCategories(filtered)
+    } else {
+      setFilterCategories([...filterCategories, obj])
+    } 
+  }
+
+   ////// используем контекст юзера, чтобы вывести количество доступных баллов 
+   const userValue = useContext(UserContext);
+   const userPoints = userValue.currentUser?.point;
+   ////// используем контекст
+  
   
   async function reqAllPromotions() {
      let allPromotinsArr: IPromotion[] = [];
@@ -80,11 +97,16 @@ const BankTab:React.FC = () => {
   }
 
 
+  
   return (
     <>
       <div className="mt-2 mb-4">
         <div className="w-[360px] h-[130px] flex flex-col justify-between">
-        <Points points={10} />
+          {userPoints ? (
+          <Points points={userPoints} />
+          ) : (<p className='flex items-center justify-between p-4 bg-white rounded-[16px] shadow w-[360px] h-[60px]'>
+              Данные по заработанным баллам временно недоступны
+          </p>)}
         <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/>
         </div>
 
@@ -100,7 +122,7 @@ const BankTab:React.FC = () => {
             <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
             <p>Пока нет доступных поощрений</p>
           </div>) : (
-            <SliderCardsPromotions promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} />
+             <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
           )}
         </div>
         <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4' >
@@ -110,10 +132,8 @@ const BankTab:React.FC = () => {
           <SliderCardsPromotions promotions={promotionsAll} optional={false} reserved={true} cancelPromotion={cancelPromotion} />
         </div>
         <Modal isOpen={openFilter} onOpenChange={setOpenFilter}>
-           <FilterPromotions categories={promotionCategory} onClose={()=>{}} onOpenDatePicker={()=>{}} />
+          <FilterPromotions categories={promotionCategory} onOpenChange={setOpenFilter} setFilter={setFilterCategories} filtered={filterCategories} handleCategoryChoice={handleCategoryChoice} />
         </Modal>
-
-      
        </div>
     </>
   )
