@@ -5,19 +5,20 @@ import { type TPromotionCategory } from '../../api/apiPromotions';
 import './filterPromotionsStyles.css' 
 
 interface IFilterPromotions {
-  categories: TPromotionCategory[]
-  onClose: () => void
-  onOpenDatePicker?: () => void
+  categories: TPromotionCategory[],
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  setFilter: React.Dispatch<React.SetStateAction<TPromotionCategory[]>>
+  filtered: TPromotionCategory[]
+  handleCategoryChoice: (cat:TPromotionCategory)=>void
 }
 
 const FilterPromotions: React.FC<IFilterPromotions> = ({
   categories,
-  onClose,
-  onOpenDatePicker,
+  onOpenChange,
+  setFilter,
+  filtered,
+  handleCategoryChoice
 }) => {
-
-
-
 
 
   return (
@@ -28,24 +29,35 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
         <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text h-9">
           <span>За период</span>
           {/* Открытие окна выбора даты по клику на иконку */}
-          <ChevronRightIcon
+          <ChevronRightIcon 
             className="text-light-gray-2  w-6 h-6 cursor-pointer mr-3"
-            onClick={onOpenDatePicker} // Открываем InputDate
+            //onClick={onOpenDatePicker} // Открываем InputDate
           />
         </div>
         <div className='filterPromotionsClass h-fit max-h-40 overflow-y-auto'>
-          {categories.map((cat) => {
-            return <CheckboxElementRight>
+          {categories.map((cat, i) => {
+            if (filtered.find(i => i.id == cat.id)) {
+              return  <CheckboxElementRight obj={cat} onClickFunc={handleCategoryChoice} checked={true} key={i}>
             <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center" key={cat.id}>
                 {cat.name.slice(0,1).toUpperCase()+cat.name.slice(1)}
             </span>
           </CheckboxElementRight>
+            } else {
+              return  <CheckboxElementRight obj={cat} onClickFunc={handleCategoryChoice} checked={false} key={i}>
+              <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center" key={cat.id}>
+                  {cat.name.slice(0,1).toUpperCase()+cat.name.slice(1)}
+              </span>
+            </CheckboxElementRight>
+            }
           })}
        </div>    
       </div>
       {/* Кнопка Применить */}
       <div className="mt-6 flex justify-center">
-        <button className="btn-B-GreenDefault" onClick={onClose}>
+        <button className="btn-B-GreenDefault" onClick={() => {
+          onOpenChange(false)
+          setFilter(filtered)
+        }}>
           Применить
         </button>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import CardPromotion from './CardPromotion';
 //import image from '../../../../assets/avatar.svg';
-import { type IPromotion } from '../../../../api/apiPromotions';
+import { type IPromotion, type TPromotionCategory } from '../../../../api/apiPromotions';
 import './SliderCardStyles.css';
 
 type TSliderCardsPromotionsProps = {
@@ -11,9 +11,10 @@ type TSliderCardsPromotionsProps = {
   makeReservationFunc?: (chosenId: number) => void
   confirmPromotion?: (chosenId: number) => void
   cancelPromotion?: (chosenId: number) => void
+  filterCategory?:TPromotionCategory[]
 }
 
-const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotions, optional, reserved, makeReservationFunc, confirmPromotion, cancelPromotion}) => {
+const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotions, optional, reserved, makeReservationFunc, filterCategory, cancelPromotion}) => {
   // const sliderRef = useRef<HTMLDivElement>(null);
   // const [isDragging, setIsDragging] = useState(false);
   // const [startX, setStartX] = useState(0);
@@ -57,6 +58,7 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
   //   };
   // }, [isDragging]);
 
+
   return (
     <div
       className='sliderPromotionsScrollbar overflow-x-scroll flex space-x-1 py-2 w-[345px]'
@@ -68,12 +70,25 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
       onDragStart={e => e.preventDefault()}
     >
       {/* Render each CardPromotion */}
-      {promotions.map((promo, index) => (
+      {filterCategory && filterCategory.length > 0 ? (
+        promotions.filter((promo) => {
+         if( filterCategory.find(i => i.id==promo.category.id)) return promo
+        }).map((promo, index) => (
         <div key={index} className="flex-shrink-0">
-          <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} confirmPromotion={confirmPromotion}  cancelPromotion={cancelPromotion}
+          <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion}
           />
         </div>
-      ))}
+        ))
+      ): (
+        promotions.map((promo, index) => (
+          <div key={index} className="flex-shrink-0">
+            <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion}
+            />
+          </div>
+          ))
+      )
+
+      }
     </div>
   );
 };
