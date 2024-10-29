@@ -7,7 +7,7 @@ import FilterPromotions from "../../../components/FilterPromotions/FilterPromoti
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { getAllPromotions, getPromotionsCategories, postPromotionCancel, postPromotionRedeem, type IPromotion, type TPromotionCategory} from '../../../api/apiPromotions';
 import { UserContext } from '../../../core/UserContext';
-
+import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 
 const BankTab:React.FC = () => {
 
@@ -15,7 +15,17 @@ const BankTab:React.FC = () => {
   const [promotionsAll, setPromotionsAll] = useState<IPromotion[]>([]); //// абсолютно все доступные промоушены
   const [promotionCategory, setPpromotionCategory] = useState<TPromotionCategory[]>([]) /// запрашиваем категории промоушенов
   const [filterCategories, setFilterCategories] = useState<TPromotionCategory[]>([]) /// устанавливаем категории для фильтра
+  //записываем ошибку при бронировании поощрения
+  const [redeemPromotionErr, setRedeemPromotionErr] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+  ////// записываем результат бронирования поощрения
+  const [redeemPromotionSuccess, setRedeemPromotionSuccess] = useState<boolean>(false);
+  const [redeemPromotionSuccessName, setRedeemPromotionSuccessName] = useState<string>('');
+  ////записываем результат отмены поощрения
+  const [cancelPromotionSuccess, setCancelPromotionSuccess] = useState<boolean>(false);
+  const [cancelPromotionSuccessName, setCancelPromotionSuccessName] = useState<string>('');
 
+  //if(redeemPromotion.length > 0 ) alert(redeemPromotion)
   //// функция вызывается при нажатии на фильтр
   function handleCategoryChoice(obj: TPromotionCategory) {
     let copy = Object.assign([], filterCategories);
@@ -28,8 +38,11 @@ const BankTab:React.FC = () => {
   }
 
    ////// используем контекст юзера, чтобы вывести количество доступных баллов 
-   const userValue = useContext(UserContext);
-   const userPoints = userValue.currentUser?.point;
+    const userValue = useContext(UserContext);
+    const userPoints = userValue.currentUser?.point;
+  //const userID = userValue.currentUser?.tg_id;
+    const token = userValue.token;
+
    ////// используем контекст
   
   
@@ -41,7 +54,9 @@ const BankTab:React.FC = () => {
       console.error(err, 'reqAllPromotions has failed, BankTab');
     } finally {
       if (allPromotinsArr.length > 0) {
-        setPromotionsAll(allPromotinsArr);
+        let avaliableProm = allPromotinsArr.filter(i => i.available_quantity >= 1);
+        let activeProm = avaliableProm.filter(i => i.is_active == true)
+        setPromotionsAll(activeProm);
       }
     }
   }
@@ -65,16 +80,27 @@ const BankTab:React.FC = () => {
   }, []); 
 
 
+
  async function redeemPromotion(chosenId:number) {
   let promotionForReservation = promotionsAll.filter((prom) => prom.id == chosenId)
    let result: boolean = false;
    try {
-     const response = await postPromotionRedeem(chosenId, promotionForReservation[0]);
+     const response = await postPromotionRedeem(chosenId, promotionForReservation[0], token);
      if (response) {
        result = true;
+       setRedeemPromotionSuccessName(promotionForReservation[0].name)
+       setRedeemPromotionSuccess(true);
      }
    } catch (err) {
-    console.error(err, 'redeemPromotion has failed, BankTab');
+     if (err == "Error: Недостаточно баллов для приобретения"){
+       setRedeemPromotionErr("Недостаточно баллов для приобретения")
+       setError(true)
+     } else {
+       console.error(err, 'redeemPromotion has failed, BankTab');
+       setRedeemPromotionErr("Что-то пошло не так, попробуйте позже")
+       setError(true)
+     }
+    
    } finally {
      return result
    }
@@ -85,9 +111,10 @@ const BankTab:React.FC = () => {
     let promotionForCancellation = promotionsAll.filter((prom) => prom.id == chosenId)
     let result: boolean = false;
     try {
-      const response = await postPromotionCancel(chosenId, promotionForCancellation[0]);
+      const response = await postPromotionCancel(chosenId, promotionForCancellation[0], token);
       if (response) {
-        result = true;
+        setCancelPromotionSuccess(true)
+        setCancelPromotionSuccessName(promotionForCancellation[0].name)
       }
     } catch (err) {
      console.error(err, 'cancelPromotion has failed, BankTab');
@@ -114,7 +141,7 @@ const BankTab:React.FC = () => {
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Обменять баллы</h1>
             {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
-              <img src='src/assets/icons/filter.svg' onClick={()=>{setOpenFilter(true)}} className='cursor-pointer'/>
+              <img src='./../src/assets/icons/filter.svg' onClick={()=>{setOpenFilter(true)}} className='cursor-pointer'/>
             )}
           
           </div>
@@ -134,6 +161,9 @@ const BankTab:React.FC = () => {
         <Modal isOpen={openFilter} onOpenChange={setOpenFilter}>
           <FilterPromotions categories={promotionCategory} onOpenChange={setOpenFilter} setFilter={setFilterCategories} filtered={filterCategories} handleCategoryChoice={handleCategoryChoice} />
         </Modal>
+        <ConfirmModal isOpen={error} onOpenChange={setError} onConfirm={() => { setError(false); setRedeemPromotionErr("") }} title={redeemPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
+        <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={`Отлично! ${redeemPromotionSuccessName} у вас в календаре`} description="" confirmText="Закрыть" isSingleButton={true} />
+        <ConfirmModal isOpen={cancelPromotionSuccess} onOpenChange={setCancelPromotionSuccess} onConfirm={() => { setCancelPromotionSuccess(false); setCancelPromotionSuccessName('') }} title={`Участие в мероприятии ${cancelPromotionSuccessName} успешно отменено`} description="" confirmText="Закрыть" isSingleButton={true} />
        </div>
     </>
   )

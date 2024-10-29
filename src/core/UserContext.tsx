@@ -33,7 +33,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const tgId = query.get('tg_id');
-   //const tgId = '123456'
+  //const tgId = '123456'
   // Функция для получения токена и пользователя
   const fetchUserAndToken = async () => {
     setIsLoading(true);
