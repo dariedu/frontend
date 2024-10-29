@@ -71,22 +71,28 @@ export const getAllPromotions = async (
 ////// заброинровать поощрение
 export const postPromotionRedeem = async (
   promotionId: number,
-  promotion:IPromotion
+  promotion: IPromotion,
+  access:string|null
 ): Promise<IPromotion> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<IPromotion> = await axios({
       url: `${promotionsUrl}${promotionId}/redeem/`,
       method: 'POST',
       headers: {
+        Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
-      data: JSON.stringify(promotion)
+      data: promotion
     });
-    return parseObject(response.data);
+    return response.data;
   } catch (err: any) {
+    if (err.response.data.error == "Недостаточно баллов для приобретения") {
+      throw new Error(err.response.data.error);
+   } else {
     console.error('Post request postPromotionRedeem has failed', err);
     throw new Error('Post request postPromotionRedeem has failed');
+ }
   }
 };
 
@@ -94,19 +100,21 @@ export const postPromotionRedeem = async (
 ////// отмеинть поощрение
 export const postPromotionCancel = async (
   promotionId: number,
-  promotion:IPromotion
+  promotion: IPromotion,
+  access:string|null
 ): Promise<IPromotion> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<IPromotion> = await axios({
       url: `${promotionsUrl}${promotionId}/cancel/`,
       method: 'POST',
       headers: {
+        Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
-      data: JSON.stringify(promotion)
+      data: promotion
     });
-    return parseObject(response.data);
+    return response.data
   } catch (err: any) {
     console.error('Post request postPromotionCancel has failed', err);
     throw new Error('Post request postPromotionCancel has failed');
