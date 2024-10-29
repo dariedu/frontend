@@ -1,7 +1,7 @@
 
 import React, {useState, useEffect, useContext} from 'react'
 import Points from "../../../components/ui/Points/Points";
-import ActionsVolunteer from "../../../components/ActionsVolunteer/ActionsVolunteer";
+//import ActionsVolunteer from "../../../components/ActionsVolunteer/ActionsVolunteer";
 import SliderCardsPromotions from "../../../components/ui/Cards/CardPromotion/SliderCardsPromotions";
 import FilterPromotions from "../../../components/FilterPromotions/FilterPromotions";
 import { Modal } from '../../../components/ui/Modal/Modal';
@@ -100,19 +100,19 @@ const BankTab:React.FC = () => {
   
   return (
     <>
-      <div className="mt-2 mb-4">
-        <div className="w-[360px] h-[130px] flex flex-col justify-between">
-          {userPoints ? (
-          <Points points={userPoints} />
-          ) : (<p className='flex items-center justify-between p-4 bg-white rounded-[16px] shadow w-[360px] h-[60px]'>
+      <div className="mt-2 mb-4 min-h-[100vh] pb-4 overflow-y-auto">
+        <div className="w-[360px] h-fit flex flex-col justify-between">
+          {userPoints !== undefined || userPoints !== null ? (
+          <Points points={Number(userPoints)} />
+          ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-[360px] h-[60px]'>
               Данные по заработанным баллам временно недоступны
           </p>)}
-        <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/>
+        {/* <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/> */}
         </div>
 
-        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4' >
+        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo ' >
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
-            <h1 className="font-gerbera-h1 text-light-gray-black">Обменять баллы</h1>
+            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Обменять баллы</h1>
             {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
               <img src='src/assets/icons/filter.svg' onClick={()=>{setOpenFilter(true)}} className='cursor-pointer'/>
             )}
@@ -125,9 +125,9 @@ const BankTab:React.FC = () => {
              <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
           )}
         </div>
-        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4' >
+        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4  dark:bg-light-gray-7-logo' >
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
-            <h1 className="font-gerbera-h1 text-light-gray-black">Мои планы</h1>
+            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
           </div>
           <SliderCardsPromotions promotions={promotionsAll} optional={false} reserved={true} cancelPromotion={cancelPromotion} />
         </div>

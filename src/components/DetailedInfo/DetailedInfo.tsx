@@ -30,33 +30,33 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
 
   return (
-    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white" onClick={e=>e.stopPropagation()}>
+    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
       <div className="flex align-middle justify-between">
         <div className="flex">
           <div className="flex flex-col ml-[14px] justify-center items-start">
-            <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0" >
+            <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
-            <p className="w-[162px] font-gerbera-sub1 text-light-gray-4 text-start">
+            <p className="w-[162px] font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
               {promotion.address}
             </p>
           </div>
         </div>
-        <p className="font-gerbera-sub2 text-light-gray-3 mr-2">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
+        <p className="font-gerbera-sub2 text-light-gray-3 mr-2 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
       </div>
       {optional ? "" : (
-        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px]">
-        <h3 className="font-gerbera-h3 text-light-gray-black">
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px] dark:bg-light-gray-6">
+        <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
          Как получить билет?
         </h3>
         {promotion.is_permanent ?
-          (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
+          (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
           {promotion.about_tickets}
           </p>) : lessThenOneHour ? (
-        <p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
+        <p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
         {promotion.about_tickets}
         </p>
-        ) : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px]">
+        ) : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
           За один час до мероприятия тут будет информация о вашем билете
           </p>)}
         
@@ -80,11 +80,11 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         ''
       )} */}
       <div className="flex justify-between items-center mt-[14px]">
-        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
-          <p className="font-gerbera-sub2 text-light-gray-black ">
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+          <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-1 ">
             Время начала
           </p>
-          <p className="font-gerbera-h3 text-light-gray-black">
+          <p className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
             {promotion.is_permanent
               ? 'В любое время'
                 : `${eventDate.getDate()}
@@ -94,8 +94,8 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             
           </p>
         </div>
-        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
-          <p className="font-gerbera-sub2 text-light-gray-black ">
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+          <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-1 ">
             Списание баллов
           </p>
           <p className="font-gerbera-h3 text-light-brand-green ">
@@ -103,9 +103,9 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           </p>
         </div>
       </div>
-      <div className="w-[328px] h-fit p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start">
-        <h3 className="font-gerbera-h3 text-light-gray-black">Описание</h3>
-        <p className="font-gerbera-sub1 text-light-gray-4 h-full text-start mt-[10px]">
+      <div className="w-[328px] h-fit max-h-[125px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
+        <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
+        <p className="font-gerbera-sub1 text-light-gray-4 h-full text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
           {promotion.description}
         </p>
       </div>
