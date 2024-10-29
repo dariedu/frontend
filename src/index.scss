@@ -29,10 +29,10 @@
 
 @layer components {
   #root {
-    @apply p-0 bg-light-gray-1;
+    @apply p-0 bg-light-gray-1 dark:bg-light-gray-black;
   }
   body {
-    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen;
+    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen dark:bg-light-gray-black;
   }
   
   html{
@@ -40,10 +40,10 @@
     @apply w-[8px] 
   }
   ::-webkit-scrollbar-track {
-    @apply bg-light-gray-1 rounded-2xl
+    @apply bg-light-gray-1 rounded-2xl dark:bg-light-gray-7-logo ;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-gray-2 rounded-2xl
+    @apply bg-light-gray-2 rounded-2xl dark:bg-light-gray-6
   }
   
   }
@@ -59,7 +59,7 @@
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white;
   }
   .btn-B-WhiteDefault {
-    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-brand-green;
+    @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-brand-green dark:bg-light-gray-6 dark:text-light-gray-white;
   }
   .btn-B-GrayDefault {
     @apply w-[328px] h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-gray-8-text;
@@ -75,7 +75,7 @@
     @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white;
   }
   .btn-M-WhiteDefault {
-    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-gray-8-text;
+    @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-gray-8-text  dark:bg-light-gray-6 dark:text-light-gray-white;
   }
   .btn-M-WhiteClicked {
     @apply w-[159px] h-10 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white;

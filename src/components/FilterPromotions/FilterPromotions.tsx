@@ -22,15 +22,15 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
 
 
   return (
-    <div className='w-[360px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8' onClick={e=>{e.stopPropagation()}}>
+    <div className='w-[360px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8 dark:bg-light-gray-7-logo' onClick={e=>{e.stopPropagation()}}>
       {/* Фильтры */}
       <div className="h-fit flex flex-col justify-between">
         {/* Фильтр за период */}
-        <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text h-9">
+        <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text h-9 dark:text-light-gray-1">
           <span>За период</span>
           {/* Открытие окна выбора даты по клику на иконку */}
           <ChevronRightIcon 
-            className="text-light-gray-2  w-6 h-6 cursor-pointer mr-3"
+            className="text-light-gray-2  w-6 h-6 cursor-pointer mr-7 dark:text-light-gray-5"
             //onClick={onOpenDatePicker} // Открываем InputDate
           />
         </div>
@@ -38,13 +38,13 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
           {categories.map((cat, i) => {
             if (filtered.find(i => i.id == cat.id)) {
               return  <CheckboxElementRight obj={cat} onClickFunc={handleCategoryChoice} checked={true} key={i}>
-            <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center" key={cat.id}>
+            <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center dark:text-light-gray-1" key={cat.id}>
                 {cat.name.slice(0,1).toUpperCase()+cat.name.slice(1)}
             </span>
           </CheckboxElementRight>
             } else {
               return  <CheckboxElementRight obj={cat} onClickFunc={handleCategoryChoice} checked={false} key={i}>
-              <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center" key={cat.id}>
+              <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center dark:text-light-gray-1" key={cat.id}>
                   {cat.name.slice(0,1).toUpperCase()+cat.name.slice(1)}
               </span>
             </CheckboxElementRight>

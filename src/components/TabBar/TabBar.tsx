@@ -29,7 +29,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-[360px] min-h-[746px]">
+    <div className="relative w-[360px]">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -60,7 +60,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
               <CalendarTabVolunteer />
             </Tabs.Content>
             <Tabs.Content value="tab4" className="TabsContent">
-              <BankTab />
+              <BankTab/>
             </Tabs.Content>
           </>
         )}
@@ -69,7 +69,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"
-            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-dark-gray-white w-full', {
+            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full', {
               'text-light-brand-green': activeTab === 'tab1',
               'text-light-gray-4': activeTab !== 'tab1',
             })}
@@ -92,7 +92,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Календарь" */}
           <Tabs.Trigger
             value="tab2"
-            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-dark-gray-white w-full', {
+            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full', {
               'text-light-brand-green': activeTab === 'tab2',
               'text-light-gray-4': activeTab !== 'tab2',
             })}
@@ -116,7 +116,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {userRole === 'curator' && (
             <Tabs.Trigger
               value="tab3"
-              className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-dark-gray-white w-full', {
+              className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full', {
                 'text-light-brand-green': activeTab === 'tab3',
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
@@ -140,7 +140,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           {/* Вкладка "Моя копилка" */}
           <Tabs.Trigger
             value="tab4"
-            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-dark-gray-white w-full', {
+            className={classNames('flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full', {
               'text-light-brand-green': activeTab === 'tab4',
               'text-light-gray-4': activeTab !== 'tab4',
             })}
