@@ -35,14 +35,14 @@ interface IPromotion {
   picture: null|string
 }
 
-function parseObject(obj: string): IPromotion {
-  const result = JSON.parse(obj, function (key, value) {
-    if (key == 'start_date' || key == 'end_date') {
-      return new Date(value);
-    }
-  });
-  return result;
-}
+// function parseObject(obj: string): IPromotion {
+//   const result = JSON.parse(obj, function (key, value) {
+//     if (key == 'start_date' || key == 'end_date') {
+//       return new Date(value);
+//     }
+//   });
+//   return result;
+// }
 // ?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}\
 //////запросить все поощрения
 export const getAllPromotions = async (
@@ -67,6 +67,27 @@ export const getAllPromotions = async (
     throw new Error('Get request getAllPromotions has failed');
   }
 };
+
+export const getMyPromotions = async (
+  access:string|null
+): Promise<IPromotion[]> => {
+  try {
+    const response: AxiosResponse<IPromotion[]> = await axios({
+      url: `${promotionsUrl}my_promo/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+      },
+    });
+    const result:IPromotion[] = [];
+    response.data.forEach(i => result.push(i))
+    return result;
+  } catch (err: any) {
+    console.error('Get request getAllPromotions has failed', err);
+    throw new Error('Get request getAllPromotions has failed');
+  }
+}
 
 ////// заброинровать поощрение
 export const postPromotionRedeem = async (
