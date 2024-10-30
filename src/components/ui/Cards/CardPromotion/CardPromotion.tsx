@@ -63,7 +63,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
           ) : (
             ''
           )}
-          <p className="font-gerbera-sub1 text-light-gray-3">
+          <p className="font-gerbera-sub1 text-light-gray-3 overflow-hidden h-[15px]">
             {promotion.address}
           </p>
         </div>
