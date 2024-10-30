@@ -119,7 +119,7 @@ const CalendarCurator: React.FC = () => {
   const address = currentDelivery?.location?.address || 'Адрес не указан';
 
   return (
-    <div className="flex-col min-h-[672px] bg-light-gray-1">
+    <div className="flex-col min-h-[80vh] bg-light-gray-1">
       <div className="flex-col rounded-[16px] bg-light-gray-white mt-2 mb-2">
         <Search
           showInfoSection={true}
