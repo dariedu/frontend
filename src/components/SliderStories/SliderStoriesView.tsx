@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import closeIcon from '../../assets/icons/closeIcon.svg';
 import storyImage1 from '../../assets/Text.png';
 import storyImage2 from '../../assets/Text (1).png';
@@ -19,6 +19,20 @@ const stories = [
     text: 'Описание события 2',
     imageSrc: storyImage2,
   },
+  {
+    id: 3,
+    title: 'Поиск волонеров',
+    date: '31 сент.',
+    text: 'Не хватает волонтёров на доставку',
+    imageSrc: storyImage1,
+  },
+  {
+    id: 4,
+    title: 'Событие 2',
+    date: '1 окт.',
+    text: 'Описание события 2',
+    imageSrc: storyImage2,
+  },
 ];
 
 interface SliderStoriesViewProps {
@@ -31,8 +45,14 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   onClose,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(currentStoryIndex);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const mouseStartX = useRef<number | null>(null);
+  const mouseEndX = useRef<number | null>(null);
 
-  // Обработчики для листания сторис
+  const minSwipeDistance = 50; // Минимальное расстояние свайпа в пикселях
+
+  // Функции для перехода между сторис
   const handleNext = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % stories.length);
   };
@@ -43,8 +63,83 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
     );
   };
 
+  // Обработчики сенсорных событий
+  const onTouchStartHandler = (e: React.TouchEvent) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+  };
+
+  const onTouchMoveHandler = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+  };
+
+  const onTouchEndHandler = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (distance > minSwipeDistance) {
+      // Свайп влево
+      handleNext();
+    } else if (distance < -minSwipeDistance) {
+      // Свайп вправо
+      handlePrev();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
+  // Обработчики мышиных событий
+  const onMouseDownHandler = (e: React.MouseEvent) => {
+    mouseStartX.current = e.clientX;
+    window.addEventListener('mousemove', onMouseMoveHandler);
+    window.addEventListener('mouseup', onMouseUpHandler);
+  };
+
+  const onMouseMoveHandler = (e: MouseEvent) => {
+    mouseEndX.current = e.clientX;
+  };
+
+  const onMouseUpHandler = () => {
+    if (!mouseStartX.current || !mouseEndX.current) {
+      window.removeEventListener('mousemove', onMouseMoveHandler);
+      window.removeEventListener('mouseup', onMouseUpHandler);
+      return;
+    }
+    const distance = mouseStartX.current - mouseEndX.current;
+    if (distance > minSwipeDistance) {
+      // Свайп влево
+      handleNext();
+    } else if (distance < -minSwipeDistance) {
+      // Свайп вправо
+      handlePrev();
+    }
+    mouseStartX.current = null;
+    mouseEndX.current = null;
+    window.removeEventListener('mousemove', onMouseMoveHandler);
+    window.removeEventListener('mouseup', onMouseUpHandler);
+  };
+
+  // Обработчик клавиатурных событий для доступности
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      } else if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-light-gray-white bg-opacity-80 flex justify-center items-center z-50">
+    <div
+      className="fixed inset-0 bg-light-gray-white bg-opacity-80 flex justify-center items-center z-50"
+      onTouchStart={onTouchStartHandler}
+      onTouchMove={onTouchMoveHandler}
+      onTouchEnd={onTouchEndHandler}
+      onMouseDown={onMouseDownHandler}
+    >
       <div className="relative w-full h-full max-w-[360px] bg-white rounded-lg overflow-hidden">
         {/* Прогресс-бар и кнопка закрытия */}
         <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
@@ -88,26 +183,46 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
           </div>
         </div>
 
-        {/* Обработка прокрутки для листания сторис */}
-        <div
-          className="absolute top-0 bottom-0 left-0 right-0 cursor-pointer z-10"
-          onMouseDown={e => {
-            const startX = e.clientX;
-            const handleMouseMove = (e: MouseEvent) => {
-              if (e.clientX - startX > 50) {
-                handlePrev();
-                window.removeEventListener('mousemove', handleMouseMove);
-              } else if (e.clientX - startX < -50) {
-                handleNext();
-                window.removeEventListener('mousemove', handleMouseMove);
-              }
-            };
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('mouseup', () => {
-              window.removeEventListener('mousemove', handleMouseMove);
-            });
-          }}
-        />
+        {/* Навигационные стрелки */}
+        <button
+          onClick={handlePrev}
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <button
+          onClick={handleNext}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
