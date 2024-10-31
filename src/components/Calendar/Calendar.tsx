@@ -12,6 +12,9 @@ import arrowDownIcon from '../../assets/icons/arrow_down.png';
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 import { DeliveryContext } from '../../core/DeliveryContext';
+import { getTasksCategories, TTaskCategory } from '../../api/apiTasks';
+import { UserContext } from '../../core/UserContext';
+
 interface ICalendarProps {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
@@ -34,6 +37,9 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [filterCategories, setFilterCategories] = useState<number[]>([]); // Добавлено для фильтров категорий
+  const [categories, setCategories] = useState<TTaskCategory[]>([]); // для хранения категорий из API
+  const { token } = useContext(UserContext); // Получаем access token из контекста пользователя
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const startX = useRef(0);
@@ -41,9 +47,26 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const startOfWeekDate = startOfWeek(new Date(), { locale: ru });
 
+  const fetchCategories = async () => {
+    try {
+      if (token) {
+        // Проверяем, что access token доступен
+        const result = await getTasksCategories(token); // Передаем токен при вызове функции
+        setCategories(result); // Устанавливаем категории из API
+      } else {
+        console.warn('Access token is missing');
+      }
+    } catch (err) {
+      console.error('Ошибка загрузки категорий:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [token]); // Вызовется повторно, если accessToken изменится
+
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
-    // Фильтрация доставок по выбранной дате и сохранение их в контексте
     const filteredDeliveries = deliveries.filter(delivery => {
       const deliveryDate = new Date(delivery.date);
       return isSameDay(deliveryDate, day) && isSameMonth(deliveryDate, day);
@@ -83,18 +106,13 @@ const Calendar: React.FC<ICalendarProps> = ({
     ));
   };
 
-  // Обработчики событий для мыши и касания
   const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    if (e.type === 'mousedown') {
-      const mouseEvent = e as React.MouseEvent;
-      startX.current =
-        mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
-    } else {
-      const touchEvent = e as React.TouchEvent;
-      startX.current =
-        touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
-    }
+    startX.current =
+      e.type === 'mousedown'
+        ? (e as React.MouseEvent).pageX - (calendarRef.current?.offsetLeft || 0)
+        : (e as React.TouchEvent).touches[0].pageX -
+          (calendarRef.current?.offsetLeft || 0);
     scrollLeft.current = calendarRef.current?.scrollLeft || 0;
   }, []);
 
@@ -102,26 +120,19 @@ const Calendar: React.FC<ICalendarProps> = ({
     (e: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
       e.preventDefault();
-      let x: number;
-      if (e.type === 'mousemove') {
-        const mouseEvent = e as MouseEvent;
-        x = mouseEvent.pageX - (calendarRef.current?.offsetLeft || 0);
-      } else {
-        const touchEvent = e as TouchEvent;
-        x =
-          touchEvent.touches[0].pageX - (calendarRef.current?.offsetLeft || 0);
-      }
+      const x =
+        e.type === 'mousemove'
+          ? (e as MouseEvent).pageX - (calendarRef.current?.offsetLeft || 0)
+          : (e as TouchEvent).touches[0].pageX -
+            (calendarRef.current?.offsetLeft || 0);
       const walk = (x - startX.current) * 1.5;
-      if (calendarRef.current) {
+      if (calendarRef.current)
         calendarRef.current.scrollLeft = scrollLeft.current - walk;
-      }
     },
     [isDragging],
   );
 
-  const handleEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+  const handleEnd = useCallback(() => setIsDragging(false), []);
 
   useEffect(() => {
     if (isDragging) {
@@ -149,65 +160,53 @@ const Calendar: React.FC<ICalendarProps> = ({
   return (
     <>
       <div className="p-4 bg-white w-[360px] rounded-[16px] relative select-none">
-        {/* Заголовок */}
-        {(showHeader || showFilterButton || showDatePickerButton) && (
-          <div className="flex justify-between items-center mb-4">
-            {showHeader && (
-              <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
-            )}
-            {(showFilterButton || showDatePickerButton) && (
-              <div className="flex space-x-2">
-                {/* Иконка фильтра */}
-                {showFilterButton && (
-                  <button
-                    className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-                    onClick={() => setIsFilterOpen(true)}
+        <div className="flex justify-between items-center mb-4">
+          {showHeader && (
+            <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
+          )}
+          {(showFilterButton || showDatePickerButton) && (
+            <div className="flex space-x-2">
+              {showFilterButton && (
+                <button
+                  className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+                  onClick={() => setIsFilterOpen(true)}
+                  draggable={false}
+                >
+                  <img
+                    src={filterIcon}
+                    alt="filter"
+                    className="w-8 h-8"
                     draggable={false}
-                  >
-                    <img
-                      src={filterIcon}
-                      alt="filter"
-                      className="w-8 h-8"
-                      draggable={false}
-                    />
-                  </button>
-                )}
-
-                {/* Иконка со стрелкой вниз */}
-                {showDatePickerButton && (
-                  <button
-                    className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-                    onClick={handleOpenDatePicker}
+                  />
+                </button>
+              )}
+              {showDatePickerButton && (
+                <button
+                  className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+                  onClick={handleOpenDatePicker}
+                  draggable={false}
+                >
+                  <img
+                    src={arrowDownIcon}
+                    alt="arrow down"
+                    className="w-4 h-4"
                     draggable={false}
-                  >
-                    <img
-                      src={arrowDownIcon}
-                      alt="arrow down"
-                      className="w-4 h-4"
-                      draggable={false}
-                    />
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Вертикальный месяц */}
-        <div className="absolute left-0 flex items-center">
-          <div className="flex items-center justify-between">
-            <span className="font-gerbera-sub1 text-light-gray-4 w-[35px] transform rotate-[-90deg] flex items-center justify-center">
-              {format(selectedDate, 'LLLL', { locale: ru })}
-            </span>
-            <div className="border-r h-[48px] border-gray-300" />
-          </div>
+                  />
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Календарь */}
+        <div className="absolute left-0 flex items-center">
+          <span className="font-gerbera-sub1 text-light-gray-4 w-[35px] rotate-[-90deg] flex items-center justify-center">
+            {format(selectedDate, 'LLLL', { locale: ru })}
+          </span>
+          <div className="border-r h-[48px] border-gray-300" />
+        </div>
+
         <div
-          className={`flex space-x-5 ml-7 ${
-            isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
+          className={`flex space-x-5 ml-7 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
           style={{ width: '300px', overflowX: 'hidden' }}
           ref={calendarRef}
           onMouseDown={handleStart}
@@ -218,28 +217,25 @@ const Calendar: React.FC<ICalendarProps> = ({
         </div>
       </div>
 
-      {/* Отображение компонента FilterCurator */}
       {isFilterOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white p-4 rounded-t-[16px] w-[360px] shadow-lg">
-            <FilterCurator
-              onClose={() => setIsFilterOpen(false)}
-              onOpenDatePicker={handleOpenDatePicker}
-            />
-          </div>
-        </div>
+        <FilterCurator
+          categories={categories} // Передаем загруженные категории
+          onOpenChange={setIsFilterOpen}
+          setFilter={setFilterCategories}
+          filtered={filterCategories}
+        />
       )}
 
-      {/* Отображение компонента InputDate */}
       {isDatePickerOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white rounded-t-[16px] w-[360px] shadow-lg">
             <InputDate
               onClose={() => setIsDatePickerOpen(false)}
               selectionMode="range"
-              setCurrentDate={function (): void {
-                throw new Error('Function not implemented.');
-              }}
+              setCurrentDate={() => {}}
+              categories={categories} // Передаем категории в InputDate
+              filterCategories={filterCategories} // Передаем текущий фильтр
+              setFilterCategories={setFilterCategories} // Передаем функцию установки фильтра
             />
           </div>
         </div>

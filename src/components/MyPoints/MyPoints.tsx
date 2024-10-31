@@ -15,7 +15,11 @@ const MyPoints: React.FC = () => {
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />
-      <SliderCardsPromotions />
+      <SliderCardsPromotions
+        promotions={[]}
+        optional={false}
+        reserved={false}
+      />
     </>
   );
 };
