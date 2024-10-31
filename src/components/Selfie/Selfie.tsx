@@ -3,7 +3,6 @@ import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
 //import ReactCrop from 'react-image-crop';
 
-
 interface ISelfieProps {
   text: string;
   setPictureConfirmed: Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +12,7 @@ interface ISelfieProps {
   setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>;
   localeStorageName: string;
   // blob: undefined | Blob
-setBlob:Dispatch<React.SetStateAction<Blob>>
+  setBlob: Dispatch<React.SetStateAction<Blob>>;
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -26,13 +25,14 @@ export const Selfie: React.FC<ISelfieProps> = ({
   uploadedFileLink,
   setUploadedFileLink,
   setTryToSubmitWithoutPic,
-  setBlob
+  setBlob,
 }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const webcamRef: React.MutableRefObject<null | Webcam> = useRef(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [url, setUrl] = useState('');
-  const imageRef:React.MutableRefObject<HTMLImageElement|null> = useRef(null)
+  const imageRef: React.MutableRefObject<HTMLImageElement | null> =
+    useRef(null);
 
   const makePhoto = React.useCallback(async () => {
     if (webcamRef.current && webcamRef.current != null) {
@@ -40,57 +40,61 @@ export const Selfie: React.FC<ISelfieProps> = ({
       if (imageSrc) {
         setUrl(imageSrc);
       }
-      }
-    }, [webcamRef]);
-  
+    }
+  }, [webcamRef]);
+
   const deletePhoto = () => {
-    setUrl("")
+    setUrl('');
   };
 
   function savePicture() {
     setFileUploaded(true);
     setUploadedFileLink(url);
     localStorage.setItem(localeStorageName, uploadedFileLink);
-    setIsEnabled(false)
+    setIsEnabled(false);
 
-    
-fetch(url)
-  .then(res => res.blob())
-  .then(blob => {
-    setBlob(blob)
-  });
-    
+    fetch(url)
+      .then(res => res.blob())
+      .then(blob => {
+        setBlob(blob);
+      });
   }
 
-
- return (
+  return (
     <>
       <div
         className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-1 rounded-full flex justify-center items-center mb-8 relative">
-         {fileUploaded ? (
-           <>
-           <img
-          src={uploadedFileLink}
-          className='h-[142px] w-[140px] size-fit rounded-full'
-               onClick={(e) => { e.preventDefault }} />  
+          {fileUploaded ? (
+            <>
               <img
-               src="./../src/assets/icons/small_pencile_bg_gray.svg"
-              className="absolute bottom-0 right-0"
-            onClick={() =>isEnabled ? setIsEnabled(false) : setIsEnabled(true)}
-               />
-           </>
-         ): (
-          <img
-          src='./../src/assets/icons/photo.svg'
-          className='h-[72px] w-[72px] cursor-pointer'
-          onClick={() =>isEnabled ? setIsEnabled(false) : setIsEnabled(true)}
-        />
+                src={uploadedFileLink}
+                className="h-[142px] w-[140px] size-fit rounded-full"
+                onClick={e => {
+                  e.preventDefault;
+                }}
+              />
+              <img
+                src="./../src/assets/icons/small_pencile_bg_gray.svg"
+                className="absolute bottom-0 right-0"
+                onClick={() =>
+                  isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+                }
+              />
+            </>
+          ) : (
+            <img
+              src="./../src/assets/icons/photo.svg"
+              className="h-[72px] w-[72px] cursor-pointer"
+              onClick={() =>
+                isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+              }
+            />
           )}
-       </div>
-       {/* <img
+        </div>
+        {/* <img
                       src="./../src/assets/icons/small_pencile_bg_gray.svg"
                       className="absolute bottom-0 right-0"
                       onClick={() => {
@@ -130,34 +134,44 @@ fetch(url)
             screenshotFormat="image/jpeg"
             screenshotQuality={1}
             forceScreenshotSourceSize={true}
-           className='relative '
+            className="relative "
           />
-         {url && (<img ref={imageRef} src={url} alt="pic" className='absolute'/>)}
-         <div className="flex justify-between w-[240px] h-[40px] mt-4">
-           {url.length !== 0 ? (
-          <button className="btn-S-GreenDefault outline-none" onClick={deletePhoto}>
-          Удалить
-       </button>
-           ): (
-            <button className="btn-S-GreenDefault outline-none" onClick={makePhoto}>
-            Сделать фото
-          </button> 
-           )}
-           {url.length !== 0 ? (
-           <button
-           className="btn-S-GreenClicked outline-none"
-           onClick={savePicture}
-         >
-           Сохранить фото
-         </button>
-           ) : (
-            <button
-            className="btn-S-GreenInactive outline-none"
-            onClick={(e)=>{e.preventDefault()}}
-          >
-            Сохранить фото
-          </button>
-           )}
+          {url && (
+            <img ref={imageRef} src={url} alt="pic" className="absolute" />
+          )}
+          <div className="flex justify-between w-[240px] h-[40px] mt-4">
+            {url.length !== 0 ? (
+              <button
+                className="btn-S-GreenDefault outline-none"
+                onClick={deletePhoto}
+              >
+                Удалить
+              </button>
+            ) : (
+              <button
+                className="btn-S-GreenDefault outline-none"
+                onClick={makePhoto}
+              >
+                Сделать фото
+              </button>
+            )}
+            {url.length !== 0 ? (
+              <button
+                className="btn-S-GreenClicked outline-none"
+                onClick={savePicture}
+              >
+                Сохранить фото
+              </button>
+            ) : (
+              <button
+                className="btn-S-GreenInactive outline-none"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+              >
+                Сохранить фото
+              </button>
+            )}
           </div>
         </div>
       </Modal>
