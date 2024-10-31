@@ -1,16 +1,16 @@
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { ReactNode } from 'react';
-import { TPromotionCategory } from '../../../api/apiPromotions';
+import { TTaskCategory } from '../../../api/apiTasks';
 
 type TCheckElementProps = {
-  onClickFunc: (obj: TPromotionCategory) => void;
-  obj: TPromotionCategory;
+  onClickFunc: (obj: TTaskCategory) => void;
+  obj: TTaskCategory;
   children: ReactNode;
   checked: boolean;
 };
 
-export const CheckboxElementRight: React.FC<TCheckElementProps> = ({
+export const CheckboxElementCurator: React.FC<TCheckElementProps> = ({
   onClickFunc,
   obj,
   children,

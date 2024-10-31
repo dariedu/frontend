@@ -1,62 +1,59 @@
 import React from 'react';
-import { CheckboxElementRight } from '../ui/CheckboxElement/CheckboxElementRight';
+import { CheckboxElementCurator } from '../ui/CheckboxElement/CheckboxElementCurator';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { TTaskCategory } from '../../api/apiTasks';
 
 interface IFilterCuratorProps {
-  onClose: () => void;
-  onOpenDatePicker?: () => void;
+  categories: TTaskCategory[];
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  setFilter: React.Dispatch<React.SetStateAction<number[]>>;
+  filtered: number[];
 }
 
 const FilterCurator: React.FC<IFilterCuratorProps> = ({
-  onClose,
-  onOpenDatePicker,
+  categories,
+  onOpenChange,
+  setFilter,
+  filtered,
 }) => {
+  const handleCategoryChoice = (categoryId: number) => {
+    setFilter(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId],
+    );
+  };
+
   return (
-    <div>
-      {/* Фильтры */}
-      <div className="space-y-4 ">
-        {/* Фильтр за период */}
-        <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text">
+    <div
+      className="w-[360px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8 dark:bg-light-gray-7-logo"
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="h-fit flex flex-col justify-between">
+        <div className="font-gerbera-sub2 flex justify-between items-center text-light-gray-black-text h-9 dark:text-light-gray-1">
           <span>За период</span>
-          {/* Открытие окна выбора даты по клику на иконку */}
-          <ChevronRightIcon
-            className="text-light-gray-5 w-6 h-6 cursor-pointer"
-            onClick={onOpenDatePicker} // Открываем InputDate
-          />
+          <ChevronRightIcon className="text-light-gray-2  w-6 h-6 cursor-pointer mr-7 dark:text-light-gray-5" />
         </div>
-
-        {/* Фильтр Благотворительные доставки */}
-        <CheckboxElementRight>
-          <span className="font-gerbera-sub2 text-light-gray-black">
-            Благотворительные доставки
-          </span>
-        </CheckboxElementRight>
-
-        {/* Фильтр Другие добрые дела */}
-        <CheckboxElementRight>
-          <span className="font-gerbera-sub2 text-light-gray-black">
-            Другие добрые дела
-          </span>
-        </CheckboxElementRight>
-
-        {/* Фильтр Мероприятия */}
-        <CheckboxElementRight>
-          <span className="font-gerbera-sub2 text-light-gray-black">
-            Мероприятия
-          </span>
-        </CheckboxElementRight>
-
-        {/* Фильтр По локации */}
-        <CheckboxElementRight>
-          <span className="font-gerbera-sub2 text-light-gray-black">
-            По локации
-          </span>
-        </CheckboxElementRight>
+        <div className="filterPromotionsClass h-fit max-h-40 overflow-y-auto">
+          {categories.map(cat => (
+            <CheckboxElementCurator
+              key={cat.id}
+              obj={cat}
+              onClickFunc={() => handleCategoryChoice(cat.id)}
+              checked={filtered.includes(cat.id)}
+            >
+              <span className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center dark:text-light-gray-1">
+                {cat.name}
+              </span>
+            </CheckboxElementCurator>
+          ))}
+        </div>
       </div>
-
-      {/* Кнопка Применить */}
       <div className="mt-6 flex justify-center">
-        <button className="btn-B-GreenDefault" onClick={onClose}>
+        <button
+          className="btn-B-GreenDefault"
+          onClick={() => onOpenChange(false)}
+        >
           Применить
         </button>
       </div>
