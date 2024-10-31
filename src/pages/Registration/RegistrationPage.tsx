@@ -499,7 +499,7 @@ function RegistrationPage() {
                   setRegistrationComplete(true);
                   setRegistrationCompleteModal(false);
                 }}
-                title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
+                title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
                 description=""
                 confirmText="Ок"
                 isSingleButton={true}
