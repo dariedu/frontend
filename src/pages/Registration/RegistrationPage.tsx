@@ -1,4 +1,5 @@
 import * as Form from '@radix-ui/react-form';
+//import * as Select from "@radix-ui/react-select";
 import { Selfie } from './../../components/Selfie/Selfie.tsx';
 import './index.css';
 import { Modal } from './../../components/ui/Modal/Modal.tsx';
@@ -6,6 +7,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
 import InputDate from '../../components/InputDate/InputDate.tsx';
 import ConcentToPersonalData from './ConcentToPersonalData.tsx';
+import { getTelegramParams } from '../../core/getQueryParams.ts';
+import { fetchCities, type TCity } from '../../api/cityApi.ts';
+
 import {
   postRegistration,
   type TRegisterationFormData,
@@ -13,7 +17,6 @@ import {
 } from '../../api/apiRegistrationToken.ts';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 import InputOptions from './InputOptions.tsx';
-import { fetchCities, type TCity } from '../../api/cityApi.ts';
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -33,6 +36,7 @@ function RegistrationPage() {
     useRef(null);
   const [concentOpenModal, setConcentOpenModal] = useState(false); /// открываем окно с условиями обработки персональных данных
   const [registrationComplete, setRegistrationComplete] = useState(false);
+  //const [birthdayMissing, setBirthdayMissing] = useState(false);
 
   ///// данные для инпута для выбора города
   const [clickedCity, setClickedCity] = useState(false);
@@ -107,13 +111,7 @@ function RegistrationPage() {
 
   type TRegister = Omit<
     IUserRegistered,
-    | 'is_adult'
-    | 'tg_id'
-    | 'tg_username'
-    | 'photo'
-    | 'phone'
-    | 'birthday'
-    | 'city'
+    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'birthday'
   >;
 
   const [userFormFieldsInfo, setUserFormFieldsInfo] = useState<TRegister>({
@@ -121,6 +119,8 @@ function RegistrationPage() {
     last_name: localStorage.getItem('last_name') ?? '',
     name: localStorage.getItem('name') ?? '',
     surname: localStorage.getItem('surname') ?? '',
+    // birthday: localStorage.getItem('birthday') ?? '',
+    city: 1,
     consent_to_personal_data: false,
   });
 
@@ -148,6 +148,7 @@ function RegistrationPage() {
       ...userFormFieldsInfo,
       [fieldName]: value,
     });
+
     if (typeof value == 'boolean')
       localStorage.setItem(fieldName, JSON.stringify(value));
     else localStorage.setItem(fieldName, value);
@@ -157,10 +158,12 @@ function RegistrationPage() {
     try {
       const response = await postRegistration(user);
       if (response == true) {
+        //setRequestForRegistrationSubmited('submitSuccess'); ///// устанавливаем дата, чтобы знать, что отображать на экране
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
       }
     } catch (e) {
       console.log('запрос fetchRegistration  прошел с ошибкой', e);
+      //  setRequestForRegistrationSubmited('submitFailed');
     }
   }
 
@@ -176,16 +179,17 @@ function RegistrationPage() {
   };
   //////функция для сабмита формы
   function onFormSubmit() {
+    const { tgId, tgUsername, phone } = getTelegramParams();
+
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: 123456,
-      tg_username: 'mgdata',
+      tg_id: tgId || 0,
+      tg_username: tgUsername || '',
       is_adult: isAdult,
-      phone: '9086851174',
+      phone: phone || '',
       photo: '',
       birthday: '',
       city: 0,
     };
-
     /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
