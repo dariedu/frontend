@@ -1,14 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, {useContext} from 'react';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import TabBar from '../../components/TabBar/TabBar';
 import { DeliveryContext } from '../../core/DeliveryContext';
 
 const VolunteerPage: React.FC = () => {
-  const { fetchDeliveries, isLoading } = useContext(DeliveryContext);
+ const { deliveries, isLoading } = useContext(DeliveryContext);
 
-  useEffect(() => {
-    fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы волонтера
-  }, []);
 
   if (isLoading) {
     return <div>Загрузка доставок...</div>;
@@ -18,11 +15,11 @@ const VolunteerPage: React.FC = () => {
     <div>
       <NavigationBar variant="mainScreen" title="Волонтёр" />
       <TabBar userRole="volunteer" />
-      {/* <div>
+      <div>
         {deliveries.map(delivery => (
           <div key={delivery.id}>{delivery.location.address}</div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
