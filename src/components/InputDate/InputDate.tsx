@@ -111,6 +111,8 @@ const InputDate: React.FC<IInputDateProps> = ({
     const days: JSX.Element[] = [];
     const monthStart = startOfMonth(currentMonth);
     const startDate = startOfWeek(monthStart, { locale: ru });
+
+    // Определяем фактические начальную и конечную даты диапазона
     let displayStart: Date | null = null;
     let displayEnd: Date | null = null;
 
@@ -132,11 +134,13 @@ const InputDate: React.FC<IInputDateProps> = ({
         displayStart &&
         displayEnd &&
         isWithinInterval(day, { start: displayStart, end: displayEnd });
+
       const isSelectedSingle =
         selectionMode === 'single' &&
         selectedDates.find(selectedDay => isSameDay(selectedDay, day));
 
       let dayClass = '';
+
       if (isSameMonth(day, currentMonth))
         dayClass += ' text-black w-[48px] h-[49px]';
       else dayClass += ' text-light-gray-5';
@@ -144,22 +148,28 @@ const InputDate: React.FC<IInputDateProps> = ({
         dayClass += ' bg-light-brand-green rounded-full text-white';
       if (selectionMode === 'range') {
         if (range.start && !range.end && isSameDay(day, range.start)) {
+          // Только начальная дата выбрана
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-full';
         } else if (isStart && isEnd) {
+          // Начальная и конечная даты совпадают
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-full';
         } else if (isStart) {
+          // Начало диапазона
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-l-full';
         } else if (isEnd) {
+          // Конец диапазона
           dayClass +=
             ' bg-white text-black border border-gray-300 rounded-r-full';
         } else if (isWithinSelectedRange) {
+          // Дата внутри выбранного диапазона
           dayClass += ' bg-light-gray-2';
         }
       }
 
+      //Стили для выделения диапазона дат
       days.push(
         <div
           key={day.toString()}
