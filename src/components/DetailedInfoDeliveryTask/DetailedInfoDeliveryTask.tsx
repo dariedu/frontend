@@ -1,102 +1,71 @@
-import React, { useState } from 'react';
-//import { type IDelivery } from "../../api/apiDeliveries";
-//import { type ITask } from "../../api/apiTasks";
+import React, { useContext, useState} from 'react';
 import {
   getMonthCorrectEndingName,
   getBallCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import {postDeliveryTake, IDelivery } from '../../api/apiDeliveries';
+//import { ITask } from '../../api/apiTasks';
+import { UserContext } from '../../core/UserContext';
 
-interface IDelivery {
-  id: number;
-  date: string;
-  curator: {
-    id: number;
-    tg_id: number;
-    tg_username: string;
-    last_name: string;
-    name: string;
-    avatar: string;
-  };
-  price: number;
-  is_free: boolean;
-  is_active: boolean;
-  is_completed: boolean;
-  in_execution: boolean;
-  volunteers_needed: number;
-  volunteers_taken: number;
-  delivery_assignments: string[];
-  route_sheet: number;
-  location: {
-    id: number;
-    city: {
-      id: number;
-      city: string;
-    };
-    address: string;
-    link: string;
-    subway: string;
-    media_files: null | string;
-    description: string;
-  };
-}
 
-export const delivery1: IDelivery = {
-  id: 1,
-  date: '2024-10-08T15:00:00Z',
-  curator: {
-    id: 9,
-    tg_id: 333,
-    tg_username: '@mgdata',
-    last_name: 'Фомина',
-    name: 'Анна',
-    avatar: '../src/assets/icons/pictureTest.jpg',
-  },
-  price: 5,
-  is_free: true,
-  is_active: true,
-  is_completed: false,
-  in_execution: false,
-  volunteers_needed: 5,
-  volunteers_taken: 3,
-  delivery_assignments: [],
-  route_sheet: 1,
-  location: {
-    id: 1,
-    city: {
-      id: 1,
-      city: 'Москва',
-    },
-    address:
-      'поселение Внуковское, ул. Авиаконстраукора Петькина, д.15 к1. строение 15 кв. 222',
-    link: 'null',
-    subway: 'Белорусская',
-    media_files: null,
-    description:
-      'В черную дверь возле лифта, второй этаж В черную дверь возле лифта, второй этаж В черную дверь возле лифта, второй этаж В черную дверь возле лифта, второй этажВ черную дверь возле лифта, второй этажВ черную дверь возле лифта, второй этажВ черную дверь возле лифта, второй этаж',
-  },
-};
 
 type TDetailedInfoDelivery = {
-  delivery?: IDelivery;
+  delivery: IDelivery;
   isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
-  delivery = delivery1,
+  delivery,
   isOpen,
   onOpenChange,
   switchTab,
 }) => {
   ////const [isAddToCalendarModalOpen, setIsAddToCalendarModalOpen] = useState(false);
-  const [isOpenModalAddToCalendar, setIsOpenModalAddToCalendar] =
-    useState(false);
+  const [isOpenModalAddToCalendar, setIsOpenModalAddToCalendar] = useState(false);
   const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
+  const curatorTelegramNik = delivery.curator.tg_username.includes('@', 0)
+  ? delivery.curator.tg_username.slice(1)
+  : delivery.curator.tg_username;
+
+  const userValue = useContext(UserContext);
+  let token = userValue.token;
+
+
+  async function takeDelivery(delivery:IDelivery) {
+    const deliveryId = delivery.id;
+
+    try {
+      const result = await postDeliveryTake(token, deliveryId, delivery)
+      if (result) {
+        console.log(delivery, "reservation made")
+        setIsOpenModalAddToCalendar(true);
+      }
+    } catch (err) {
+      console.log(err, "detailedDelivery err")
+    }
+  }
+  
+//   async function cancelDelivery(delivery:IDelivery) {
+//     const deliveryId = delivery.id;
+
+//     try {
+//       const result = await postDeliveryCancel(token, deliveryId, delivery)
+//       if (result) {
+//         console.log(delivery, "cancelled")
+//         setIsOpenModalAddToCalendar(true);
+//       }
+//     } catch (err) {
+//       console.log(err, "detailedDelivery  cancell err")
+//     }
+// }
+
+
 
   return (
     <>
@@ -114,7 +83,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   <img src="../src/assets/icons/metro_station.svg" />
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
                     <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                      Ст. {delivery.location.subway}
+                    {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)}
                     </h1>
                     <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-[230px] dark:text-light-gray-3">
                       {delivery.location.address}
@@ -152,10 +121,10 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
               <div className="flex">
-                <img
+                {/* <img
                   className="h-[32px] w-[32px] rounded-full"
-                  src={delivery.curator.avatar}
-                />
+                  src={delivery.curator.photo}
+                /> */}
                 <div className="felx flex-col justify-center items-start ml-4">
                   <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
                     {delivery.curator.name}
@@ -166,7 +135,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 </div>
               </div>
               <a
-                href={'https://t.me/' + delivery.curator.tg_username}
+                href={'https://t.me/' + curatorTelegramNik}
                 target="_blank"
               >
                 <img
@@ -206,7 +175,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
-                  setIsOpenModalAddToCalendar(true);
+                  takeDelivery(delivery)
                 }}
               >
                 Записаться

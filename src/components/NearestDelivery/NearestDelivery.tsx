@@ -94,7 +94,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
   const lessThenTwoHours =
     (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;
 
-  let curatorTelegramNik = delivery.curator.tg_username.includes('@')
+  let curatorTelegramNik = delivery.curator.tg_username.includes('@', 0)
     ? delivery.curator.tg_username.slice(1)
     : delivery.curator.tg_username;
 
