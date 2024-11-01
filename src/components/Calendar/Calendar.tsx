@@ -14,6 +14,7 @@ import InputDate from '../InputDate/InputDate';
 import { DeliveryContext } from '../../core/DeliveryContext';
 import { getTasksCategories, TTaskCategory } from '../../api/apiTasks';
 import { UserContext } from '../../core/UserContext';
+import { Modal } from '../ui/Modal/Modal';
 
 interface ICalendarProps {
   selectedDate: Date;
@@ -37,9 +38,9 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [filterCategories, setFilterCategories] = useState<number[]>([]); // Добавлено для фильтров категорий
-  const [categories, setCategories] = useState<TTaskCategory[]>([]); // для хранения категорий из API
-  const { token } = useContext(UserContext); // Получаем access token из контекста пользователя
+  const [filterCategories, setFilterCategories] = useState<number[]>([]);
+  const [categories, setCategories] = useState<TTaskCategory[]>([]);
+  const { token } = useContext(UserContext);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const startX = useRef(0);
@@ -50,9 +51,8 @@ const Calendar: React.FC<ICalendarProps> = ({
   const fetchCategories = async () => {
     try {
       if (token) {
-        // Проверяем, что access token доступен
-        const result = await getTasksCategories(token); // Передаем токен при вызове функции
-        setCategories(result); // Устанавливаем категории из API
+        const result = await getTasksCategories(token);
+        setCategories(result);
       } else {
         console.warn('Access token is missing');
       }
@@ -63,7 +63,7 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   useEffect(() => {
     fetchCategories();
-  }, [token]); // Вызовется повторно, если accessToken изменится
+  }, [token]);
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
@@ -219,27 +219,23 @@ const Calendar: React.FC<ICalendarProps> = ({
 
       {isFilterOpen && (
         <FilterCurator
-          categories={categories} // Передаем загруженные категории
+          categories={categories}
           onOpenChange={setIsFilterOpen}
           setFilter={setFilterCategories}
           filtered={filterCategories}
         />
       )}
 
-      {isDatePickerOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-t-[16px] w-[360px] shadow-lg">
-            <InputDate
-              onClose={() => setIsDatePickerOpen(false)}
-              selectionMode="range"
-              setCurrentDate={() => {}}
-              categories={categories} // Передаем категории в InputDate
-              filterCategories={filterCategories} // Передаем текущий фильтр
-              setFilterCategories={setFilterCategories} // Передаем функцию установки фильтра
-            />
-          </div>
-        </div>
-      )}
+      <Modal isOpen={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+        <InputDate
+          onClose={() => setIsDatePickerOpen(false)}
+          selectionMode="range"
+          setCurrentDate={() => {}}
+          categories={categories}
+          filterCategories={filterCategories}
+          setFilterCategories={setFilterCategories}
+        />
+      </Modal>
     </>
   );
 };
