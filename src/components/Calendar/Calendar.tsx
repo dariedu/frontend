@@ -33,9 +33,7 @@ const Calendar: React.FC<ICalendarProps> = ({
   selectedDate,
   setSelectedDate,
 }) => {
-  const { deliveries, setFilteredDeliveriesByDate } =
-    useContext(DeliveryContext);
-
+  const { deliveries } = useContext(DeliveryContext);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [filterCategories, setFilterCategories] = useState<number[]>([]);
@@ -45,7 +43,6 @@ const Calendar: React.FC<ICalendarProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
-
   const startOfWeekDate = startOfWeek(new Date(), { locale: ru });
 
   const fetchCategories = async () => {
@@ -67,11 +64,16 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
+
+    // Фильтруем доставки по выбранной дате
     const filteredDeliveries = deliveries.filter(delivery => {
       const deliveryDate = new Date(delivery.date);
       return isSameDay(deliveryDate, day) && isSameMonth(deliveryDate, day);
     });
-    setFilteredDeliveriesByDate(filteredDeliveries);
+
+    // Вы можете сохранить `filteredDeliveries` в локальном состоянии
+    // для отображения на основе выбранной даты.
+    console.log('Filtered Deliveries:', filteredDeliveries);
   };
 
   const handleOpenDatePicker = () => {
