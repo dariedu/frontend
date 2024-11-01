@@ -15,7 +15,7 @@ interface IDelivery {
     surname: string
     phone:string
     photo: string
-    photo_view: null
+    photo_view: string | null
   }
   price: number
   is_free: boolean
@@ -35,7 +35,7 @@ interface IDelivery {
   in_execution: boolean
   volunteers_needed: number
   volunteers_taken: number
-  delivery_assignments: string[]
+  delivery_assignments?: string[]
 }
 
 

@@ -44,7 +44,9 @@ const token = userValue.token;
       if (token) {
         // Передаем токен в getUsers
         const response = await getAllDeliveries(token);
+        
         if (response) {
+          console.log(response)
           setDeliveries(response);
         } else {
           console.error('Ошибка получения доставок с сервера DaliveryContext');
