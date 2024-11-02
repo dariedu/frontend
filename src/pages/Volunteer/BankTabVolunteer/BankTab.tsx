@@ -14,7 +14,11 @@ const BankTab:React.FC = () => {
 
   const [openFilter, setOpenFilter] = useState(false);
   const [promotionsAll, setPromotionsAll] = useState<IPromotion[]>([]); //// абсолютно все доступные промоушены не включая забронированные мной
+  const [promotionsIsLoading, setPromotionsIsLoading] = useState<boolean>(false); 
+
   const [promotionsMy, setPromotionsMy] = useState<IPromotion[]>([]); //// все мои забронированные промоушены
+  const [promotionsMyIsLoading, setPromotionsMyIsLoading] = useState(false);
+
   const [promotionCategory, setPpromotionCategory] = useState<TPromotionCategory[]>([]) /// запрашиваем категории промоушенов
   const [filterCategories, setFilterCategories] = useState<TPromotionCategory[]>([]) /// устанавливаем категории для фильтра
   //записываем ошибку при бронировании поощрения
@@ -26,7 +30,10 @@ const BankTab:React.FC = () => {
   ////записываем результат отмены поощрения
   const [cancelPromotionSuccess, setCancelPromotionSuccess] = useState<boolean>(false);
   const [cancelPromotionSuccessName, setCancelPromotionSuccessName] = useState<string>('');
- const [promotionsIsLoading, setPromotionsIsLoading] = useState<boolean>(false);
+   //записываем ошибку при отмене поощрения
+  const [cancelPromotionErr, setCancelPromotionErr] = useState<string>('')
+  const [cancelError, setCancelError] = useState<boolean>(false);
+ 
   //// функция вызывается при нажатии на фильтр
   function handleCategoryChoice(obj: TPromotionCategory) {
     let copy = Object.assign([], filterCategories);
@@ -65,19 +72,19 @@ const BankTab:React.FC = () => {
   }
 
   async function reqMyPromotions() {
-    let allPromotinsArr: IPromotion[] = [];
+    setPromotionsMyIsLoading(true)
+    let myPromotinsArr: IPromotion[] = [];
     try {
       if (token) {
-       allPromotinsArr = await getMyPromotions(token);
+        myPromotinsArr = await getMyPromotions(token);
+        if (myPromotinsArr) {
+      setPromotionsMy(myPromotinsArr)
+        }
      }
    } catch (err) {
      console.error(err, 'reqMyPromotions has failed, BankTab');
    } finally {
-     if (allPromotinsArr.length > 0) {
-       let avaliableProm = allPromotinsArr.filter(i => i.available_quantity >= 1);
-       let activeProm = avaliableProm.filter(i => i.is_active == true)
-       setPromotionsMy(activeProm);
-     }
+    setPromotionsMyIsLoading(false)
     }
  }
  
@@ -104,7 +111,7 @@ const BankTab:React.FC = () => {
   useEffect(() => {
     reqAllPromotions();
     reqMyPromotions();
-  }, [redeemPromotionSuccessName, cancelPromotionSuccessName]); 
+  }, [cancelPromotionSuccessName, redeemPromotionSuccessName]); 
 
 /////сортируем промоушены, когда получили их с сервера
   // useEffect(() => {
@@ -130,12 +137,10 @@ const BankTab:React.FC = () => {
 
   async function redeemPromotion(promotionForReservation: IPromotion) {
    const chosenId = promotionForReservation.id;
-   let result: boolean = false;
    try {
      if (token) {
        const response = await postPromotionRedeem(chosenId, promotionForReservation, token);
        if (response) {
-        result = true;
         setRedeemPromotionSuccessName(promotionForReservation.name)
         setRedeemPromotionSuccess(true);
       }
@@ -144,21 +149,21 @@ const BankTab:React.FC = () => {
      if (err == "Error: Недостаточно баллов для приобретения"){
        setRedeemPromotionErr("Недостаточно баллов для приобретения")
        setError(true)
+       setRedeemPromotionSuccess(false);
      } else if (err == "Error: Вы уже приобрели этот поощрение") { 
-      setRedeemPromotionErr("Вы уже приобрели это поощрение")
-      setError(true)
+       setRedeemPromotionErr("Вы уже приобрели это поощрение")
+       setError(true)
+       setRedeemPromotionSuccess(false);
      } else {
-       console.error(err, 'redeemPromotion has failed, BankTab');
        setRedeemPromotionErr("Что-то пошло не так, попробуйте позже")
        setError(true)
+       setRedeemPromotionSuccess(false);
      }
-   } finally {
-     return result
-   }
+   } 
   }
 
 
-  async function cancelPromotion(promotionForCancellation:IPromotion) {
+  async function cancelPromotion(promotionForCancellation: IPromotion) {
     const chosenId = promotionForCancellation.id;
     try {
       if (token) {
@@ -169,7 +174,9 @@ const BankTab:React.FC = () => {
       }
       }
     } catch (err) {
-     console.error(err, 'cancelPromotion has failed, BankTab');
+      setCancelPromotionErr("Что-то пошло не так, попробуйте позже")
+      setCancelError(true)
+      setCancelPromotionSuccess(false)
     } 
   }
 
@@ -194,9 +201,9 @@ const BankTab:React.FC = () => {
             )}
           
           </div>
-          {promotionsAll.length == 0 || promotionsIsLoading ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
+          {promotionsAll.length == 0 || promotionsIsLoading ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
             <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
-            <p>Пока нет доступных поощрений</p>
+            <p className='dark:text-light-gray-1'>Скоро тут появятся доступные поощрения</p>
           </div>) : (
              <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
           )}
@@ -204,8 +211,12 @@ const BankTab:React.FC = () => {
         <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo' >
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
-          </div>
-          <SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} />
+            </div>{promotionsMy.length == 0 || promotionsMyIsLoading ? 
+            (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
+              <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
+              <p className='dark:text-light-gray-1'>Скоро тут появятся ваши планы</p>
+            </div>)
+            : (<SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} />)}
           </div>
           </div>
  </div>
@@ -213,7 +224,8 @@ const BankTab:React.FC = () => {
         <Modal isOpen={openFilter} onOpenChange={setOpenFilter}>
           <FilterPromotions categories={promotionCategory} onOpenChange={setOpenFilter} setFilter={setFilterCategories} filtered={filterCategories} handleCategoryChoice={handleCategoryChoice} />
         </Modal>
-        <ConfirmModal isOpen={error} onOpenChange={setError} onConfirm={() => { setError(false); setRedeemPromotionErr("") }} title={redeemPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
+      <ConfirmModal isOpen={error} onOpenChange={setError} onConfirm={() => { setError(false); setRedeemPromotionErr("") }} title={redeemPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
+      <ConfirmModal isOpen={cancelError} onOpenChange={setCancelError} onConfirm={() => { setCancelError(false); setCancelPromotionErr("") }} title={cancelPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
         <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={`Отлично! ${redeemPromotionSuccessName} у вас в календаре`} description="" confirmText="Закрыть" isSingleButton={true} />
         <ConfirmModal isOpen={cancelPromotionSuccess} onOpenChange={setCancelPromotionSuccess} onConfirm={() => { setCancelPromotionSuccess(false); setCancelPromotionSuccessName('') }} title={`Участие в мероприятии ${cancelPromotionSuccessName} успешно отменено`} description="" confirmText="Закрыть" isSingleButton={true} />
        
