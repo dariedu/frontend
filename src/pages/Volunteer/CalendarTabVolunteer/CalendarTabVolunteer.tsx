@@ -1,6 +1,6 @@
 import {useState, useContext, useEffect} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
-import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
+import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 //import NearestTask from "../../../components/NearestTask/NearestTask";
 //import Logo from "./../../../assets/icons/Logo.svg"
 //C:\Users\gonch\Desktop\IT shit\telegram_app\frontend\src\assets\icons\Logo.svg
@@ -44,16 +44,16 @@ const CalendarTabVolunteer = () => {
     getMyDeliveries()
   }, [])
   
-//let hasTasks: boolean = true;
-
   return (
     <>
       <div className="mt-2 mb-4 flex flex-col items-center" >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        {myDeliveries.myCurrent.length > 0 ? (
-          myDeliveries.myCurrent.map(i => {
-        return <NearestDelivery delivery={i}  volunteer={true} deliveryFilter="active"/>
-      })
+        {myDeliveries.myCurrent.length > 0 ? (myDeliveries.myCurrent.map(i =>
+        {return <div key={i.id}>
+             <NearestDeliveryVolunteer delivery={i} />
+          </div>
+         
+        })
       ): ("")}
 
           {/* <div className="w-full h-vh flex flex-col items-center py-[20px] mt-2 rounded-2xl">
