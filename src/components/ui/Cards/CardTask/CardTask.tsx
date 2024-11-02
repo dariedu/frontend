@@ -14,18 +14,17 @@ type TCardTaskProps = {
 const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const deliveryDate = new Date(delivery.date);
-  const hours =
-    deliveryDate.getHours() < 10
-      ? '0' + deliveryDate.getHours()
-      : deliveryDate.getHours();
-  const minutes =
-    deliveryDate.getMinutes() < 10
-      ? '0' + deliveryDate.getMinutes()
-      : deliveryDate.getMinutes();
+  // Проверка на наличие даты и других необходимых данных
+  const deliveryDate = delivery?.date ? new Date(delivery.date) : null;
+  const hours = deliveryDate
+    ? String(deliveryDate.getHours()).padStart(2, '0')
+    : '--';
+  const minutes = deliveryDate
+    ? String(deliveryDate.getMinutes()).padStart(2, '0')
+    : '--';
 
   // Выбор иконки в зависимости от типа доставки
-  const icon = delivery.location.subway ? metroIcon : onlineIcon;
+  const icon = delivery?.location?.subway ? metroIcon : onlineIcon;
 
   return (
     <>
@@ -39,7 +38,7 @@ const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
             <img src={icon} alt="task-icon" className="w-10 h-10" />
             <div className="flex flex-col items-start ml-2">
               <p className="font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start">
-                {delivery.location.subway
+                {delivery?.location?.subway
                   ? delivery.location.subway
                       .replace(/м\.\s|м\.|м\s/, '')
                       .charAt(0)
@@ -50,7 +49,7 @@ const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
                   : 'Онлайн'}
               </p>
               <p className="text-light-gray-black font-gerbera-sub1">
-                {delivery.location.address}
+                {delivery?.location?.address || 'Адрес не указан'}
               </p>
             </div>
           </div>
@@ -63,7 +62,8 @@ const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
           </div>
           <div className="flex items-center justify-center bg-light-brand-green min-w-[75px] h-[28px] rounded-full">
             <span className="text-light-gray-white font-gerbera-sub2">
-              + {delivery.price} {getBallCorrectEndingName(delivery.price)}
+              + {delivery?.price || 0}{' '}
+              {getBallCorrectEndingName(delivery?.price || 0)}
             </span>
           </div>
         </div>
@@ -71,12 +71,16 @@ const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
 
       {/* Модальное окно с подробной информацией */}
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-        <DetailedInfoDelivery
-          delivery={delivery}
-          switchTab={switchTab}
-          isOpen={isOpen}
-          onOpenChange={setIsOpen}
-        />
+        {delivery ? (
+          <DetailedInfoDelivery
+            delivery={delivery}
+            switchTab={switchTab}
+            isOpen={isOpen}
+            onOpenChange={setIsOpen}
+          />
+        ) : (
+          <p>Детальная информация недоступна</p>
+        )}
       </Modal>
     </>
   );

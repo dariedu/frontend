@@ -1,15 +1,13 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   getMonthCorrectEndingName,
   getBallCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import {postDeliveryTake, IDelivery } from '../../api/apiDeliveries';
+import { postDeliveryTake, IDelivery } from '../../api/apiDeliveries';
 //import { ITask } from '../../api/apiTasks';
 import { UserContext } from '../../core/UserContext';
-
-
 
 type TDetailedInfoDelivery = {
   delivery: IDelivery;
@@ -25,47 +23,47 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   switchTab,
 }) => {
   ////const [isAddToCalendarModalOpen, setIsAddToCalendarModalOpen] = useState(false);
-  const [isOpenModalAddToCalendar, setIsOpenModalAddToCalendar] = useState(false);
+  const [isOpenModalAddToCalendar, setIsOpenModalAddToCalendar] =
+    useState(false);
   const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
-  const curatorTelegramNik = delivery.curator.tg_username.includes('@', 0)
-  ? delivery.curator.tg_username.slice(1)
-  : delivery.curator.tg_username;
+  const curatorTelegramNik = delivery?.curator?.tg_username
+    ? delivery.curator.tg_username.includes('@')
+      ? delivery.curator.tg_username.slice(1)
+      : delivery.curator.tg_username
+    : '';
 
   const userValue = useContext(UserContext);
   let token = userValue.token;
 
-
-  async function takeDelivery(delivery:IDelivery) {
+  async function takeDelivery(delivery: IDelivery) {
     const deliveryId = delivery.id;
 
     try {
-      const result = await postDeliveryTake(token, deliveryId, delivery)
+      const result = await postDeliveryTake(token, deliveryId, delivery);
       if (result) {
-        console.log(delivery, "reservation made")
+        console.log(delivery, 'reservation made');
         setIsOpenModalAddToCalendar(true);
       }
     } catch (err) {
-      console.log(err, "detailedDelivery err")
+      console.log(err, 'detailedDelivery err');
     }
   }
-  
-//   async function cancelDelivery(delivery:IDelivery) {
-//     const deliveryId = delivery.id;
 
-//     try {
-//       const result = await postDeliveryCancel(token, deliveryId, delivery)
-//       if (result) {
-//         console.log(delivery, "cancelled")
-//         setIsOpenModalAddToCalendar(true);
-//       }
-//     } catch (err) {
-//       console.log(err, "detailedDelivery  cancell err")
-//     }
-// }
+  //   async function cancelDelivery(delivery:IDelivery) {
+  //     const deliveryId = delivery.id;
 
-
+  //     try {
+  //       const result = await postDeliveryCancel(token, deliveryId, delivery)
+  //       if (result) {
+  //         console.log(delivery, "cancelled")
+  //         setIsOpenModalAddToCalendar(true);
+  //       }
+  //     } catch (err) {
+  //       console.log(err, "detailedDelivery  cancell err")
+  //     }
+  // }
 
   return (
     <>
@@ -83,7 +81,13 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   <img src="../src/assets/icons/metro_station.svg" />
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
                     <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                    {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)}
+                      {delivery.location.subway
+                        .replace(/м\.\s|м\.|м\s/, '')
+                        .slice(0, 1)
+                        .toLocaleUpperCase() +
+                        delivery.location.subway
+                          .replace(/м\.\s|м\.|м\s/, '')
+                          .slice(1)}
                     </h1>
                     <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-[230px] dark:text-light-gray-3">
                       {delivery.location.address}
@@ -134,10 +138,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   </p>
                 </div>
               </div>
-              <a
-                href={'https://t.me/' + curatorTelegramNik}
-                target="_blank"
-              >
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
                 <img
                   src="../src/assets/icons/small_sms.svg"
                   className="w-[36px] h-[35px]"
@@ -175,7 +176,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
-                  takeDelivery(delivery)
+                  takeDelivery(delivery);
                 }}
               >
                 Записаться
@@ -429,7 +430,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
         onConfirm={() => {
           setIsOpenModalAddToCalendar(false);
           setIsAddedToCalendar(true);
-          onOpenChange(false)
+          onOpenChange(false);
         }}
         onCancel={() => {
           switchTab('tab2');

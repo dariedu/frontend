@@ -16,6 +16,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   const [dragStart, setDragStart] = useState<number>(0);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [hasMoved, setHasMoved] = useState<boolean>(false); // Новое состояние для отслеживания движения
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const { token } = useContext(UserContext);
@@ -38,19 +39,20 @@ const SliderCards: React.FC<SliderCardsProps> = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsDragging(false);
+    setIsDragging(true); // Начинаем перетаскивание
+    setHasMoved(false); // Сбрасываем флаг движения
     setDragStart(e.pageX - (sliderRef.current?.offsetLeft || 0));
     setScrollLeft(sliderRef.current?.scrollLeft || 0);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (e.buttons !== 1) return;
+    if (!isDragging) return; // Если не перетаскиваем, выходим
     e.preventDefault();
     const x = e.pageX - (sliderRef.current?.offsetLeft || 0);
     const walk = x - dragStart;
 
-    if (Math.abs(walk) > 5 && !isDragging) {
-      setIsDragging(true);
+    if (Math.abs(walk) > 5 && !hasMoved) {
+      setHasMoved(true); // Пользователь начал двигать мышь
     }
 
     if (sliderRef.current) {
@@ -59,23 +61,45 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   };
 
   const handleMouseUp = () => {
+    setIsDragging(false); // Завершаем перетаскивание
     setTimeout(() => {
-      setIsDragging(false);
+      setHasMoved(false); // Сбрасываем флаг движения после завершения события
     }, 0);
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleMouseLeave = () => {
     setIsDragging(false);
+    setTimeout(() => {
+      setHasMoved(false);
+    }, 0);
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (hasMoved) {
+      e.stopPropagation();
+      e.preventDefault();
+    } else {
+      // Обрабатываем клик по карточке, если не было перетаскивания
+      // Например, можно вызвать функцию для открытия карточки
+      // onCardClick(e);
+    }
+  };
+
+  // Обработчики для сенсорных устройств
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setHasMoved(false);
     setDragStart(e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0));
     setScrollLeft(sliderRef.current?.scrollLeft || 0);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
     const x = e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0);
     const walk = x - dragStart;
 
-    if (Math.abs(walk) > 5 && !isDragging) {
-      setIsDragging(true);
+    if (Math.abs(walk) > 5 && !hasMoved) {
+      setHasMoved(true);
     }
 
     if (sliderRef.current) {
@@ -84,8 +108,9 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   };
 
   const handleTouchEnd = () => {
+    setIsDragging(false);
     setTimeout(() => {
-      setIsDragging(false);
+      setHasMoved(false);
     }, 0);
   };
 
@@ -103,13 +128,21 @@ const SliderCards: React.FC<SliderCardsProps> = ({
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        style={{ cursor: 'grab', whiteSpace: 'nowrap' }}
+        style={{
+          cursor: isDragging ? 'grabbing' : 'grab',
+          whiteSpace: 'nowrap',
+        }}
       >
         {deliveries.map(delivery => (
-          <div key={delivery.id} className="">
+          <div
+            key={delivery.id}
+            className=""
+            onClickCapture={handleCardClick} // Добавили обработчик клика
+          >
             <CardTask delivery={delivery} switchTab={switchTab} />
           </div>
         ))}
