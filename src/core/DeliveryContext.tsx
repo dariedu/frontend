@@ -47,6 +47,7 @@ const token = userValue.token;
         
         if (response) {
           setDeliveries(response);
+          console.log(response)
         } else {
           console.error('Ошибка получения доставок с сервера DaliveryContext');
           setError('Ошибка получения доставок с сервера DaliveryContext');

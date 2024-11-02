@@ -38,6 +38,11 @@ interface IDelivery {
   delivery_assignments?: string[]
 }
 
+interface IVolunteerDeliveries{
+  "свободные доставки": IDelivery[]
+  "мои активные доставки": IDelivery[]
+  "мои завершенные доставки": IDelivery[]
+}
 
 // Получение всех доставок
 export const getAllDeliveries = async (
@@ -124,20 +129,24 @@ export const postDeliveryTake = async (
 // };
 
 // Получение доставок волонтера
-// export const getVolunteerDeliveries = async (
-//   access: string,
-// ): Promise<IDelivery[]> => {
-//   try {
-//     const response: AxiosResponse<IDelivery[]> = await axios.get(
-//       `${deliveriesUrl}volunteer/`,
-//       getHeaders(access),
-//     );
-//     return response.data;
-//   } catch (err: any) {
-//     console.error('Get request getVolunteerDeliveries has failed', err);
-//     throw new Error('Get request getVolunteerDeliveries has failed');
-//   }
-// };
+export const getVolunteerDeliveries = async (
+  access: string,
+): Promise<IVolunteerDeliveries> => {
+  try {
+    const response: AxiosResponse<IVolunteerDeliveries> = await axios({
+      url: `${deliveriesUrl}volunteer/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getVolunteerDeliveries has failed', err);
+    throw new Error('Get request getVolunteerDeliveries has failed');
+  }
+};
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery };
+export type { IDelivery, IVolunteerDeliveries };

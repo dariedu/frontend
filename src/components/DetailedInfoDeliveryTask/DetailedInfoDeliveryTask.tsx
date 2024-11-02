@@ -29,9 +29,12 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
-  const curatorTelegramNik = delivery.curator.tg_username.includes('@', 0)
-  ? delivery.curator.tg_username.slice(1)
-  : delivery.curator.tg_username;
+
+  let curatorTelegramNik = delivery.curator.tg_username;
+  if (delivery.curator.tg_username && delivery.curator.tg_username.length != 0) {
+    curatorTelegramNik = delivery.curator.tg_username.includes('@') ? delivery.curator.tg_username.slice(1) :delivery.curator.tg_username;
+  }
+  
 
   const userValue = useContext(UserContext);
   let token = userValue.token;
