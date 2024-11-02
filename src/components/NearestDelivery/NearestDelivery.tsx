@@ -10,46 +10,11 @@ import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery } from '../../api/apiDeliveries';
-//import DeliveryInfo from '../ui/Hr/DeliveryInfo';
 import { DeliveryContext } from '../../core/DeliveryContext';
 
-export const delivery1: IDelivery = {
-  id: 1,
-  date: '2024-10-08T15:00:00Z',
-  curator: {
-    id: 9,
-    tg_id: 333,
-    tg_username: '@mgdata',
-    last_name: 'Фомина',
-    name: 'Анна',
-    avatar: '../src/assets/icons/pictureTest.jpg',
-  },
-  price: 5,
-  is_free: true,
-  is_active: true,
-  is_completed: false,
-  in_execution: false,
-  volunteers_needed: 5,
-  volunteers_taken: 3,
-  delivery_assignments: [],
-  route_sheet: 1,
-  location: {
-    id: 1,
-    city: {
-      id: 1,
-      city: 'Москва',
-    },
-    address:
-      'поселение Внуковское, ул. Авиаконстраукора Петькина, д.15 к1. строение 15 кв. 222',
-    link: 'null',
-    subway: 'Белорусская',
-    media_files: null,
-    description: 'Доставка милой бабуле',
-  },
-};
 
 interface INearestDeliveryProps {
-  delivery?: IDelivery;
+  delivery: IDelivery;
   volunteer?: boolean;
   deliveryFilter?: TDeliveryFilter;
   booked?: boolean;
@@ -58,7 +23,7 @@ interface INearestDeliveryProps {
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDelivery: React.FC<INearestDeliveryProps> = ({
-  delivery = delivery1,
+  delivery,
   volunteer = true,
   deliveryFilter = 'active',
   //booked = false,
@@ -312,7 +277,7 @@ const NearestDelivery: React.FC<INearestDeliveryProps> = ({
                 <div className="flex">
                   <img
                     className="h-[32px] w-[32px] rounded-full"
-                    src={delivery.curator.avatar}
+                    src={delivery.curator.photo}
                   />
                   <div className="felx flex-col justify-center items-start ml-4">
                     <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">

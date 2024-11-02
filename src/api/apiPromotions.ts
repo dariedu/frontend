@@ -35,26 +35,14 @@ interface IPromotion {
   picture: null | string;
 }
 
-// function parseObject(obj: string): IPromotion {
-//   const result = JSON.parse(obj, function (key, value) {
-//     if (key == 'start_date' || key == 'end_date') {
-//       return new Date(value);
-//     }
-//   });
-//   return result;
-// }
-// ?category=${category}&city=${city}&is_active=${is_active}&start_date=${JSON.stringify(start_date)}\
-//////запросить все поощрения
-export const getAllPromotions = async () // category?: string,
-// city?: number,
-// is_active: boolean = false,
-// start_date?: Date,
-: Promise<IPromotion[]> => {
+//////запросить все доступные поощрения
+export const getAllPromotions = async (access:string):Promise<IPromotion[]> => {
   try {
     const response: AxiosResponse<IPromotion[]> = await axios({
       url: promotionsUrl,
       method: 'GET',
       headers: {
+        Authorization: `Bearer ${access}`,
         accept: 'application/json',
       },
     });
@@ -67,9 +55,8 @@ export const getAllPromotions = async () // category?: string,
   }
 };
 
-export const getMyPromotions = async (
-  access:string|null
-): Promise<IPromotion[]> => {
+///// запросить все мои поощрения
+export const getMyPromotions = async (access:string): Promise<IPromotion[]> => {
   try {
     const response: AxiosResponse<IPromotion[]> = await axios({
       url: `${promotionsUrl}my_promo/`,
@@ -92,7 +79,7 @@ export const getMyPromotions = async (
 export const postPromotionRedeem = async (
   promotionId: number,
   promotion: IPromotion,
-  access: string | null,
+  access:string
 ): Promise<IPromotion> => {
   try {
     const response: AxiosResponse<IPromotion> = await axios({
@@ -109,6 +96,8 @@ export const postPromotionRedeem = async (
   } catch (err: any) {
     if (err.response.data.error == 'Недостаточно баллов для приобретения') {
       throw new Error(err.response.data.error);
+    } else if (err.response.data.error = "Вы уже приобрели этот поощрение") {
+      throw new Error(err.response.data.error);
     } else {
       console.error('Post request postPromotionRedeem has failed', err);
       throw new Error('Post request postPromotionRedeem has failed');
@@ -120,7 +109,7 @@ export const postPromotionRedeem = async (
 export const postPromotionCancel = async (
   promotionId: number,
   promotion: IPromotion,
-  access: string | null,
+  access:string
 ): Promise<IPromotion> => {
   try {
     const response: AxiosResponse<IPromotion> = await axios({
@@ -141,14 +130,13 @@ export const postPromotionCancel = async (
 };
 
 /////запросить категорий поощрений
-export const getPromotionsCategories = async (): Promise<
-  TPromotionCategory[]
-> => {
+export const getPromotionsCategories = async (access:string): Promise<TPromotionCategory[]> => {
   try {
     const response: AxiosResponse<TPromotionCategory[]> = await axios({
       url: `${promotionsUrl}promo_categories/`,
       method: 'GET',
       headers: {
+        Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },

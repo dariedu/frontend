@@ -9,12 +9,11 @@ interface IDefaultInfoProps {
   promotion: IPromotion
   reserved: boolean 
   confirmed?: boolean
-  makeReservationFunc?: (chosenId: number) => void
-  cancelPromotion?: (chosenId: number) => void
+  makeReservationFunc?: (promotion: IPromotion) => void
+  cancelPromotion?: (promotion: IPromotion) => void
 }
 
  
-
 const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   onOpenChange,
   optional,
@@ -122,7 +121,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         <button
           onClick={() => {
             if (makeReservationFunc) {
-              makeReservationFunc(promotion.id)
+              makeReservationFunc(promotion)
               onOpenChange(false)
             }
           }}
@@ -145,7 +144,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
        <button
          onClick={() => {
           if (cancelPromotion) {
-            cancelPromotion(promotion.id)
+            cancelPromotion(promotion)
             onOpenChange(false)
           }
          }}

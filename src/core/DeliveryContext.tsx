@@ -46,7 +46,6 @@ const token = userValue.token;
         const response = await getAllDeliveries(token);
         
         if (response) {
-          console.log(response)
           setDeliveries(response);
         } else {
           console.error('Ошибка получения доставок с сервера DaliveryContext');
