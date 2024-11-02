@@ -14,10 +14,8 @@ const BankTab:React.FC = () => {
 
   const [openFilter, setOpenFilter] = useState(false);
   const [promotionsAll, setPromotionsAll] = useState<IPromotion[]>([]); //// абсолютно все доступные промоушены не включая забронированные мной
-  const [promotionsIsLoading, setPromotionsIsLoading] = useState<boolean>(false); 
 
   const [promotionsMy, setPromotionsMy] = useState<IPromotion[]>([]); //// все мои забронированные промоушены
-  const [promotionsMyIsLoading, setPromotionsMyIsLoading] = useState(false);
 
   const [promotionCategory, setPpromotionCategory] = useState<TPromotionCategory[]>([]) /// запрашиваем категории промоушенов
   const [filterCategories, setFilterCategories] = useState<TPromotionCategory[]>([]) /// устанавливаем категории для фильтра
@@ -53,26 +51,19 @@ const BankTab:React.FC = () => {
   
   
   async function reqAllPromotions() {
-    setPromotionsIsLoading(true)
-     let allPromotinsArr: IPromotion[] = [];
     try {
       if (token) {
-        allPromotinsArr = await getAllPromotions(token);
+        const allPromotinsArr = await getAllPromotions(token);
+        if (allPromotinsArr) {
+        setPromotionsAll(allPromotinsArr);
+        }
       }
     } catch (err) {
       console.error(err, 'reqAllPromotions has failed, BankTab');
-    } finally {
-      if (allPromotinsArr.length > 0) {
-        let avaliableProm = allPromotinsArr.filter(i => i.available_quantity >= 1);
-        let activeProm = avaliableProm.filter(i => i.is_active == true)
-        setPromotionsAll(activeProm);
-        setPromotionsIsLoading(false)
-      }
-    }
+    } 
   }
 
   async function reqMyPromotions() {
-    setPromotionsMyIsLoading(true)
     let myPromotinsArr: IPromotion[] = [];
     try {
       if (token) {
@@ -83,9 +74,7 @@ const BankTab:React.FC = () => {
      }
    } catch (err) {
      console.error(err, 'reqMyPromotions has failed, BankTab');
-   } finally {
-    setPromotionsMyIsLoading(false)
-    }
+   } 
  }
  
   async function requestPromotionsCategories() {
@@ -135,13 +124,13 @@ const BankTab:React.FC = () => {
   //   }
   // } 
 
-  async function redeemPromotion(promotionForReservation: IPromotion) {
-   const chosenId = promotionForReservation.id;
+  async function redeemPromotion(promotion: IPromotion) {
+   const chosenId = promotion.id;
    try {
      if (token) {
-       const response = await postPromotionRedeem(chosenId, promotionForReservation, token);
+       const response = await postPromotionRedeem(chosenId, promotion, token);
        if (response) {
-        setRedeemPromotionSuccessName(promotionForReservation.name)
+        setRedeemPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
         setRedeemPromotionSuccess(true);
       }
      }
@@ -163,14 +152,14 @@ const BankTab:React.FC = () => {
   }
 
 
-  async function cancelPromotion(promotionForCancellation: IPromotion) {
-    const chosenId = promotionForCancellation.id;
+  async function cancelPromotion(promotion: IPromotion) {
+    const chosenId = promotion.id;
     try {
       if (token) {
-        const response = await postPromotionCancel(chosenId, promotionForCancellation, token);
+        const response = await postPromotionCancel(chosenId, promotion, token);
         if (response) {
         setCancelPromotionSuccess(true)
-        setCancelPromotionSuccessName(promotionForCancellation.name)
+        setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
       }
       }
     } catch (err) {
@@ -185,7 +174,7 @@ const BankTab:React.FC = () => {
     <>
       <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden">
         <div className="w-[360px] h-fit flex flex-col justify-between">
-          {userPoints !== undefined || userPoints !== null ? (
+          {userPoints !== undefined && userPoints !== null? (
           <Points points={Number(userPoints)} />
           ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-[360px] h-[60px]'>
               Данные по заработанным баллам временно недоступны
@@ -201,7 +190,7 @@ const BankTab:React.FC = () => {
             )}
           
           </div>
-          {promotionsAll.length == 0 || promotionsIsLoading ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
+          {promotionsAll.length == 0 ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
             <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
             <p className='dark:text-light-gray-1'>Скоро тут появятся доступные поощрения</p>
           </div>) : (
@@ -211,7 +200,7 @@ const BankTab:React.FC = () => {
         <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo' >
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
-            </div>{promotionsMy.length == 0 || promotionsMyIsLoading ? 
+            </div>{promotionsMy.length == 0 ? 
             (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
               <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
               <p className='dark:text-light-gray-1'>Скоро тут появятся ваши планы</p>
