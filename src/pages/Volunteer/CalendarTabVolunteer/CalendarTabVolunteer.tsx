@@ -1,32 +1,66 @@
-import {useState} from 'react'
+import {useState, useContext, useEffect} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
-//import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
-import NearestTask from "../../../components/NearestTask/NearestTask";
+import NearestDelivery from "../../../components/NearestDelivery/NearestDelivery";
+//import NearestTask from "../../../components/NearestTask/NearestTask";
 //import Logo from "./../../../assets/icons/Logo.svg"
 //C:\Users\gonch\Desktop\IT shit\telegram_app\frontend\src\assets\icons\Logo.svg
-
-
+import { getVolunteerDeliveries, type IDelivery, type IVolunteerDeliveries } from '../../../api/apiDeliveries';
+import { UserContext } from '../../../core/UserContext';
 
 const CalendarTabVolunteer = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [myDeliveries, setMyDeliveries] = useState<IMyDeliveries>({ avaliable: [], myCurrent: [], myPast: []})
+   
   
-let hasTasks: boolean = true;
+  ////// используем контекст юзера, чтобы вывести количество доступных баллов
+   const userValue = useContext(UserContext);
+   const token = userValue.token;
+  ////// используем контекст
+
+  interface IMyDeliveries{
+    avaliable: IDelivery[]
+    myCurrent: IDelivery[]
+    myPast: IDelivery[]
+  }
+
+  async function getMyDeliveries() {
+      const my:IMyDeliveries = { avaliable: [], myCurrent: [], myPast: []}
+    try {
+       if (token) {
+         let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
+         if (result) {
+           result['мои активные доставки'].forEach(i => { my.myCurrent.push(i)});
+           result['мои завершенные доставки'].forEach(i => { my.myPast.push(i) });
+           result['свободные доставки'].forEach(i => { my.avaliable.push(i) });     
+           setMyDeliveries(my)
+      }
+    }
+    } catch (err) {
+      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+    }
+}
+
+  useEffect(() => {
+    getMyDeliveries()
+  }, [])
+  
+//let hasTasks: boolean = true;
 
   return (
     <>
       <div className="mt-2 mb-4 flex flex-col items-center" >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        {hasTasks ? (
-          <>
-            {/* <NearestDelivery /> */}
-            <NearestTask />
-          </>
-        ): (
-          <div className="w-full h-vh flex flex-col items-center py-[20px] mt-2 rounded-2xl">
+        {myDeliveries.myCurrent.length > 0 ? (
+          myDeliveries.myCurrent.map(i => {
+        return <NearestDelivery delivery={i}  volunteer={true} deliveryFilter="active"/>
+      })
+      ): ("")}
+
+          {/* <div className="w-full h-vh flex flex-col items-center py-[20px] mt-2 rounded-2xl">
           <img src="./../../src/assets/icons/LogoNoTaskYet.svg" />
           <p className="font-gerbera-h2 text-light-gray-black w-[300px] mt-[28px]">Пока нет запланированных добрых дел</p>
-        </div>  
-        )}
+        </div>   */}
+        
       </div>
 
     </>
