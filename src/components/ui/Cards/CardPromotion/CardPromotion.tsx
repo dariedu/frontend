@@ -12,8 +12,8 @@ interface IPromotionProps {
   promotion: IPromotion
   optional: boolean
   reserved: boolean
-  makeReservationFunc?: (chosenId: number) => void
-  cancelPromotion?: (chosenId: number) => void
+  makeReservationFunc?: (promotion: IPromotion) => void
+  cancelPromotion?: (promotion: IPromotion) => void
 }
 
 const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserved, makeReservationFunc, cancelPromotion}) => {

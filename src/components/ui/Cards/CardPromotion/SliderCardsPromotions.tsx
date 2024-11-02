@@ -8,9 +8,8 @@ type TSliderCardsPromotionsProps = {
   promotions: IPromotion[]
   optional: boolean
   reserved: boolean
-  makeReservationFunc?: (chosenId: number) => void
-  confirmPromotion?: (chosenId: number) => void
-  cancelPromotion?: (chosenId: number) => void
+  makeReservationFunc?: (promotion: IPromotion) => void
+  cancelPromotion?: (promotion: IPromotion) => void
   filterCategory?:TPromotionCategory[]
 }
 
