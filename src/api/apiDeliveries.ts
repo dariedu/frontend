@@ -88,7 +88,7 @@ export const postDeliveryCancel = async (
   }
 };
 
-// Принятие доставки
+// берем доставку себе
 export const postDeliveryTake = async (
   access: string|null,
   deliveryId: number,
@@ -113,20 +113,24 @@ export const postDeliveryTake = async (
 };
 
 // Получение доставок куратора
-// export const getCuratorDeliveries = async (
-//   access: string,
-// ): Promise<IDelivery[]> => {
-//   try {
-//     const response: AxiosResponse<IDelivery[]> = await axios.get(
-//       `${deliveriesUrl}curator/`,
-//       getHeaders(access),
-//     );
-//     return response.data;
-//   } catch (err: any) {
-//     console.error('Get request getCuratorDeliveries has failed', err);
-//     throw new Error('Get request getCuratorDeliveries has failed');
-//   }
-// };
+export const getCuratorDeliveries = async (
+  access: string,
+): Promise<IDelivery[]> => {
+  try {
+    const response: AxiosResponse<IDelivery[]> = await axios({
+      url: `${deliveriesUrl}curator/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getCuratorDeliveries has failed', err);
+    throw new Error('Get request getCuratorDeliveries has failed');
+  }
+};
 
 // Получение доставок волонтера
 export const getVolunteerDeliveries = async (

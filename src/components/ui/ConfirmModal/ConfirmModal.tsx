@@ -40,7 +40,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
               {/* Кнопка подтверждения */}
               <button
                 onClick={onConfirm}
-                className=" btn-S-GreenDefault"
+                className="btn-S-GreenDefault"
               >
                 {confirmText}
               </button>
@@ -50,7 +50,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
                 <Dialog.Close asChild>
                   <button
                     onClick={onCancel}
-                    className="bg-light-gray-3 text-gray-500 px-4 py-2 rounded-full focus:outline-none hover:bg-gray-400"
+                    className="btn-S-GreenInactive"
                   >
                     {cancelText}
                   </button>
