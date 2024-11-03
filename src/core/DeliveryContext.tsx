@@ -1,22 +1,19 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-} from 'react';
-import {getAllDeliveries, type IDelivery} from '../api/apiDeliveries';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { getAllDeliveries, type IDelivery } from '../api/apiDeliveries';
 import { UserContext } from './UserContext';
 
 interface IDeliveryContext {
   deliveries: IDelivery[];
   isLoading: boolean;
   error: string | null;
+  fetchAllDeliveries: () => Promise<void>;
 }
 
 const defaultDeliveryContext: IDeliveryContext = {
   deliveries: [],
   isLoading: false,
   error: null,
+  fetchAllDeliveries: async () => {},
 };
 
 ///создаю контекст
@@ -27,13 +24,13 @@ export const DeliveryContext = createContext<IDeliveryContext>(
 export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
- const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
- const [isLoading, setIsLoading] = useState<boolean>(true);
- const [error, setError] = useState<string | null>(null);
+  const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   //////////////////////////////////////////////////////
-const userValue = useContext(UserContext);
-const token = userValue.token;
+  const userValue = useContext(UserContext);
+  const token = userValue.token;
   ////// используем контекст
 
   const fetchAllDeliveries = async () => {
@@ -44,7 +41,7 @@ const token = userValue.token;
       if (token) {
         // Передаем токен в getUsers
         const response = await getAllDeliveries(token);
-        
+
         if (response) {
           setDeliveries(response);
           console.log(response)
@@ -54,23 +51,23 @@ const token = userValue.token;
         }
       }
     } catch (err) {
-      console.log(err, "DeliveryContext")
+      console.log(err, 'DeliveryContext');
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchAllDeliveries();
   }, [token]);
-
 
   return (
     <DeliveryContext.Provider
       value={{
         deliveries,
         isLoading,
-        error
+        error,
+        fetchAllDeliveries,
       }}
     >
       {children}
