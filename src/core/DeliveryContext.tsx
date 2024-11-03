@@ -43,8 +43,8 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
         const response = await getAllDeliveries(token);
 
         if (response) {
-          console.log(response);
           setDeliveries(response);
+          console.log(response)
         } else {
           console.error('Ошибка получения доставок с сервера DaliveryContext');
           setError('Ошибка получения доставок с сервера DaliveryContext');

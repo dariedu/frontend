@@ -29,18 +29,18 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
         <Dialog.Content className="fixed inset-0 flex items-center justify-center backdrop-blur-[2px]">
-          <div className="bg-light-gray-white dark:bg-dark-gray-1 rounded-lg shadow-lg p-6 w-[300px] h-[148px] max-w-sm text-center">
-            <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-dark-gray-8-text">
+          <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-lg shadow-lg p-6 w-[300px] h-[148px] max-w-sm flex flex-col justify-center items-center text-center">
+            <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white">
               {title}
             </Dialog.Title>
-            <Dialog.Description className="font-gerbera-h3 text-light-gray-4 dark:text-dark-gray-4 mt-2">
+            <Dialog.Description className="font-gerbera-h3 text-light-gray-4 dark:text-light-gray-white-4 mt-2">
               {description}
             </Dialog.Description>
             <div className="flex justify-center mt-4 space-x-4">
               {/* Кнопка подтверждения */}
               <button
                 onClick={onConfirm}
-                className="bg-light-brand-green text-white px-4 py-2 rounded-full focus:outline-none hover:bg-green-700 btn-S-GreenDefault"
+                className="btn-S-GreenDefault"
               >
                 {confirmText}
               </button>
@@ -50,7 +50,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
                 <Dialog.Close asChild>
                   <button
                     onClick={onCancel}
-                    className="bg-light-gray-3 text-gray-500 px-4 py-2 rounded-full focus:outline-none hover:bg-gray-400"
+                    className="btn-S-GreenInactive"
                   >
                     {cancelText}
                   </button>

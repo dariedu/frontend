@@ -99,4 +99,8 @@ function getVolunteerCorrectEndingName(num: number): string {
   return result
 }
 
-export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName, getPersonCorrectEndingName, getVolunteerCorrectEndingName}
+function getMetroCorrectName(subway: string) {
+  return `${subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+subway.replace(/м\.\s|м\.|м\s/, "").slice(1)}`
+}
+
+export {getBallCorrectEndingName, getMonthCorrectEndingName, getHourCorrectEndingName, getPersonCorrectEndingName, getVolunteerCorrectEndingName, getMetroCorrectName}
