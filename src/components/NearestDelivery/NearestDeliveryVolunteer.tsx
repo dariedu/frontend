@@ -1,49 +1,43 @@
-import React, { useState, useContext } from 'react';
-import {  getBallCorrectEndingName,  getMonthCorrectEndingName} from '../helperFunctions/helperFunctions';
+import React, { useState} from 'react';
+import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
 import RouteSheets from '../RouteSheets/RouteSheets';
 import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { type IDelivery } from '../../api/apiDeliveries';
-import { DeliveryContext } from '../../core/DeliveryContext';
 
-
-interface INearestDeliveryProps {
-  delivery: IDelivery;
-  deliveryFilter?: TDeliveryFilter;
-}
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
+interface INearestDeliveryProps {
+  delivery: IDelivery;
+  status: TDeliveryFilter
+  cancelFunc?:(dellivery:IDelivery)=>{}
+}
+
+
+
 const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   delivery,
-  deliveryFilter = 'active',
-
+  status,
+  cancelFunc
 }) => {
   const deliveryDate = new Date(delivery.date);
-  const currentDate = new Date();
+  //const currentDate = new Date();
 
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
-
-  const [currentStatus, setCurrentStatus] =  useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
+  const currentStatus = status;
+  //const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(status); /// статус доставки 'nearest' | 'active' | 'completed'
+  const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false); //// модальное окно для отмены доставки
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =  useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
 
   const [isConfirmDeliveryModalOpen, setIsConfirmDeliveryModalOpen] =   useState(false); ///// модальное окно для подтверждения доставки
   const [isDeliveryConfirmedModalOpen, setIsDeliveryConfirmedModalOpen] =   useState(false); ///// модальное окно для подтверждения подтверждения доставки
 
-  const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] =    useState(false); //// модальное окно для отмены доставки
-  const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =    useState(false); //// модальное окно для подтверждения отмены доставки
+  //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
 
-  const { deliveries, isLoading } = useContext(DeliveryContext); // Данные из контекста
-  delivery = deliveries[0];
 
-  if (isLoading) return <div>Loading</div>;
-
-  const lessThenTwoHours =
-    (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
-
-  
   /////////////////////////////
   let curatorTelegramNik = delivery.curator.tg_username;
   if (delivery.curator.tg_username && delivery.curator.tg_username.length > 0) {
@@ -53,23 +47,18 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   }
   ///////////////////////////////////
 
-
   return (
-    <>
+    <div key={delivery.id}>
       {/* ///// раскрываем полные детали активной доставки для волонтера///// */}
       {currentStatus == 'active' ? (
         fullView == true ? (
           <RouteSheets
             status="Активная"
             onClose={() => setFullView(false)}
-            onStatusChange={() => {
-              return setCurrentStatus('completed');
-            }}
+            onStatusChange={() => {}}
             routeSheetsData={[]}
             completedRouteSheets={[]}
-            setCompletedRouteSheets={function (): void {
-              throw new Error('Function not implemented.');
-            }}
+            setCompletedRouteSheets={() =>{}}
           />) : ("")) : ("")}
       <div
         className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
@@ -120,7 +109,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             <img src="../src/assets/icons/metro_station.svg" />
             <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
               <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                Ст. {delivery.location.subway}
+               Ст. {getMetroCorrectName(delivery.location.subway)}
               </h1>
               <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
                 {delivery.location.address}
@@ -156,10 +145,10 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             fullView ? (
               <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
                 <div className="flex">
-                  <img
+                  {/* <img
                     className="h-[32px] w-[32px] rounded-full"
                     src={delivery.curator.photo}
-                  />
+                  /> */}
                   <div className="felx flex-col justify-center items-start ml-4">
                     <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
                       {delivery.curator.name}
@@ -182,38 +171,16 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
           ) :  ('')}
 
         {fullView ? (currentStatus == 'nearest' ? (
-            lessThenTwoHours ? (
-              <div className="w-[329px] flex justify-between">
-                <button
-                  className="btn-M-GreenDefault  mt-[20px]"
-                  onClick={e => {
-                    e.preventDefault();
-                    setIsConfirmDeliveryModalOpen(true);
-                  }}
-                >
-                  Подтвердить
-                </button>
-                <button
-                  className="btn-M-WhiteDefault  mt-[20px]"
-                  onClick={e => {
-                    e.preventDefault();
-                    setIsCancelDeliveryModalOpen(true);
-                  }}
-                >
-                  Отказаться
-                </button>
-              </div>
-            ) : (
               <button
                 className="btn-B-GrayDefault  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
-                  setIsCancelDeliveryModalOpen(true);
+                  setIsCancelDeliveryModalOpen(true)
                 }}
               >
                 Отказаться
               </button>
-            )): currentStatus == 'completed' ? (
+            ): currentStatus == 'completed' ? (
               <button
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
@@ -227,6 +194,21 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
          
         {/* /////////////////////// */}
       </div>
+
+      <ConfirmModal
+        isOpen={isCancelDeliveryModalOpen}
+        onOpenChange={setIsCancelDeliveryModalOpen}
+        onConfirm={() => {
+          cancelFunc ? cancelFunc(delivery) : () => { };          
+          setIsCancelDeliveryModalOpen(false);
+        }}
+        title={<p>Уверены, что хотите отменить участие в доставке?</p>}
+        description=""
+        confirmText="Да"
+        cancelText="Нет"
+      />
+
+
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
         <DeliveryFeedback
           onOpenChange={setIsModalOpen}
@@ -261,27 +243,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         confirmText="Да"
         cancelText="Нет"
       />
-      <ConfirmModal
-        isOpen={isCancelDeliveryModalOpen}
-        onOpenChange={setIsCancelDeliveryModalOpen}
-        onConfirm={() => {
-          setIsDeliveryCancelledModalOpen(true);
-          setIsCancelDeliveryModalOpen(false);
-        }}
-        title={<p>Уверены, что хотите отменить участие в доставке?</p>}
-        description=""
-        confirmText="Да"
-        cancelText="Нет"
-      />
-      <ConfirmModal
-        isOpen={isDeliveryCancelledModalOpen}
-        onOpenChange={setIsDeliveryCancelledModalOpen}
-        onConfirm={() => setIsDeliveryCancelledModalOpen(false)}
-        title="Участие в доставке отменено"
-        description=""
-        confirmText="Ок"
-        isSingleButton={true}
-      />
+
       <ConfirmModal
         isOpen={isDeliveryConfirmedModalOpen}
         onOpenChange={setIsDeliveryConfirmedModalOpen}
@@ -291,7 +253,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         confirmText="Ок"
         isSingleButton={true}
       />
-    </>
+    </div>
     
   );
 };

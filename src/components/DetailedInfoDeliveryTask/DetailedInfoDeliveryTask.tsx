@@ -1,21 +1,26 @@
-import React, { useContext, useState} from 'react';
+import React, { useState} from 'react';
 import {
   getMonthCorrectEndingName,
   getBallCorrectEndingName,
+  getMetroCorrectName,
 } from '../helperFunctions/helperFunctions';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import {postDeliveryTake, IDelivery } from '../../api/apiDeliveries';
+import { IDelivery } from '../../api/apiDeliveries';
 //import { ITask } from '../../api/apiTasks';
-import { UserContext } from '../../core/UserContext';
+//import { UserContext } from '../../core/UserContext';
 
 
 
 type TDetailedInfoDelivery = {
-  delivery: IDelivery;
-  isOpen: boolean;
-  switchTab: React.Dispatch<React.SetStateAction<string>>;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  delivery: IDelivery
+  isOpen: boolean
+  switchTab: React.Dispatch<React.SetStateAction<string>>
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  getDelivery: (delivery: IDelivery) =>{}
+  stringForModal: string
+  takeDeliverySuccess: boolean
+  setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
@@ -23,10 +28,13 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   isOpen,
   onOpenChange,
   switchTab,
+  getDelivery,
+  stringForModal,
+  takeDeliverySuccess,
+  setTakeDeliverySuccess
 }) => {
-  ////const [isAddToCalendarModalOpen, setIsAddToCalendarModalOpen] = useState(false);
-  const [isOpenModalAddToCalendar, setIsOpenModalAddToCalendar] = useState(false);
-  const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
+
+  //const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
 
@@ -36,23 +44,10 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   }
   
 
-  const userValue = useContext(UserContext);
-  let token = userValue.token;
+  // const userValue = useContext(UserContext);
+  // let token = userValue.token;
 
 
-  async function takeDelivery(delivery:IDelivery) {
-    const deliveryId = delivery.id;
-
-    try {
-      const result = await postDeliveryTake(token, deliveryId, delivery)
-      if (result) {
-        console.log(delivery, "reservation made")
-        setIsOpenModalAddToCalendar(true);
-      }
-    } catch (err) {
-      console.log(err, "detailedDelivery err")
-    }
-  }
   
 //   async function cancelDelivery(delivery:IDelivery) {
 //     const deliveryId = delivery.id;
@@ -86,7 +81,8 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   <img src="../src/assets/icons/metro_station.svg" />
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
                     <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                    {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)}
+                      {getMetroCorrectName(delivery.location.subway)}
+                    {/* {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)} */}
                     </h1>
                     <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-[230px] dark:text-light-gray-3">
                       {delivery.location.address}
@@ -163,9 +159,9 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             )}
 
             {/* /////////////////////// */}
-            {isAddedToCalendar ? (
+            {!delivery.is_free ? (
               <button
-                className="btn-B-GreenDefault  mt-[20px]"
+                className="btn-B-GreenClicked  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
                   onOpenChange(false);
@@ -178,7 +174,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
-                  takeDelivery(delivery)
+                  getDelivery(delivery)
                 }}
               >
                 Записаться
@@ -192,17 +188,16 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
       {/* Добавить опцию что-то пошло не так, попробуйте позже */}
       {/* заменить кнопку записаться на вы уже записались!!!! в основном окне */}
       <ConfirmModal
-        isOpen={isOpenModalAddToCalendar}
-        onOpenChange={setIsOpenModalAddToCalendar}
+        isOpen={takeDeliverySuccess}
+        onOpenChange={setTakeDeliverySuccess}
         onConfirm={() => {
-          setIsOpenModalAddToCalendar(false);
-          setIsAddedToCalendar(true);
+          setTakeDeliverySuccess(false);
         }}
         onCancel={() => {
           switchTab('tab2');
-          setIsOpenModalAddToCalendar(false);
+          setTakeDeliverySuccess(false);
         }}
-        title="Доставка в календаре"
+        title={`Доставка ${stringForModal} в календаре `}
         description=""
         confirmText="Ок"
         cancelText="В календарь"

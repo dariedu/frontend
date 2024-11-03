@@ -7,10 +7,14 @@ import './../../components/ui/Cards/CardPromotion/SliderCardStyles.css'
 type TSliderCardsDeliveriesProps = {
   deliveries: IDelivery[]
   switchTab: React.Dispatch<React.SetStateAction<string>>;
+  getDelivery: (delivery: IDelivery) =>{}
+  stringForModal: string
+  takeDeliverySuccess: boolean
+  setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, switchTab}) => {
+const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, switchTab, getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
   // Начальные позиции для перетаскивания
   // const [dragStart, setDragStart] = useState<number>(0);
   // const [scrollLeft, setScrollLeft] = useState<number>(0);
@@ -102,7 +106,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
     
         {deliveries.map((delivery:IDelivery) => (
           <div key={delivery.id} className="">
-            <CardDelivery delivery={delivery} switchTab={switchTab } />
+            <CardDelivery delivery={delivery} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
           </div>
         ))}
       </div>
