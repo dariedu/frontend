@@ -6,6 +6,7 @@ import './../../components/ui/Cards/CardPromotion/SliderCardStyles.css'
 
 type TSliderCardsDeliveriesProps = {
   deliveries: IDelivery[]
+  myDeliveries: IDelivery[]
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   getDelivery: (delivery: IDelivery) =>{}
   stringForModal: string
@@ -14,7 +15,7 @@ type TSliderCardsDeliveriesProps = {
 }
 
 
-const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, switchTab, getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
+const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, myDeliveries, switchTab, getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
   // Начальные позиции для перетаскивания
   // const [dragStart, setDragStart] = useState<number>(0);
   // const [scrollLeft, setScrollLeft] = useState<number>(0);
@@ -81,6 +82,10 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
   //   }, 0);
   // };
 
+  let arrOfMyDeliveriesId: number[] = [];
+  myDeliveries.forEach(i => arrOfMyDeliveriesId.push(i.id));
+  console.log(arrOfMyDeliveriesId)
+
   return (
     <div className="pt-3 w-[360px]">
       {/* Заголовок - отображается только если showTitle === true */}
@@ -104,11 +109,18 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
       >
         {/* Отображение карточек через map */}
     
-        {deliveries.map((delivery:IDelivery) => (
-          <div key={delivery.id} className="">
-            <CardDelivery delivery={delivery} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+        {deliveries.map((delivery: IDelivery) => {
+
+          if (!arrOfMyDeliveriesId.includes(delivery.id)) {
+            return <div key={delivery.id} className="">
+            <CardDelivery delivery={delivery} canBook={true} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
           </div>
-        ))}
+          } else {
+            return <div key={delivery.id} className="">
+            <CardDelivery delivery={delivery} canBook={false} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+          </div>
+          }
+        })}
       </div>
     </div>
   );

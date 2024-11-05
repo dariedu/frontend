@@ -11,18 +11,20 @@ import { IDelivery } from '../../api/apiDeliveries';
 //import { UserContext } from '../../core/UserContext';
 
 type TDetailedInfoDelivery = {
-  delivery: IDelivery;
-  isOpen: boolean;
-  switchTab: React.Dispatch<React.SetStateAction<string>>;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-  getDelivery: (delivery: IDelivery) => {};
-  stringForModal: string;
-  takeDeliverySuccess: boolean;
-  setTakeDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  delivery: IDelivery
+  canBook:boolean
+  isOpen: boolean
+  switchTab: React.Dispatch<React.SetStateAction<string>>
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  getDelivery: (delivery: IDelivery) =>{}
+  stringForModal: string
+  takeDeliverySuccess: boolean
+  setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   delivery,
+  canBook,
   isOpen,
   onOpenChange,
   switchTab,
@@ -45,22 +47,6 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
       : delivery.curator.tg_username;
   }
 
-  // const userValue = useContext(UserContext);
-  // let token = userValue.token;
-
-  //   async function cancelDelivery(delivery:IDelivery) {
-  //     const deliveryId = delivery.id;
-
-  //     try {
-  //       const result = await postDeliveryCancel(token, deliveryId, delivery)
-  //       if (result) {
-  //         console.log(delivery, "cancelled")
-  //         setIsOpenModalAddToCalendar(true);
-  //       }
-  //     } catch (err) {
-  //       console.log(err, "detailedDelivery  cancell err")
-  //     }
-  // }
 
   return (
     <>
@@ -79,7 +65,6 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
                     <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                       {getMetroCorrectName(delivery.location.subway)}
-                      {/* {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)} */}
                     </h1>
                     <p className="font-gerbera-sub1 tetx-light-gray-5 text-left h-fit w-[230px] dark:text-light-gray-3">
                       {delivery.location.address}
@@ -115,17 +100,17 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               </div>
             </div>
             {/* /////////////////////// */}
-            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
                 {/* <img
                   className="h-[32px] w-[32px] rounded-full"
                   src={delivery.curator.photo}
                 /> */}
                 <div className="felx flex-col justify-center items-start ml-4">
-                  <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+                  <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                     {delivery.curator.name}
                   </h1>
-                  <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+                  <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
                     Куратор
                   </p>
                 </div>
@@ -152,17 +137,27 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               ''
             )}
 
-            {/* /////////////////////// */}
-            {!delivery.is_free ? (
+            {/* ///////!delivery.is_free || ///////// */}
+            {!canBook? (
               <button
-                className="btn-B-GreenClicked  mt-[20px]"
+                className="btn-B-WhiteDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green"
                 onClick={e => {
                   e.preventDefault();
                   onOpenChange(false);
                 }}
               >
-                Закрыть
+                Вы уже записались
               </button>
+            ) : !delivery.is_free ? (
+              <button
+              className="btn-B-GreenInactive  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green"
+              onClick={e => {
+                e.preventDefault();
+                onOpenChange(false);
+              }}
+            >
+              Нет мест
+            </button>
             ) : (
               <button
                 className="btn-B-GreenDefault  mt-[20px]"
