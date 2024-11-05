@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { isSameDay, parseISO, isAfter } from 'date-fns';
+import React, { useState, useContext } from 'react';
 import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
@@ -9,7 +8,7 @@ import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { IUser } from '../../../core/types';
 import avatar1 from '../../../assets/avatar.svg';
-import { DeliveryContext } from '../../../core/DeliveryContext';
+import { DeliveryContext } from '../../../core/DeliveryContextCurator';
 
 const users: IUser[] = [
   {
@@ -52,11 +51,7 @@ interface RouteSheet {
 }
 
 const MainPageCurator: React.FC = () => {
-  const { deliveries, isLoading, error } = useContext(DeliveryContext);
-  const [currentDelivery, setCurrentDelivery] = useState<any>(null);
-  const [deliveryStatus, setDeliveryStatus] = useState<
-    'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок'
-  >('Нет доставок');
+  const { nearestDelivery, isLoading, error } = useContext(DeliveryContext);
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
@@ -88,54 +83,17 @@ const MainPageCurator: React.FC = () => {
     console.log('Selected user:', user);
   };
 
-  // Вычисление статуса доставки на основе данных из API
-  const computeStatus = (delivery: any) => {
-    if (!delivery || !delivery.date) return 'Нет доставок';
+  // Определяем статус доставки на основе ближайшей доставки
+  const deliveryStatus = nearestDelivery
+    ? nearestDelivery.is_completed
+      ? 'Завершена'
+      : nearestDelivery.is_active
+        ? 'Активная'
+        : 'Ближайшая'
+    : 'Нет доставок';
 
-    const today = new Date();
-    const deliveryDate = parseISO(delivery.date);
-
-    if (delivery.is_completed) {
-      return 'Завершена';
-    } else if (isSameDay(deliveryDate, today)) {
-      return 'Активная';
-    } else if (isAfter(deliveryDate, today)) {
-      return 'Ближайшая';
-    } else {
-      return 'Нет доставок';
-    }
-  };
-
-  // Функция для поиска ближайшей доставки
-  const getNearestDelivery = (deliveries: any[]) => {
-    const today = new Date();
-
-    const upcomingDeliveries = deliveries
-      .filter(d => {
-        const deliveryDate = parseISO(d.date);
-        return isAfter(deliveryDate, today) || isSameDay(deliveryDate, today);
-      })
-      .sort((a, b) => {
-        const dateA = parseISO(a.date);
-        const dateB = parseISO(b.date);
-        return dateA.getTime() - dateB.getTime();
-      });
-
-    return upcomingDeliveries.length > 0 ? upcomingDeliveries[0] : null;
-  };
-
-  useEffect(() => {
-    if (!isLoading && deliveries.length > 0) {
-      const nearestDelivery = getNearestDelivery(deliveries);
-      setCurrentDelivery(nearestDelivery);
-      setDeliveryStatus(computeStatus(nearestDelivery));
-    } else if (!isLoading && deliveries.length === 0) {
-      setDeliveryStatus('Нет доставок');
-    }
-  }, [isLoading, deliveries]);
-
-  const station = currentDelivery?.location?.subway || 'Станция не указана';
-  const address = currentDelivery?.location?.address || 'Адрес не указан';
+  const station = nearestDelivery?.location?.subway || 'Станция не указана';
+  const address = nearestDelivery?.location?.address || 'Адрес не указан';
 
   return (
     <div className="flex-col bg-light-gray-1 min-h-[80vh]">
@@ -146,15 +104,15 @@ const MainPageCurator: React.FC = () => {
           <div>Загрузка доставок...</div>
         ) : error ? (
           <div>{error}</div>
-        ) : deliveries.length === 0 ? (
-          <div>Доставок в ближайшее время нет</div>
-        ) : (
-          // Отображаем доставки
+        ) : nearestDelivery ? (
+          // Отображаем ближайшую доставку
           <DeliveryType
             status={deliveryStatus}
             points={points}
             onDeliveryClick={openRouteSheets} // Открытие маршрутных листов
           />
+        ) : (
+          <div>Доставок в ближайшее время нет</div>
         )}
 
         <Search
@@ -185,18 +143,8 @@ const MainPageCurator: React.FC = () => {
       </div>
       {!isRouteSheetsOpen && (
         <>
-          <SliderCards
-            showTitle={false}
-            switchTab={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
-          <SliderCards
-            showTitle={true}
-            switchTab={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
+          <SliderCards showTitle={false} switchTab={() => {}} />
+          <SliderCards showTitle={true} switchTab={() => {}} />
         </>
       )}
       {isRouteSheetsOpen && (
@@ -206,9 +154,7 @@ const MainPageCurator: React.FC = () => {
           routeSheetsData={routeSheetsData} // Передача данных о маршрутных листах
           completedRouteSheets={completedRouteSheets} // Состояние завершенных маршрутов
           setCompletedRouteSheets={setCompletedRouteSheets} // Функция для обновления завершенных маршрутов
-          onStatusChange={function (): void {
-            throw new Error('Function not implemented.');
-          }}
+          onStatusChange={() => {}}
         />
       )}
     </div>

@@ -77,6 +77,14 @@ const CardTask: React.FC<TCardTaskProps> = ({ delivery, switchTab }) => {
             switchTab={switchTab}
             isOpen={isOpen}
             onOpenChange={setIsOpen}
+            getDelivery={function (): {} {
+              throw new Error('Function not implemented.');
+            }}
+            stringForModal={''}
+            takeDeliverySuccess={false}
+            setTakeDeliverySuccess={function (): void {
+              throw new Error('Function not implemented.');
+            }}
           />
         ) : (
           <p>Детальная информация недоступна</p>
