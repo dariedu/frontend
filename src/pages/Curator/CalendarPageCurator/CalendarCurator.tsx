@@ -5,7 +5,8 @@ import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { UserContext } from '../../../core/UserContext';
 import { DeliveryContext } from '../../../core/DeliveryContext';
-import { IUser } from '../../../core/types';
+import { IDelivery } from '../../../api/apiDeliveries';
+import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 
 const CalendarCurator: React.FC = React.memo(() => {
   const {
@@ -49,6 +50,13 @@ const CalendarCurator: React.FC = React.memo(() => {
     updateDeliveryStatus(deliveryId, newStatus);
   };
 
+  const getDeliveryStatus = (delivery: IDelivery) => {
+    if (delivery.is_completed) return 'Завершена';
+    if (delivery.is_active && delivery.in_execution) return 'Активная';
+    if (delivery.is_active && !delivery.in_execution) return 'Ближайшая';
+    return 'Нет доставок';
+  };
+
   if (isUserLoading || deliveriesLoading) return <div>Загрузка данных...</div>;
   if (userError)
     return <div>Ошибка загрузки данных пользователя: {userError}</div>;
@@ -78,14 +86,24 @@ const CalendarCurator: React.FC = React.memo(() => {
       </div>
 
       {deliveries.length > 0 ? (
-        deliveries.map(delivery => (
-          <DeliveryType
-            key={delivery.id}
-            status={delivery.is_active ? 'Активная' : 'Завершена'}
-            points={delivery.price}
-            onDeliveryClick={handleOpenRouteSheets}
-          />
-        ))
+        deliveries.map(delivery => {
+          const calculatedStatus = getDeliveryStatus(delivery);
+          return (
+            <div key={delivery.id}>
+              <DeliveryType
+                status={calculatedStatus}
+                points={delivery.price}
+                onDeliveryClick={handleOpenRouteSheets}
+              />
+
+              {calculatedStatus === 'Ближайшая' && (
+                <div>
+                  <DeliveryInfo />
+                </div>
+              )}
+            </div>
+          );
+        })
       ) : (
         <div>Нет доступных доставок</div>
       )}
