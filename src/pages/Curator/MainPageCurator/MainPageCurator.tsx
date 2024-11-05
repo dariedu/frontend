@@ -185,8 +185,18 @@ const MainPageCurator: React.FC = () => {
       </div>
       {!isRouteSheetsOpen && (
         <>
-          <SliderCards showTitle={false} />
-          <SliderCards showTitle={true} />
+          <SliderCards
+            showTitle={false}
+            switchTab={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
+          <SliderCards
+            showTitle={true}
+            switchTab={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
         </>
       )}
       {isRouteSheetsOpen && (

@@ -4,10 +4,10 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { DeliveryContext } from '../../core/DeliveryContext';
 
 const CuratorPage: React.FC = () => {
-  const { fetchDeliveries, isLoading } = useContext(DeliveryContext);
+  const { fetchAllDeliveries, isLoading } = useContext(DeliveryContext);
 
   useEffect(() => {
-    fetchDeliveries(); // Загружаем данные о доставках только при посещении страницы куратора
+    fetchAllDeliveries(); // Загружаем данные о доставках только при посещении страницы куратора
   }, []);
 
   if (isLoading) {
@@ -18,11 +18,6 @@ const CuratorPage: React.FC = () => {
     <>
       <NavigationBar variant="mainScreen" title="Куратор" />
       <TabBar userRole="curator" />
-      {/* <div>
-        {deliveries.map(delivery => (
-          <div key={delivery.id}>{delivery.location.address}</div>
-        ))}
-      </div> */}
     </>
   );
 };

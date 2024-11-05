@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import {
   getMonthCorrectEndingName,
   getBallCorrectEndingName,
@@ -9,8 +9,6 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IDelivery } from '../../api/apiDeliveries';
 //import { ITask } from '../../api/apiTasks';
 //import { UserContext } from '../../core/UserContext';
-
-
 
 type TDetailedInfoDelivery = {
   delivery: IDelivery
@@ -33,19 +31,21 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   getDelivery,
   stringForModal,
   takeDeliverySuccess,
-  setTakeDeliverySuccess
+  setTakeDeliverySuccess,
 }) => {
-
   //const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
 
   let curatorTelegramNik = delivery.curator.tg_username;
-  if (delivery.curator.tg_username && delivery.curator.tg_username.length != 0) {
-    curatorTelegramNik = delivery.curator.tg_username.includes('@') ? delivery.curator.tg_username.slice(1) :delivery.curator.tg_username;
+  if (
+    delivery.curator.tg_username &&
+    delivery.curator.tg_username.length != 0
+  ) {
+    curatorTelegramNik = delivery.curator.tg_username.includes('@')
+      ? delivery.curator.tg_username.slice(1)
+      : delivery.curator.tg_username;
   }
-  
-
 
 
   return (
@@ -115,10 +115,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   </p>
                 </div>
               </div>
-              <a
-                href={'https://t.me/' + curatorTelegramNik}
-                target="_blank"
-              >
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
                 <img
                   src="../src/assets/icons/small_sms.svg"
                   className="w-[36px] h-[35px]"
@@ -166,7 +163,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
                   e.preventDefault();
-                  getDelivery(delivery)
+                  getDelivery(delivery);
                 }}
               >
                 Записаться
@@ -419,7 +416,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
         onConfirm={() => {
           setIsOpenModalAddToCalendar(false);
           setIsAddedToCalendar(true);
-          onOpenChange(false)
+          onOpenChange(false);
         }}
         onCancel={() => {
           switchTab('tab2');

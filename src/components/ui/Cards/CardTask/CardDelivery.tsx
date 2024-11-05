@@ -1,27 +1,34 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { type IDelivery } from '../../../../api/apiDeliveries';
-import { getBallCorrectEndingName, getMetroCorrectName } from '../../../helperFunctions/helperFunctions';
-import { DetailedInfoDelivery} from '../../../DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
+import {
+  getBallCorrectEndingName,
+  getMetroCorrectName,
+} from '../../../helperFunctions/helperFunctions';
+import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
 import { Modal } from '../../Modal/Modal';
 
 type TCardDeliveryProps = {
   delivery: IDelivery
   canBook: boolean
   switchTab: React.Dispatch<React.SetStateAction<string>>;
-  getDelivery: (delivery: IDelivery) =>{}
-  stringForModal: string
-  takeDeliverySuccess: boolean
-  setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
-}
-
+  getDelivery: (delivery: IDelivery) => {};
+  stringForModal: string;
+  takeDeliverySuccess: boolean;
+  setTakeDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab,  getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
 const [isOpen, setIsOpen] = useState(false);
 
   const deliveryDate = new Date(delivery.date);
-  const hours = (deliveryDate.getHours() < 10) ? '0'+ deliveryDate.getHours() :  deliveryDate.getHours() 
-  const minutes = (deliveryDate.getMinutes() < 10) ? '0'+ deliveryDate.getMinutes() :  deliveryDate.getMinutes() 
-
+  const hours =
+    deliveryDate.getHours() < 10
+      ? '0' + deliveryDate.getHours()
+      : deliveryDate.getHours();
+  const minutes =
+    deliveryDate.getMinutes() < 10
+      ? '0' + deliveryDate.getMinutes()
+      : deliveryDate.getMinutes();
 
   return (
     <>
@@ -35,16 +42,16 @@ const [isOpen, setIsOpen] = useState(false);
                 {/* {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0, 1).toLocaleUpperCase() + delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)} */}
               </p>
           <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p>
+
           </div>
         </div>
-      </div>
         <div className="flex justify-between items-center w-[133px]">
         <div className="flex items-center justify-center bg-light-gray-white w-[54px] h-[28px] rounded-full dark:bg-light-gray-5 dark:text-light-gray-2">
           {`${hours}:${minutes}`}
             </div>
           <div className="flex items-center justify-center bg-light-brand-green min-w-[75px] h-[28px] rounded-full">
             <span className="text-light-gray-white font-gerbera-sub2">
-            + {delivery.price} {getBallCorrectEndingName(delivery.price)}
+              + {delivery.price} {getBallCorrectEndingName(delivery.price)}
             </span>
           </div>
         </div>
@@ -53,7 +60,6 @@ const [isOpen, setIsOpen] = useState(false);
        <DetailedInfoDelivery delivery={delivery} canBook={canBook} switchTab={switchTab} isOpen={isOpen} onOpenChange={setIsOpen} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
       </Modal>
     </>
-    
   );
 };
 
