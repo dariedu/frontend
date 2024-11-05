@@ -23,8 +23,9 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]);/// сверяемся есть ли доставки в моих забронированных
-  ////// используем контекст доставок, чтобы вывести количество доступных баллов 
+
   
+  ////// используем контекст доставок, чтобы вывести количество доступных баллов 
   const { deliveries } = useContext(DeliveryContext);
   const userValue = useContext(UserContext);
   const token = userValue.token;
