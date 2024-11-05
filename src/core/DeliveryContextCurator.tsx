@@ -38,9 +38,9 @@ export const DeliveryContext = createContext<IDeliveryContext>(
   defaultDeliveryContext,
 );
 
-export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const DeliveryProviderCurator: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

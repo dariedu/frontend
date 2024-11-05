@@ -4,7 +4,7 @@ import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { UserContext } from '../../../core/UserContext';
-import { DeliveryContext } from '../../../core/DeliveryContextCurator';
+import { DeliveryContext } from '../../../core/DeliveryContext';
 import { IUser } from '../../../core/types';
 
 const CalendarCurator: React.FC = React.memo(() => {

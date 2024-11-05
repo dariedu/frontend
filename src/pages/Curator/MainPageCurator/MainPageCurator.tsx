@@ -8,7 +8,7 @@ import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { IUser } from '../../../core/types';
 import avatar1 from '../../../assets/avatar.svg';
-import { DeliveryContext } from '../../../core/DeliveryContextCurator';
+import { DeliveryContext } from '../../../core/DeliveryContext';
 
 const users: IUser[] = [
   {
