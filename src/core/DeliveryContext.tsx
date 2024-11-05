@@ -118,7 +118,8 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchAllDeliveries();
-  }, [token]);
+    fetchCuratorDeliveries;
+  }, [token, fetchCuratorDeliveries]);
 
   return (
     <DeliveryContext.Provider
