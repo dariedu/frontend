@@ -84,7 +84,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
 
   let arrOfMyDeliveriesId: number[] = [];
   myDeliveries.forEach(i => arrOfMyDeliveriesId.push(i.id));
-  console.log(arrOfMyDeliveriesId)
+  
 
   return (
     <div className="pt-3 w-[360px]">

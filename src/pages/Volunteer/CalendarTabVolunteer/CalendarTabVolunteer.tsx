@@ -47,7 +47,7 @@ const CalendarTabVolunteer = () => {
     getMyDeliveries()
   }, [cancelDeliverySuccess])
 
-    ////функция чтобы волонтер взял доставку
+    ////функция чтобы волонтер отменил взятую доставку
 async function cancelTakenDelivery(delivery:IDelivery) {
   const id: number = delivery.id;
 try {

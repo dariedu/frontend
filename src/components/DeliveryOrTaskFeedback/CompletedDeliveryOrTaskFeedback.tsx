@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
+import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/feedbackApi';
+import { UserContext } from '../../core/UserContext';
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
   onSubmitFidback: (e: boolean) => void
   volunteer: boolean
   delivery: boolean //// true если это доствка false  если это доброе дело
+  deliveryOrTaskId:number
 }
 
 
-const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback, volunteer, delivery}) => {
+const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId}) => {
 
 
   const [feedbacks, setFeedbacks] = useState({
@@ -19,9 +24,16 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
   });
 
   const [buttonActive, setButtonActive] = useState(false)
+ const [fedbackSendFail, setFedbackSendFail] = useState(false)
+
+  ////// используем контекст
+  const userValue = useContext(UserContext);
+  const token = userValue.token;
+  ////// используем контекст
+
+
 
   type TReasons = keyof typeof feedbacks;
-
   // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
   function handleFormFieldChange(fieldName: TReasons, value: string) {
     setFeedbacks({
@@ -37,14 +49,47 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
     } else setButtonActive(false)
   }
 
-  function handleFormSubmit() {
-    console.log('submited');
-    feedbacks.fb1 = "";
-    feedbacks.fb2 = "";
-    localStorage.removeItem("fb1");
-    localStorage.removeItem("fb2");
-    onOpenChange(false)
-    onSubmitFidback(true)
+
+  
+  async function handleDeliveryOrTaskFeedbackSubmit(deliveryId: number, volunteer: boolean) {
+    let type: TFeedbackTypes;
+    let fedbackText: string;
+    if (volunteer) {
+      if (delivery) {
+      type = "completed_delivery";
+      fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошла доставка? что вам понравилось? что бы вы выпоменяли? Ответ: ${feedbacks.fb2}`
+      } else {
+        type = "completed_task"
+        fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошло ваше участие в добром деле? что вам понравилось? что бы вы выпоменяли? Ответ: ${feedbacks.fb2}`
+        }
+    } else {
+      if (delivery) {
+        type = "completed_delivery";
+        fedbackText = `Поделитесь вашими впечатлениями от курирования доставки? Ответ: ${feedbacks.fb1}, Как прошла доставка? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb2}`
+      } else {
+        type = "completed_task";
+        fedbackText = `Поделитесь вашими впечатлениями от курирования доброго дела? Ответ: ${feedbacks.fb1}, Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb2}`
+      }
+    }
+    
+    if (token) {
+      try {
+        const response = await submitFeedbackDeliveryoOrTask(token, delivery, type, fedbackText, deliveryId)
+        if (response) {
+        feedbacks.fb1 = "";
+        feedbacks.fb2 = "";
+        localStorage.removeItem("fb1");
+        localStorage.removeItem("fb2");
+        onOpenChange(false)
+        onSubmitFidback(true)
+        }
+      } catch (err) {
+        setFedbackSendFail(true)
+        console.log(err, "handleDeliveryOrTaskFeedbackSubmit deliveryFeedback")
+      }
+    } else {
+      setFedbackSendFail(true)
+    }
   }
 
   return (
@@ -66,7 +111,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
            className=" flex flex-col items-center justify-center"
           onSubmit={e => {
             e.preventDefault();
-            handleFormSubmit()
+            handleDeliveryOrTaskFeedbackSubmit(deliveryOrTaskId, true)
           }}
          >
           <div  className='flex flex-col px-4'>
@@ -96,9 +141,9 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
             </Form.Field>
               <Form.Field name="fb2" className="mt-4">
                 {delivery ? (
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Как прошла доставка? что вам понравилось? что вы бы поменяли?</Form.Label>
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Как прошла доставка? что вам понравилось? что бы вы выпоменяли?</Form.Label>
                 ): (
-                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3  dark:text-light-gray">Как прошло ваше учачтие в добром деле? что вам понравилось? что вы бы поменяли?</Form.Label>   
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3  dark:text-light-gray">Как прошло ваше участие в добром деле? что вам понравилось? что бы вы выпоменяли?</Form.Label>   
                 )
                  }
               
@@ -154,7 +199,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
              className=" flex flex-col items-center justify-center"
             onSubmit={e => {
               e.preventDefault();
-              handleFormSubmit()
+              handleDeliveryOrTaskFeedbackSubmit(deliveryOrTaskId, false)
             }}
            >
             <div  className='flex flex-col px-4'>
@@ -205,9 +250,17 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
             >Отправить</button>
           </Form.Root>
         </div>)}
-      
+        <ConfirmModal
+        isOpen={fedbackSendFail}
+        onOpenChange={setFedbackSendFail}
+        onConfirm={() => {setFedbackSendFail(false);}}
+        title={"Упс, что-то пошло не так, попробуйте позже"}
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+      />
     </>
   );
 };
 
-export default DeliveryFeedback;
+export default CompletedDeliveryOrTaskFeedback;
