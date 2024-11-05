@@ -73,7 +73,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               Активная
             </p>
           ) : currentStatus == 'completed' ? (
-            <p className="btn-S-GreenInactive flex items-center justify-center">
+            <p className="btn-S-GreenInactive flex items-center justify-center dark:bg-light-gray-5 dark:text-light-gray-white">
               Завершённая
             </p>
           ) : (
@@ -109,7 +109,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             <img src="../src/assets/icons/metro_station.svg" />
             <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
               <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-               Ст. {getMetroCorrectName(delivery.location.subway)}
+               {getMetroCorrectName(delivery.location.subway)}
               </h1>
               <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
                 {delivery.location.address}
@@ -143,17 +143,17 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
             fullView ? (
-              <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+              <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
                 <div className="flex">
                   {/* <img
                     className="h-[32px] w-[32px] rounded-full"
                     src={delivery.curator.photo}
                   /> */}
                   <div className="felx flex-col justify-center items-start ml-4">
-                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                       {delivery.curator.name}
                     </h1>
-                    <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+                    <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
                       Куратор
                     </p>
                   </div>
@@ -172,7 +172,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
 
         {fullView ? (currentStatus == 'nearest' ? (
               <button
-                className="btn-B-GrayDefault  mt-[20px]"
+                className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white"
                 onClick={e => {
                   e.preventDefault();
                   setIsCancelDeliveryModalOpen(true)

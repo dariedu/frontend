@@ -50,14 +50,14 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
   return (
     <>
       {volunteer ? (
-      <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white"
+      <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4">
           <img
             src="../src/assets/icons/big_pencil.svg"
             className="h-[32px] w-[32px]"
           />
-          <p className="ml-[14px] font-gerbera-h3">
+          <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
             Расскажите, в свободной форме
           </p>
         </div>
@@ -78,7 +78,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
                 <TextareaAutosize
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
-                placeholder:text-light-gray-3"
+                placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('fb1') ?? ''}
                   onChange={e => {
@@ -96,9 +96,9 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
             </Form.Field>
               <Form.Field name="fb2" className="mt-4">
                 {delivery ? (
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 ">Как прошла доставка? что вам понравилось? что вы бы поменяли?</Form.Label>
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Как прошла доставка? что вам понравилось? что вы бы поменяли?</Form.Label>
                 ): (
-                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 ">Как прошло ваше учачтие в добром деле? что вам понравилось? что вы бы поменяли?</Form.Label>   
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3  dark:text-light-gray">Как прошло ваше учачтие в добром деле? что вам понравилось? что вы бы поменяли?</Form.Label>   
                 )
                  }
               
@@ -106,7 +106,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
                 <TextareaAutosize
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
-                 placeholder:text-light-gray-3 mb-2 "
+                 placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   defaultValue={localStorage.getItem('fb2') ?? ''}
                   onChange={e => {
                     handleFormFieldChange('fb2', e.target.value);
@@ -122,7 +122,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               </Form.Message>
             </Form.Field>
           </div>
-          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive"} mt-4 mb-4 `}
+          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4 mb-4 `}
             onClick={(e) => {
               if (buttonActive) {
                
@@ -140,11 +140,11 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
               className="h-[32px] w-[32px]"
             />
               {delivery ? (
-            <p className="ml-[14px] font-gerbera-h3">
+            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
             Поделитесь вашими впечатлениями от курирования доставки
             </p>
               ) : (
-                <p className="ml-[14px] font-gerbera-h3">
+                <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
                 Поделитесь вашими впечатлениями от курирования доброго дела
                 </p>
             )}
@@ -160,11 +160,11 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
             <div  className='flex flex-col px-4'>
               <Form.Field name="fb1" className="mt-4">
                   {delivery ? (
-                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">
                   Как прошла доставка? Что понравилось? А что хотели бы изменить и как?
                   </Form.Label>
                   ): (
-                    <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
+                    <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3">
                 Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как?
                 </Form.Label>
                 )}
@@ -172,7 +172,7 @@ const DeliveryFeedback: React.FC<IDeliveryFeedbackProps> = ({onOpenChange, onSub
                   <TextareaAutosize
                     maxRows={10}
                     className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
-                  placeholder:text-light-gray-3"
+                  placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                     required
                     defaultValue={localStorage.getItem('fb1') ?? ''}
                     onChange={e => {
