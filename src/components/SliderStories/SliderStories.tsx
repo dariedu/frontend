@@ -112,7 +112,7 @@ const SliderStories: React.FC = () => {
     <>
       {/* Слайдер для историй */}
       <div
-        className="flex overflow-x-hidden space-x-4 p-4 w-[360px]"
+        className="flex overflow-x-hidden space-x-4 p-4 w-[360px] bg-light-gray-white rounded-2xl mt-1"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

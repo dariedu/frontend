@@ -7,6 +7,7 @@ import { postDeliveryTake, getVolunteerDeliveries, type IDelivery, type IVolunte
 import { UserContext } from "../../../core/UserContext";
 import { getMetroCorrectName, getMonthCorrectEndingName } from "../../../components/helperFunctions/helperFunctions";
 import ConfirmModal from "../../../components/ui/ConfirmModal/ConfirmModal";
+import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 
 type TMainTabVolunteerProps = {
   switchTab:React.Dispatch<React.SetStateAction<string>>
@@ -87,18 +88,27 @@ async function getDelivery(delivery:IDelivery) {
        setTakeDeliveryFail(true)
        setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`)
        }
-       
        }
    }
   
 
 
   return (
-    <>
-      <div className="mt-2 mb-4 bg-light-gray-white dark:bg-light-gray-7-logo">
-        <SliderStories />
-        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 mb-3 dark:text-light-gray-white ">Расписание доставок</div>
-        <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+    <div className="flex flex-col h-fit min-h-full overflow-y-auto">
+      <SliderStories />
+        {myCurrent.length > 0 ?
+              (myCurrent.map((i) => {
+                if (i.in_execution == true) {
+                  return(
+                <div key={i.id}>
+                  <NearestDeliveryVolunteer delivery={i} status="active" />
+                </div>)
+              }})
+            ) : ""
+          }
+      <div className="mt-[6px] mb-20 bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl">
+        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white mt-[20px]">Расписание доставок</div>
+        <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} showHeader={false} showFilterButton={false} showDatePickerButton={false} />
         {filteredDeliveries.length > 0 ? (
           <SliderCardsDeliveries deliveries={filteredDeliveries} myDeliveries={myCurrent} switchTab={switchTab} getDelivery={getDelivery} stringForModal={takeDeliverySuccessDateName} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
         ): ""}
@@ -114,7 +124,7 @@ async function getDelivery(delivery:IDelivery) {
         isSingleButton={true}
       />
 
-    </>
+    </div>
   )
 }
 

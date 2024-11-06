@@ -7,7 +7,7 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 
 interface IDeliveryFeedbackProps{
- onOpenChange: (open: boolean) => void
+    onOpenChange: (open: boolean) => void
   onSubmitFidback: (e: boolean) => void
   delivery: boolean //// true если это доствка false  если это доброе дело
   deliveryOrTaskId:number
@@ -116,7 +116,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
                   className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
-                  defaultValue={localStorage.getItem('fb1') ?? ''}
+                  defaultValue={localStorage.getItem('fb1Cancel') ?? ''}
                   onChange={e => {
                     handleFormFieldChange('fb1Cancel', e.target.value);
                     handleInfoInput()
@@ -144,7 +144,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
         isOpen={fedbackSendFail}
         onOpenChange={setFedbackSendFail}
         onConfirm={() => {setFedbackSendFail(false);}}
-        title={"Упс, что-то пошло не так, попробуйте позже"}
+        title={"Упс, что-то пошло не так"}
         description=""
         confirmText="Ок"
         isSingleButton={true}
