@@ -6,6 +6,7 @@ import Search from '../../../components/Search/Search';
 import { UserContext } from '../../../core/UserContext';
 import { DeliveryContext } from '../../../core/DeliveryContext';
 import { IDelivery } from '../../../api/apiDeliveries';
+import { getRouteSheets, IRouteSheet } from '../../../api/routeSheetApi';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 
 const CalendarCurator: React.FC = React.memo(() => {
@@ -17,7 +18,6 @@ const CalendarCurator: React.FC = React.memo(() => {
 
   const {
     deliveries,
-    nearestDelivery,
     isLoading: deliveriesLoading,
     error: deliveriesError,
     fetchCuratorDeliveries,
@@ -26,7 +26,12 @@ const CalendarCurator: React.FC = React.memo(() => {
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [points, setPoints] = useState<number>(0);
-  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
+  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState<number | null>(
+    null,
+  );
+  const [routeSheetsMap, setRouteSheetsMap] = useState<{
+    [deliveryId: number]: IRouteSheet[];
+  }>({});
 
   useEffect(() => {
     setPoints(currentUser?.point ?? 0);
@@ -38,12 +43,31 @@ const CalendarCurator: React.FC = React.memo(() => {
     }
   }, [currentUser, fetchCuratorDeliveries]);
 
-  const handleOpenRouteSheets = () => {
-    setIsRouteSheetsOpen(true);
+  const handleOpenRouteSheets = async (deliveryId: number) => {
+    setIsRouteSheetsOpen(deliveryId); // Устанавливаем ID доставки для открытых маршрутных листов
+    if (!routeSheetsMap[deliveryId]) {
+      try {
+        const userValue = useContext(UserContext);
+        const token = userValue.token;
+        if (!token) throw new Error('Отсутствует токен доступа');
+
+        const routeSheets = await getRouteSheets(token); // Получаем все маршрутные листы
+        const deliveryRouteSheets = routeSheets.filter(
+          rs => rs.deliveryId === deliveryId,
+        ); // Фильтруем по текущей доставке
+
+        setRouteSheetsMap(prevMap => ({
+          ...prevMap,
+          [deliveryId]: deliveryRouteSheets,
+        }));
+      } catch (error) {
+        console.error('Ошибка при получении маршрутных листов:', error);
+      }
+    }
   };
 
   const handleCloseRouteSheets = () => {
-    setIsRouteSheetsOpen(false);
+    setIsRouteSheetsOpen(null);
   };
 
   const handleStatusChange = (deliveryId: number, newStatus: boolean) => {
@@ -65,8 +89,8 @@ const CalendarCurator: React.FC = React.memo(() => {
   if (!currentUser) return <div>Пользователь не найден</div>;
 
   // Получаем данные о станции и адресе ближайшей доставки
-  const station = nearestDelivery?.location?.subway || 'Станция не указана';
-  const address = nearestDelivery?.location?.address || 'Адрес не указан';
+  const station = deliveries[0]?.location?.subway || 'Станция не указана';
+  const address = deliveries[0]?.location?.address || 'Адрес не указан';
 
   return (
     <div className="flex-col min-h-[80vh] bg-light-gray-1">
@@ -76,8 +100,8 @@ const CalendarCurator: React.FC = React.memo(() => {
           showSearchInput={true}
           users={[currentUser]}
           onUserClick={() => {}}
-          station={station} // Передача станции метро в Search
-          address={address} // Передача адреса в Search
+          station={station}
+          address={address}
         />
         <Calendar
           selectedDate={selectedDate}
@@ -93,30 +117,30 @@ const CalendarCurator: React.FC = React.memo(() => {
               <DeliveryType
                 status={calculatedStatus}
                 points={delivery.price}
-                onDeliveryClick={handleOpenRouteSheets}
+                onDeliveryClick={() => handleOpenRouteSheets(delivery.id)}
               />
 
-              {calculatedStatus === 'Ближайшая' && (
-                <div>
-                  <DeliveryInfo />
-                </div>
+              {calculatedStatus === 'Ближайшая' && <DeliveryInfo />}
+
+              {isRouteSheetsOpen === delivery.id && (
+                <RouteSheets
+                  status={calculatedStatus}
+                  routeSheetsData={routeSheetsMap[delivery.id] || []}
+                  onClose={handleCloseRouteSheets}
+                  completedRouteSheets={
+                    routeSheetsMap[delivery.id]?.map(() => false) || []
+                  }
+                  setCompletedRouteSheets={() => {}}
+                  onStatusChange={() =>
+                    handleStatusChange(delivery.id, !delivery.is_completed)
+                  }
+                />
               )}
             </div>
           );
         })
       ) : (
         <div>Нет доступных доставок</div>
-      )}
-
-      {isRouteSheetsOpen && (
-        <RouteSheets
-          status="Активная"
-          routeSheetsData={[{ id: 1, title: 'Маршрутный лист 1' }]}
-          onClose={handleCloseRouteSheets}
-          completedRouteSheets={[false, false]}
-          setCompletedRouteSheets={() => {}}
-          onStatusChange={() => {}}
-        />
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
@@ -7,29 +7,17 @@ import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from './RouteSheetsView';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-
-interface RouteSheet {
-  id: number;
-  title: string;
-}
+import { getRouteSheets, IRouteSheet } from '../../api/routeSheetApi';
+import { UserContext } from '../../core/UserContext';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
-  routeSheetsData: RouteSheet[];
+  routeSheetsData: IRouteSheet[];
   onClose: () => void;
   onStatusChange: () => void;
   completedRouteSheets: boolean[];
   setCompletedRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
-
-const mockRoutes = [
-  {
-    address: 'ул. Бобруйская 66',
-    additionalInfo: '3 подъезд 10 этаж кв 143 код домофона #3214',
-    personName: 'Петрова Галина Сергеевна',
-    avatar: avatarIcon,
-  },
-];
 
 const RouteSheets: React.FC<RouteSheetsProps> = ({
   status,
@@ -39,6 +27,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   completedRouteSheets,
   setCompletedRouteSheets,
 }) => {
+  const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(
     Array(routeSheetsData.length).fill(false),
   );
@@ -56,7 +45,23 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   const [isAllRoutesCompleted, setIsAllRoutesCompleted] = useState(false);
   const [isDeliveryCompletedModalOpen, setIsDeliveryCompletedModalOpen] =
     useState(false);
-  const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false); // Для отслеживания завершения доставки
+  const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false);
+  const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([]);
+
+  useEffect(() => {
+    // Загрузка данных маршрутных листов из API
+    const fetchRouteSheets = async () => {
+      if (!token) return;
+      try {
+        const data = await getRouteSheets(token);
+        setRouteSheets(data);
+      } catch (error) {
+        console.error('Ошибка загрузки маршрутных листов:', error);
+      }
+    };
+
+    fetchRouteSheets();
+  }, [token]);
 
   useEffect(() => {
     // Проверяем завершены ли все маршрутные листы
@@ -76,12 +81,11 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
   };
 
   const handleConfirmDeliveryCompletion = () => {
-    setIsDeliveryCompletedModalOpen(false); // Закрываем модалку
-    setDeliveryCompletedOnce(true); // Устанавливаем флаг завершения, чтобы не показывать снова
-    onStatusChange(); // Меняем статус доставки на "Завершена"
+    setIsDeliveryCompletedModalOpen(false);
+    setDeliveryCompletedOnce(true);
+    onStatusChange();
   };
 
-  // Функция для выбора волонтёра и закрытия списка волонтеров
   const handleVolunteerSelect = (
     index: number,
     volunteerName: string,
@@ -99,7 +103,6 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
     );
   };
 
-  // Функция для "Забрать себе" и закрытия списка волонтеров
   const handleTakeRoute = (index: number) => {
     setSelectedVolunteers(prev =>
       prev.map((volunteer, idx) =>
@@ -121,7 +124,7 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
       </div>
 
       <div className="flex flex-col">
-        {routeSheetsData.map((routeSheet, index) => {
+        {routeSheets.map((routeSheet, index) => {
           const isVolunteerSelected =
             selectedVolunteers[index].name !== 'Не выбран';
 
@@ -202,7 +205,13 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
 
               {openRouteSheets[index] && (
                 <RouteSheetsView
-                  routes={mockRoutes}
+                  routes={routeSheet.address.map(addr => ({
+                    address: addr.address || 'Адрес не указан', // Используем поле address из TAddress
+                    additionalInfo: addr.link || '', // Используем поле link для доп. информации, если оно существует
+                    personName: addr.beneficiary || 'Имя не указано', // Имя получателя (beneficiary)
+                    avatar: avatarIcon, // Пока что статичная иконка, так как в данных нет поля для аватара
+                    needsPhoto: false, // Если необходима, можно добавить логику на основе условия
+                  }))}
                   onComplete={() => handleComplete(index)}
                   isCompleted={completedRouteSheets[index]}
                   isVolunteerSelected={isVolunteerSelected}
@@ -213,7 +222,6 @@ const RouteSheets: React.FC<RouteSheetsProps> = ({
         })}
       </div>
 
-      {/* Модальное окно должно появляться только один раз при завершении доставки */}
       {isAllRoutesCompleted && isDeliveryCompletedModalOpen && (
         <ConfirmModal
           title="Доставка завершена"
