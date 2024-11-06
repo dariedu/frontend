@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
 import RouteSheets from '../RouteSheets/RouteSheets';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
-import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
+//import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { type IDelivery } from '../../api/apiDeliveries';
@@ -13,7 +13,13 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 interface INearestDeliveryProps {
   delivery: IDelivery;
   status: TDeliveryFilter
-  cancelFunc?:(dellivery:IDelivery)=>{}
+  cancelFunc?: (dellivery: IDelivery) => {}
+  isFeedbackSubmitedModalOpen?:boolean
+  setIsFeedbackSubmitedModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  feedbackSubmited?: boolean
+  // cancelDeliveryReasonOpenModal?:boolean
+  // setCancelDeliveryReasonOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
+ // setCancelDeliverySuccess?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -21,21 +27,19 @@ interface INearestDeliveryProps {
 const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   delivery,
   status,
-  cancelFunc
+  cancelFunc,
+  isFeedbackSubmitedModalOpen, 
+  setIsFeedbackSubmitedModalOpen,
+  feedbackSubmited,
 }) => {
   const deliveryDate = new Date(delivery.date);
   //const currentDate = new Date();
 
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
   const currentStatus = status;
-  //const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(status); /// статус доставки 'nearest' | 'active' | 'completed'
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false); //// модальное окно для отмены доставки
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
-  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =  useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
-
-  const [isCancelledDeliveryFeedbackModalOpen, setIsCancelledDeliveryFeedbackModalOpen] =   useState(false); ///// модальное окно для фидбека по отмененной доставке
-  const [isCancelledDeliveryFeedbackSubmited, setIsCancelledDeliveryFeedbackSubmited] =   useState(false); ///// модальное окно для подтверждения отправки фидбэка отмененной доставки
-
+  
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
 
 
@@ -62,7 +66,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             setCompletedRouteSheets={() =>{}}
           />) : ("")) : ("")}
       <div
-        className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
       >
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
@@ -169,7 +173,30 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             ) : (
               ''
             )
-          ) :  ('')}
+        ) : (
+          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+          <div className="flex">
+            {/* <img
+              className="h-[32px] w-[32px] rounded-full"
+              src={delivery.curator.photo}
+            /> */}
+            <div className="felx flex-col justify-center items-start ml-4">
+              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
+                {delivery.curator.name}
+              </h1>
+              <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
+                Куратор
+              </p>
+            </div>
+          </div>
+          <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+            <img
+              src="../src/assets/icons/small_sms.svg"
+              className="w-[36px] h-[35px]"
+            />
+          </a>
+        </div>
+          )}
 
         {fullView ? (currentStatus == 'nearest' ? (
               <button
@@ -181,7 +208,16 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               >
                 Отказаться
               </button>
-            ): currentStatus == 'completed' ? (
+            ): currentStatus == 'completed' ? feedbackSubmited ? (
+              <button
+              className="btn-B-WhiteDefault mt-[20px]"
+              onClick={e => {
+                e.preventDefault();
+              }}
+            >
+              Oтзыв отправлен
+            </button>
+            ): (
               <button
                 className="btn-B-GreenDefault  mt-[20px]"
                 onClick={e => {
@@ -211,47 +247,31 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
         <CompletedDeliveryOrTaskFeedback
           onOpenChange={setIsModalOpen}
-          onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
+          onSubmitFidback={() => setIsFeedbackSubmitedModalOpen ? setIsFeedbackSubmitedModalOpen(true) : ()=>{}}
           volunteer={true}
           delivery={true}
           deliveryOrTaskId={delivery.id}
         />
       </Modal>
+
+
+      {(isFeedbackSubmitedModalOpen && setIsFeedbackSubmitedModalOpen) ? (
       <ConfirmModal
-        isOpen={isFeedbackSubmitedModalOpen}
-        onOpenChange={setIsFeedbackSubmitedModalOpen}
-        onConfirm={() => setIsFeedbackSubmitedModalOpen(false)}
-        title={
-          <p>
-            Спасибо, что поделились!
-            <br /> Это важно.
-          </p>
-        }
-        description=""
-        confirmText="Закрыть"
-        isSingleButton={true}
-      />
-      <Modal isOpen={isCancelledDeliveryFeedbackModalOpen} onOpenChange={setIsCancelledDeliveryFeedbackModalOpen}>
-        <CancelledDeliveryOrTaskFeedback
-        onOpenChange={setIsCancelledDeliveryFeedbackModalOpen}
-        onSubmitFidback={()=>setIsCancelledDeliveryFeedbackSubmited(true)}
-        delivery={true}
-        deliveryOrTaskId={delivery.id}
-      />
-      </Modal>
-      
-      <ConfirmModal
-        isOpen={isCancelledDeliveryFeedbackSubmited}
-        onOpenChange={setIsCancelledDeliveryFeedbackSubmited}
-        onConfirm={() => setIsCancelledDeliveryFeedbackSubmited(false)}
-        title={<p>
+      isOpen={isFeedbackSubmitedModalOpen}
+      onOpenChange={setIsFeedbackSubmitedModalOpen}
+      onConfirm={() => setIsFeedbackSubmitedModalOpen(false)}
+      title={
+        <p>
           Спасибо, что поделились!
           <br /> Это важно.
-        </p>}
-        description=""
-        confirmText="Закрыть"
-        isSingleButton={true}
-      />
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+    />
+      ) : ""}
+      
     </div>
     
   );
