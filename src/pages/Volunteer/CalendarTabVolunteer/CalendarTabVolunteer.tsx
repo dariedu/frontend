@@ -10,14 +10,13 @@ import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 
 const CalendarTabVolunteer = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [avaliable, setAvaliable] = useState<IDelivery[]>([])
+ // const [avaliable, setAvaliable] = useState<IDelivery[]>([])
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([])
   const [myPast, setMyPast] = useState<IDelivery[]>([])
   const [cancelDeliverySuccess, setCancelDeliverySuccess] = useState<boolean>(false)
   const [cancelDeliveryFail, setCancelDeliveryFail]= useState<boolean>(false)
   const [cancelDeliverySuccessString, setCancelDeliverySuccessString] = useState<string>("");
 
-  console.log(avaliable, 'mainTab avaliable')
   ////// используем контекст юзера, чтобы вывести количество доступных баллов
    const userValue = useContext(UserContext);
    const token = userValue.token;
@@ -35,7 +34,7 @@ const CalendarTabVolunteer = () => {
            result['мои активные доставки'].forEach(i => { current.push(i)});
            result['мои завершенные доставки'].forEach(i => { past.push(i)});
            result['свободные доставки'].forEach(i => { avaliable.push(i)});     
-           setAvaliable(avaliable);
+           //setAvaliable(avaliable);
            setMyCurrent(current);
            setMyPast(past)}
     }
@@ -48,7 +47,7 @@ const CalendarTabVolunteer = () => {
     getMyDeliveries()
   }, [cancelDeliverySuccess])
 
-    ////функция чтобы волонтер взял доставку
+    ////функция чтобы волонтер отменил взятую доставку
 async function cancelTakenDelivery(delivery:IDelivery) {
   const id: number = delivery.id;
 try {
@@ -76,7 +75,7 @@ try {
     <>
       <div className="mt-2 mb-4 flex flex-col items-center" >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        <div>
+        <div className='flex flex-col h-full  mb-20 overflow-auto'>
           {myCurrent.length > 0 ?
               (myCurrent.map((i) => {
                 const currentStatus = i.in_execution == true ? "active" : "nearest";
@@ -102,7 +101,6 @@ try {
           <img src="./../../src/assets/icons/LogoNoTaskYet.svg" />
           <p className="font-gerbera-h2 text-light-gray-black w-[300px] mt-[28px]">Пока нет запланированных добрых дел</p>
         </div>   */}
-        
       </div>
     
       <ConfirmModal

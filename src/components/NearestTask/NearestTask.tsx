@@ -4,7 +4,7 @@ import {
   getMonthCorrectEndingName,
   getVolunteerCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
-import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
+import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
