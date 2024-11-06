@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { getMonthCorrectEndingName,   getVolunteerCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
  import RouteSheets from '../RouteSheets/RouteSheets';
-import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
+import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';

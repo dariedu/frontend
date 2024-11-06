@@ -1,7 +1,8 @@
 import React, { useState} from 'react';
 import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
 import RouteSheets from '../RouteSheets/RouteSheets';
-import DeliveryFeedback from '../DeliveryFeedback/DeliveryFeedback';
+import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
+import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { type IDelivery } from '../../api/apiDeliveries';
@@ -32,8 +33,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =  useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
 
-  const [isConfirmDeliveryModalOpen, setIsConfirmDeliveryModalOpen] =   useState(false); ///// модальное окно для подтверждения доставки
-  const [isDeliveryConfirmedModalOpen, setIsDeliveryConfirmedModalOpen] =   useState(false); ///// модальное окно для подтверждения подтверждения доставки
+  const [isCancelledDeliveryFeedbackModalOpen, setIsCancelledDeliveryFeedbackModalOpen] =   useState(false); ///// модальное окно для фидбека по отмененной доставке
+  const [isCancelledDeliveryFeedbackSubmited, setIsCancelledDeliveryFeedbackSubmited] =   useState(false); ///// модальное окно для подтверждения отправки фидбэка отмененной доставки
 
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
 
@@ -73,7 +74,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               Активная
             </p>
           ) : currentStatus == 'completed' ? (
-            <p className="btn-S-GreenInactive flex items-center justify-center">
+            <p className="btn-S-GreenInactive flex items-center justify-center dark:bg-light-gray-5 dark:text-light-gray-white">
               Завершённая
             </p>
           ) : (
@@ -109,7 +110,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             <img src="../src/assets/icons/metro_station.svg" />
             <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
               <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-               Ст. {getMetroCorrectName(delivery.location.subway)}
+               {getMetroCorrectName(delivery.location.subway)}
               </h1>
               <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
                 {delivery.location.address}
@@ -143,17 +144,17 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
             fullView ? (
-              <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+              <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
                 <div className="flex">
                   {/* <img
                     className="h-[32px] w-[32px] rounded-full"
                     src={delivery.curator.photo}
                   /> */}
                   <div className="felx flex-col justify-center items-start ml-4">
-                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                       {delivery.curator.name}
                     </h1>
-                    <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+                    <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
                       Куратор
                     </p>
                   </div>
@@ -172,7 +173,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
 
         {fullView ? (currentStatus == 'nearest' ? (
               <button
-                className="btn-B-GrayDefault  mt-[20px]"
+                className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white"
                 onClick={e => {
                   e.preventDefault();
                   setIsCancelDeliveryModalOpen(true)
@@ -207,14 +208,13 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         confirmText="Да"
         cancelText="Нет"
       />
-
-
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DeliveryFeedback
+        <CompletedDeliveryOrTaskFeedback
           onOpenChange={setIsModalOpen}
           onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
           volunteer={true}
           delivery={true}
+          deliveryOrTaskId={delivery.id}
         />
       </Modal>
       <ConfirmModal
@@ -231,26 +231,25 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         confirmText="Закрыть"
         isSingleButton={true}
       />
-      <ConfirmModal
-        isOpen={isConfirmDeliveryModalOpen}
-        onOpenChange={setIsConfirmDeliveryModalOpen}
-        onConfirm={() => {
-          setIsConfirmDeliveryModalOpen(false);
-          setIsDeliveryConfirmedModalOpen(true);
-        }}
-        title={<p>Вы подтверждаете участие в доставке?</p>}
-        description=""
-        confirmText="Да"
-        cancelText="Нет"
+      <Modal isOpen={isCancelledDeliveryFeedbackModalOpen} onOpenChange={setIsCancelledDeliveryFeedbackModalOpen}>
+        <CancelledDeliveryOrTaskFeedback
+        onOpenChange={setIsCancelledDeliveryFeedbackModalOpen}
+        onSubmitFidback={()=>setIsCancelledDeliveryFeedbackSubmited(true)}
+        delivery={true}
+        deliveryOrTaskId={delivery.id}
       />
-
+      </Modal>
+      
       <ConfirmModal
-        isOpen={isDeliveryConfirmedModalOpen}
-        onOpenChange={setIsDeliveryConfirmedModalOpen}
-        onConfirm={() => setIsDeliveryConfirmedModalOpen(false)}
-        title="Участие в доставке подтверждено"
+        isOpen={isCancelledDeliveryFeedbackSubmited}
+        onOpenChange={setIsCancelledDeliveryFeedbackSubmited}
+        onConfirm={() => setIsCancelledDeliveryFeedbackSubmited(false)}
+        title={<p>
+          Спасибо, что поделились!
+          <br /> Это важно.
+        </p>}
         description=""
-        confirmText="Ок"
+        confirmText="Закрыть"
         isSingleButton={true}
       />
     </div>

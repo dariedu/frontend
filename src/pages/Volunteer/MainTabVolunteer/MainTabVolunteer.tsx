@@ -6,7 +6,7 @@ import { DeliveryContext } from "../../../core/DeliveryContext";
 import { postDeliveryTake, getVolunteerDeliveries, type IDelivery, type IVolunteerDeliveries } from "../../../api/apiDeliveries";
 import { UserContext } from "../../../core/UserContext";
 import { getMetroCorrectName, getMonthCorrectEndingName } from "../../../components/helperFunctions/helperFunctions";
-
+import ConfirmModal from "../../../components/ui/ConfirmModal/ConfirmModal";
 
 type TMainTabVolunteerProps = {
   switchTab:React.Dispatch<React.SetStateAction<string>>
@@ -16,13 +16,16 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false);
-  const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>('');
+  const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false);//// подтверждение бронирования доставки
+  const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>('');///строка для вывова названия и времени доставки в алерт
+  const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
+  const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>('');//переменная для записи названия ошибки при взятии доставки
+
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
-  const [myAvaliable, setMyAvaliable] = useState<IDelivery[]>([]);
-  const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]);
-   console.log(myAvaliable, myCurrent)
-////// используем контекст доставок, чтобы вывести количество доступных баллов 
+  const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]);/// сверяемся есть ли доставки в моих забронированных
+
+  
+  ////// используем контекст доставок, чтобы вывести количество доступных баллов 
   const { deliveries } = useContext(DeliveryContext);
   const userValue = useContext(UserContext);
   const token = userValue.token;
@@ -37,15 +40,12 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
   }
 
   async function getMyDeliveries() {
-    const avaliable: IDelivery[] = [];
     const current: IDelivery[] = [];
     try {
       if (token) {
         let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
         if (result) {
           result['мои активные доставки'].forEach(i => { current.push(i)});
-          result['свободные доставки'].forEach(i => { avaliable.push(i)});
-          setMyAvaliable(avaliable);
           setMyCurrent(current);
         }
       }
@@ -57,17 +57,13 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
 
   useEffect(() => {
     getMyDeliveries()
-      filterDeliveries()
-}, [deliveries])
+    filterDeliveries()
+}, [deliveries, takeDeliverySuccess])
   
   
 ////функция чтобы волонтер взял доставку
 async function getDelivery(delivery:IDelivery) {
-  const id: number = delivery.id;
-try {
-   if (token) {
-     let result: IDelivery = await postDeliveryTake(token, id, delivery);
-     if (result) {
+       const id: number = delivery.id;
        const deliveryDate = new Date(delivery.date);
        const date = deliveryDate.getDate();
        const month = getMonthCorrectEndingName(deliveryDate);
@@ -75,28 +71,49 @@ try {
        const minutes = deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes();    
        const subway = getMetroCorrectName(delivery.location.subway)
        const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`
+     try {
+      if (token) {
+       let result: IDelivery = await postDeliveryTake(token, id, delivery);
+       if (result) {
        setTakeDeliverySuccess(true)
        setTakeDeliverySuccessDateName(finalString)
-  }
-}
-} catch (err) {
-  console.log(err, "MainTabVolunteer getMDelivery fail")
-}
-  }
+         }
+       }
+       } catch (err) {
+     if (err == 'Error: You have already taken this delivery') {
+       setTakeDeliveryFail(true)
+       setTakeDeliveryFailString(`Ошибка, доставка ${finalString}, уже у вас в календаре`)
+     } else {
+       setTakeDeliveryFail(true)
+       setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`)
+       }
+       
+       }
+   }
   
 
 
   return (
     <>
-      <div className="mt-2 mb-4 bg-light-gray-white">
+      <div className="mt-2 mb-4 bg-light-gray-white dark:bg-light-gray-7-logo">
         <SliderStories />
-        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4">Расписание доставок</div>
+        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 mb-3 dark:text-light-gray-white ">Расписание доставок</div>
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         {filteredDeliveries.length > 0 ? (
-        <SliderCardsDeliveries deliveries={filteredDeliveries} switchTab={switchTab} getDelivery={getDelivery} stringForModal={takeDeliverySuccessDateName} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+          <SliderCardsDeliveries deliveries={filteredDeliveries} myDeliveries={myCurrent} switchTab={switchTab} getDelivery={getDelivery} stringForModal={takeDeliverySuccessDateName} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
         ): ""}
         
       </div>
+      <ConfirmModal
+        isOpen={takeDeliveryFail}
+        onOpenChange={setTakeDeliveryFail}
+        onConfirm={() => { setTakeDeliveryFail(false); setTakeDeliveryFailString("")}}
+        title={takeDeliveryFailString}
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+      />
+
     </>
   )
 }
