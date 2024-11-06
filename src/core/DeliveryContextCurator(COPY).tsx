@@ -34,48 +34,37 @@ const defaultDeliveryContext: IDeliveryContext = {
   updateDeliveryStatus: () => {},
 };
 
-///создаю контекст
 export const DeliveryContext = createContext<IDeliveryContext>(
   defaultDeliveryContext,
 );
 
-export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const DeliveryProviderCurator: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [hasFetchedCurator, setHasFetchedCurator] = useState<boolean>(false);
+  const [hasFetchedAll, setHasFetchedAll] = useState<boolean>(false);
 
-  //////////////////////////////////////////////////////
   const userValue = useContext(UserContext);
   const token = userValue.token;
-  ////// используем контекст
 
-  const fetchAllDeliveries = async () => {
+  const fetchAllDeliveries = useCallback(async () => {
+    if (!token || hasFetchedAll) return;
     setIsLoading(true);
     setError(null);
-
     try {
-      if (token) {
-        // Передаем токен в getUsers
-        const response = await getAllDeliveries(token);
-
-        if (response) {
-          setDeliveries(response);
-          console.log(response);
-
-        } else {
-          console.error('Ошибка получения доставок с сервера DaliveryContext');
-          setError('Ошибка получения доставок с сервера DaliveryContext');
-        }
-      }
+      const response = await getAllDeliveries(token);
+      setDeliveries(response ?? []); // Устанавливаем пустой массив, если ответ `null` или `undefined`
+      setHasFetchedAll(true);
     } catch (err) {
-      console.log(err, 'DeliveryContext');
+      console.error('Failed to fetch all deliveries:', err);
+      setError('Failed to fetch deliveries');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token, hasFetchedAll]);
 
   const fetchCuratorDeliveries = useCallback(async () => {
     if (!token || hasFetchedCurator) return;
@@ -119,8 +108,8 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchAllDeliveries();
-    fetchCuratorDeliveries;
-  }, [token, fetchCuratorDeliveries]);
+    fetchCuratorDeliveries();
+  }, [token]);
 
   return (
     <DeliveryContext.Provider
