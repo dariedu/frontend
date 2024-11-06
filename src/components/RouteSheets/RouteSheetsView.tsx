@@ -3,11 +3,11 @@ import avatar from '../../assets/avatar.svg';
 import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
 
 interface IRoute {
-  address: string;
-  additionalInfo: string;
-  personName: string;
-  avatar?: string; // Optional if there's no image
-  needsPhoto?: boolean;
+  address: string; // Адрес
+  additionalInfo: string; // Дополнительная информация (link)
+  personName: string; // Имя получателя (beneficiary)
+  avatar?: string; // Иконка или изображение, если доступно
+  needsPhoto?: boolean; // Логическое значение для фото, по умолчанию false
 }
 
 interface IRouteSheetsViewProps {
