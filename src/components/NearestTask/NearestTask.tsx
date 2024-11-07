@@ -458,6 +458,7 @@ const NearestTask: React.FC<INearestTaskProps> = ({
           onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
           volunteer={true}
           delivery={false}
+          deliveryOrTaskId={0}
         />
       </Modal>
       <Modal
@@ -469,6 +470,7 @@ const NearestTask: React.FC<INearestTaskProps> = ({
           onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
           volunteer={false}
           delivery={false}
+          deliveryOrTaskId={0}
         />
       </Modal>
       <ConfirmModal

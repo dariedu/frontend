@@ -25,7 +25,7 @@ const CalendarCurator: React.FC = React.memo(() => {
   } = useContext(DeliveryContext);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [points, setPoints] = useState<number>(0);
+  // const [points, setPoints] = useState<number>(0);
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState<number | null>(
     null,
   );
@@ -33,9 +33,9 @@ const CalendarCurator: React.FC = React.memo(() => {
     [deliveryId: number]: IRouteSheet[];
   }>({});
 
-  useEffect(() => {
-    setPoints(currentUser?.point ?? 0);
-  }, [currentUser]);
+  // useEffect(() => {
+  //   setPoints(currentUser?.point ?? 0);
+  // }, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {

@@ -4,7 +4,7 @@ import Calendar from '../../../components/Calendar/Calendar';
 import SliderCards from '../../../components/SliderCards/SliderCards';
 import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
-import RouteSheets from '../../../components/RouteSheets/RouteSheets';
+// import RouteSheets from '../../../components/RouteSheets/RouteSheets';
 import Search from '../../../components/Search/Search';
 import { IUser } from '../../../core/types';
 import avatar1 from '../../../assets/avatar.svg';
@@ -45,10 +45,10 @@ const users: IUser[] = [
   },
 ];
 
-interface RouteSheet {
-  id: number;
-  title: string;
-}
+// interface RouteSheet {
+//   id: number;
+//   title: string;
+// }
 
 const MainPageCurator: React.FC = () => {
   const { nearestDelivery, isLoading, error } = useContext(DeliveryContext);
@@ -58,26 +58,26 @@ const MainPageCurator: React.FC = () => {
   const points = 5;
 
   // Данные маршрутных листов
-  const routeSheetsData: RouteSheet[] = [
-    { id: 1, title: 'Маршрутный лист 1' },
-    { id: 2, title: 'Маршрутный лист 2' },
-    { id: 3, title: 'Маршрутный лист 3' },
-    { id: 4, title: 'Маршрутный лист 4' },
-  ];
+  // const routeSheetsData: RouteSheet[] = [
+  //   { id: 1, title: 'Маршрутный лист 1' },
+  //   { id: 2, title: 'Маршрутный лист 2' },
+  //   { id: 3, title: 'Маршрутный лист 3' },
+  //   { id: 4, title: 'Маршрутный лист 4' },
+  // ];
 
   // Состояние завершенных маршрутных листов
-  const [completedRouteSheets, setCompletedRouteSheets] = useState<boolean[]>(
-    Array(routeSheetsData.length).fill(false),
-  );
+  //  const [completedRouteSheets, setCompletedRouteSheets] = useState<boolean[]>(
+  //     Array(routeSheetsData.length).fill(false),
+  //   );
 
   // Обработчик для открытия маршрутных листов
   const openRouteSheets = () => {
     setIsRouteSheetsOpen(true);
   };
 
-  const closeRouteSheets = () => {
-    setIsRouteSheetsOpen(false);
-  };
+  // const closeRouteSheets = () => {
+  //   setIsRouteSheetsOpen(false);
+  // };
 
   const handleUserClick = (user: IUser) => {
     console.log('Selected user:', user);
@@ -147,7 +147,7 @@ const MainPageCurator: React.FC = () => {
           <SliderCards showTitle={true} switchTab={() => {}} />
         </>
       )}
-      {isRouteSheetsOpen && (
+      {/* {isRouteSheetsOpen && (
         <RouteSheets
           status={deliveryStatus}
           onClose={closeRouteSheets} // Закрытие маршрутных листов
@@ -156,7 +156,7 @@ const MainPageCurator: React.FC = () => {
           setCompletedRouteSheets={setCompletedRouteSheets} // Функция для обновления завершенных маршрутов
           onStatusChange={() => {}}
         />
-      )}
+      )} */}
     </div>
   );
 };
