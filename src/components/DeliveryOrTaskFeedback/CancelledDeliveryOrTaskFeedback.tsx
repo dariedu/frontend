@@ -7,7 +7,7 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 
 interface IDeliveryFeedbackProps{
-    onOpenChange: (open: boolean) => void
+  onOpenChange: (open: boolean) => void
   onSubmitFidback: (e: boolean) => void
   delivery: boolean //// true если это доствка false  если это доброе дело
   deliveryOrTaskId:number
