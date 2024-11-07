@@ -100,28 +100,33 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               </div>
             </div>
             {/* /////////////////////// */}
+            {delivery.curator.name && delivery.curator.name.length > 0 ? (
             <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
-              <div className="flex">
-                {/* <img
-                  className="h-[32px] w-[32px] rounded-full"
-                  src={delivery.curator.photo}
-                /> */}
-                <div className="felx flex-col justify-center items-start ml-4">
-                  <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
-                    {delivery.curator.name}
-                  </h1>
-                  <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
-                    Куратор
-                  </p>
-                </div>
+            <div className="flex">
+              {/* <img
+                className="h-[32px] w-[32px] rounded-full"
+                src={delivery.curator.photo}
+              /> */}
+              <div className="felx flex-col justify-center items-start ml-4">
+                <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
+                  {delivery.curator.name}
+                </h1>
+                <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
+                  Куратор
+                </p>
               </div>
-              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-                <img
-                  src="../src/assets/icons/small_sms.svg"
-                  className="w-[36px] h-[35px]"
-                />
-              </a>
-            </div>
+                </div>
+                {curatorTelegramNik && curatorTelegramNik.length > 0 ? (
+               <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+               <img
+                 src="../src/assets/icons/small_sms.svg"
+                 className="w-[36px] h-[35px]"
+               />
+             </a>
+               ) : ""} 
+          </div>
+            ): ""}
+           
             {/* /////////////////////// */}
             {delivery.location.description &&
             delivery.location.description.length != 0 ? (

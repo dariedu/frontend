@@ -10,10 +10,26 @@ type TTaskCategory = {
 };
 
 interface ITask {
-  id: number;
-  category: TTaskCategory;
+  id: number
+  city: {
+    id: number,
+    city: string
+  }
+  category: TTaskCategory
+  curator: {
+    id: number
+    tg_id: number
+    tg_username: string
+    last_name: string
+    name: string
+    surname: string
+    phone: string
+    photo: string
+    photo_view: string
+  }
   name: string;
-  price: number;
+  volunteer_price: number
+  curator_price: number;
   description?: string;
   start_date: string;
   end_date: string;
@@ -21,19 +37,24 @@ interface ITask {
   volunteers_taken: number;
   is_active: boolean;
   is_completed: boolean;
-  city: string;
-  curator: number;
-  volunteers: number[];
+  volunteers?: number[];
 }
 
+
 // Запросить все задачи
-export const getAllAvaliableTasks = async (): Promise<ITask[]> => {
+export const getAllAvaliableTasks = async (
+  access: string
+): Promise<ITask[]> => {
   try {
-    const response: AxiosResponse<ITask[]> = await axios.get(tasksUrl, {
+    const response: AxiosResponse<ITask[]> = await axios({
+      url: tasksUrl,
+      method: 'GET',
       headers: {
+         Authorization: `Bearer ${access}`,
         accept: 'application/json',
       },
     });
+    console.log(response.data, "api tasks")
     return response.data;
   } catch (err: any) {
     console.error('Get request getAllAvaliableTasks has failed', err);
@@ -44,7 +65,7 @@ export const getAllAvaliableTasks = async (): Promise<ITask[]> => {
 // Принять задание
 export const postTaskAccept = async (
   taskId: number,
-  access: string | null,
+  access: string,
 ): Promise<ITask> => {
   try {
     const response: AxiosResponse<ITask> = await axios.post(
@@ -59,8 +80,14 @@ export const postTaskAccept = async (
     );
     return response.data;
   } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
+    if (err.response.data.error == "You\'ve already taken this task!") {
+       console.log(err.response.data.error)
+      throw new Error(err.response.data.error)
+    } else {
+      console.error('Post request postTaskAccept has failed', err);
     throw new Error('Post request postTaskAccept has failed');
+    }
+    
   }
 };
 
@@ -90,7 +117,7 @@ export const postTaskComplete = async (
 // Отказаться от задания
 export const postTaskRefuse = async (
   taskId: number,
-  access: string | null,
+  access: string,
 ): Promise<ITask> => {
   try {
     const response: AxiosResponse<ITask> = await axios.post(
@@ -131,7 +158,7 @@ export const getTasksCurator = async (
   }
 };
 
-// Получить категории заданий
+
 export const getTasksCategories = async (
   access: string | null,
 ): Promise<TTaskCategory[]> => {
@@ -152,7 +179,28 @@ export const getTasksCategories = async (
   }
 };
 
-// Получить свои задания
+// Получить категории заданий
+// export const getTasksCategories = async (
+//   access: string,
+// ): Promise<TTaskCategory[]> => {
+//   try {
+//     const response: AxiosResponse<TTaskCategory[]> = await axios({
+//         url: `${tasksUrl}get_categories/`,
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${access}`,
+//           accept: 'application/json',
+//         },
+//       },
+//     );
+//     return response.data;
+//   } catch (err: any) {
+//     console.error('Get request getTasksCategories has failed', err);
+//     throw new Error('Get request getTasksCategories has failed');
+//   }
+// };
+
+// Получить свои задания c фильтрами
 export const getMyTasks = async (
   is_active: boolean = false,
   is_completed: boolean = false,
@@ -163,6 +211,26 @@ export const getMyTasks = async (
       `${tasksUrl}my/?is_active=${is_active ? 1 : 0}&is_completed=${
         is_completed ? 1 : 0
       }`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          accept: 'application/json',
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getMyTasks has failed', err);
+    throw new Error('Get request getMyTasks has failed');
+  }
+};
+// Получить свои задания без фильтров
+export const getMyTasksNoFilter = async (
+  access: string | null,
+): Promise<ITask[]> => {
+  try {
+    const response: AxiosResponse<ITask[]> = await axios.get(
+      `${tasksUrl}my`,
       {
         headers: {
           Authorization: `Bearer ${access}`,

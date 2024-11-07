@@ -46,11 +46,11 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
           </div>
              </div>
             </div>    
-        <div className="flex justify-between items-center w-[133px]">
-        <div className="flex items-center justify-center bg-light-gray-white w-[54px] h-[28px] rounded-full dark:bg-light-gray-5 dark:text-light-gray-2">
+        <div className="flex justify-between items-center w-fit space-x-1">
+        <div className="flex justify-center text-center bg-light-gray-white w-fit h-fit py-[6px] px-3 rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub2">
           {`${hours}:${minutes}`}
             </div>
-          <div className="flex items-center justify-center bg-light-brand-green min-w-[75px] h-[28px] rounded-full">
+          <div className="flex items-center justify-center bg-light-brand-green w-fit h-fit py-[6px] px-3 rounded-2xl">
             <span className="text-light-gray-white font-gerbera-sub2">
               + {delivery.price} {getBallCorrectEndingName(delivery.price)}
             </span>

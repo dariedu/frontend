@@ -8,6 +8,8 @@ import { UserContext } from "../../../core/UserContext";
 import { getMetroCorrectName, getMonthCorrectEndingName } from "../../../components/helperFunctions/helperFunctions";
 import ConfirmModal from "../../../components/ui/ConfirmModal/ConfirmModal";
 import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
+import { getAllAvaliableTasks, postTaskAccept, type ITask} from "../../../api/apiTasks";
+import SliderCardsTaskVolunteer from "../../../components/SliderCards/SliderCardsTasksVolunteer";
 
 type TMainTabVolunteerProps = {
   switchTab:React.Dispatch<React.SetStateAction<string>>
@@ -22,10 +24,18 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
   const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
   const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>('');//переменная для записи названия ошибки при взятии доставки
 
+  const [takeTaskSuccess, setTakeTaskSuccess] = useState<boolean>(false);//// подтверждение бронирования доброго дела
+  const [takeTaskSuccessDateName, setTakeTaskSuccessDateName] = useState<string>('');///строка для вывова названия и времени доброго дела в алерт
+  const [takeTaskFail, setTakeTaskFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доброго дела
+  const [takeTaskFailString, setTakeTaskFailString] = useState<string>('');//переменная для записи названия ошибки при взятии доброго дела
+
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]);/// сверяемся есть ли доставки в моих забронированных
 
-  
+  const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
+
+//console.log(allAvaliableTasks, "allavaliable tasks")
+
   ////// используем контекст доставок, чтобы вывести количество доступных баллов 
   const { deliveries } = useContext(DeliveryContext);
   const userValue = useContext(UserContext);
@@ -55,6 +65,24 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
       }
   }
 
+  async function getAllTasks() {
+    
+      try {
+        if (token) {
+        let result: ITask[] = await getAllAvaliableTasks(token);
+        if (result) {
+          setAllAvaliableTasks(result)
+          console.log(result, 'tasks')
+          }
+        }
+      } catch (err) {
+        console.log(err, "getAllTasks() has failed volunteer main tab")
+      }
+  }
+
+  useEffect(() => {
+    getAllTasks()
+    },[token])
 
   useEffect(() => {
     getMyDeliveries()
@@ -89,12 +117,42 @@ async function getDelivery(delivery:IDelivery) {
        setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`)
        }
        }
-   }
+  }
+  
+  ////функция чтобы волонтер взял оброе дело
+async function getTask(task:ITask) {
+  const id: number = task.id;
+  const taskDate = new Date(task.start_date);
+  const date = taskDate.getDate();
+  const month = getMonthCorrectEndingName(taskDate);
+  const hours = taskDate.getHours() < 10 ? '0' + taskDate.getHours() : taskDate.getHours();
+  const minutes = taskDate.getMinutes() < 10 ? '0' + taskDate.getMinutes() : taskDate.getMinutes();    
+  const finalString = `\"${task.name.slice(0, 1).toUpperCase()+task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`
+try {
+ if (token) {
+  let result: ITask = await postTaskAccept(id, token);
+  if (result) {
+  setTakeTaskSuccess(true)
+  setTakeTaskSuccessDateName(finalString)
+    }
+  }
+  } catch (err) {
+if (err == 'Error: You\'ve already taken this task!') {
+  setTakeTaskFail(true)
+  setTakeTaskFailString(`Ошибка, доброе дело ${finalString}, уже в календаре`)
+} else {
+  setTakeTaskFail(true)
+  setTakeTaskFailString(`Упс, что то пошло не так, попробуйте позже`)
+  }
+  }
+}
   
 
 
   return (
-    <div className="flex flex-col h-fit min-h-full overflow-y-auto">
+<>
+      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden">
+         <div>
       <SliderStories />
         {myCurrent.length > 0 ?
               (myCurrent.map((i) => {
@@ -106,14 +164,30 @@ async function getDelivery(delivery:IDelivery) {
               }})
             ) : ""
           }
-      <div className="mt-[6px] mb-20 bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl">
-        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white mt-[20px]">Расписание доставок</div>
+      <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
+        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">Расписание доставок</div>
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} showHeader={false} showFilterButton={false} showDatePickerButton={false} />
         {filteredDeliveries.length > 0 ? (
           <SliderCardsDeliveries deliveries={filteredDeliveries} myDeliveries={myCurrent} switchTab={switchTab} getDelivery={getDelivery} stringForModal={takeDeliverySuccessDateName} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
-        ): ""}
+            ) : (
+             ""
+        )}
         
+         </div>
+        </div>
+        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-fit" >
+        <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-4">Другие добрые дела</div>
+          {allAvaliableTasks.length > 0 ? (
+          <SliderCardsTaskVolunteer tasks={allAvaliableTasks} switchTab={switchTab} getTask={getTask} stringForModal={takeTaskSuccessDateName} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess}/>
+          ) : (
+            <div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4 mb-5'>
+            <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
+            <p className='dark:text-light-gray-1'>Скоро тут появятся добрые дела</p>
+          </div>
+          )}  
       </div>
+        </div>
+       
       <ConfirmModal
         isOpen={takeDeliveryFail}
         onOpenChange={setTakeDeliveryFail}
@@ -121,10 +195,19 @@ async function getDelivery(delivery:IDelivery) {
         title={takeDeliveryFailString}
         description=""
         confirmText="Ок"
-        isSingleButton={true}
+         isSingleButton={true}
       />
+       <ConfirmModal
+        isOpen={takeTaskFail}
+        onOpenChange={setTakeTaskFail}
+        onConfirm={() => { setTakeTaskFail(false); setTakeTaskFailString("")}}
+        title={takeTaskFailString}
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+       />
+</>
 
-    </div>
   )
 }
 
