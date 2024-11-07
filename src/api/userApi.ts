@@ -22,10 +22,28 @@ export const getUsers = async (access: string): Promise<IUser[]> => {
   }
 };
 
+// Получение списка пользователей с возможными фильтрами
+export const getVolunteers = async (access: string): Promise<IUser[]> => {
+  try {
+    const response: AxiosResponse<IUser[]> = await axios.get(
+      `${usersEndpoint}?is_staff=false&is_superuser=false/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching users:', error);
+    throw new Error('Failed to fetch users');
+  }
+};
+
 // Получение информации о пользователе по ID
 export const getUserById = async (
   id: number,
-  access: string,
+  token: string | null,
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
@@ -34,7 +52,7 @@ export const getUserById = async (
       `${usersEndpoint}${id}/`,
       {
         headers: {
-          Authorization: `Bearer ${access}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     );
