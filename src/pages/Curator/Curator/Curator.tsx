@@ -6,8 +6,7 @@ import { IUser } from '../../../core/types';
 
 const Curator: React.FC = () => {
   const { currentUser, isLoading } = useContext(UserContext);
-  const currentUserId = currentUser?.id || 1;
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   if (isLoading) {
     return <div>Загрузка...</div>;
@@ -18,11 +17,11 @@ const Curator: React.FC = () => {
   }
 
   const handleUserClick = (user: IUser) => {
-    setSelectedUser(user);
+    setSelectedUserId(user.id); // Передаем ID выбранного пользователя
   };
 
   const closeProfile = () => {
-    setSelectedUser(null);
+    setSelectedUserId(null);
   };
 
   return (
@@ -34,12 +33,8 @@ const Curator: React.FC = () => {
         showInfoSection={false}
       />
 
-      {selectedUser && (
-        <ProfileUser
-          userId={selectedUser.id}
-          currentUserId={currentUserId}
-          onClose={closeProfile}
-        />
+      {selectedUserId && (
+        <ProfileUser currentUserId={selectedUserId} onClose={closeProfile} />
       )}
     </div>
   );

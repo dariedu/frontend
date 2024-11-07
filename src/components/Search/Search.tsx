@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import searchIcon from '../../assets/icons/search.svg';
 import metroIcon from '../../assets/icons/metro_station.svg';
 import { IUser } from '../../core/types';
+import { UserContext } from '../../core/UserContext';
+import { getVolunteers } from '../../api/userApi';
+import ProfileUser from '../ProfileUser/ProfileUser';
 
 interface ISearchProps {
   placeholder?: string;
@@ -17,24 +20,47 @@ const Search: React.FC<ISearchProps> = ({
   placeholder = 'Поиск по ФИО',
   showSearchInput = true,
   showInfoSection = true,
-  users,
-  onUserClick,
   station = 'Станция не указана', // Установка значений по умолчанию
   address = 'Адрес не указан',
 }) => {
+  const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
+  const [allVolunteers, setAllVolunteers] = useState<IUser[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null); // Хранение ID выбранного пользователя
 
+  // Загружаем список пользователей при наличии токена
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (token) {
+        try {
+          const users = await getVolunteers(token);
+          setAllVolunteers(users);
+        } catch (error) {
+          console.error('Ошибка загрузки пользователей:', error);
+        }
+      }
+    };
+
+    fetchUsers();
+  }, [token]);
+
+  // Фильтруем пользователей на основе поискового запроса
   useEffect(() => {
     if (searchQuery.trim() !== '') {
-      const results = users.filter(user =>
+      const results = allVolunteers.filter(user =>
         (user.name ?? '').toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredUsers(results);
     } else {
       setFilteredUsers([]);
     }
-  }, [searchQuery, users]);
+  }, [searchQuery, allVolunteers]);
+
+  // Обработчик для выбора пользователя
+  const handleUserClick = (user: IUser) => {
+    setSelectedUserId(user.id); // Устанавливаем выбранный user.id
+  };
 
   return (
     <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] max-w-md w-[360px]">
@@ -77,7 +103,7 @@ const Search: React.FC<ISearchProps> = ({
             <div
               key={user.id}
               className="flex items-center space-x-4 p-2 bg-light-gray-1 rounded-[16px] shadow cursor-pointer"
-              onClick={() => onUserClick(user)}
+              onClick={() => handleUserClick(user)}
             >
               <img
                 src={user.avatar}
@@ -90,6 +116,12 @@ const Search: React.FC<ISearchProps> = ({
             </div>
           ))}
         </div>
+      )}
+      {selectedUserId && (
+        <ProfileUser
+          onClose={() => setSelectedUserId(null)}
+          currentUserId={selectedUserId}
+        />
       )}
     </div>
   );
