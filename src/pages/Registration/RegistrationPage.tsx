@@ -9,7 +9,8 @@ import InputDate from '../../components/InputDate/InputDate.tsx';
 import ConcentToPersonalData from './ConcentToPersonalData.tsx';
 import { getTelegramParams } from '../../core/getQueryParams.ts';
 import { fetchCities, type TCity } from '../../api/cityApi.ts';
-
+import Photo from './../../assets/icons/photo.svg?react';
+import Pencile from './../../assets/icons/pencile.svg?react'
 import {
   postRegistration,
   type TRegisterationFormData,
@@ -419,14 +420,18 @@ function RegistrationPage() {
                         src={uploadedPictureLink}
                         className="h-[142px] w-[142px] rounded-full"
                       />
-                    </div>
-                    <img
+                      </div>
+                      <Pencile  className="relative -mt-[25px] ml-[70px]"
+                      onClick={() => {
+                        setIsModalOpen(true);
+                      }} />
+                    {/* <img
                       src="./../src/assets/icons/small_pencile_bg_gray.svg"
                       className="relative -mt-[25px] ml-[70px]"
                       onClick={() => {
                         setIsModalOpen(true);
                       }}
-                    />
+                    /> */}
                   </div>
                 ) : (
                   <div className="flex justify-between place-items-start my-4">
@@ -445,14 +450,17 @@ function RegistrationPage() {
                         на камеру телефона так, чтобы было хорошо видно ваше
                         лицо
                       </p>
-                    </div>
-                    <img
+                        </div>
+                        <Photo className="h-[35px] w-[38px] cursor-pointer"  onClick={() => {
+                        setIsModalOpen(true);
+                      }} />
+                    {/* <img
                       src="./../src/assets/icons/photo.svg"
                       className="h-[35px] w-[38px] cursor-pointer"
                       onClick={() => {
                         setIsModalOpen(true);
                       }}
-                    />
+                    /> */}
                   </div>
                 )}
                 <button
