@@ -16,7 +16,6 @@ const CalendarCurator: React.FC = React.memo(() => {
     currentUser,
     isLoading: isUserLoading,
     error: userError,
-    token,
   } = useContext(UserContext);
 
   const {

@@ -19,7 +19,6 @@ const Search: React.FC<ISearchProps> = ({
   placeholder = 'Поиск по ФИО',
   showSearchInput = true,
   showInfoSection = true,
-  users,
   onUserClick,
   station = 'Станция не указана',
   address = 'Адрес не указан',
