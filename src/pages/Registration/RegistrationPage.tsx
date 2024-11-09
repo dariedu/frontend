@@ -7,7 +7,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
 import InputDate from '../../components/InputDate/InputDate.tsx';
 import ConcentToPersonalData from './ConcentToPersonalData.tsx';
-//import { getTelegramParams } from '../../core/getQueryParams.ts';
 import { fetchCities, type TCity } from '../../api/cityApi.ts';
 import Photo from './../../assets/icons/photo.svg?react';
 import Pencile from './../../assets/icons/pencile.svg?react'
@@ -18,6 +17,8 @@ import {
 } from '../../api/apiRegistrationToken.ts';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 import InputOptions from './InputOptions.tsx';
+import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react'
+
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -29,22 +30,22 @@ function RegistrationPage() {
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
   const [birthDate, setBirthDate] = useState<string>('');
-  //const [requestForRegistrationSubmited, setRequestForRegistrationSubmited] = useState<'start' | 'submitSuccess' | 'submitFailed'>('start');
-  //const [res, setRes] = useState<boolean|undefined>();
+
+  const [registrationhasFailed, setRegistrationhasFailed] = useState<boolean>(false); /// если регистрация не прошла, выводим ошибку пользователю
+
   const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
   const [openCalendar, setOpenCalendar] = useState(false); ////открывает модалку с календарем
   const calendarRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
   const [concentOpenModal, setConcentOpenModal] = useState(false); /// открываем окно с условиями обработки персональных данных
   const [registrationComplete, setRegistrationComplete] = useState(false);
-  //const [birthdayMissing, setBirthdayMissing] = useState(false);
 
   ///// данные для инпута для выбора города
   const [clickedCity, setClickedCity] = useState(false);
   const [cityOptions, setCityOptions] = useState<[number, string][]>([
     [1, 'Москва'],
-    [3, 'Ростов-на-Дону'],
-    [4, 'другой'],
+    [2, 'Ростов-на-Дону'],
+    [3, 'другой'],
   ]);
   const [cityIndex, setCityIndex] = useState<number>(1);
   ///// данные для инпута для выбора города
@@ -58,7 +59,6 @@ function RegistrationPage() {
         arr.push([res.id, res.city]);
       });
     } catch (err) {
-      //alert(err + ' reqCiliesList has failed, registrationPage')
       console.error(err, 'reqCiliesList has failed, registrationPage');
     } finally {
       if (arr.length > 0) {
@@ -104,7 +104,6 @@ function RegistrationPage() {
     setBirthDate(dateString);
     localStorage.setItem('isAdult', `${adult}`);
     setIsAdult(adult);
-    // setBirthdayMissing(false);
     if (calendarRef.current != undefined && calendarRef.current != null) {
       calendarRef.current.value = dateString;
     }
@@ -155,16 +154,16 @@ function RegistrationPage() {
     else localStorage.setItem(fieldName, value);
   }
 
+  ////отправляем данные на сервер
   async function fetchRegistration(user: TRegisterationFormData) {
     try {
       const response = await postRegistration(user);
       if (response == true) {
-        //setRequestForRegistrationSubmited('submitSuccess'); ///// устанавливаем дата, чтобы знать, что отображать на экране
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
+        setRegistrationCompleteModal(true);
       }
     } catch (e) {
-      console.log('запрос fetchRegistration  прошел с ошибкой', e);
-      //  setRequestForRegistrationSubmited('submitFailed');
+      setRegistrationhasFailed(true)
     }
   }
 
@@ -178,47 +177,28 @@ function RegistrationPage() {
     birthday: string;
     city: number;
   };
-  //////функция для сабмита формы
 
-  //phone_number=79086851174&tg_id=1567882993&tg_nickname=@MGdata
-  // type TParameterObj = {
-  //   phone_number: string
-  //   tg_id: string
-  //   tg_nickname:string
-  // }
-  
-  // const parametersObj: TParameterObj = {
-  //   phone_number:"",
-  //   tg_id:"",
-  //   tg_nickname:""
-  // };
-  
+
+  //// бэк передает параметры пользователя через командную строку оттуда и берем данные
   const paramsFromCommandLine: string[] = [];
-
-  // useEffect(() => {
     if (window.location.search !="" && window.location.search!=null) {
       const str = window.location.search;
       const params:["phone_number", "tg_id", "tg_nickname"] = ["phone_number", "tg_id", "tg_nickname"];
       let regexp;
       for (let i = 0; i < params.length; i++){
-         console.log(params[i], "(let i = 0; i < params.length; i++)")
          regexp = `[\\?&]${params[i]}=([^&#]*)`;
          if (str.match(regexp) !== null && str.match(regexp)?.length) {
            let obj = str.match(regexp) || [];
-           console.log(obj, "obj")
            if (obj.length > 0) {
             paramsFromCommandLine.push(obj[1])
            }
          }
       }
-    }
-// }, [])
- 
-console.log(paramsFromCommandLine, "paramsFromCommandLine")
-  function onFormSubmit() {
-   // const { tgId, tgUsername } = getTelegramParams();
+  }
+  //////функция для сабмита формы
+ async function onFormSubmit() {
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: +paramsFromCommandLine[1] || 0,
+      tg_id: +paramsFromCommandLine[1] || NaN,
       tg_username: paramsFromCommandLine[2] || '',
       is_adult: isAdult,
       phone: paramsFromCommandLine[0] || '',
@@ -231,12 +211,6 @@ console.log(paramsFromCommandLine, "paramsFromCommandLine")
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
     user.city = cityIndex;
-   
-    console.log(user.tg_id, user.phone, user.tg_username, 'user obj when sent to server for registration')
-    user.phone = paramsFromCommandLine[0];
-    user.tg_username = paramsFromCommandLine[2];
-    user.tg_id = +paramsFromCommandLine[1];
-    console.log(user.tg_id, user.phone, user.tg_username, 'user obj when sent to server for registration after double check')
     ///// создаем объект форм дата
     const formData = new FormData();
     ///// перебираем юзера переносим все поля `в форм дата
@@ -261,28 +235,21 @@ console.log(paramsFromCommandLine, "paramsFromCommandLine")
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
+  
     fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
-    setRegistrationCompleteModal(true);
+    
   }
 
-  // :  requestForRegistrationSubmited == 'submitFailed' ? (
-  //   <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
-  //     <img src="./../src/assets/icons/AwaitConfirmRegistrationLogo.svg"></img>
-  //     <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center">
-  //       Упс.. что-то пошло не так
-  //     </h1>
-  //   </div>
-  // )
 
   return (
     <>
       {registrationComplete ? (
         <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
-          <img src="./../src/assets/icons/AwaitConfirmRegistrationLogo.svg"></img>
-          <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center">
+          <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
+          <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center mt-7">
             Благодарим за регистрацию!
             <br />
-            Теперь вы можете перейти на главную страницу
+            Теперь вы можете перейти на <a href="/volunteer" className='text-light-brand-green cursor-pointer'>главную страницу</a>
           </h1>
         </div>
       ) : (
@@ -572,7 +539,21 @@ console.log(paramsFromCommandLine, "paramsFromCommandLine")
           </Modal>
           <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
             <ConcentToPersonalData />
-          </Modal>
+            </Modal>
+      <ConfirmModal
+      isOpen={registrationhasFailed}
+      onOpenChange={setRegistrationhasFailed}
+      onConfirm={() => setRegistrationhasFailed(false)}
+      title={
+        <p>
+          Упс, что-то пошло не так
+          <br /> Попробуйте позже.
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+    />
         </>
       )}
     </>

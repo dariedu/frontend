@@ -11,7 +11,7 @@ import NearestDeliveryVolunteer from "../../../components/NearestDelivery/Neares
 import { getAllAvaliableTasks, postTaskAccept, type ITask} from "../../../api/apiTasks";
 import SliderCardsTaskVolunteer from "../../../components/SliderCards/SliderCardsTasksVolunteer";
 import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
-import './index.css';
+
 
 type TMainTabVolunteerProps = {
   switchTab:React.Dispatch<React.SetStateAction<string>>
