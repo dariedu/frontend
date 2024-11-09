@@ -4,7 +4,6 @@ import metroIcon from '../../assets/icons/metro_station.svg';
 import { IUser } from '../../core/types';
 import { UserContext } from '../../core/UserContext';
 import { getVolunteers } from '../../api/userApi';
-import ProfileUser from '../ProfileUser/ProfileUser';
 
 interface ISearchProps {
   placeholder?: string;
@@ -20,16 +19,16 @@ const Search: React.FC<ISearchProps> = ({
   placeholder = 'Поиск по ФИО',
   showSearchInput = true,
   showInfoSection = true,
-  station = 'Станция не указана', // Установка значений по умолчанию
+  users,
+  onUserClick,
+  station = 'Станция не указана',
   address = 'Адрес не указан',
 }) => {
-  const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
+  const { token } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [allVolunteers, setAllVolunteers] = useState<IUser[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null); // Хранение ID выбранного пользователя
 
-  // Загружаем список пользователей при наличии токена
   useEffect(() => {
     const fetchUsers = async () => {
       if (token) {
@@ -45,7 +44,6 @@ const Search: React.FC<ISearchProps> = ({
     fetchUsers();
   }, [token]);
 
-  // Фильтруем пользователей на основе поискового запроса
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       const results = allVolunteers.filter(user =>
@@ -56,11 +54,6 @@ const Search: React.FC<ISearchProps> = ({
       setFilteredUsers([]);
     }
   }, [searchQuery, allVolunteers]);
-
-  // Обработчик для выбора пользователя
-  const handleUserClick = (user: IUser) => {
-    setSelectedUserId(user.id); // Устанавливаем выбранный user.id
-  };
 
   return (
     <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] max-w-md w-[360px]">
@@ -103,7 +96,7 @@ const Search: React.FC<ISearchProps> = ({
             <div
               key={user.id}
               className="flex items-center space-x-4 p-2 bg-light-gray-1 rounded-[16px] shadow cursor-pointer"
-              onClick={() => handleUserClick(user)}
+              onClick={() => onUserClick(user)}
             >
               <img
                 src={user.avatar}
@@ -116,12 +109,6 @@ const Search: React.FC<ISearchProps> = ({
             </div>
           ))}
         </div>
-      )}
-      {selectedUserId && (
-        <ProfileUser
-          onClose={() => setSelectedUserId(null)}
-          currentUserId={selectedUserId}
-        />
       )}
     </div>
   );
