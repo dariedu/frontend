@@ -30,6 +30,7 @@ function RegistrationPage() {
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
   const [birthDate, setBirthDate] = useState<string>('');
+  const [requestSent, setRequestSent] = useState(false);
 
   const [registrationhasFailed, setRegistrationhasFailed] = useState<boolean>(false); /// если регистрация не прошла, выводим ошибку пользователю
 
@@ -161,8 +162,9 @@ function RegistrationPage() {
       if (response == true) {
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
         setRegistrationCompleteModal(true);
-      }
+      } 
     } catch (e) {
+      setRequestSent(false)
       setRegistrationhasFailed(true)
     }
   }
@@ -196,9 +198,11 @@ function RegistrationPage() {
       }
   }
   //////функция для сабмита формы
- async function onFormSubmit() {
+  async function onFormSubmit() {
+    setRequestSent(true);
+
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: +paramsFromCommandLine[1] || NaN,
+      tg_id: +paramsFromCommandLine[1] || 0,
       tg_username: paramsFromCommandLine[2] || '',
       is_adult: isAdult,
       phone: paramsFromCommandLine[0] || '',
@@ -235,9 +239,7 @@ function RegistrationPage() {
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
-  
     fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
-    
   }
 
 
@@ -249,7 +251,7 @@ function RegistrationPage() {
           <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center mt-7">
             Благодарим за регистрацию!
             <br />
-            Теперь вы можете перейти на <a href="/volunteer" className='text-light-brand-green cursor-pointer'>главную страницу</a>
+            Теперь вы можете перейти на главную страницу
           </h1>
         </div>
       ) : (
@@ -481,7 +483,8 @@ function RegistrationPage() {
                         ? 'btn-B-GreenDefault mb-8'
                         : 'btn-B-GreenInactive mb-8'
                   }
-                  onClick={e => {
+                    onClick={e => {
+                    
                     if (isAdult && !checked) {
                       e.preventDefault();
                     } else {
@@ -491,10 +494,13 @@ function RegistrationPage() {
                       } else {
                         setTryToSubmitWithoutPic(true);
                       }
-                    }
+                      }
+                      if (requestSent) {
+                        e.preventDefault()
+                      }
                   }}
                 >
-                  Отправить заявку
+                    {requestSent ? "Запрос отправлен" : "Отправить заявку" }
                 </button>
               </div>
               <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
