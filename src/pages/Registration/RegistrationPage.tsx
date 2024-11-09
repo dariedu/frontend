@@ -202,7 +202,7 @@ function RegistrationPage() {
     setRequestSent(true);
 
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: +paramsFromCommandLine[1] || 0,
+      tg_id: +paramsFromCommandLine[1] || NaN,
       tg_username: paramsFromCommandLine[2] || '',
       is_adult: isAdult,
       phone: paramsFromCommandLine[0] || '',
