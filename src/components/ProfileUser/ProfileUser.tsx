@@ -5,7 +5,7 @@ import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import { IUser } from '../../core/types';
-import { getUserById } from '../../api/userApi'; // Предполагаем, что есть API-запрос для получения пользователя по ID
+import { getUserById } from '../../api/userApi';
 
 interface IProfileUserProps {
   onClose: () => void;
@@ -22,10 +22,10 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   useEffect(() => {
     const fetchUser = async () => {
       if (currentUser?.id === currentUserId) {
-        setUser(currentUser); // Если это текущий пользователь, используем данные из контекста
+        setUser(currentUser);
       } else {
         try {
-          const fetchedUser = await getUserById(currentUserId, token); // Загрузка данных по ID
+          const fetchedUser = await getUserById(currentUserId, token);
           setUser(fetchedUser);
         } catch (error) {
           console.error('Ошибка загрузки пользователя:', error);
