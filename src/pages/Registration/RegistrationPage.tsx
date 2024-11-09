@@ -7,7 +7,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { CheckboxElement } from './../../components/ui/CheckboxElement/CheckboxElement';
 import InputDate from '../../components/InputDate/InputDate.tsx';
 import ConcentToPersonalData from './ConcentToPersonalData.tsx';
-import { getTelegramParams } from '../../core/getQueryParams.ts';
+//import { getTelegramParams } from '../../core/getQueryParams.ts';
 import { fetchCities, type TCity } from '../../api/cityApi.ts';
 import Photo from './../../assets/icons/photo.svg?react';
 import Pencile from './../../assets/icons/pencile.svg?react'
@@ -179,14 +179,46 @@ function RegistrationPage() {
     city: number;
   };
   //////функция для сабмита формы
-  function onFormSubmit() {
-    const { tgId, tgUsername, phone } = getTelegramParams();
 
+  //phone_number=79086851174&tg_id=1567882993&tg_nickname=@MGdata
+  type TParameterObj = {
+  phone_number: string
+    tg_id: string
+    tg_nickname:string
+  }
+  
+  const parametersObj: TParameterObj = {
+    phone_number:"",
+    tg_id:"",
+    tg_nickname:""
+  };
+  
+
+  useEffect(() => {
+    if (window.location.search !="" && window.location.search!=null) {
+      const str = window.location.search;
+      const params:["phone_number", "tg_id", "tg_nickname"] = ["phone_number", "tg_id", "tg_nickname"];
+      let regexp;
+       for (let i = 0; i < params.length; i++){
+         regexp = `[\\?&]${params[i]}=([^&#]*)`;
+         if (str.match(regexp) !== null && str.match(regexp)?.length) {
+           let obj = str.match(regexp) || [];
+           if (obj.length > 0) {
+              parametersObj[params[i]] = obj[1]
+           }
+         }
+      }
+    }
+}, [])
+ 
+
+  function onFormSubmit() {
+   // const { tgId, tgUsername } = getTelegramParams();
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: tgId || 0,
-      tg_username: tgUsername || '',
+      tg_id: +parametersObj.tg_id || 0,
+      tg_username: parametersObj.tg_nickname || '',
       is_adult: isAdult,
-      phone: phone || '',
+      phone: parametersObj.phone_number || '',
       photo: '',
       birthday: '',
       city: 0,

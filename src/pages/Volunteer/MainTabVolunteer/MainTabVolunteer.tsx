@@ -10,6 +10,8 @@ import ConfirmModal from "../../../components/ui/ConfirmModal/ConfirmModal";
 import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 import { getAllAvaliableTasks, postTaskAccept, type ITask} from "../../../api/apiTasks";
 import SliderCardsTaskVolunteer from "../../../components/SliderCards/SliderCardsTasksVolunteer";
+import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
+import './index.css';
 
 type TMainTabVolunteerProps = {
   switchTab:React.Dispatch<React.SetStateAction<string>>
@@ -40,8 +42,11 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
   const { deliveries } = useContext(DeliveryContext);
   const userValue = useContext(UserContext);
   const token = userValue.token;
+  //const theme = useContext(ThemeContext)
   ////// используем контекст
   
+
+ 
   ///// убираем все неактивные (завершенные заявки из списка)
   function filterDeliveries() {
     if (deliveries.length > 0) {
@@ -180,8 +185,8 @@ if (err == 'Error: You\'ve already taken this task!') {
           {allAvaliableTasks.length > 0 ? (
           <SliderCardsTaskVolunteer tasks={allAvaliableTasks} switchTab={switchTab} getTask={getTask} stringForModal={takeTaskSuccessDateName} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess}/>
           ) : (
-            <div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4 mb-5'>
-            <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
+              <div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4 mb-5'>
+                <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='dark:text-light-gray-1'>Скоро тут появятся добрые дела</p>
           </div>
           )}  
