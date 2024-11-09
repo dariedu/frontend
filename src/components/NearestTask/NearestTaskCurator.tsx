@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  getBallCorrectEndingName,
   getMonthCorrectEndingName,
   getVolunteerCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
@@ -10,7 +9,6 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 //import RouteSheets from '../RouteSheets/RouteSheets';
 import { type ITask } from '../../api/apiTasks';
-
 
 interface INearestTaskProps {
   task: ITask;
@@ -28,14 +26,16 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
 
   const [fullViewCurator, setFullViewCurator] = useState(false);
   // const [currentStatus, setCurrentStatus] = useState<TTaskFilter>(taskFilter); /// статус доставки 'nearest' | 'active' | 'completed'
- // const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
-  const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] =    useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
-  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =    useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  // const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
+  const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] =
+    useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
+  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
+    useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
 
-
-  const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] =    useState(false); //// модальное окно для отмены доставки
-  const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =    useState(false); //// модальное окно для подтверждения отмены доставки
-
+  const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] =
+    useState(false); //// модальное окно для отмены доставки
+  const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =
+    useState(false); //// модальное окно для подтверждения отмены доставки
 
   function onSelectVolunteer(
     volunteerName: string,
@@ -72,7 +72,13 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
                   ? 'font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2'
                   : 'font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2 cursor-pointer'
               }
-              onClick={() => {taskFilter == 'nearest' ? '' : fullViewCurator == true  ? setFullViewCurator(false) : setFullViewCurator(true)}}
+              onClick={() => {
+                taskFilter == 'nearest'
+                  ? ''
+                  : fullViewCurator == true
+                    ? setFullViewCurator(false)
+                    : setFullViewCurator(true);
+              }}
             >
               {task.category.name}{' '}
             </p>
@@ -102,7 +108,8 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
           </div>
         </div>
         {/* /////////////////////// */}
-        {taskFilter == 'active' ? ( ''
+        {taskFilter == 'active' ? (
+          ''
         ) : taskFilter == 'nearest' ? (
           <div className="flex justify-between items-center mt-[20px]">
             <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
@@ -127,32 +134,29 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         ) : (
           ''
         )}
-         { taskFilter == 'active' || taskFilter == 'completed' ? (
-            ''
-          ) : (
-            <button
-              className="btn-B-WhiteDefault mt-[20px]"
-              onClick={() => setFullViewCurator(true)}
-            >
-              Список записавшихся волонтёров
-            </button>
-          )
-        }
-        {
-          taskFilter == 'completed' && fullViewCurator ? (
-            <button
-              className="btn-B-GreenDefault  mt-[20px]"
-              onClick={e => {
-                e.preventDefault();
-                setIsCuratorFeedbackModalOpen(true);
-              }}
-            >
-              Поделиться впечатлениями
-            </button>
-          ) : (
-            ''
-          )
-       }
+        {taskFilter == 'active' || taskFilter == 'completed' ? (
+          ''
+        ) : (
+          <button
+            className="btn-B-WhiteDefault mt-[20px]"
+            onClick={() => setFullViewCurator(true)}
+          >
+            Список записавшихся волонтёров
+          </button>
+        )}
+        {taskFilter == 'completed' && fullViewCurator ? (
+          <button
+            className="btn-B-GreenDefault  mt-[20px]"
+            onClick={e => {
+              e.preventDefault();
+              setIsCuratorFeedbackModalOpen(true);
+            }}
+          >
+            Поделиться впечатлениями
+          </button>
+        ) : (
+          ''
+        )}
         {/* /////////////////////// */}
       </div>
       <Modal

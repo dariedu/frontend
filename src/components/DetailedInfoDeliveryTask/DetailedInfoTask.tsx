@@ -85,7 +85,6 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
                   <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
                     Онлайн
                   </p>
-  
               </div>
             </div>
           </div>
@@ -114,7 +113,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
           <div className="flex">
             {/* <img
               className="h-[32px] w-[32px] rounded-full"
-              src={task.curator.photo}
+              src={task.curator.photo_view}
             /> */}
             <div className="felx flex-col justify-center items-start ml-4">
               <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
@@ -167,6 +166,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
         isOpen={takeTaskSuccess}
         onOpenChange={setTakeTaskSuccess}
         onConfirm={() => {
+          onOpenChange(false)
           setTakeTaskSuccess(false);
         }}
         onCancel={() => {

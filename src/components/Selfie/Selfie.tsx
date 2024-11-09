@@ -2,6 +2,8 @@ import React, { useState, useRef, type Dispatch } from 'react';
 import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
 //import ReactCrop from 'react-image-crop';
+import Small_pencile_bg_gray from './../../assets/icons/small_pencile_bg_gray.svg?react'
+import Photo from './../../assets/icons/photo.svg?react'
 
 interface ISelfieProps {
   text: string;
@@ -76,24 +78,36 @@ export const Selfie: React.FC<ISelfieProps> = ({
                   e.preventDefault;
                 }}
               />
-              <img
+    <Small_pencile_bg_gray className="absolute bottom-0 right-0"
+                onClick={() =>
+                  isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+                } />
+              {/* <img
                 src="./../src/assets/icons/small_pencile_bg_gray.svg"
                 className="absolute bottom-0 right-0"
                 onClick={() =>
                   isEnabled ? setIsEnabled(false) : setIsEnabled(true)
                 }
-              />
+              /> */}
             </>
           ) : (
-            <img
-              src="./../src/assets/icons/photo.svg"
-              className="h-[72px] w-[72px] cursor-pointer"
+              <Photo  className="h-[72px] w-[72px] cursor-pointer"
               onClick={() =>
                 isEnabled ? setIsEnabled(false) : setIsEnabled(true)
-              }
-            />
+              }/>
+            // <img
+            //   src="./../src/assets/icons/photo.svg"
+              // className="h-[72px] w-[72px] cursor-pointer"
+              // onClick={() =>
+              //   isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+              // }
+            // />
           )}
         </div>
+        {/* <Small_pencile_bg_gray className="absolute bottom-0 right-0"
+                onClick={() =>
+                  isEnabled ? setIsEnabled(false) : setIsEnabled(true)
+                } /> */}
         {/* <img
                       src="./../src/assets/icons/small_pencile_bg_gray.svg"
                       className="absolute bottom-0 right-0"

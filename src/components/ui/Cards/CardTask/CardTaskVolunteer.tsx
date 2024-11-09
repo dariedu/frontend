@@ -8,7 +8,6 @@ import { DetailedInfoTask } from '../../../DetailedInfoDeliveryTask/DetailedInfo
 
 type TCardDeliveryProps = {
   task: ITask
-  // canBook: boolean
    switchTab: React.Dispatch<React.SetStateAction<string>>;
    getTask: (delivery: ITask) =>{}
    stringForModal: string

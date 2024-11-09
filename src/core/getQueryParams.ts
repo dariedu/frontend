@@ -15,3 +15,5 @@ export const getTelegramParams = () => {
     tgUsername: null,
   };
 };
+
+//phone_number=79086851174&tg_id=1567882993&tg_nickname=@MGdata

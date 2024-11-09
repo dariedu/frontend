@@ -33,7 +33,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       <div className="flex align-middle justify-between">
         <div className="flex">
           <div className="flex flex-col ml-[14px] justify-center items-start">
-            <h1 className="w-[162px] h-fit font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
+            <h1 className="w-[200px] h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
             <p className="w-[162px] font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
@@ -102,12 +102,15 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           </p>
         </div>
       </div>
+      {promotion.description != undefined && promotion.description.length > 0 ? (
       <div className="w-[328px] h-fit max-h-[125px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
-        <p className="font-gerbera-sub1 text-light-gray-4 h-full text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
+        <p className="font-gerbera-sub1 text-light-gray-4 h-fit text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
           {promotion.description}
         </p>
       </div>
+      ): ""}
+      
       {/* {promotion.picture.length > 0 ? (
         <img
           className="w-[328px] h-[205px] rounded-2xl mt-[14px]"
