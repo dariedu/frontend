@@ -199,10 +199,12 @@ function RegistrationPage() {
       const str = window.location.search;
       const params:["phone_number", "tg_id", "tg_nickname"] = ["phone_number", "tg_id", "tg_nickname"];
       let regexp;
-       for (let i = 0; i < params.length; i++){
+      for (let i = 0; i < params.length; i++){
+         console.log(params[i], "(let i = 0; i < params.length; i++)")
          regexp = `[\\?&]${params[i]}=([^&#]*)`;
          if (str.match(regexp) !== null && str.match(regexp)?.length) {
            let obj = str.match(regexp) || [];
+           console.log(obj, "obj")
            if (obj.length > 0) {
               parametersObj[params[i]] = obj[1]
            }
@@ -211,7 +213,7 @@ function RegistrationPage() {
     }
 }, [])
  
-
+console.log(parametersObj.phone_number, parametersObj.tg_id, parametersObj.tg_nickname)
   function onFormSubmit() {
    // const { tgId, tgUsername } = getTelegramParams();
     const userUnchangableValues: TUserUnchangableValues = {
@@ -227,6 +229,7 @@ function RegistrationPage() {
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
     user.city = cityIndex;
+    console.log(user, 'user obj when sent to server for registration')
     ///// создаем объект форм дата
     const formData = new FormData();
     ///// перебираем юзера переносим все поля в форм дата
