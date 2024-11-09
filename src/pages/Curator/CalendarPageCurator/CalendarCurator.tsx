@@ -8,6 +8,8 @@ import { DeliveryContext } from '../../../core/DeliveryContext';
 import { IDelivery } from '../../../api/apiDeliveries';
 import { getRouteSheets, IRouteSheet } from '../../../api/routeSheetApi';
 import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
+import { Modal } from '../../../components/ui/Modal/Modal';
+import ProfileUser from '../../../components/ProfileUser/ProfileUser';
 
 const CalendarCurator: React.FC = React.memo(() => {
   const {
@@ -25,7 +27,6 @@ const CalendarCurator: React.FC = React.memo(() => {
   } = useContext(DeliveryContext);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  // const [points, setPoints] = useState<number>(0);
   const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState<number | null>(
     null,
   );
@@ -33,9 +34,8 @@ const CalendarCurator: React.FC = React.memo(() => {
     [deliveryId: number]: IRouteSheet[];
   }>({});
 
-  // useEffect(() => {
-  //   setPoints(currentUser?.point ?? 0);
-  // }, [currentUser]);
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -44,17 +44,17 @@ const CalendarCurator: React.FC = React.memo(() => {
   }, [currentUser, fetchCuratorDeliveries]);
 
   const handleOpenRouteSheets = async (deliveryId: number) => {
-    setIsRouteSheetsOpen(deliveryId); // Устанавливаем ID доставки для открытых маршрутных листов
+    setIsRouteSheetsOpen(deliveryId);
     if (!routeSheetsMap[deliveryId]) {
       try {
         const userValue = useContext(UserContext);
         const token = userValue.token;
         if (!token) throw new Error('Отсутствует токен доступа');
 
-        const routeSheets = await getRouteSheets(token); // Получаем все маршрутные листы
+        const routeSheets = await getRouteSheets(token);
         const deliveryRouteSheets = routeSheets.filter(
           rs => rs.deliveryId === deliveryId,
-        ); // Фильтруем по текущей доставке
+        );
 
         setRouteSheetsMap(prevMap => ({
           ...prevMap,
@@ -81,6 +81,18 @@ const CalendarCurator: React.FC = React.memo(() => {
     return 'Нет доставок';
   };
 
+  const handleUserClick = () => {
+    if (currentUser) {
+      setSelectedUserId(currentUser.id);
+      setProfileModalOpen(true);
+    }
+  };
+
+  const closeProfile = () => {
+    setSelectedUserId(null);
+    setProfileModalOpen(false);
+  };
+
   if (isUserLoading || deliveriesLoading) return <div>Загрузка данных...</div>;
   if (userError)
     return <div>Ошибка загрузки данных пользователя: {userError}</div>;
@@ -88,7 +100,6 @@ const CalendarCurator: React.FC = React.memo(() => {
     return <div>Ошибка загрузки доставок: {deliveriesError}</div>;
   if (!currentUser) return <div>Пользователь не найден</div>;
 
-  // Получаем данные о станции и адресе ближайшей доставки
   const station = deliveries[0]?.location?.subway || 'Станция не указана';
   const address = deliveries[0]?.location?.address || 'Адрес не указан';
 
@@ -99,7 +110,7 @@ const CalendarCurator: React.FC = React.memo(() => {
           showInfoSection={true}
           showSearchInput={true}
           users={[currentUser]}
-          onUserClick={() => {}}
+          onUserClick={handleUserClick}
           station={station}
           address={address}
         />
@@ -142,6 +153,12 @@ const CalendarCurator: React.FC = React.memo(() => {
       ) : (
         <div>Нет доступных доставок</div>
       )}
+
+      <Modal isOpen={isProfileModalOpen} onOpenChange={setProfileModalOpen}>
+        {selectedUserId && (
+          <ProfileUser currentUserId={selectedUserId} onClose={closeProfile} />
+        )}
+      </Modal>
     </div>
   );
 });

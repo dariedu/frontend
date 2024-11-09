@@ -17,13 +17,16 @@ createRoot(document.getElementById('root')!).render(
       <Router>
         <UserProvider>
           <DeliveryProvider>
-             <Routes>
+            <Routes>
               <Route path={routerConfig[0].path} element={<App />} />
-              <Route path={routerConfig[1].path} element={<RegistrationPage />} />
+              <Route
+                path={routerConfig[1].path}
+                element={<RegistrationPage />}
+              />
               <Route path={routerConfig[2].path} element={<CuratorPage />} />
               <Route path={routerConfig[3].path} element={<VolunteerPage />} />
-             </Routes>
-         </DeliveryProvider>
+            </Routes>
+          </DeliveryProvider>
         </UserProvider>
       </Router>
     </ThemeProvider>
