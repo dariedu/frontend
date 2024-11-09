@@ -161,6 +161,12 @@ try {
     <>
       <div className="mt-2 mb-4 flex flex-col items-center overflow-x-hidden" >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        {myCurrent.length == 0 && myPast.length == 0 ? (
+          <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
+            <img src='./../src/assets/icons/LogoNoTaskYet.svg' />
+            <p className='font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7'>Пока нет запланированных<br/>добрых дел</p>
+        </div>
+        ): ""}
         <div className='flex flex-col h-full mb-20 overflow-auto'>
           {myCurrent.length > 0 ?
               (myCurrent.map((i) => {
@@ -171,7 +177,6 @@ try {
                 </div>)
               })
             ) : ""
-          
           }
           {myPast.length > 0 ? (
             myPast.map((i: IDelivery) => (
@@ -191,19 +196,16 @@ try {
             ))) : ""
           }
           {allMyTasks && allMyTasks.length > 0 ? (
-            allMyTasks.map(task => (
-              <div key={task.id}>
-                <NearestTaskVolunteer task={task} taskFilter='nearest' cancelFunc={cancelTakenTask} />
-              </div>
-            ))
-            
+            allMyTasks.map(task => {
+              let date = new Date();
+              let taskDate = new Date(task.start_date)
+              const taskFilter = ((+date - +taskDate) > 0)? "active" : "nearest";
+              return(<div key={task.id}>
+                <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+              </div>)
+            })
           ): "" }
-       
         </div>
-          {/* <div className="w-full h-vh flex flex-col items-center py-[20px] mt-2 rounded-2xl">
-          <img src="./../../src/assets/icons/LogoNoTaskYet.svg" />
-          <p className="font-gerbera-h2 text-light-gray-black w-[300px] mt-[28px]">Пока нет запланированных добрых дел</p>
-        </div>   */}
       </div>    
       <ConfirmModal
         isOpen={cancelDeliverySuccess}

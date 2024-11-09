@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { IUser, getUserById, getUsers } from '../api/userApi';
 import { postToken } from '../api';
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 
 // Создаем типы для контекста
 interface IUserContext {
@@ -30,10 +30,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const tgId = query.get('tg_id');
-  //const tgId = '1567882993'
+  // const location = useLocation();
+  // const query = new URLSearchParams(location.search);
+  // const tgId = query.get('tg_id');
+  const tgId = '1567882993'
   // Функция для получения токена и пользователя
   const fetchUserAndToken = async () => {
     setIsLoading(true);

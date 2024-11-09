@@ -42,7 +42,6 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
   const { deliveries } = useContext(DeliveryContext);
   const userValue = useContext(UserContext);
   const token = userValue.token;
-  //const theme = useContext(ThemeContext)
   ////// используем контекст
   
 
@@ -71,7 +70,6 @@ const MainTabVolunteer:React.FC<TMainTabVolunteerProps> = ({switchTab}) => {
   }
 
   async function getAllTasks() {
-    
       try {
         if (token) {
         let result: ITask[] = await getAllAvaliableTasks(token);
@@ -117,7 +115,10 @@ async function getDelivery(delivery:IDelivery) {
      if (err == 'Error: You have already taken this delivery') {
        setTakeDeliveryFail(true)
        setTakeDeliveryFailString(`Ошибка, доставка ${finalString}, уже у вас в календаре`)
-     } else {
+     } else if (err =' Error: User does not confirmed') { 
+      setTakeTaskFail(true)
+      setTakeTaskFailString(`Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`)
+    }else {
        setTakeDeliveryFail(true)
        setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`)
        }
@@ -145,7 +146,10 @@ try {
 if (err == 'Error: You\'ve already taken this task!') {
   setTakeTaskFail(true)
   setTakeTaskFailString(`Ошибка, доброе дело ${finalString}, уже в календаре`)
-} else {
+  } else if (err =' Error: User does not confirmed') { 
+    setTakeTaskFail(true)
+    setTakeTaskFailString(`Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`)
+  } else {
   setTakeTaskFail(true)
   setTakeTaskFailString(`Упс, что то пошло не так, попробуйте позже`)
   }

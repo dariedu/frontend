@@ -80,14 +80,15 @@ export const postTaskAccept = async (
     );
     return response.data;
   } catch (err: any) {
-    if (err.response.data.error == "You\'ve already taken this task!") {
-       console.log(err.response.data.error)
-      throw new Error(err.response.data.error)
-    } else {
-      console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
-    }
-    
+    //console.error('Post request postTaskAccept has failed', err);
+     throw new Error(err.response.data.error)
+    // if (err.response.data.error == "You\'ve already taken this task!") {
+    //    console.log(err.response.data.error)
+     
+    // } else {
+     
+    // throw new Error('Post request postTaskAccept has failed');
+    // }
   }
 };
 

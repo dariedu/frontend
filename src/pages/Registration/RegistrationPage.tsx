@@ -181,20 +181,21 @@ function RegistrationPage() {
   //////функция для сабмита формы
 
   //phone_number=79086851174&tg_id=1567882993&tg_nickname=@MGdata
-  type TParameterObj = {
-  phone_number: string
-    tg_id: string
-    tg_nickname:string
-  }
+  // type TParameterObj = {
+  //   phone_number: string
+  //   tg_id: string
+  //   tg_nickname:string
+  // }
   
-  const parametersObj: TParameterObj = {
-    phone_number:"",
-    tg_id:"",
-    tg_nickname:""
-  };
+  // const parametersObj: TParameterObj = {
+  //   phone_number:"",
+  //   tg_id:"",
+  //   tg_nickname:""
+  // };
   
+  const paramsFromCommandLine: string[] = [];
 
-  useEffect(() => {
+  // useEffect(() => {
     if (window.location.search !="" && window.location.search!=null) {
       const str = window.location.search;
       const params:["phone_number", "tg_id", "tg_nickname"] = ["phone_number", "tg_id", "tg_nickname"];
@@ -206,33 +207,39 @@ function RegistrationPage() {
            let obj = str.match(regexp) || [];
            console.log(obj, "obj")
            if (obj.length > 0) {
-              parametersObj[params[i]] = obj[1]
+            paramsFromCommandLine.push(obj[1])
            }
          }
       }
     }
-}, [])
+// }, [])
  
-console.log(parametersObj.phone_number, parametersObj.tg_id, parametersObj.tg_nickname)
+console.log(paramsFromCommandLine, "paramsFromCommandLine")
   function onFormSubmit() {
    // const { tgId, tgUsername } = getTelegramParams();
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: +parametersObj.tg_id || 0,
-      tg_username: parametersObj.tg_nickname || '',
+      tg_id: +paramsFromCommandLine[1] || 0,
+      tg_username: paramsFromCommandLine[2] || '',
       is_adult: isAdult,
-      phone: parametersObj.phone_number || '',
+      phone: paramsFromCommandLine[0] || '',
       photo: '',
       birthday: '',
       city: 0,
     };
+    
     /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
     user.city = cityIndex;
-    console.log(user, 'user obj when sent to server for registration')
+   
+    console.log(user.tg_id, user.phone, user.tg_username, 'user obj when sent to server for registration')
+    user.phone = paramsFromCommandLine[0];
+    user.tg_username = paramsFromCommandLine[2];
+    user.tg_id = +paramsFromCommandLine[1];
+    console.log(user.tg_id, user.phone, user.tg_username, 'user obj when sent to server for registration after double check')
     ///// создаем объект форм дата
     const formData = new FormData();
-    ///// перебираем юзера переносим все поля в форм дата
+    ///// перебираем юзера переносим все поля `в форм дата
     for (let key in user) {
       if (key == 'photo') {
         formData.set('photo', blob, `selfie-${user.tg_id}.jpeg`);

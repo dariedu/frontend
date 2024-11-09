@@ -107,13 +107,18 @@ export const postDeliveryTake = async (
     });
     return response.data;
   } catch (err: any) {
-    if (err.response.data.error == 'You have already taken this delivery') {
-       console.error('Post request postDeliveryTake has failed', err);
-      throw new Error(err.response.data.error)
-     
-    }
-    console.error('Post request postDeliveryTake has failed', err);
-    throw new Error('Post request postDeliveryTake has failed');
+   //console.error('Post request postDeliveryTake has failed', err);
+    throw new Error(err.response.data.error)
+    //   if (err.response.data.error == 'You have already taken this delivery') {
+       
+    //   } else if (err.response.data.detail == 'User does not confirmed') {
+    //     console.error('User does not confirmed', err);
+    //     throw new Error(err.response.data.detail)
+    //   }
+    //   console.error('Post request postDeliveryTake has failed', err);
+    //  // throw new Error('Post request postDeliveryTake has failed');
+    //   throw new Error(err.response.data.error)
+    // }
   }
 };
 

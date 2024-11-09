@@ -53,7 +53,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
 
         {/* Text Content */}
         <div className="space-y-1 text-left mt-[6px] p-[6px]">
-          <p className="font-gerbera-sub2 text-light-gray-black w-[159px] dark:text-light-gray-1">
+          <p className="font-gerbera-sub2 text-light-gray-black w-[159px] h-[17px] dark:text-light-gray-1 overflow-hidden">
             {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
           </p>
           {promotion.start_date ? (
