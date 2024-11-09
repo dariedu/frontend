@@ -77,7 +77,6 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
 
       {isProfileOpen && (
         <ProfileUser
-          userId={currentUser.id}
           onClose={handleCloseProfile}
           currentUserId={currentUser.id}
         />
