@@ -10,8 +10,8 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 //import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 //import RouteSheets from '../RouteSheets/RouteSheets';
 import { type ITask } from '../../api/apiTasks';
-
-
+import Small_sms from "./../../assets/icons/small_sms.svg?react"
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 interface INearestTaskProps {
   task: ITask;
@@ -78,7 +78,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               Активное
             </p>
           ) : taskFilter == 'completed' ? (
-            <p className="btn-S-GreenInactive flex items-center justify-center">
+            <p className="btn-S-GreenInactive flex items-center justify-center dark:bg-light-gray-5 dark:text-light-gray-white">
               Завершённое
             </p>
           ) : (
@@ -93,21 +93,15 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               {task.category.name}{' '}
             </p>
             {taskFilter == 'nearest' || taskFilter == 'completed' ? (
-                <img
-                  src="../src/assets/icons/arrow_down.png"
-                  className={`${!fullView ? 'rotate-180' : ''} cursor-pointer`}
-                  onClick={() => {
-                    fullView == true ? setFullView(false) : setFullView(true);
-                  }}
-                />
-              ) : taskFilter == 'active' ? (
-                <img
-                  src="../src/assets/icons/arrow_down.png"
-                  className={`${!fullView ? 'rotate-180' : ''} cursor-pointer`}
-                  onClick={() => {
-                    fullView == true ? setFullView(false) : setFullView(true);
-                  }}
-                />
+            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+            onClick={() => {
+              fullView == true ? setFullView(false) : setFullView(true);
+            }}/>
+            ) : taskFilter == 'active' ? (
+              <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+              onClick={() => {
+                fullView == true ? setFullView(false) : setFullView(true);
+              }}/>
               ) : (
                 ''
               )
@@ -164,39 +158,35 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         )}
         {fullView ? (
         task.curator?.name && task.curator.name.length > 0 ? (
-          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
           <div className="flex">
             {/* <img
               className="h-[32px] w-[32px] rounded-full"
               src={task.curator.photo}
             /> */}
             <div className="felx flex-col justify-center items-start ml-4">
-              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                 {task.curator.name}
               </h1>
-              <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+              <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
                 Куратор
               </p>
             </div>
             </div>
             {curatorTelegramNik && curatorTelegramNik.length > 0 ? (
-              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-              <img
-                src="../src/assets/icons/small_sms.svg"
-                className="w-[36px] h-[35px]"
-                />
-                </a>
-                
+                <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+                  <Small_sms className="w-[36px] h-[35px]"/>
+                </a>     
             ) : ""}
         </div>
           ) : ""
         ): ""}
        {(taskFilter == 'active' || taskFilter == 'nearest') && fullView ? (
               <div>{task.description && task.description.length != 0 ? (
-                <div className="w-[330px] h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4">
-                  <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text">
+                <div className="w-[330px] h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
+                  <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                     Подробности
-                    <p className="font-gerbera-sub2 text-light-gray-2 text-start pt-2">
+                    <p className="font-gerbera-sub2 text-light-gray-2 text-start pt-2 dark:text-light-gray-3">
                       {task.description}
                     </p>
                   </div>
@@ -212,7 +202,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
 
         {fullView ? (taskFilter == 'nearest' ? (
               <button
-                className="btn-B-GrayDefault  mt-[20px]"
+                className="btn-B-GrayDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white"
                 onClick={e => {
                   e.preventDefault();
                   setIsCancelDeliveryModalOpen(true);

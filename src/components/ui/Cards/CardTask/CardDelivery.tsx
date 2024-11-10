@@ -6,6 +6,9 @@ import {
 } from '../../../helperFunctions/helperFunctions';
 import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
 import { Modal } from '../../Modal/Modal';
+import Metro_station from './../../../../assets/icons/metro_station.svg?react'
+
+
 
 type TCardDeliveryProps = {
   delivery: IDelivery
@@ -34,12 +37,11 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
      <>
      <div className="p-4 bg-light-gray-1 rounded-2xl shadow w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
       <div className="flex items-center">
-        <div className="flex items-start justify-center">
-          <img src='./../src/assets/icons/metro_station.svg' alt="task-icon" className="w-[32px] h-[32px]" />
+             <div className="flex items-start justify-center">
+             <Metro_station  className='w-[32px] h-[32px] bg-[#FFFFFF] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
           <div className='flex flex-col items-start ml-2'>
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
                 {getMetroCorrectName(delivery.location.subway)}
-                {/* {delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(0, 1).toLocaleUpperCase() + delivery.location.subway.replace(/м\.\s|м\.|м\s/, "").slice(1)} */}
               </p>
           <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p>
 

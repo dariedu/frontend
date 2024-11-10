@@ -18,7 +18,7 @@ import {
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 import InputOptions from './InputOptions.tsx';
 import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react'
-
+import CalendarIcon from '../../assets/icons/tap_calendar.svg?react'
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -337,8 +337,9 @@ function RegistrationPage() {
                     name="birthday"
                     className="flex flex-col items-center"
                   >
-                    <Form.Control asChild>
-                      <input
+                      <Form.Control asChild>
+                        <>
+                         <input
                         ref={calendarRef}
                         name="age"
                         className="formFieldBirthday bgImage"
@@ -354,8 +355,12 @@ function RegistrationPage() {
                           localStorage.removeItem('isAdult');
                           setIsAdult(null);
                         }}
-                        required
-                      />
+                          required
+                         
+                          />  
+                           <CalendarIcon  className='fixed ml-[250px] mt-1 fill-[#BFBFBF]'/>
+                        </>
+                     
                     </Form.Control>
                     <Form.Message match="valueMissing" className="error">
                       Пожалуйста введите дату рождения
@@ -432,17 +437,10 @@ function RegistrationPage() {
                         className="h-[142px] w-[142px] rounded-full"
                       />
                       </div>
-                      <Pencile  className="relative -mt-[25px] ml-[70px]"
+                      <Pencile  className="relative -mt-[25px] ml-[70px] rounded-full bg-light-gray-2 fill-light-gray-black"
                       onClick={() => {
                         setIsModalOpen(true);
                       }} />
-                    {/* <img
-                      src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                      className="relative -mt-[25px] ml-[70px]"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                      }}
-                    /> */}
                   </div>
                 ) : (
                   <div className="flex justify-between place-items-start my-4">
@@ -462,16 +460,9 @@ function RegistrationPage() {
                         лицо
                       </p>
                         </div>
-                        <Photo className="h-[35px] w-[38px] cursor-pointer"  onClick={() => {
+                        <Photo className="h-[35px] w-[38px] cursor-pointer fill-light-gray-3"  onClick={() => {
                         setIsModalOpen(true);
                       }} />
-                    {/* <img
-                      src="./../src/assets/icons/photo.svg"
-                      className="h-[35px] w-[38px] cursor-pointer"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                      }}
-                    /> */}
                   </div>
                 )}
                 <button
@@ -484,7 +475,6 @@ function RegistrationPage() {
                         : 'btn-B-GreenInactive mb-8'
                   }
                     onClick={e => {
-                    
                     if (isAdult && !checked) {
                       e.preventDefault();
                     } else {

@@ -3,7 +3,7 @@
 
 const ConcentToPersonalData = () => {
   return (
-    <div className="bg-light-gray-white rounded-t-2xl w-[360px] h-[613px] flex flex-col p-6 items-center dark:bg-light-gray-7-logo ">
+    <div className="concentTopersonalData bg-light-gray-white rounded-t-2xl w-[360px] h-[613px] flex flex-col p-6 items-center dark:bg-light-gray-7-logo ">
       <h1 className="font-gerbera-h1 text-light-gray-black mb-8 text-center dark:text-light-gray-1">Договор-оферта о безвозмездной добровольческой деятельности</h1>
       <div className="font-gerbera-h3 text-light-gray-7-logo overflow-y-scroll scroll-m-0 text-justify px-2 dark:text-light-gray-3" >
   г. Москва <br /><br/>

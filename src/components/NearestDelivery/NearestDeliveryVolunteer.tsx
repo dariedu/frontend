@@ -6,7 +6,10 @@ import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/Completed
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { type IDelivery } from '../../api/apiDeliveries';
-
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
+import Arrow_right from './../../assets/icons/arrow_right.svg?react'
+import Metro_station from './../../assets/icons/metro_station.svg?react'
+import Small_sms from "./../../assets/icons/small_sms.svg?react"
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
@@ -92,26 +95,22 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               Доставка{' '}
             </p>
             {currentStatus == 'nearest' || currentStatus == 'completed' ? (
-              <img
-                src="../src/assets/icons/arrow_down.png"
-                className={`${!fullView ? 'rotate-180' : ''} cursor-pointer`}
-                onClick={() => {
-                  fullView == true ? setFullView(false) : setFullView(true);
-                }}
-              />
+            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+            onClick={() => {
+              fullView == true ? setFullView(false) : setFullView(true);
+            }}/>
             ) : (
-              <img
-                src="../src/assets/icons/arrow_right.png"
-                className=" cursor-pointer"
-                onClick={() => {
-                  fullView == true ? setFullView(false) : setFullView(true);
-                }}
-              />)}
+              <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+              onClick={() => {
+                fullView == true ? setFullView(false) : setFullView(true);
+              }}/>
+
+            )}
           </div>
         </div>
         {/* /////////////////////// */}
-          <div className="flex w-fit  pt-[10px]">
-            <img src="../src/assets/icons/metro_station.svg" />
+        <div className="flex w-fit  pt-[10px]">
+          <Metro_station  className='bg-[#F8F8F8] fill-[#000000] rounded-full dark:bg-[#323232] dark:fill-[#F8F8F8]' />
             <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
               <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                {getMetroCorrectName(delivery.location.subway)}
@@ -163,11 +162,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
                     </p>
                   </div>
                 </div>
-                <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-                  <img
-                    src="../src/assets/icons/small_sms.svg"
-                    className="w-[36px] h-[35px]"
-                  />
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+              <Small_sms className="w-[36px] h-[35px]"/>
                 </a>
               </div>
             ) : (
@@ -189,11 +185,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               </p>
             </div>
           </div>
-          <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-            <img
-              src="../src/assets/icons/small_sms.svg"
-              className="w-[36px] h-[35px]"
-            />
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+              <Small_sms className="w-[36px] h-[35px]"/>
           </a>
         </div>
           )}

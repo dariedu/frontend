@@ -37,13 +37,13 @@
   
   html{
    ::-webkit-scrollbar {
-    @apply w-[8px] 
+    @apply w-[0px] 
   }
   ::-webkit-scrollbar-track {
-    @apply bg-light-gray-1 rounded-2xl dark:bg-light-gray-7-logo ;
+    @apply bg-none
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-gray-2 rounded-2xl dark:bg-light-gray-6
+    @apply bg-none
   }  
   }
   
