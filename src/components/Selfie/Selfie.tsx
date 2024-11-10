@@ -2,7 +2,7 @@ import React, { useState, useRef, type Dispatch } from 'react';
 import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
 //import ReactCrop from 'react-image-crop';
-import Small_pencile_bg_gray from './../../assets/icons/small_pencile_bg_gray.svg?react'
+import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react'
 
 interface ISelfieProps {
@@ -68,7 +68,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
         className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
         onClick={e => e.stopPropagation()}
       >
-        <div className="h-[142px] w-[140px] bg-light-gray-1 rounded-full flex justify-center items-center mb-8 relative">
+        <div className="h-[142px] w-[140px] bg-light-gray-2 rounded-full flex justify-center items-center mb-8 relative">
           {fileUploaded ? (
             <>
               <img
@@ -78,43 +78,18 @@ export const Selfie: React.FC<ISelfieProps> = ({
                   e.preventDefault;
                 }}
               />
-    <Small_pencile_bg_gray className="absolute bottom-0 right-0"
+       <Small_pencile className="absolute bottom-0 right-0 fill-light-gray-8-text bg-light-gray-2 rounded-full"
                 onClick={() =>
                   isEnabled ? setIsEnabled(false) : setIsEnabled(true)
                 } />
-              {/* <img
-                src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                className="absolute bottom-0 right-0"
-                onClick={() =>
-                  isEnabled ? setIsEnabled(false) : setIsEnabled(true)
-                }
-              /> */}
             </>
           ) : (
-              <Photo  className="h-[72px] w-[72px] cursor-pointer"
+              <Photo  className="h-[72px] w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white"
               onClick={() =>
                 isEnabled ? setIsEnabled(false) : setIsEnabled(true)
               }/>
-            // <img
-            //   src="./../src/assets/icons/photo.svg"
-              // className="h-[72px] w-[72px] cursor-pointer"
-              // onClick={() =>
-              //   isEnabled ? setIsEnabled(false) : setIsEnabled(true)
-              // }
-            // />
           )}
         </div>
-        {/* <Small_pencile_bg_gray className="absolute bottom-0 right-0"
-                onClick={() =>
-                  isEnabled ? setIsEnabled(false) : setIsEnabled(true)
-                } /> */}
-        {/* <img
-                      src="./../src/assets/icons/small_pencile_bg_gray.svg"
-                      className="absolute bottom-0 right-0"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                      }}
-                    /> */}
         <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2">
           {fileUploaded ? 'Отличное фото!' : text}
           <br />

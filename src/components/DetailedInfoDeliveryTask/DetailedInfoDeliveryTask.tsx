@@ -9,6 +9,8 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IDelivery } from '../../api/apiDeliveries';
 //import { ITask } from '../../api/apiTasks';
 //import { UserContext } from '../../core/UserContext';
+import Metro_station from './../../assets/icons/metro_station.svg?react'
+import Small_sms from "./../../assets/icons/small_sms.svg?react"
 
 type TDetailedInfoDelivery = {
   delivery: IDelivery
@@ -61,7 +63,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             <div className="flex justify-between w-full">
               <div className="flex items-start">
                 <div className="flex w-fit items-start">
-                  <img src="../src/assets/icons/metro_station.svg" />
+                <Metro_station  className='w-[32px] h-[32px] bg-[#F8F8F8] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
                     <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                       {getMetroCorrectName(delivery.location.subway)}
@@ -117,11 +119,8 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               </div>
                 </div>
                 {curatorTelegramNik && curatorTelegramNik.length > 0 ? (
-               <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-               <img
-                 src="../src/assets/icons/small_sms.svg"
-                 className="w-[36px] h-[35px]"
-               />
+                  <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+                    <Small_sms className="w-[36px] h-[35px]"/>
              </a>
                ) : ""} 
           </div>

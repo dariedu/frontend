@@ -8,6 +8,8 @@ import { Modal } from '../../../components/ui/Modal/Modal';
 import { getAllPromotions, getMyPromotions, getPromotionsCategories, postPromotionCancel, postPromotionRedeem, type IPromotion, type TPromotionCategory} from '../../../api/apiPromotions';
 import { UserContext } from '../../../core/UserContext';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
+import Filter from "./../../../assets/icons/filter.svg?react"
+import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 
 
 const BankTab:React.FC = () => {
@@ -185,13 +187,13 @@ const BankTab:React.FC = () => {
           <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo ' >
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Обменять баллы</h1>
-            {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
-              <img src='./../src/assets/icons/filter.svg' onClick={()=>{setOpenFilter(true)}} className='cursor-pointer'/>
+              {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
+                <Filter onClick={()=>{setOpenFilter(true)}} className='cursor-pointer rounded-full bg-light-gray-1 fill-[#0A0A0A] dark:bg-light-gray-6 dark:fill-[#F8F8F8]'/>
             )}
           
           </div>
-          {promotionsAll.length == 0 ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
-            <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
+            {promotionsAll.length == 0 ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
+              <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='dark:text-light-gray-1'>Скоро тут появятся доступные поощрения</p>
           </div>) : (
              <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
@@ -201,15 +203,14 @@ const BankTab:React.FC = () => {
           <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
             </div>{promotionsMy.length == 0 ? 
-            (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
-              <img src="./../src/assets/icons/LogoNoTaskYet.svg" className='w-[100px]' />
+              (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
+                <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
               <p className='dark:text-light-gray-1'>Скоро тут появятся ваши планы</p>
             </div>)
             : (<SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} />)}
           </div>
           </div>
  </div>
-        
         <Modal isOpen={openFilter} onOpenChange={setOpenFilter}>
           <FilterPromotions categories={promotionCategory} onOpenChange={setOpenFilter} setFilter={setFilterCategories} filtered={filterCategories} handleCategoryChoice={handleCategoryChoice} />
         </Modal>

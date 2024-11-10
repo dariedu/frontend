@@ -3,7 +3,7 @@ import { UserContext } from '../../core/UserContext';
 import ProfilePic from '../ProfilePic/ProfilePic';
 import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
-import leftArrowIcon from '../../assets/icons/arrow_left.png';
+import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { IUser } from '../../core/types';
 import { getUserById } from '../../api/userApi';
 
@@ -44,14 +44,14 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль пользователя';
 
   return (
-    <div className="fixed z-50 top-0 bg-white rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col">
-      <div className="flex items-center mb-[4px] bg-white rounded-t-[16px] w-full h-[60px] p-[16px]">
+    <div className="fixed z-50 top-0 bg-light-gray-1  dark:bg-light-gray-black rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col overflow-x-hidden">
+      <div className="flex items-center mb-[4px] bg-white dark:bg-light-gray-7-logo dark:text-light-gray-1 rounded-b-2xl w-full h-[60px] p-[16px]">
         <button onClick={onClose} className="mr-2">
-          <img src={leftArrowIcon} alt="back" className="w-9 h-9 mr-[8px]" />
+          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] dark:fill-light-gray-1 fill-light-gray-black' />
         </button>
         <h2>{profileTitle}</h2>
       </div>
-      <div className="w-full flex-grow overflow-y-auto">
+      <div className="w-full flex-grow overflow-y-auto ">
         <ProfilePic user={user} />
         <VolunteerData
           geo={user.city ? `Город: ${user.city.city}` : 'Город не указан'}
@@ -66,7 +66,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
         />
         {isCurrentUser && (
           <ActionsVolunteer
-            visibleActions={['История', 'Обо мне', 'Пригласить друга']}
+            visibleActions={['История', 'Обо мне', 'Пригласить друга', 'Подать заявку на должность куратора']}
             showThemeToggle={true}
           />
         )}

@@ -4,7 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/feedbackApi';
 import { UserContext } from '../../core/UserContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-
+import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
@@ -83,11 +83,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
       <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4">
-          <img
-            src="../src/assets/icons/big_pencil.svg"
-            className="h-[32px] w-[32px]"
-          />
-
+          <Big_pencil className=" w-[62px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
           {delivery ? (
          <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
          Поделитесь, пожалуйста, почему вы отказались от участия в доставке?

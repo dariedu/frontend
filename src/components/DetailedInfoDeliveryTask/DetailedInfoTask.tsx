@@ -7,8 +7,8 @@ import {
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { ITask } from '../../api/apiTasks';
-
-
+import OnlineIcon from './../../assets/icons/onlineIcon.svg?react'
+import Small_sms from './../../assets/icons/small_sms.svg?react'
 
 
 type TDetailedInfoTaskProps = {
@@ -75,9 +75,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             <div
               className={'flex items-start'}
             >
-              <img
-                src={'../src/assets/icons/onlineIcon.svg'}
-              />
+               <OnlineIcon className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />
               <div className="flex flex-col justify-center items-start pl-2 max-w-[170px]">
                 <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                 {task.name.slice(0, 1).toLocaleUpperCase()+task.name.slice(1)}
@@ -109,17 +107,17 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             </div>
           </div>
           {task.curator.name && task.curator.name.length > 0 ? (
-          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4">
+          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
           <div className="flex">
             {/* <img
               className="h-[32px] w-[32px] rounded-full"
               src={task.curator.photo_view}
             /> */}
             <div className="felx flex-col justify-center items-start ml-4">
-              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start">
+              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                 {task.curator.name}
               </h1>
-              <p className="font-gerbera-sub2 text-light-gray-2 text-start">
+              <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
                 Куратор
               </p>
             </div>
@@ -128,11 +126,8 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
            <a
             href={'https://t.me/' + task.curator?.tg_username}
             target="_blank"
-          >
-            <img
-              src="../src/assets/icons/small_sms.svg"
-              className="w-[36px] h-[35px]"
-            />
+                >
+               <Small_sms className="w-[36px] h-[35px]"/>
           </a>
           ): ""}
          

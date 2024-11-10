@@ -50,7 +50,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
                 <Dialog.Close asChild>
                   <button
                     onClick={onCancel}
-                    className="btn-S-GreenInactive"
+                    className="btn-S-GreenInactive dark:bg-light-gray-6 dark:text-light-gray-2"
                   >
                     {cancelText}
                   </button>

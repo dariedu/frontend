@@ -11,6 +11,7 @@ import CancelledDeliveryOrTaskFeedback from '../../../components/DeliveryOrTaskF
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { getMyTasksNoFilter, postTaskRefuse, type ITask } from '../../../api/apiTasks';
 import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVolunteer';
+import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 
 const CalendarTabVolunteer = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());/// дата для календаря
@@ -163,7 +164,7 @@ try {
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         {myCurrent.length == 0 && myPast.length == 0 ? (
           <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
-            <img src='./../src/assets/icons/LogoNoTaskYet.svg' />
+            <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7'>Пока нет запланированных<br/>добрых дел</p>
         </div>
         ): ""}
@@ -197,9 +198,16 @@ try {
           }
           {allMyTasks && allMyTasks.length > 0 ? (
             allMyTasks.map(task => {
+              let taskFilter:'nearest' | 'active' | 'completed';
+              if (task.is_completed) {
+                taskFilter = 'completed';
+                return(<div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+                </div>)
+              }
               let date = new Date();
               let taskDate = new Date(task.start_date)
-              const taskFilter = ((+date - +taskDate) > 0)? "active" : "nearest";
+              taskFilter = ((+date - +taskDate) > 0)? "active": "nearest";
               return(<div key={task.id}>
                 <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
               </div>)

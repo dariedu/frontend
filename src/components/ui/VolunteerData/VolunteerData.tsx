@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
-import geoIcon from '../../../assets/icons/geo.svg';
-import emailIcon from '../../../assets/icons/email.svg';
-import birthdayIcon from '../../../assets/icons/birthday.svg';
-import phoneIcon from '../../../assets/icons/phone.svg';
-import telegramIcon from '../../../assets/icons/telegram.svg';
-import big_pencilIcon from '../../../assets/icons/big_pencil.svg';
+import GeoIcon from '../../../assets/icons/geo.svg?react';
+import EmailIcon from '../../../assets/icons/email.svg?react';
+import BirthdayIcon from '../../../assets/icons/birthday.svg?react';
+import PhoneIcon from '../../../assets/icons/phone.svg?react';
+import TelegramIcon from '../../../assets/icons/telegram.svg?react';
+import Big_pencilIcon from '../../../assets/icons/big_pencil.svg?react';
 import { UserContext } from '../../../core/UserContext';
 import { patchUser } from '../../../api/userApi';
 
@@ -95,19 +95,17 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     telegram,
   ];
   const iconsLinks = [
-    geoIcon,
-    emailIcon,
-    birthdayIcon,
-    phoneIcon,
-    telegramIcon,
+    <GeoIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black"/>,
+    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black"/>,
+    <PhoneIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />
   ];
-  const changeIconLink = big_pencilIcon;
 
   return (
-    <div className="w-[360px] h-[410px] bg-light-gray-white flex flex-col justify-between">
+    <div className="w-[360px] h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
       {items.map((item, index) => {
         const field = Object.keys(isEditing)[index] as keyof typeof formData;
-
         // Если это поле telegram (последний элемент), не делаем его редактируемым
         if (index === 4) {
           return (
@@ -116,8 +114,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
               key={index}
             >
               <div className="inline-flex items-center justify-start">
-                <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
-                <p className="ml-3.5">{item}</p>
+                {iconsLinks[index]}
+                <p className="ml-3.5 dark:text-light-gray-1">{item}</p>
               </div>
             </div>
           );
@@ -128,7 +126,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
               key={index}
             >
               <div className="inline-flex items-center justify-start">
-                <img src={iconsLinks[index]} className="w-[42px] h-[42px]" />
+              {iconsLinks[index]}
                 {isEditing[field] ? (
                   <input
                     className="ml-3.5 p-1 border rounded"
@@ -137,14 +135,10 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                     onBlur={() => handleSave(field)}
                   />
                 ) : (
-                  <p className="ml-3.5">{formData[field]}</p>
+                  <p className="ml-3.5 dark:text-light-gray-1">{formData[field]}</p>
                 )}
               </div>
-              <img
-                src={changeIconLink}
-                className="w-[42px] h-[42px] cursor-pointer"
-                onClick={() => toggleEdit(field)}
-              />
+              <Big_pencilIcon className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" onClick={() => toggleEdit(field)} />
             </div>
           );
         }
