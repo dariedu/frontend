@@ -6,7 +6,7 @@ const VolunteerPage: React.FC = () => {
 
   return (
     <div>
-      <NavigationBar variant="mainScreen" title="Волонтёр" />
+      <NavigationBar variant="mainScreen" title="Волонтёр" isVolunteer={true} />
       <TabBar userRole="volunteer" />
     </div>
   );
