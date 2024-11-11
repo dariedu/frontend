@@ -5,14 +5,10 @@ import MainPageCurator from '../../pages/Curator/MainPageCurator/MainPageCurator
 import CalendarCurator from '../../pages/Curator/CalendarPageCurator/CalendarCurator';
 import './index.css';
 
-import HomeIcon from '../../assets/icons/tap_home.svg';
-import HomeIconActive from '../../assets/icons/tap_homeActive.svg';
-import CalendarIcon from '../../assets/icons/tap_calendar.svg';
-import CalendarIconActive from '../../assets/icons/tap_calendarActive.svg';
-import CuratorIcon from '../../assets/icons/curator.svg';
-import CuratorIconActive from '../../assets/icons/curatorActive.svg';
-import BonusesIcon from '../../assets/icons/bonus.svg';
-import BonusesIconActive from '../../assets/icons/bonusActive.svg';
+import HomeIcon from '../../assets/icons/tap_home.svg?react';
+import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
+import CuratorIcon from '../../assets/icons/curator.svg?react';
+import BonusesIcon from '../../assets/icons/bonus.svg?react';
 import Curator from '../../pages/Curator/Curator/Curator';
 
 //////volunteer
@@ -64,8 +60,8 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             </Tabs.Content>
           </>
         )}
-
         <Tabs.List className="flex justify-between fixed bottom-0 w-[360px] h-[74px]">
+
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"
@@ -74,11 +70,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
               'text-light-gray-4': activeTab !== 'tab1',
             })}
           >
-            <img
-              src={activeTab === 'tab1' ? HomeIconActive : HomeIcon}
-              alt="Главная"
-              className="w-6 h-6"
-            />
+              <HomeIcon className={`${activeTab === 'tab1' ? "fill-light-brand-green" : "fill-light-gray-3 dark:fill-light-gray-4 "}`}/>
             <span
               className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab1',
@@ -97,11 +89,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
               'text-light-gray-4': activeTab !== 'tab2',
             })}
           >
-            <img
-              src={activeTab === 'tab2' ? CalendarIconActive : CalendarIcon}
-              alt="Календарь"
-              className="w-6 h-6"
-            />
+            <CalendarIcon className={`${activeTab === 'tab2' ? "fill-light-brand-green" : "fill-light-gray-3 dark:fill-light-gray-4 "}`}/>
             <span
               className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab2',
@@ -121,11 +109,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
                 'text-light-gray-4': activeTab !== 'tab3',
               })}
             >
-              <img
-                src={activeTab === 'tab3' ? CuratorIconActive : CuratorIcon}
-                alt="Куратор"
-                className="w-6 h-6"
-              />
+               <CuratorIcon className={`${activeTab === 'tab3' ? "fill-light-brand-green" : "fill-light-gray-3 dark:fill-light-gray-4 "}`}/>
               <span
                 className={classNames('mt-1 text-xs', {
                   'text-light-brand-green': activeTab === 'tab3',
@@ -145,11 +129,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
               'text-light-gray-4': activeTab !== 'tab4',
             })}
           >
-            <img
-              src={activeTab === 'tab4' ? BonusesIconActive : BonusesIcon}
-              alt="Моя копилка"
-              className="w-6 h-6"
-            />
+            <BonusesIcon className={`${activeTab === 'tab4' ? "fill-light-brand-green" : "fill-light-gray-3 dark:fill-light-gray-4 "}`}/>
             <span
               className={classNames('mt-1 text-xs', {
                 'text-light-brand-green': activeTab === 'tab4',
