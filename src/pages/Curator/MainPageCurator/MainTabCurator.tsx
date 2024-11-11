@@ -1,6 +1,5 @@
 import SliderStories from '../../../components/SliderStories/SliderStories';
 import Calendar from '../../../components/Calendar/Calendar';
-import SliderCardsDeliveries from '../../../components/SliderCards/SliderCardsDeliveries';
 import { useState, useContext, useEffect } from 'react';
 import { DeliveryContext } from '../../../core/DeliveryContext';
 import {
@@ -15,21 +14,27 @@ import {
   getMonthCorrectEndingName,
 } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
-import NearestDeliveryVolunteer from '../../../components/NearestDelivery/NearestDeliveryVolunteer';
 import {
   getAllAvaliableTasks,
   postTaskAccept,
   type ITask,
 } from '../../../api/apiTasks';
-import SliderCardsTaskVolunteer from '../../../components/SliderCards/SliderCardsTasksVolunteer';
 import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react';
+import SliderCardsTaskCurator from '../../../components/SliderCards/SliderCardsTasksCurator';
+import SliderCardsDeliveriesCurator from '../../../components/SliderCards/SliderCardsDeliveriesCurator';
+import Search from '../../../components/Search/Search';
+import { IUser } from '../../../core/types';
+import DeliveryType from '../../../components/ui/Hr/DeliveryType';
+import DeliveryInfo from '../../../components/ui/Hr/DeliveryInfo';
 
-type TMainTabVolunteerProps = {
+type TMainTabCuratorProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
+const MainTabCurator: React.FC<TMainTabCuratorProps> = ({ switchTab }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { nearestDelivery, isLoading, error } = useContext(DeliveryContext);
+  const [isRouteSheetsOpen, setIsRouteSheetsOpen] = useState(false);
 
   const [takeDeliverySuccess, setTakeDeliverySuccess] =
     useState<boolean>(false); //// подтверждение бронирования доставки
@@ -191,70 +196,96 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
     }
   }
 
+  const station = nearestDelivery?.location?.subway || 'Станция не указана';
+  const address = nearestDelivery?.location?.address || 'Адрес не указан';
+  const users: IUser[] = [];
+  const points = 5;
+
+  const deliveryStatus = nearestDelivery
+    ? nearestDelivery.is_completed
+      ? 'Завершена'
+      : nearestDelivery.is_active
+        ? 'Активная'
+        : 'Ближайшая'
+    : 'Нет доставок';
+
   return (
     <>
       <div className="flex flex-col min-h-full mb-20 overflow-x-hidden">
         <div>
           <SliderStories />
-          {myCurrent.length > 0
-            ? myCurrent.map(i => {
-                if (i.in_execution == true) {
-                  return (
-                    <div key={i.id}>
-                      <NearestDeliveryVolunteer delivery={i} status="active" />
-                    </div>
-                  );
-                }
-              })
-            : ''}
-          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
-            <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Расписание доставок
-            </div>
-            <Calendar
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              showHeader={false}
-              showFilterButton={false}
-              showDatePickerButton={false}
-            />
-            {filteredDeliveries.length > 0 ? (
-              <SliderCardsDeliveries
-                deliveries={filteredDeliveries}
-                myDeliveries={myCurrent}
-                switchTab={switchTab}
-                getDelivery={getDelivery}
-                stringForModal={takeDeliverySuccessDateName}
-                takeDeliverySuccess={takeDeliverySuccess}
-                setTakeDeliverySuccess={setTakeDeliverySuccess}
-              />
-            ) : (
-              ''
-            )}
-          </div>
-        </div>
-        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-fit">
-          <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-4">
-            Другие добрые дела
-          </div>
-          {allAvaliableTasks.length > 0 ? (
-            <SliderCardsTaskVolunteer
-              tasks={allAvaliableTasks}
-              switchTab={switchTab}
-              getTask={getTask}
-              stringForModal={takeTaskSuccessDateName}
-              takeTaskSuccess={takeTaskSuccess}
-              setTakeTaskSuccess={setTakeTaskSuccess}
-            />
+          {isLoading ? (
+            <div>Загрузка доставок...</div>
+          ) : error || !nearestDelivery ? (
+            <div>Доставок пока нет</div>
           ) : (
-            <div className="flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4 mb-5">
-              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
-              <p className="dark:text-light-gray-1">
-                Скоро тут появятся добрые дела
-              </p>
+            <DeliveryType
+              status={deliveryStatus}
+              points={points}
+              onDeliveryClick={() => setIsRouteSheetsOpen(true)}
+            />
+          )}
+          <Search
+            showSearchInput={false}
+            showInfoSection={true}
+            users={users}
+            onUserClick={() => {}}
+            station={station}
+            address={address}
+          />
+
+          {deliveryStatus === 'Ближайшая' && <DeliveryInfo />}
+
+          {!isRouteSheetsOpen && (
+            <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
+              <Calendar
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                showHeader={true}
+                headerName="Расписание доставок"
+                showFilterButton={false}
+                showDatePickerButton={false}
+              />
+              {filteredDeliveries.length > 0 ? (
+                <SliderCardsDeliveriesCurator
+                  deliveries={filteredDeliveries}
+                  myDeliveries={myCurrent}
+                  switchTab={switchTab}
+                  getDelivery={getDelivery}
+                  stringForModal={takeDeliverySuccessDateName}
+                  takeDeliverySuccess={takeDeliverySuccess}
+                  setTakeDeliverySuccess={setTakeDeliverySuccess}
+                />
+              ) : (
+                ''
+              )}
             </div>
           )}
         </div>
+        {!isRouteSheetsOpen && (
+          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-fit">
+            <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-4">
+              Другие добрые дела
+            </div>
+            {allAvaliableTasks.length > 0 ? (
+              <SliderCardsTaskCurator
+                tasks={allAvaliableTasks}
+                switchTab={switchTab}
+                getTask={getTask}
+                stringForModal={takeTaskSuccessDateName}
+                takeTaskSuccess={takeTaskSuccess}
+                setTakeTaskSuccess={setTakeTaskSuccess}
+              />
+            ) : (
+              <div className="flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4 mb-5">
+                <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
+                <p className="dark:text-light-gray-1">
+                  Скоро тут появятся добрые дела
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <ConfirmModal
@@ -285,4 +316,4 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   );
 };
 
-export default MainTabVolunteer;
+export default MainTabCurator;
