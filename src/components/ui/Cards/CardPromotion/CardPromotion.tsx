@@ -7,6 +7,8 @@ import DetailedInfo from '../../../DetailedInfo/DetailedInfo';
 import { Modal } from '../../Modal/Modal';
 import { type IPromotion } from '../../../../api/apiPromotions';
 
+
+
 // Интерфейс для пропсов CardPromotion
 interface IPromotionProps {
   promotion: IPromotion
@@ -39,12 +41,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
               className="w-[159px] h-[112px] object-cover rounded-[16px]"
             />
           ) : (
-            <img
-              src="./../src/assets/icons/pictureTest.jpg"
-              alt={promotion.name}
-              draggable={false} // Prevent default image dragging
-              className="w-[159px] h-[112px] object-cover rounded-[16px]"
-            />
+              <div className='w-[159px] h-[112px] bg-light-gray-2 '></div>
           )}
           <div className="absolute top-2 left-2 bg-light-brand-green text-light-gray-white px-2 py-1 rounded-full font-gerbera-sub1">
             {promotion.price + ' ' + getBallCorrectEndingName(promotion.price)}
