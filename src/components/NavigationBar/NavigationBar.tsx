@@ -9,11 +9,13 @@ import ProfileUser from '../ProfileUser/ProfileUser';
 interface INavigationBarProps {
   variant: 'volunteerForm' | 'mainScreen';
   title?: string;
+  isVolunteer: boolean
 }
 
 const NavigationBar: React.FC<INavigationBarProps> = ({
   variant,
   title = '',
+  isVolunteer
 }) => {
   const { currentUser, isLoading } = useContext(UserContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -52,11 +54,6 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
 
         {variant === 'mainScreen' && currentUser && (
           <div className="flex items-center space-x-4">
-            {/* <img
-              src={bell}
-              className="w-10 h-10 text-black dark:text-white"
-              alt="Notifications"
-            /> */}
             <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-light-gray-1 dark:bg-dark-gray-1 rounded-full" onClick={handleAvatarClick}>
               <Avatar.Image
                 src={currentUser.avatar || ''}
@@ -79,6 +76,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         <ProfileUser
           onClose={handleCloseProfile}
           currentUserId={currentUser.id}
+          IsVolunteer={isVolunteer}
         />
       )}
     </>

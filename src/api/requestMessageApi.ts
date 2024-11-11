@@ -17,10 +17,10 @@ interface IRequestMessage {
 
 // Тип данных для запроса при создании или обновлении RequestMessage
 type TRequestMessageRequest = {
-  type: string;
-  text?: string | null;
-  form?: string | null;
-  user: number;
+  type: string
+  about_location: string
+  about_presence: string
+  about_worktime: string
 };
 
 // Получение списка сообщений с возможностью фильтрации по типу
@@ -41,20 +41,22 @@ export const getRequestMessages = async (
   }
 };
 
-// Создание нового сообщения запроса
+// Создание нового сообщения запроса чтобы стать куратором, работает!
 export const createRequestMessage = async (
-  data: TRequestMessageRequest,
-): Promise<IRequestMessage> => {
+  access: string,
+  data: TRequestMessageRequest
+): Promise<TRequestMessageRequest> => {
   try {
-    const response: AxiosResponse<IRequestMessage> = await axios.post(
-      requestMessagesEndpoint,
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    const response:AxiosResponse<TRequestMessageRequest > = await axios({
+      url: requestMessagesEndpoint,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
       },
-    );
+      data: data
+    })
     return response.data;
   } catch (error: any) {
     console.error('Error creating request message:', error);

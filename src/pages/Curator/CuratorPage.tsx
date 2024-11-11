@@ -16,7 +16,7 @@ const CuratorPage: React.FC = () => {
 
   return (
     <>
-      <NavigationBar variant="mainScreen" title="Куратор" />
+      <NavigationBar variant="mainScreen" title="Куратор" isVolunteer={false} />
       <TabBar userRole="curator" />
     </>
   );
