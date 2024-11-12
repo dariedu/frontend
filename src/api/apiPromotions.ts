@@ -73,6 +73,28 @@ export const getMyPromotions = async (access:string): Promise<IPromotion[]> => {
     throw new Error('Get request getAllPromotions has failed');
   }
 }
+///// запросить все мои поощрения с фильтром
+export const getMyPastOrActivePromotions = async (
+  access: string,
+  is_active: boolean = false
+): Promise<IPromotion[]> => {
+  try {
+    const response: AxiosResponse<IPromotion[]> = await axios({
+      url: `${promotionsUrl}my_promo/?is_active=${is_active ? 1 : 0}`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+      },
+    });
+    const result:IPromotion[] = [];
+    response.data.forEach(i => result.push(i))
+    return result;
+  } catch (err: any) {
+    console.error('Get request getAllPromotions has failed', err);
+    throw new Error('Get request getAllPromotions has failed');
+  }
+}
 
 ////// заброинровать поощрение
 export const postPromotionRedeem = async (
