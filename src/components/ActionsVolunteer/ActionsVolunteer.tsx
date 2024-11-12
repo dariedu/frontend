@@ -13,6 +13,8 @@ import { UserContext } from '../../core/UserContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import BecameCurator from '../BecameCurator/BecameCurator';
 import { Modal } from '../ui/Modal/Modal';
+import History from '../History/History';
+
 
 interface IAction {
   label: string
@@ -25,18 +27,21 @@ interface IAction {
 interface IActionsVolunteerProps {
   visibleActions: string[];
   showThemeToggle: boolean;
+  isVolunteer: boolean;
 }
 
 const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   visibleActions,
   showThemeToggle,
+  isVolunteer
 }) => {
 
   const {token} = useContext(UserContext);  //// берем токен из юзер контекст
   const [myPast, setMyPast] = useState<number>(0);
   const [notEnoughtPointsOpenModal, setNotEnoughtPointsOpenModal] = useState(false);
- const [becameCuratorOpen, setBecameCuratorOpen] = useState(false)
- 
+  const [becameCuratorOpen, setBecameCuratorOpen] = useState(false);
+  const [openHistoryPage, setOpenHistoryPage] = useState(false);
+
 /////проверяем сколько просшедших доставок у волонтера
   async function getMyDeliveries() {  
     try {
@@ -62,7 +67,11 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     } else {
       setBecameCuratorOpen(true)
   }
-}
+  }
+  
+  function openHistory() {
+    setOpenHistoryPage(true)
+  }
 
 
   // Все действия
@@ -72,7 +81,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       icon: <CuratorIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>,
       link: '#',
       onClick: becameCurator},
-    { label: 'История', icon: <HistoryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, link: '#' },
+    { label: 'История', icon: <HistoryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, link: '#', onClick: openHistory},
     { label: 'Обо мне', icon: <AboutIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, link: '#' },
     {
       label: 'Пригласить друга',
@@ -143,8 +152,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       <Modal isOpen={becameCuratorOpen} onOpenChange={setBecameCuratorOpen} zIndex={true}>
         <BecameCurator />
       </Modal>
-
-      
+       <Modal isOpen={openHistoryPage} onOpenChange={setOpenHistoryPage} zIndex={true}>
+        <History onClose={setOpenHistoryPage} isVolunteer={isVolunteer} />
+      </Modal>  
     </>
     
   );
