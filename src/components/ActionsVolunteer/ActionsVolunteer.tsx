@@ -14,12 +14,12 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import BecameCurator from '../BecameCurator/BecameCurator';
 import { Modal } from '../ui/Modal/Modal';
 import History from '../History/History';
+import AboutMe from '../AboutMe/AboutMe';
 
 
 interface IAction {
   label: string
   icon: string | JSX.Element
-  link: string
   points?: string
   onClick?: () => void
 }
@@ -41,7 +41,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   const [notEnoughtPointsOpenModal, setNotEnoughtPointsOpenModal] = useState(false);
   const [becameCuratorOpen, setBecameCuratorOpen] = useState(false);
   const [openHistoryPage, setOpenHistoryPage] = useState(false);
-
+  const [openAboutMePage, setOpenAboutMePage]= useState(false)
 /////проверяем сколько просшедших доставок у волонтера
   async function getMyDeliveries() {  
     try {
@@ -72,6 +72,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   function openHistory() {
     setOpenHistoryPage(true)
   }
+  function openAboutMe() {
+    setOpenAboutMePage(true)
+  }
 
 
   // Все действия
@@ -79,19 +82,17 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     {
       label: 'Подать заявку на должность куратора',
       icon: <CuratorIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>,
-      link: '#',
       onClick: becameCurator},
-    { label: 'История', icon: <HistoryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, link: '#', onClick: openHistory},
-    { label: 'Обо мне', icon: <AboutIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, link: '#' },
+    { label: 'История', icon: <HistoryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />,  onClick: openHistory},
+    { label: 'Обо мне', icon: <AboutIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick: openAboutMe}, 
     {
       label: 'Пригласить друга',
       icon: <InviteIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>,
-      link: '#',
       points: `+3 ${getBallCorrectEndingName(3)} `,
     },
-    { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> , link: '#' },
-    { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, link: '#' },
-    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, link: '#' },
+    { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
+    { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
+    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/> },
   ];
 
   // Фильтруем действия для отображения
@@ -154,6 +155,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       </Modal>
        <Modal isOpen={openHistoryPage} onOpenChange={setOpenHistoryPage} zIndex={true}>
         <History onClose={setOpenHistoryPage} isVolunteer={isVolunteer} />
+      </Modal>  
+      <Modal isOpen={openAboutMePage} onOpenChange={setOpenAboutMePage} zIndex={true}>
+        <AboutMe onClose={setOpenAboutMePage} />
       </Modal>  
     </>
     

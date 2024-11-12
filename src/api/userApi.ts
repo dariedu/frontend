@@ -63,13 +63,21 @@ export const getUserById = async (
   }
 };
 
+export const metier = [["schoolchild", "Школьник"],
+["student", "Студент"],
+["work_on_himself", "Работаю на себя"],
+["work_for_hire", "Работаю по найму"],
+["pensioner", "Пенсионер"],
+["other", "Другое"]]
+
+
 // Обновление информации о пользователе (метод PUT)
 export const updateUser = async (
   id: number,
   userData: Partial<IUser>,
+  token:string
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
-
   try {
     const response: AxiosResponse<IUser> = await axios.put(
       `${usersEndpoint}${id}/`,
@@ -77,6 +85,7 @@ export const updateUser = async (
       {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
       },
     );
@@ -91,6 +100,7 @@ export const updateUser = async (
 export const patchUser = async (
   id: number,
   userData: Partial<IUser>,
+  token:string
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
@@ -101,6 +111,7 @@ export const patchUser = async (
       {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
       },
     );
@@ -110,6 +121,7 @@ export const patchUser = async (
     throw new Error('Failed to patch user');
   }
 };
+
 
 export const getUserByTelegramId = async (
   tgId: number,
@@ -140,4 +152,4 @@ export const getUserByTelegramId = async (
 };
 
 // Экспорт интерфейсов для использования в других частях проекта
-export type { IUser };
+export type { IUser};

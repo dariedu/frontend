@@ -16,7 +16,7 @@ import {
   IUserRegistered,
 } from '../../api/apiRegistrationToken.ts';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
-import InputOptions from './InputOptions.tsx';
+import InputOptions, {type T} from './InputOptions.tsx';
 import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react'
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react'
 
@@ -48,7 +48,7 @@ function RegistrationPage() {
     [2, 'Ростов-на-Дону'],
     [3, 'другой'],
   ]);
-  const [cityIndex, setCityIndex] = useState<number>(1);
+  const [cityIndex, setCityIndex] = useState<T>(1);
   ///// данные для инпута для выбора города
 
   ////// запрашиваем города и пушим их в cityOptions для формирования инпута
@@ -214,7 +214,7 @@ function RegistrationPage() {
     /////содиняем два объекта с вводимыми полями формы и с вычисляемыми полями для данного пользователя
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
-    user.city = cityIndex;
+    user.city = cityIndex as number;
     ///// создаем объект форм дата
     const formData = new FormData();
     ///// перебираем юзера переносим все поля `в форм дата
