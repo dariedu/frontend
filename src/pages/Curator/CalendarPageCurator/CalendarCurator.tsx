@@ -156,7 +156,11 @@ const CalendarCurator: React.FC = React.memo(() => {
 
       <Modal isOpen={isProfileModalOpen} onOpenChange={setProfileModalOpen}>
         {selectedUserId && (
-          <ProfileUser currentUserId={selectedUserId} onClose={closeProfile} />
+          <ProfileUser
+            currentUserId={selectedUserId}
+            onClose={closeProfile}
+            IsVolunteer={false}
+          />
         )}
       </Modal>
     </div>

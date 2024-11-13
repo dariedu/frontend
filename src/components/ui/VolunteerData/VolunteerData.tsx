@@ -71,9 +71,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
     try {
       // Отправляем обновленные данные на бэкенд
-      const updatedUser = await patchUser(currentUser.id, {
-        [field]: formData[field],
-      });
+      const updatedUser = await patchUser(
+        currentUser.id,
+        {
+          [field]: formData[field],
+        },
+        token,
+      );
 
       console.log('Пользователь успешно обновлен:', updatedUser);
 
@@ -96,10 +100,10 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   ];
   const iconsLinks = [
     <GeoIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black"/>,
-    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black"/>,
+    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
     <PhoneIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />
+    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
   ];
 
   return (
@@ -126,7 +130,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
               key={index}
             >
               <div className="inline-flex items-center justify-start">
-              {iconsLinks[index]}
+                {iconsLinks[index]}
                 {isEditing[field] ? (
                   <input
                     className="ml-3.5 p-1 border rounded"
@@ -135,10 +139,15 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                     onBlur={() => handleSave(field)}
                   />
                 ) : (
-                  <p className="ml-3.5 dark:text-light-gray-1">{formData[field]}</p>
+                  <p className="ml-3.5 dark:text-light-gray-1">
+                    {formData[field]}
+                  </p>
                 )}
               </div>
-              <Big_pencilIcon className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" onClick={() => toggleEdit(field)} />
+              <Big_pencilIcon
+                className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
+                onClick={() => toggleEdit(field)}
+              />
             </div>
           );
         }
