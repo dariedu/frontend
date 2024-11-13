@@ -9,7 +9,7 @@ import HomeIcon from '../../assets/icons/tap_home.svg?react';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
 import CuratorIcon from '../../assets/icons/curator.svg?react';
 import BonusesIcon from '../../assets/icons/bonus.svg?react';
-import Curator from '../../pages/Curator/Curator/Curator';
+import Curator from '../../pages/Curator/CuratorTab/CuratorTab';
 
 //////volunteer
 import MainTabVolunteer from '../../pages/Volunteer/MainTabVolunteer/MainTabVolunteer';
