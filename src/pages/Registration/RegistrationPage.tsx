@@ -251,7 +251,7 @@ function RegistrationPage() {
           <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center mt-7">
             Благодарим за регистрацию!
             <br />
-            Теперь вы можете перейти на главную страницу
+            Теперь вы можете перейти на <p className='text-light-brand-green' onClick={()=>location.reload()}>главную страницу</p>
           </h1>
         </div>
       ) : (

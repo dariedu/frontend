@@ -38,14 +38,14 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
           />
         </div>
         <div className="filterPromotionsClass h-fit max-h-40 overflow-y-auto">
-          {categories.map((cat, i) => {
+          {categories.map((cat, index) => {
             if (filtered.find(i => i.id == cat.id)) {
               return (
                 <CheckboxElementRight
                   obj={cat}
                   onClickFunc={handleCategoryChoice}
                   checked={true}
-                  key={i}
+                  key={index}
                 >
                   <span
                     className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center dark:text-light-gray-1"
@@ -61,7 +61,7 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
                   obj={cat}
                   onClickFunc={handleCategoryChoice}
                   checked={false}
-                  key={i}
+                  key={index}
                 >
                   <span
                     className="font-gerbera-sub2 text-light-gray-black h-9 flex items-center dark:text-light-gray-1"
