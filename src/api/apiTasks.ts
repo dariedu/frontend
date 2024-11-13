@@ -54,7 +54,6 @@ export const getAllAvaliableTasks = async (
         accept: 'application/json',
       },
     });
-    console.log(response.data, "api tasks")
     return response.data;
   } catch (err: any) {
     console.error('Get request getAllAvaliableTasks has failed', err);
@@ -80,15 +79,7 @@ export const postTaskAccept = async (
     );
     return response.data;
   } catch (err: any) {
-    //console.error('Post request postTaskAccept has failed', err);
      throw new Error(err.response.data.error)
-    // if (err.response.data.error == "You\'ve already taken this task!") {
-    //    console.log(err.response.data.error)
-     
-    // } else {
-     
-    // throw new Error('Post request postTaskAccept has failed');
-    // }
   }
 };
 

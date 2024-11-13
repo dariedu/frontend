@@ -91,7 +91,6 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         let result: ITask[] = await getAllAvaliableTasks(token);
         if (result) {
           setAllAvaliableTasks(result);
-          console.log(result, 'tasks');
         }
       }
     } catch (err) {
