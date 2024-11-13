@@ -266,7 +266,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                 })
                 .map((past, index) => {
                   return (
-                    <>
+                    <div key={index+1000} className='flex flex-col items-center'>
                       {index == 0 ? (
                         <div
                           key={index+past.dayMonthYearString}
@@ -321,13 +321,13 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                           ''
                         )}
                       </div>
-                    </>
+                    </div>
                   );
                 })
             ) : (
               allMyPastCombined.map((past, index) => {
                 return (
-                  <>
+                  <div key={index+1000} className='flex flex-col items-center'>
                     {index == 0 ? (
                       <div
                         key={index+past.dayMonthYearString}
@@ -381,7 +381,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                         ''
                       )}
                     </div>
-                  </>
+                  </div>
                 );
               })
             )
