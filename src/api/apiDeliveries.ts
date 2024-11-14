@@ -35,7 +35,7 @@ interface IDelivery {
   in_execution: boolean
   volunteers_needed: number
   volunteers_taken: number
-  delivery_assignments?: string[]
+  delivery_assignments?: number[]
 }
 
 interface IVolunteerDeliveries{
@@ -46,13 +46,14 @@ interface IVolunteerDeliveries{
 
 type TCuratorDelivery = {
   id_delivery: number,
-  id_route_sheet: number[]
+  id_route_sheet: number[],
+  delivery_assignments: number[]
 }
 
 interface ICuratorDeliveries {
   "выполняются доставки": TCuratorDelivery[],
-  "количество активных доставок": TCuratorDelivery[],
-  "количество завершенных доставок":TCuratorDelivery[]
+  "активные доставки": TCuratorDelivery[],
+  "завершенные доставки":TCuratorDelivery[]
 }
 
 

@@ -29,7 +29,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
       {routes.map((route, index) => (
         <div
           key={index}
-          className="w-full bg-light-gray-1 p-4 rounded-lg flex justify-between items-center mb-4 mt-[12px]"
+          className="w-full bg-light-gray-1 p-4 rounded-lg flex justify-between items-center mb-4 mt-[12px] "
         >
           <div className="flex flex-col items-start h-[44px]">
             <p className="font-gerbera-h3 text-light-gray-8 mb-[4px]">

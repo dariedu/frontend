@@ -43,7 +43,7 @@ export const getVolunteers = async (access: string): Promise<IUser[]> => {
 // Получение информации о пользователе по ID
 export const getUserById = async (
   id: number,
-  token: string | null,
+  token: string,
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
@@ -59,9 +59,11 @@ export const getUserById = async (
     return response.data;
   } catch (error: any) {
     console.error('Error fetching user:', error);
-    throw new Error('Failed to fetch user');
+    throw new Error(error.response.data.error);
   }
 };
+
+
 
 export const metier = [["schoolchild", "Школьник"],
 ["student", "Студент"],

@@ -1,26 +1,30 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import {
-  getMonthCorrectEndingName,
-  getVolunteerCorrectEndingName,
+  getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
-import RouteSheets from '../RouteSheets/RouteSheets';
+import RouteSheetsM from '../RouteSheets/RouteSheetsM';
 import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery } from '../../api/apiDeliveries';
-import { DeliveryContext } from '../../core/DeliveryContext';
+import { getUserById, IUser } from '../../api/userApi';
+import { UserContext } from '../../core/UserContext';
+import { IRouteSheet } from '../../api/routeSheetApi';
+
 
 interface INearestDeliveryProps {
-  delivery: IDelivery;
-  deliveryFilter?: TDeliveryFilter;
+  delivery: IDelivery
+  deliveryFilter: TDeliveryFilter
+  routeSheetsList?:IRouteSheet[]
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   delivery,
-  deliveryFilter = 'nearest',
+  deliveryFilter,
+  routeSheetsList
 }) => {
   const deliveryDate = new Date(delivery.date);
 
@@ -34,20 +38,67 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
     useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
     useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  const [volunteers, setVolunteers] = useState<IUser[]>([]);
+console.log(volunteers, "volunteers")
 
-  const { deliveries, isLoading } = useContext(DeliveryContext); // Данные из контекста
-  delivery = deliveries[0];
-
-  if (isLoading) return <div>Loading</div>;
-
+  
   ///////////////////////////
-  function onSelectVolunteer(
-    volunteerName: string,
-    volunteerAvatar: string,
-  ): void {
-    console.log(volunteerName + ' ' + volunteerAvatar);
-  }
+  // function onSelectVolunteer(
+  //   volunteerName: string,
+  //   volunteerAvatar: string,
+  // ): void {
+  //   console.log(volunteerName + ' ' + volunteerAvatar);
+  // }
   ////////////////////////
+
+    ////// используем контекст юзера
+    const userValue = useContext(UserContext);
+    const token = userValue.token;
+   ////// используем контекст
+
+  
+  
+  function getAllVolunteers() { 
+    if (token && delivery.delivery_assignments) {
+  let usersArr: IUser[] = [];
+  Promise.allSettled(delivery.delivery_assignments.map(id => getUserById(id, token)))
+    .then(responses => responses.forEach((result, num) => {
+      if (result.status == "fulfilled") {
+        usersArr.push(result.value)
+      }
+      if (result.status == "rejected") {
+       console.log(`${num} user was not fetched`)
+      }
+    })).finally(()=> setVolunteers(usersArr)
+    )
+ }
+  
+  }
+  
+
+  useEffect(() => {
+    getAllVolunteers()
+},[token])
+   
+//   async function getAllVolunteers() {
+//     if (delivery.delivery_assignments && delivery.delivery_assignments.length > 0) {
+//       if (token){
+//         try {
+//        delivery.delivery_assignments.forEach((i:number) => {
+//        let result = await getUserById(i, token)
+//       })
+//         } catch (err) {
+          
+//         }
+//       }
+     
+//     }
+  
+// }
+
+
+
+
 
   return (
     <>
@@ -109,23 +160,23 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           <>
             <div className="flex justify-between items-center mt-[20px]">
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub2 text-light-gray-5 ">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>
-                <p className="font-gerbera-h3 text-light-gray-8">
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {`${deliveryDate.getDate()}
                   ${getMonthCorrectEndingName(deliveryDate)} в
                   ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
-                <p className="font-gerbera-sub2 text-light-gray-5">
+              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Записались
                 </p>
-                <p className="font-gerbera-h3 text-light-gray-8">
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {delivery.volunteers_taken == 0
-                    ? '0 из' + `${delivery.volunteers_needed}`
-                    : `${delivery.volunteers_taken + ' из ' + `${delivery.volunteers_needed}` + ' ' + getVolunteerCorrectEndingName(delivery.volunteers_needed)}`}
+                    ? `0 из ${delivery.volunteers_needed}`
+                    : `${delivery.volunteers_taken} из ${delivery.volunteers_needed} ${delivery.volunteers_needed == 1 ? "": "волонтёров"}`}
                 </p>
               </div>
             </div>
@@ -155,21 +206,22 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
         {/* /////////////////////// */}
       </div>
-      {
-        <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
-          <RouteSheets
-            status="Активная"
-            onClose={() => setFullViewActive(false)}
-            onStatusChange={() => {
-              return setCurrentStatus('completed');
-            }}
-            routeSheetsData={[]}
-            completedRouteSheets={[]}
-            setCompletedRouteSheets={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
-        </Modal>
+      {routeSheetsList && routeSheetsList.length > 0 ? (
+       <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
+       <RouteSheetsM
+         status="Активная"
+         onClose={() => setFullViewActive(false)}
+         onStatusChange={() => {
+           return setCurrentStatus('completed');
+         }}
+         routeSheetsData={routeSheetsList}
+         completedRouteSheets={[]}
+         setCompletedRouteSheets={() => { }}
+         volunteerList={volunteers}
+       />
+     </Modal>
+      ): ("")
+       
       }
       <Modal
         isOpen={isCuratorFeedbackModalOpen}
@@ -202,12 +254,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       {currentStatus == 'nearest' ? (
         <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
-            onSelectVolunteer={onSelectVolunteer}
-            onTakeRoute={() => {}}
+            listOfVolunteers={volunteers}
+            onOpenChange={setFullViewNearest}
             showActions={true}
-            onClose={function (): void {
-              throw new Error('Function not implemented.');
-            }}
           />
         </Modal>
       ) : (

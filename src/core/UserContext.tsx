@@ -35,6 +35,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   // const tgId = query.get('tg_id');
   //const tgId = '1567882993'
   const tgId = '205758925'
+  //const tgId = '1695164858' // Евгений
   // Функция для получения токена и пользователя
   const fetchUserAndToken = async () => {
     setIsLoading(true);

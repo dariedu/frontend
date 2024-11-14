@@ -5,49 +5,63 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 // Эндпоинты для работы с маршрутными листами
 const routeSheetsEndpoint = `${API_URL}/route_sheets/`;
-const assignRouteSheetEndpoint = `${API_URL}/route_sheets/assign/`;
-
-// Интерфейс для данных локации (Location)
-interface ILocation {
-  id: number;
-  city: string; // Название города
-  curator: string; // Имя куратора
-  address: string; // Полный адрес
-  link?: string; // Ссылка (если есть)
-  subway?: string; // Ближайшее метро (если есть)
-  media_files?: string[]; // Ссылки на медиафайлы (если есть)
-  description?: string; // Описание локации (если есть)
-}
+//const assignRouteSheetEndpoint = `${API_URL}/route_sheets/assign/`;
 
 // Интерфейс для данных адреса (Address)
-interface TAddress {
+type TAddress = {
   id: number;
-  beneficiary: string; // Имя или название получателя
+  beneficiary: string[]; 
   address: string; // Полный адрес
   link?: string; // Ссылка (если есть)
   location?: string; // Локация, к которой привязан адрес
   route_sheet: number; // Идентификатор маршрутного листа
 }
 
+type TCurator = {
+id: number
+last_name: string
+name: string
+phone:string
+photo: string
+photo_view: string
+surname: string
+tg_id: number
+tg_username:string
+}
+
+// Интерфейс для данных локации (Location)
+interface ILocation {
+  address: string
+  city: {
+    id: number
+    name: string
+  } 
+  curator: TCurator
+  description?: string // Описание локации (если есть)
+  id: number
+  link?: string // Ссылка (если есть)
+  media_files?: string[] // Ссылки на медиафайлы (если есть)
+  subway?: string // Ближайшее метро (если есть)
+}
+
+
 // Интерфейс для данных маршрутного листа (RouteSheet)
 interface IRouteSheet {
-  id: number;
-  location: ILocation; // Данные о локации
-  address: TAddress[]; // Список адресов
-  name: string; // Название маршрутного листа
-  map?: string | null; // Карта (если есть)
-  user?: number | null; // Идентификатор волонтера, назначенного на маршрутный лист
-  deliveryId: number;
+  id: number
+  address: TAddress[] // Список адресов
+  location: ILocation // Данные о локации
+  name: string // Название маршрутного листа
+  map?: string // Карта (если есть)
 }
+///////Проверено!
 
 // Тип данных для запроса при создании или обновлении маршрутного листа
 type TRouteSheetRequest = {
-  name: string;
-  map?: string | null;
-  user?: number | null;
-  addresses?: TAddressRequest[];
+  volunteer_id: number
+  delivery_id: number
 };
 
+//id=volunteer_id for delivery with id=delivery_id Body: { "volunteer_id": {id} "delivery_id": {id} }
 // Интерфейс для создания или обновления адреса в маршрутном листе
 interface TAddressRequest {
   beneficiary: string;
@@ -56,6 +70,7 @@ interface TAddressRequest {
   location?: string;
   route_sheet: number;
 }
+
 
 // Получение списка маршрутных листов
 export const getRouteSheets = async (token: string): Promise<IRouteSheet[]> => {
@@ -77,15 +92,18 @@ export const getRouteSheets = async (token: string): Promise<IRouteSheet[]> => {
 
 // Назначение маршрутного листа волонтеру
 export const assignRouteSheet = async (
+  routeSheetId:number,
+  access:string,
   data: TRouteSheetRequest,
 ): Promise<IRouteSheet> => {
   try {
     const response: AxiosResponse<IRouteSheet> = await axios.post(
-      assignRouteSheetEndpoint,
+      `${API_URL}/route_sheets/${routeSheetId}/assign/`,
       data,
       {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access}`,
         },
       },
     );
