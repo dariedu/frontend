@@ -2,24 +2,22 @@ import React from 'react';
 import avatar from '../../assets/avatar.svg';
 import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
 
-interface IRoute {
-  address: string; // Адрес
-  additionalInfo: string; // Дополнительная информация (link)
-  personName: string; // Имя получателя (beneficiary)
-  avatar?: string; // Иконка или изображение, если доступно
-  needsPhoto?: boolean; // Логическое значение для фото, по умолчанию false
-}
 
 interface IRouteSheetsViewProps {
-  routes: IRoute[];
-  onComplete: () => void;
+  routes: {address: string
+    additionalInfo: string
+    personName:string[]
+    avatar: string
+    needsPhoto:boolean
+      }[];
+  //onComplete: () => void;
   isCompleted: boolean;
   isVolunteerSelected: boolean; // Добавили этот проп
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes = [],
-  onComplete,
+  //onComplete,
   isCompleted,
   isVolunteerSelected,
 }) => {
@@ -59,7 +57,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           className={`btn-M-GreenDefault w-full mt-4 ${
             !isVolunteerSelected ? 'opacity-50 cursor-not-allowed' : ''
           }`}
-          onClick={onComplete}
+          //onClick={onComplete}
           disabled={!isVolunteerSelected}
         >
           Завершить

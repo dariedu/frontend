@@ -3,22 +3,27 @@ import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
-import curator from '../../assets/icons/curator.svg';
+//import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from './RouteSheetsView';
 //import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { getRouteSheets, IRouteSheet } from '../../api/routeSheetApi';
 import { UserContext } from '../../core/UserContext';
-import { IUser } from '../../core/types';
-import { assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+// import { IUser } from '../../core/types';
+// import { assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
+//import { IDelivery } from '../../api/apiDeliveries';
+
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
   routeSheetsData: IRouteSheet[];
   onClose: () => void;
-  onStatusChange: () => void;
+  // onStatusChange: () => void;
   completedRouteSheets: boolean[];
-  volunteerList:IUser[]
+  listOfVolunteers: TVolunteerForDeliveryAssignments[]
+  onVolunteerAssign: (volunteerId: number, deliveryId: number, routeSheetId: number) => {}
+  deliveryId:number
   //setCompletedRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
@@ -26,23 +31,22 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   status,
   routeSheetsData,
   onClose,
-  onStatusChange,
+  // onStatusChange,
   completedRouteSheets,
-  volunteerList
+  listOfVolunteers,
+  onVolunteerAssign,
+  deliveryId
  // setCompletedRouteSheets,
 }) => {
   const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
-  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(
-    Array(routeSheetsData.length).fill(false),
-  );
-  const [selectedVolunteers, setSelectedVolunteers] = useState<
-    { name: string; avatar: string }[]
-  >(
-    Array(routeSheetsData.length).fill({
+  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
+  const [selectedVolunteers, setSelectedVolunteers] =
+    useState<{ name: string; avatar: string }[]>(Array(routeSheetsData.length).fill({
       name: 'Не выбран',
       avatar: avatarIcon,
     }),
-  );
+    );
+  
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(
     Array(routeSheetsData.length).fill(false),
   );
@@ -50,7 +54,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [isDeliveryCompletedModalOpen, setIsDeliveryCompletedModalOpen] = useState(false);
   const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false);
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([]);
-
+console.log(listOfVolunteers, 'ListOfVolunteers')
+  // console.log(isAllRoutesCompleted, isDeliveryCompletedModalOpen, onStatusChange, setDeliveryCompletedOnce, setSelectedVolunteers)
+  
   useEffect(() => {
     // Загрузка данных маршрутных листов из API
     const fetchRouteSheets = async () => {
@@ -83,59 +89,59 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
     // );
   //};
 
-  const handleConfirmDeliveryCompletion = () => {
-    setIsDeliveryCompletedModalOpen(false);
-    setDeliveryCompletedOnce(true);
-    onStatusChange();
-  };
+  // const handleConfirmDeliveryCompletion = () => {
+  //   setIsDeliveryCompletedModalOpen(false);
+  //   setDeliveryCompletedOnce(true);
+  //   onStatusChange();
+  // };
 
-  const handleVolunteerSelect = (
-    index: number,
-    volunteerName: string,
-    volunteerAvatar: string,
-  ) => {
-    setSelectedVolunteers(prev =>
-      prev.map((volunteer, idx) =>
-        idx === index
-          ? { name: volunteerName, avatar: volunteerAvatar }
-          : volunteer,
-      ),
-    );
-    setOpenVolunteerLists(prev =>
-      prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
-    );
-  };
+  // const handleVolunteerSelect = (
+  //   index: number,
+  //   volunteerName: string,
+  //   volunteerAvatar: string,
+  // ) => {
+  //   setSelectedVolunteers(prev =>
+  //     prev.map((volunteer, idx) =>
+  //       idx === index
+  //         ? { name: volunteerName, avatar: volunteerAvatar }
+  //         : volunteer,
+  //     ),
+  //   );
+  //   setOpenVolunteerLists(prev =>
+  //     prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
+  //   );
+  // };
 
-  const handleTakeRoute = (index: number) => {
-    setSelectedVolunteers(prev =>
-      prev.map((volunteer, idx) =>
-        idx === index ? { name: 'Куратор', avatar: curator } : volunteer,
-      ),
-    );
-    setOpenVolunteerLists(prev =>
-      prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
-    );
-  };
+  // const handleTakeRoute = (index: number) => {
+  //   setSelectedVolunteers(prev =>
+  //     prev.map((volunteer, idx) =>
+  //       idx === index ? { name: 'Куратор', avatar: curator } : volunteer,
+  //     ),
+  //   );
+  //   setOpenVolunteerLists(prev =>
+  //     prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
+  //   );
+  // };
 
-  async function assignRoutSheetFunction(volunteerForRoutSheet: IUser, routeSheetId:number, deliveryId:number) {
-    let data:TRouteSheetRequest = {
-      volunteer_id: volunteerForRoutSheet.id,
-      delivery_id: deliveryId
-   }
-    if (token) {
-      try {
-        let result = await assignRouteSheet(routeSheetId, token, data);
-        if (result) {
-          console.log('success')
-        }
-      } catch (err) {
-        console.log(err, 'assignRoutSheetFunction list of volunteers')
-      }
-    }
-}
+//   async function assignRoutSheetFunction(volunteerForRoutSheet: IUser, routeSheetId:number, deliveryId:number) {
+//     let data:TRouteSheetRequest = {
+//       volunteer_id: volunteerForRoutSheet.id,
+//       delivery_id: deliveryId
+//    }
+//     if (token) {
+//       try {
+//         let result = await assignRouteSheet(routeSheetId, token, data);
+//         if (result) {
+//           console.log('success')
+//         }
+//       } catch (err) {
+//         console.log(err, 'assignRoutSheetFunction list of volunteers')
+//       }
+//     }
+// }
 
   return (
-    <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col " onClick={(e)=>e.stopPropagation()}>
+    <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col overflow-y-auto max-h-full" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center mb-4">
         <button onClick={onClose} className="mr-2">
           <img src={leftArrowIcon} alt="back" className="w-6 h-6" />
@@ -146,13 +152,12 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       <div className="flex flex-col">
         {routeSheets.map((routeSheet, index) => {
           const isVolunteerSelected =
-            selectedVolunteers[index].name !== 'Не выбран';
-
+          selectedVolunteers[index].name !== 'Не выбран';
           return (
-            <div key={routeSheet.id} className="mb-4 p-2 border rounded-lg overflow-y-auto h-[fit] max-h-[400px]">
+            <div key={routeSheet.id} className="mb-4 p-2 border rounded-lg">
               <div className="flex items-center justify-between w-full mb-2">
                 <span className="font-gerbera-h3 text-light-gray-5">
-                  {`Маршрутный лист ${index + 1}`}
+                  {`Маршрутный лист: ${routeSheet.name}`}
                 </span>
                 <div
                   className="w-6 h-6 ml-2 cursor-pointer"
@@ -180,7 +185,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                   onClick={() =>
                     setOpenVolunteerLists(prev =>
                       prev.map((isOpen, idx) =>
-                        idx === index ? true : isOpen,
+                        idx === index ? isOpen ? false: true : isOpen,
                       ),
                     )
                   }
@@ -190,7 +195,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     alt="avatar"
                     className="w-8 h-8 rounded-full mr-3"
                   />
-                  <span className="font-gerbera-h3 text-light-gray-8">
+                  <span className="font-gerbera-h3 text-light-gray-8" >
                     {selectedVolunteers[index].name}
                   </span>
                 </div>
@@ -207,12 +212,16 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 ) : null}
               </div>
 
-              {openVolunteerLists[index] && (
+              {openVolunteerLists[index]&& (
                 <ListOfVolunteers
-                  listOfVolunteers={volunteerList}
+                  listOfVolunteers={listOfVolunteers}
                   onOpenChange={() => { }}
                   showActions={false}
-                  onVolunteerClick={()=>{}}
+                  //onVolunteerClick={() => { }}
+                  onVolunteerAssign={onVolunteerAssign}
+                  deliveryId={deliveryId}
+                  routeSheetName={`Маршрутный лист: ${routeSheet.name}`}
+                  routeSheetId={routeSheet.id}
                 />
               )}
 

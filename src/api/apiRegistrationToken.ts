@@ -40,7 +40,7 @@ export const postRegistration = async (
   user: TRegisterationFormData,
 ): Promise<boolean|undefined> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<boolean> = await axios({
       url: tasksUrl,
       method: 'POST',
       headers: {
@@ -54,7 +54,6 @@ export const postRegistration = async (
     }
     //return JSON.parse(response.data);
   } catch (err) {
-
     console.error('Post request postRegistration has failed', err);
     throw new Error('Post request postRegistration has failed');
   }

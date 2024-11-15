@@ -90,6 +90,25 @@ export const getRouteSheets = async (token: string): Promise<IRouteSheet[]> => {
   }
 };
 
+// Получение маршрутного листа по айди
+export const getRouteSheetById = async (token: string, routeSheetId:number): Promise<IRouteSheet> => {
+  try {
+    const response: AxiosResponse<IRouteSheet> = await axios.get(
+      `${routeSheetsEndpoint}${routeSheetId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching route sheet by id', error);
+    throw new Error('Failed to fetch route sheets by id');
+  }
+};
+
+
 // Назначение маршрутного листа волонтеру
 export const assignRouteSheet = async (
   routeSheetId:number,
@@ -97,16 +116,26 @@ export const assignRouteSheet = async (
   data: TRouteSheetRequest,
 ): Promise<IRouteSheet> => {
   try {
-    const response: AxiosResponse<IRouteSheet> = await axios.post(
-      `${API_URL}/route_sheets/${routeSheetId}/assign/`,
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${access}`,
-        },
+    const response: AxiosResponse<IRouteSheet> = await axios({
+      url: `${API_URL}/route_sheets/${routeSheetId}/assign/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
       },
-    );
+      data: data,
+    });
+    // const response: AxiosResponse<IRouteSheet> = await axios.post(
+    //   `${API_URL}/route_sheets/${routeSheetId}/assign/`,
+    //   data,
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${access}`,
+    //     },
+    //   },
+    // );
     return response.data;
   } catch (error: any) {
     console.error('Error assigning route sheet:', error);

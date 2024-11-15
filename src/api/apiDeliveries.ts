@@ -3,6 +3,16 @@ import axios, { AxiosResponse } from 'axios';
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const deliveriesUrl = `${API_URL}/deliveries/`;
 
+///// так отображается волонтер в ответе на getCuratorDeliveries
+type TVolunteerForDeliveryAssignments = {
+  id: number
+  tg_username: string
+  last_name: string
+  name: string,
+  photo: string
+  }
+
+
 interface IDelivery {
   id: number;
   date: string;
@@ -35,19 +45,20 @@ interface IDelivery {
   in_execution: boolean
   volunteers_needed: number
   volunteers_taken: number
-  delivery_assignments?: number[]
+  delivery_assignments?: TVolunteerForDeliveryAssignments[] ///этот пункт добавляю в процессе рендера списка записавшихся волонтеров для куратора
 }
 
+//// тип для ответа для getVolunteerDeliveries
 interface IVolunteerDeliveries{
   "свободные доставки": IDelivery[]
   "мои активные доставки": IDelivery[]
   "мои завершенные доставки": IDelivery[]
 }
-
+//// тип для ответа для getCuratorDeliveries
 type TCuratorDelivery = {
   id_delivery: number,
   id_route_sheet: number[],
-  delivery_assignments: number[]
+  volunteers: TVolunteerForDeliveryAssignments[]
 }
 
 interface ICuratorDeliveries {
@@ -185,4 +196,4 @@ export const getVolunteerDeliveries = async (
 };
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries };
+export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments};

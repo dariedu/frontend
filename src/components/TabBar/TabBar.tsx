@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 //import CalendarCurator from '../../pages/Curator/CalendarPageCurator/CalendarCurator';
-//import MainTabCurator from '../../pages/Curator/MainPageCurator/MainTabCurator';
+// import MainTabCurator from '../../pages/Curator/MainPageCurator/MainTabCurator';
 import './index.css';
 
 import HomeIcon from '../../assets/icons/tap_home.svg?react';
