@@ -76,7 +76,7 @@ function getPersonCorrectEndingName(price: number): string {
     }
   return result
 }
-
+//// для 4 волонтера
 function getVolunteerCorrectEndingName(num: number): string {
   let result = "волонтёр"
   num % 100 == 0 ? (result = "волонтёров") : (num = num % 100)
@@ -98,6 +98,8 @@ function getVolunteerCorrectEndingName(num: number): string {
     }
   return result
 }
+
+
 
 function getMetroCorrectName(subway: string) {
   return `${subway.replace(/м\.\s|м\.|м\s/, "").slice(0,1).toLocaleUpperCase()+subway.replace(/м\.\s|м\.|м\s/, "").slice(1)}`

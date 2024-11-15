@@ -1,26 +1,30 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext} from 'react';
 import {
-  getMonthCorrectEndingName,
-  getVolunteerCorrectEndingName,
+  getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
-import RouteSheets from '../RouteSheets/RouteSheets';
+import RouteSheetsM from '../RouteSheets/RouteSheetsM';
 import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery } from '../../api/apiDeliveries';
-import { DeliveryContext } from '../../core/DeliveryContext';
+//import { getUserById, IUser } from '../../api/userApi';
+import { UserContext } from '../../core/UserContext';
+import { IRouteSheet, assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+
 
 interface INearestDeliveryProps {
-  delivery: IDelivery;
-  deliveryFilter?: TDeliveryFilter;
+  delivery: IDelivery
+  deliveryFilter: TDeliveryFilter
+  routeSheetsList?:IRouteSheet[]
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   delivery,
-  deliveryFilter = 'nearest',
+  deliveryFilter,
+  routeSheetsList
 }) => {
   const deliveryDate = new Date(delivery.date);
 
@@ -28,26 +32,76 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [fullViewActive, setFullViewActive] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewNearest, setFullViewNearest] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
 
-  const [currentStatus, setCurrentStatus] =
-    useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
-  const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] =
-    useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
-  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
-    useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
+  const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
+  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
+  const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
 
-  const { deliveries, isLoading } = useContext(DeliveryContext); // Данные из контекста
-  delivery = deliveries[0];
-
-  if (isLoading) return <div>Loading</div>;
-
+  
   ///////////////////////////
-  function onSelectVolunteer(
-    volunteerName: string,
-    volunteerAvatar: string,
-  ): void {
-    console.log(volunteerName + ' ' + volunteerAvatar);
-  }
+  // function onSelectVolunteer(
+  //   volunteerName: string,
+  //   volunteerAvatar: string,
+  // ): void {
+  //   console.log(volunteerName + ' ' + volunteerAvatar);
+  // }
   ////////////////////////
+
+    ////// используем контекст юзера
+    const userValue = useContext(UserContext);
+    const token = userValue.token;
+   ////// используем контекст
+
+  
+  
+  // function getAllVolunteers() { 
+  //   if (token && delivery.delivery_assignments) {
+  //     let usersArr: IUser[] = [];
+  //     Promise.allSettled(delivery.delivery_assignments.map(id => getUserById(id, token)))
+  //       .then(responses => responses.forEach((result, num) => {
+  //         if (result.status == "fulfilled") {
+  //           usersArr.push(result.value)
+  //         }
+  //         if (result.status == "rejected") {
+  //           console.log(`${num} user was not fetched`)
+  //         }
+  //       })).finally(() => setVolunteers(usersArr)
+  //       )
+  //   }
+  // }
+  
+  // assignRouteSheet = async (
+  //   routeSheetId:number,
+  //   access:string,
+  //   data: TRouteSheetRequest,
+  // type TRouteSheetRequest = {
+  //   volunteer_id: number
+  //   delivery_id: number
+  // };
+  
+  // routeSheetId:number,
+  // access:string,
+  // data: TRouteSheetRequest,
+  
+  async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number) {
+    let object:TRouteSheetRequest = {
+      volunteer_id: volunteerId,
+      delivery_id: deliveryId
+    }
+    if (token) {
+      try {
+        let result = await assignRouteSheet(routeSheetId, token, object)
+        if (result) {
+          setAssignVolunteerSuccess(true)
+        }
+      } catch (err) {
+        setAssignVolunteerFail(true)
+      }
+    }
+  }
+  
+// console.log(delivery, "nearest Delivery curator")
 
   return (
     <>
@@ -81,7 +135,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               Доставка{' '}
             </p>
 
-            {currentStatus == 'active' ? (
+            {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
               <img
                 src="../src/assets/icons/arrow_right.png"
                 className="cursor-pointer"
@@ -109,32 +163,34 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           <>
             <div className="flex justify-between items-center mt-[20px]">
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub2 text-light-gray-5 ">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>
-                <p className="font-gerbera-h3 text-light-gray-8">
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {`${deliveryDate.getDate()}
                   ${getMonthCorrectEndingName(deliveryDate)} в
                   ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
-                <p className="font-gerbera-sub2 text-light-gray-5">
+              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Записались
                 </p>
-                <p className="font-gerbera-h3 text-light-gray-8">
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {delivery.volunteers_taken == 0
-                    ? '0 из' + `${delivery.volunteers_needed}`
-                    : `${delivery.volunteers_taken + ' из ' + `${delivery.volunteers_needed}` + ' ' + getVolunteerCorrectEndingName(delivery.volunteers_needed)}`}
+                    ? `0 из ${delivery.volunteers_needed}`
+                    : `${delivery.volunteers_taken} из ${delivery.volunteers_needed} ${delivery.volunteers_needed == 1 ? "": "волонтёров"}`}
                 </p>
               </div>
             </div>
-            <button
+            {delivery.volunteers_taken == 0 ? ("") : (
+              <button
               className="btn-B-WhiteDefault mt-[20px]"
               onClick={() => setFullViewNearest(true)}
             >
               Список записавшихся волонтёров
             </button>
+            )}
           </>
         ) : (
           ''
@@ -155,21 +211,24 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
         {/* /////////////////////// */}
       </div>
-      {
-        <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
-          <RouteSheets
-            status="Активная"
-            onClose={() => setFullViewActive(false)}
-            onStatusChange={() => {
-              return setCurrentStatus('completed');
-            }}
-            routeSheetsData={[]}
-            completedRouteSheets={[]}
-            setCompletedRouteSheets={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
-        </Modal>
+      {(routeSheetsList && routeSheetsList.length > 0) && delivery.delivery_assignments ? (
+       <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
+       <RouteSheetsM
+         status="Активная"
+         onClose={() => setFullViewActive(false)}
+        //  onStatusChange={() => {
+        //   return setCurrentStatus('completed');
+        //  }}
+         routeSheetsData={routeSheetsList}
+         completedRouteSheets={[]}
+        // setCompletedRouteSheets={() => { }}
+          listOfVolunteers={delivery.delivery_assignments}
+          onVolunteerAssign={onVolunteerAssign}
+          deliveryId={delivery.id}
+       />
+     </Modal>
+      ): ("")
+       
       }
       <Modal
         isOpen={isCuratorFeedbackModalOpen}
@@ -200,19 +259,46 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
       {/* ///// раскрываем полные детали активной доставуи для куратора///// */}
       {currentStatus == 'nearest' ? (
-        <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
+        delivery.delivery_assignments ? (
+          <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
-            onSelectVolunteer={onSelectVolunteer}
-            onTakeRoute={() => {}}
+            listOfVolunteers={delivery.delivery_assignments}
+            onOpenChange={setFullViewNearest}
             showActions={true}
-            onClose={function (): void {
-              throw new Error('Function not implemented.');
-            }}
           />
         </Modal>
+        ): ("")
+       
       ) : (
         ''
       )}
+<ConfirmModal
+  isOpen={assignVolunteerSuccess}
+  onOpenChange={setAssignVolunteerSuccess}
+    onConfirm = {() => {setAssignVolunteerSuccess(false)}}
+  title={
+    <p>
+    Волонтер успешно назначен на доставку!
+    </p>
+  }
+  description=""
+  confirmText="Ок"
+  isSingleButton={true}
+      />
+      <ConfirmModal
+  isOpen={assignVolunteerFail}
+  onOpenChange={setAssignVolunteerFail}
+    onConfirm = {() => {setAssignVolunteerFail(false)}}
+  title={
+    <p>
+      Упс, что-то пошло не так<br />
+      Попробуйте позже
+    </p>
+  }
+  description=""
+  confirmText="Ок"
+  isSingleButton={true}
+/>
     </>
   );
 };

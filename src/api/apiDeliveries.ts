@@ -3,6 +3,16 @@ import axios, { AxiosResponse } from 'axios';
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const deliveriesUrl = `${API_URL}/deliveries/`;
 
+///// так отображается волонтер в ответе на getCuratorDeliveries
+type TVolunteerForDeliveryAssignments = {
+  id: number
+  tg_username: string
+  last_name: string
+  name: string,
+  photo: string
+  }
+
+
 interface IDelivery {
   id: number;
   date: string;
@@ -26,27 +36,41 @@ interface IDelivery {
     link: string
     subway: string
     description: string
-  //  city: {
-  //     id: number
-  //     city: string
-  //   }
+   city: {
+      id: number
+      city: string
+    }
   }
   is_completed: boolean
   in_execution: boolean
   volunteers_needed: number
   volunteers_taken: number
-  delivery_assignments?: string[]
+  delivery_assignments?: TVolunteerForDeliveryAssignments[] ///этот пункт добавляю в процессе рендера списка записавшихся волонтеров для куратора
 }
 
+//// тип для ответа для getVolunteerDeliveries
 interface IVolunteerDeliveries{
   "свободные доставки": IDelivery[]
   "мои активные доставки": IDelivery[]
   "мои завершенные доставки": IDelivery[]
 }
+//// тип для ответа для getCuratorDeliveries
+type TCuratorDelivery = {
+  id_delivery: number,
+  id_route_sheet: number[],
+  volunteers: TVolunteerForDeliveryAssignments[]
+}
+
+interface ICuratorDeliveries {
+  "выполняются доставки": TCuratorDelivery[],
+  "активные доставки": TCuratorDelivery[],
+  "завершенные доставки":TCuratorDelivery[]
+}
+
 
 // Получение всех доставок
 export const getAllDeliveries = async (
-accessToken: string|null
+accessToken: string
 ): Promise<IDelivery[]> => {
   try {
     const response = await axios({
@@ -63,6 +87,26 @@ accessToken: string|null
     throw err; // Пробрасываем ошибку выше
   }
 };
+// Получение всех доставок
+export const getDeliveryById = async (
+  accessToken: string,
+  id:number
+  ): Promise<IDelivery> => {
+    try {
+      const response = await axios({
+        url: `${deliveriesUrl}${id}/`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
+        },
+      });
+      return response.data;
+    } catch (err: any) {
+      console.error( 'Get request getDeliveryById has failed', err.response || err)
+      throw err; // Пробрасываем ошибку выше
+    }
+  };
 
 // Отмена доставки
 export const postDeliveryCancel = async (
@@ -107,27 +151,16 @@ export const postDeliveryTake = async (
     });
     return response.data;
   } catch (err: any) {
-   //console.error('Post request postDeliveryTake has failed', err);
     throw new Error(err.response.data.error)
-    //   if (err.response.data.error == 'You have already taken this delivery') {
-       
-    //   } else if (err.response.data.detail == 'User does not confirmed') {
-    //     console.error('User does not confirmed', err);
-    //     throw new Error(err.response.data.detail)
-    //   }
-    //   console.error('Post request postDeliveryTake has failed', err);
-    //  // throw new Error('Post request postDeliveryTake has failed');
-    //   throw new Error(err.response.data.error)
-    // }
   }
 };
 
 // Получение доставок куратора
 export const getCuratorDeliveries = async (
   access: string,
-): Promise<IDelivery[]> => {
+): Promise<ICuratorDeliveries> => {
   try {
-    const response: AxiosResponse<IDelivery[]> = await axios({
+    const response: AxiosResponse<ICuratorDeliveries> = await axios({
       url: `${deliveriesUrl}curator/`,
       method: 'GET',
       headers: {
@@ -163,4 +196,4 @@ export const getVolunteerDeliveries = async (
 };
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery, IVolunteerDeliveries };
+export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments};

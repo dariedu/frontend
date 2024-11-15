@@ -2,24 +2,22 @@ import React from 'react';
 import avatar from '../../assets/avatar.svg';
 import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
 
-interface IRoute {
-  address: string; // Адрес
-  additionalInfo: string; // Дополнительная информация (link)
-  personName: string; // Имя получателя (beneficiary)
-  avatar?: string; // Иконка или изображение, если доступно
-  needsPhoto?: boolean; // Логическое значение для фото, по умолчанию false
-}
 
 interface IRouteSheetsViewProps {
-  routes: IRoute[];
-  onComplete: () => void;
+  routes: {address: string
+    additionalInfo: string
+    personName:string[]
+    avatar: string
+    needsPhoto:boolean
+      }[];
+  //onComplete: () => void;
   isCompleted: boolean;
   isVolunteerSelected: boolean; // Добавили этот проп
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes = [],
-  onComplete,
+  //onComplete,
   isCompleted,
   isVolunteerSelected,
 }) => {
@@ -29,7 +27,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
       {routes.map((route, index) => (
         <div
           key={index}
-          className="w-full bg-light-gray-1 p-4 rounded-lg flex justify-between items-center mb-4 mt-[12px]"
+          className="w-full bg-light-gray-1 p-4 rounded-lg flex justify-between items-center mb-4 mt-[12px] "
         >
           <div className="flex flex-col items-start h-[44px]">
             <p className="font-gerbera-h3 text-light-gray-8 mb-[4px]">
@@ -59,7 +57,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           className={`btn-M-GreenDefault w-full mt-4 ${
             !isVolunteerSelected ? 'opacity-50 cursor-not-allowed' : ''
           }`}
-          onClick={onComplete}
+          //onClick={onComplete}
           disabled={!isVolunteerSelected}
         >
           Завершить
