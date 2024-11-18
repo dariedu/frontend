@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../../../core/UserContext';
-import { getRouteSheets, type IRouteSheet } from '../../../api/routeSheetApi';
+import { type IRouteSheet, type TRouteSheetIndividual, getRouteSheetById } from '../../../api/routeSheetApi';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries, getDeliveryById, IDelivery } from '../../../api/apiDeliveries';
 import NearestDeliveryCurator from '../../../components/NearestDelivery/NearestDeliveryCurator';
 
@@ -17,62 +17,47 @@ const Curator: React.FC = () => {
     return <div>Пользователь не найден</div>;
   }
 
-  const [routeSheetsMy, setRouteSheetsMy] = useState<IRouteSheet[]>([]);
+  interface IDeliveryWithRouteSheets extends IDelivery {
+    delivery_routeSheets?: IRouteSheet[]
+  }
+  //const [routeSheetsMy, setRouteSheetsMy] = useState<IRouteSheet[]>([]);
   const [curatorActiveDeliveries, setCuratorActiveDeliveries] = useState<TCuratorDelivery[]>([])
-  const [myCurrentActiveDeliveries, setMyCurrentActiveDeliveries] = useState<IDelivery[]>([]) ///основной объект активной доставки
-  const [activeDeliveriesAssignmentsSuccess, setActiveDeliveriesAssignmentsSuccess] = useState(false)
+  const [myCurrentActiveDeliveries, setMyCurrentActiveDeliveries] = useState<IDeliveryWithRouteSheets[]>([]) ///основной объект активной доставки
+  const [activeDeliveriesAssignmentsSuccess, setActiveDeliveriesAssignmentsSuccess] = useState(false);
+  const [activeRouteSheetWithDeliveryId, setActiveRouteSheetWithDeliveryId] = useState<TRouteSheetIndividual[]>([])
+  const[assignRouteSheetsToFullDeliveryObjectActiveSuccess, setAssignRouteSheetsToFullDeliveryObjectActiveSuccess] = useState(false);
   // ////////////////////////////
   const [curatorInProcessDeliveries, setCuratorInProcessDeliveries] = useState<TCuratorDelivery[]>([])
-  const [myInProcessDeliveries, setMyInProcessDeliveries] = useState<IDelivery[]>([]) ///основной объект активной в процессе выполнения доставки
+  const [myInProcessDeliveries, setMyInProcessDeliveries] = useState<IDeliveryWithRouteSheets[]>([]) ///основной объект активной в процессе выполнения доставки
   const [inProcessDeliveriesAssignmentsSuccess, setInProcessDeliveriesAssignmentsSuccess] = useState(false)
-  
+  const [inProcessRouteSheetWithDeliveryId, setInProcessRouteSheetWithDeliveryId] = useState<TRouteSheetIndividual[]>([])
   ////// используем контекст юзера
     const userValue = useContext(UserContext);
     const token = userValue.token;
    ////// используем контекст
 
 
-  async function getMyRounteSheets() {
-    try {
-       if (token) {
-         let result: IRouteSheet[] = await  getRouteSheets(token);
-         if (result) { 
-           console.log(result)
-           setRouteSheetsMy(result)
-         }
+  function requestEachMyActiveRouteSheet(deliveries: TCuratorDelivery[], setStateAction:React.Dispatch<React.SetStateAction<TRouteSheetIndividual[]>>) {
+    let routeSheets: TRouteSheetIndividual[] = [];
+    if (token) {
+      deliveries.forEach(d => {
+        let oneDeliveryRouteSheets = d.id_route_sheet;
+        let routesArr: IRouteSheet[] = [];
+        Promise.allSettled(oneDeliveryRouteSheets.map(routeS => getRouteSheetById(token, routeS)))
+          .then(responses => responses.forEach((result, num) => {
+            if (result.status == "fulfilled") {
+              routesArr.push(result.value)
+            }
+            if (result.status == "rejected") {
+              console.log(`${num} delivery was not fetched`)
+            }
+          })).finally(() => { routeSheets.push({ deliveryId: d.id_delivery, routeSheets: routesArr }); setStateAction(routeSheets)}
+          )
+      })
     }
-    } catch (err) {
-      console.log(err, "getMyRounteSheets CuratorPage fail")
-    }
-  };
-
-  // type TRouteSheetIndividual = {
-  //   deliveryId: number
-  //   routeSheets: IRouteSheet[]
-  //   }
-
-  // function requestEachMyRouteSheet(deliveries: TCuratorDelivery[]) {
-  //   let routeSheets: TRouteSheetIndividual[] = [];
-  //   if (token) {
-  //     deliveries.forEach(d => {
-  //       let oneDeliveryRouteSheets = d.id_route_sheet;
-  //       let routesArr: IRouteSheet[] = [];
-  //       Promise.allSettled(oneDeliveryRouteSheets.map(routeS => getRouteSheetById(token, routeS)))
-  //         .then(responses => responses.forEach((result, num) => {
-  //           if (result.status == "fulfilled") {
-  //             routesArr.push(result.value)
-  //           }
-  //           if (result.status == "rejected") {
-  //             console.log(`${num} delivery was not fetched`)
-  //           }
-  //         })).finally(() => { routeSheets.push({ deliveryId: d.id_delivery, routeSheets: routesArr }) }
-  //         )
-  //     })
-  //     console.log(routeSheets, "routeSheets")
-  //   }
-    
-  // }
-
+  }
+  
+useEffect(()=> {console.log(activeRouteSheetWithDeliveryId, "activeRouteSheetWithDeliveryId")}, [activeRouteSheetWithDeliveryId])
 //// запрашиваем кураторские доставки и берем активные и в процессе исполнения
 async function getMyCuratorDeliveries() {
   const activeDeliveries: TCuratorDelivery[] = [];
@@ -83,13 +68,16 @@ async function getMyCuratorDeliveries() {
        if (result) { 
          result['активные доставки'].forEach((i: TCuratorDelivery) => { activeDeliveries.push(i) });
          requestEachMyNearestDelivery(activeDeliveries)/// запрашиваем полный объект доставки
-        //  requestEachMyRouteSheet(activeDeliveries)
+         requestEachMyActiveRouteSheet(activeDeliveries, setActiveRouteSheetWithDeliveryId)
          setCuratorActiveDeliveries(activeDeliveries)/// запоминаем результат
         ////////////////////////
          result['выполняются доставки'].forEach((i: TCuratorDelivery) => { inProcessDeliveries.push(i) });
          requestEachMyInProcessDelivery(inProcessDeliveries)/// запрашиваем полный объект доставки
          setCuratorInProcessDeliveries(inProcessDeliveries)/// запоминаем результат
+         requestEachMyActiveRouteSheet(inProcessDeliveries, setInProcessRouteSheetWithDeliveryId)
+        //requestEachMyRouteSheet(inProcessDeliveries)
          /////////////////////
+         console.log(result, 'getMyCuratorDeliveries()')
        }
   }
   } catch (err) {
@@ -100,7 +88,7 @@ async function getMyCuratorDeliveries() {
 
  
     useEffect(() => {
-      getMyRounteSheets()
+      //getMyRounteSheets()
    getMyCuratorDeliveries()
  }, [])
   
@@ -138,7 +126,7 @@ async function getMyCuratorDeliveries() {
   }
 
 
-
+/////переносим deliveruAssignments в полный объект доставки
   function assignVolunteersToFullDeliveryObjectInProcess() {
     if (curatorInProcessDeliveries.length > 0 && myInProcessDeliveries.length > 0) {
       myInProcessDeliveries.forEach((deliveryInProcess) => {
@@ -151,7 +139,7 @@ async function getMyCuratorDeliveries() {
       })
     }
   }
-
+/////переносим deliveruAssignments в полный объект доставки
   function assignVolunteersToFullDeliveryObjectActive() {
     if (curatorActiveDeliveries.length > 0 && myCurrentActiveDeliveries.length > 0) {
       myCurrentActiveDeliveries.forEach((delivery) => {
@@ -164,15 +152,55 @@ async function getMyCuratorDeliveries() {
       })
     }
   }
-
+/////переносим deliveruAssignments в полный объект доставки
   useEffect(() => {
     assignVolunteersToFullDeliveryObjectInProcess()
  }, [myInProcessDeliveries,curatorInProcessDeliveries]);
 
- 
+ /////переносим deliveruAssignments в полный объект доставки
  useEffect(() => {
    assignVolunteersToFullDeliveryObjectActive()
  }, [myCurrentActiveDeliveries, curatorActiveDeliveries]);
+  
+  
+  /////переносим deliveruAssignments в полный объект доставки
+  // function assignRouteSheetsToFullDeliveryObjectInProcess() {
+  //   if (curatorInProcessDeliveries.length > 0 && myInProcessDeliveries.length > 0) {
+  //     myInProcessDeliveries.forEach((deliveryInProcess) => {
+  //       for (let i = 0; i < curatorInProcessDeliveries.length; i++){
+  //         if (deliveryInProcess.id == curatorInProcessDeliveries[i].id_delivery) {
+  //           deliveryInProcess.delivery_assignments = curatorInProcessDeliveries[i].volunteers
+  //           setInProcessDeliveriesAssignmentsSuccess(true)
+  //         }
+  //       }
+  //     })
+  //   }
+  // }
+
+
+/////переносим deliveruAssignments в полный объект доставки
+  function assignRouteSheetsToFullDeliveryObjectActive() {
+    if (myCurrentActiveDeliveries.length > 0 && activeRouteSheetWithDeliveryId.length > 0 ) {
+      myCurrentActiveDeliveries.forEach((delivery) => {
+        for (let i = 0; i < activeRouteSheetWithDeliveryId.length; i++){
+          if (delivery.id == activeRouteSheetWithDeliveryId[i].deliveryId) {
+            delivery.delivery_routeSheets = activeRouteSheetWithDeliveryId[i].routeSheets
+            setAssignRouteSheetsToFullDeliveryObjectActiveSuccess(true)
+          }
+        }
+      })
+    }
+  }
+/////переносим deliveruAssignments в полный объект доставки
+//   useEffect(() => {
+//     assignVolunteersToFullDeliveryObjectInProcess()
+//  }, [myInProcessDeliveries,curatorInProcessDeliveries]);
+
+ /////переносим deliveruAssignments в полный объект доставки
+ useEffect(() => {
+  assignRouteSheetsToFullDeliveryObjectActive()
+ }, [myCurrentActiveDeliveries, activeRouteSheetWithDeliveryId]);
+  
   
 
 
@@ -180,16 +208,23 @@ async function getMyCuratorDeliveries() {
     <div className="flex-col min-h-[80vh] bg-light-gray-1  dark:bg-light-gray-black ">
 
       {myInProcessDeliveries.length > 0 && inProcessDeliveriesAssignmentsSuccess ?(
-        myInProcessDeliveries.sort((a,b)=> {return +(new Date(a.date))-+(new Date(b.date))}).map((del, index) => {
+        myInProcessDeliveries.sort((a, b) => { return +(new Date(a.date)) - +(new Date(b.date)) }).map((del, index) => {
+          //let routeSheets = inProcessRouteSheetWithDeliveryId[index].routeSheets; 
+          // for (let y = 0; y < inProcessRouteSheetWithDeliveryId.length; y++){
+          //   if (inProcessRouteSheetWithDeliveryId[y].deliveryId = del.id) {
+          //     routeSheets = inProcessRouteSheetWithDeliveryId[y].routeSheets
+          //   }
+          // }
+          
             return(<div key={index}>
-              <NearestDeliveryCurator delivery={del} deliveryFilter='active' routeSheetsList={routeSheetsMy}/>
+              <NearestDeliveryCurator delivery={del} deliveryFilter='active' />
             </div>)
         })
       ) : ("")}
-      {myCurrentActiveDeliveries.length > 0 && activeDeliveriesAssignmentsSuccess ? (
-        myCurrentActiveDeliveries.sort((a,b)=> {return +(new Date(a.date))-+(new Date(b.date))}).map((del, index) => {
+      {myCurrentActiveDeliveries.length > 0 && activeDeliveriesAssignmentsSuccess && assignRouteSheetsToFullDeliveryObjectActiveSuccess? (
+        myCurrentActiveDeliveries.sort((a, b) => { return +(new Date(a.date)) - +(new Date(b.date)) }).map((del, index) => {
             return (<div key={index}>
-            <NearestDeliveryCurator delivery={del} deliveryFilter='nearest' routeSheetsList={routeSheetsMy}/>
+            <NearestDeliveryCurator delivery={del} deliveryFilter='nearest' />
           </div>)
         })
       ) : ("")}

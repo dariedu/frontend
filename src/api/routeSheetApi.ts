@@ -59,7 +59,14 @@ interface IRouteSheet {
 type TRouteSheetRequest = {
   volunteer_id: number
   delivery_id: number
+  routesheet_id:number
 };
+
+//// кастомный тип для некоторых компонетов куратора
+type TRouteSheetIndividual = {
+  deliveryId: number
+  routeSheets: IRouteSheet[]
+  }
 
 //id=volunteer_id for delivery with id=delivery_id Body: { "volunteer_id": {id} "delivery_id": {id} }
 // Интерфейс для создания или обновления адреса в маршрутном листе
@@ -111,13 +118,12 @@ export const getRouteSheetById = async (token: string, routeSheetId:number): Pro
 
 // Назначение маршрутного листа волонтеру
 export const assignRouteSheet = async (
-  routeSheetId:number,
   access:string,
   data: TRouteSheetRequest,
 ): Promise<IRouteSheet> => {
   try {
     const response: AxiosResponse<IRouteSheet> = await axios({
-      url: `${API_URL}/route_sheets/${routeSheetId}/assign/`,
+      url: `${API_URL}/route_sheets/assign/`,
       method: 'POST',
       headers: {
         Authorization: `Bearer ${access}`,
@@ -150,4 +156,5 @@ export type {
   TAddress,
   TRouteSheetRequest,
   TAddressRequest,
+  TRouteSheetIndividual
 };
