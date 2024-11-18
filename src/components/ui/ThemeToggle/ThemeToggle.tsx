@@ -1,14 +1,32 @@
 import * as Switch from '@radix-ui/react-switch';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import ThemeIcon from '../../../assets/icons/dark_theame.svg?react';
 
+
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light'); ///тема из телеграма
+
+  useEffect(() => {
+  let color = window.Telegram?.WebApp?.colorScheme || 'light';
+  setColorScheme(color);
+},[])
+
+  let colorTheme: 'light' | 'dark';
+  if (localStorage.getItem('dariEduColorTheme') != undefined) {
+  colorTheme = localStorage.getItem('dariEduColorTheme') as 'dark'|'light'; 
+    } else {
+  colorTheme = colorScheme
+    }
+
+  const [theme, setTheme] = useState<'light' | 'dark'>(colorTheme);
+
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove(theme === 'light' ? 'dark' : 'light');
     root.classList.add(theme);
+    localStorage.setItem('dariEduColorTheme', theme)
   }, [theme]);
 
   const toggleTheme = () => {

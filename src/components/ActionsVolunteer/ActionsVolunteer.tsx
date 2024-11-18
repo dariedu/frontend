@@ -106,7 +106,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       {/* Переключение темы */}
       {showThemeToggle && (
         <div className="relative bg-light-gray-1 rounded-[16px]">
-          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px] dark:bg-light-gray-7-logo">
+          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px] dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
             <ThemeToggle />
           </div>
         </div>

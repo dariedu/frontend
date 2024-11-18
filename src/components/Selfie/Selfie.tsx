@@ -65,10 +65,10 @@ export const Selfie: React.FC<ISelfieProps> = ({
   return (
     <>
       <div
-        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full"
+        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full dark:bg-light-gray-7-logo"
         onClick={e => e.stopPropagation()}
       >
-        <div className="h-[142px] w-[140px] bg-light-gray-2 rounded-full flex justify-center items-center mb-8 relative">
+        <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-8 relative">
           {fileUploaded ? (
             <>
               <img
@@ -78,19 +78,19 @@ export const Selfie: React.FC<ISelfieProps> = ({
                   e.preventDefault;
                 }}
               />
-       <Small_pencile className="absolute bottom-0 right-0 fill-light-gray-8-text bg-light-gray-2 rounded-full"
+       <Small_pencile className="absolute bottom-0 right-0  bg-light-gray-2 fill-light-gray-8-text dark:bg-light-gray-5 dark:fill-light-gray-1 rounded-full"
                 onClick={() =>
                   isEnabled ? setIsEnabled(false) : setIsEnabled(true)
                 } />
             </>
           ) : (
-              <Photo  className="h-[72px] w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white"
+              <Photo  className="h-[72px] w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white dark:bg-light-gray-5 dark:fill-light-gray-3"
               onClick={() =>
                 isEnabled ? setIsEnabled(false) : setIsEnabled(true)
               }/>
           )}
         </div>
-        <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2">
+        <p className="block text-center max-w-[280px] pb-8 font-gerbera-h2 dark:text-light-gray-1">
           {fileUploaded ? 'Отличное фото!' : text}
           <br />
         </p>
@@ -111,7 +111,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
       </div>
       <Modal isOpen={isEnabled} onOpenChange={setIsEnabled}>
         <div
-          className="w-full h-fit bg-light-gray-white flex flex-col justify-between items-center py-8 rounded-t-2xl"
+          className="w-full h-fit bg-light-gray-white flex flex-col justify-between items-center py-8 rounded-t-2xl dark:bg-light-gray-7-logo"
           onClick={e => {
             e.stopPropagation();
           }}
@@ -123,7 +123,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
             screenshotFormat="image/jpeg"
             screenshotQuality={1}
             forceScreenshotSourceSize={true}
-            className="relative "
+            className="relative"
           />
           {url && (
             <img ref={imageRef} src={url} alt="pic" className="absolute" />
@@ -131,11 +131,11 @@ export const Selfie: React.FC<ISelfieProps> = ({
           <div className="flex justify-between w-[240px] h-[40px] mt-4">
             {url.length !== 0 ? (
               <button
-                className="btn-S-GreenDefault outline-none"
-                onClick={deletePhoto}
-              >
-                Удалить
-              </button>
+              className="btn-S-GreenDefault outline-none"
+              onClick={savePicture}
+            >
+              Сохранить
+            </button>
             ) : (
               <button
                 className="btn-S-GreenDefault outline-none"
@@ -146,19 +146,19 @@ export const Selfie: React.FC<ISelfieProps> = ({
             )}
             {url.length !== 0 ? (
               <button
-                className="btn-S-GreenClicked outline-none"
-                onClick={savePicture}
-              >
-                Сохранить фото
-              </button>
+              className="btn-S-GreenInactive outline-none"
+              onClick={deletePhoto}
+            >
+              Удалить
+            </button>
             ) : (
               <button
                 className="btn-S-GreenInactive outline-none"
-                onClick={e => {
-                  e.preventDefault();
+                onClick={() => {
+                  onOpenChange(false);
                 }}
               >
-                Сохранить фото
+                Отменить
               </button>
             )}
           </div>

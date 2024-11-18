@@ -19,6 +19,8 @@ import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal.tsx';
 import InputOptions, {type T} from './InputOptions.tsx';
 import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react'
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react'
+import { useLocation } from 'react-router-dom';
+
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -28,6 +30,8 @@ function RegistrationPage() {
     useState(false);
   const [checked, setChecked] = useState(false); // активируем кнопку отпарвки, если согласились с офертой для взрослых
   const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
+  //const [titleForAlert, setTitleForAlert] = useState<string>("");
+
   const [tryToSubmitWithoutPic, setTryToSubmitWithoutPic] = useState(false); // уведомляем пользователя, если он не засабмитил фото
   const [birthDate, setBirthDate] = useState<string>('');
   const [requestSent, setRequestSent] = useState(false);
@@ -45,14 +49,13 @@ function RegistrationPage() {
   const [clickedCity, setClickedCity] = useState(false);
   const [cityOptions, setCityOptions] = useState<[number, string][]>([
     [1, 'Москва'],
-    [2, 'Ростов-на-Дону'],
     [3, 'другой'],
   ]);
   const [cityIndex, setCityIndex] = useState<T>(1);
   ///// данные для инпута для выбора города
 
   ////// запрашиваем города и пушим их в cityOptions для формирования инпута
-  async function reqCiliesList() {
+  async function reqCitiesList() {
     let arr: [number, string][] = [];
     try {
       const result: TCity[] = await fetchCities();
@@ -70,7 +73,7 @@ function RegistrationPage() {
 
   /////запрашиваем города один раз при загрузке страницы
   useEffect(() => {
-    reqCiliesList();
+    reqCitiesList();
   }, []);
 
   ///определяем есть ли пользователю 18 лет по введенной дате рождения
@@ -112,7 +115,7 @@ function RegistrationPage() {
 
   type TRegister = Omit<
     IUserRegistered,
-    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'birthday'
+    'is_adult' | 'tg_id' | 'tg_username' | 'photo' | 'phone' | 'birthday' 
   >;
 
   const [userFormFieldsInfo, setUserFormFieldsInfo] = useState<TRegister>({
@@ -124,6 +127,7 @@ function RegistrationPage() {
     city: 1,
     consent_to_personal_data: false,
   });
+
 
   ////При загрузке страницы, если isAdult пуст, то проверяем localStorage, если там есть birthDate то она подцепится в форму и соотвественно надо обновить isAdult
   if (isAdult == null || birthDate.length == 0) {
@@ -164,8 +168,14 @@ function RegistrationPage() {
         setRegistrationCompleteModal(true);
       } 
     } catch (e) {
-      setRequestSent(false)
+      console.log(e, "fetchRegistration, registration page")
+      if (e == 'Error: Access token refresh failed: invalid_grant: Token has been expired or revoked.') {
+        localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
+        setRegistrationCompleteModal(true);
+      } else {
+         setRequestSent(false)
       setRegistrationhasFailed(true)
+      }
     }
   }
 
@@ -180,32 +190,22 @@ function RegistrationPage() {
     city: number;
   };
 
+ //// бэк передает параметры пользователя через командную строку, забераем данные
+  const locationForParams = useLocation();
+  const query = new URLSearchParams(locationForParams.search);
+  const tgId = query.get('tg_id');
+  const phone_number = query.get('phone_number');
+  const tg_nickname = query.get('tg_nickname')
 
-  //// бэк передает параметры пользователя через командную строку оттуда и берем данные
-  const paramsFromCommandLine: string[] = [];
-    if (window.location.search !="" && window.location.search!=null) {
-      const str = window.location.search;
-      const params:["phone_number", "tg_id", "tg_nickname"] = ["phone_number", "tg_id", "tg_nickname"];
-      let regexp;
-      for (let i = 0; i < params.length; i++){
-         regexp = `[\\?&]${params[i]}=([^&#]*)`;
-         if (str.match(regexp) !== null && str.match(regexp)?.length) {
-           let obj = str.match(regexp) || [];
-           if (obj.length > 0) {
-            paramsFromCommandLine.push(obj[1])
-           }
-         }
-      }
-  }
   //////функция для сабмита формы
   async function onFormSubmit() {
     setRequestSent(true);
 
     const userUnchangableValues: TUserUnchangableValues = {
-      tg_id: +paramsFromCommandLine[1] || NaN,
-      tg_username: paramsFromCommandLine[2] || '',
+      tg_id: tgId ? +tgId : NaN,
+      tg_username: tg_nickname ? tg_nickname : '',
       is_adult: isAdult,
-      phone: paramsFromCommandLine[0] || '',
+      phone: phone_number ? phone_number : '',
       photo: '',
       birthday: '',
       city: 0,
@@ -215,6 +215,20 @@ function RegistrationPage() {
     const user = Object.assign(userUnchangableValues, userFormFieldsInfo);
     user.birthday = `${birthDate.slice(6, 10)}-${birthDate.slice(3, 5)}-${birthDate.slice(0, 2)}`;
     user.city = cityIndex as number;
+    if (user.phone.includes('+', 0)) {
+      user.phone = user.phone.slice(1);
+    };
+
+    if (user.phone.slice(0, 1) == '7'){
+      user.phone = "8"+user.phone.slice(1)
+    }
+  
+    user.tg_username = user.tg_username.slice(0, 1) == '@' ? user.tg_username.slice(1).toLowerCase() : user.tg_username.toLowerCase();
+    user.email = user.email.toLowerCase();
+    user.last_name = user.last_name.slice(0, 1).toUpperCase() + user.last_name.slice(1).toLowerCase();
+    user.name = user.name.slice(0, 1).toUpperCase() + user.name.slice(1).toLowerCase();
+    user.surname = user.surname.slice(0, 1).toUpperCase() + user.surname.slice(1).toLowerCase();
+    
     ///// создаем объект форм дата
     const formData = new FormData();
     ///// перебираем юзера переносим все поля `в форм дата
@@ -246,13 +260,34 @@ function RegistrationPage() {
   return (
     <>
       {registrationComplete ? (
-        <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white h-screen">
-          <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-          <h1 className="font-gerbera-h2 text-light-gray-black w-[325px] h-[63px] text-center mt-7">
-            Благодарим за регистрацию!
-            <br />
-            Теперь вы можете перейти на <p className='text-light-brand-green' onClick={()=>location.reload()}>главную страницу</p>
+        <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white dark:bg-light-gray-7-logo h-screen">
+          <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]' />
+          {isAdult ? (
+            <div className='w-[310px] text-cventer'><br/>
+              <p className='font-gerbera-h2 dark:text-light-gray-white'>Спасибо!</p>
+           <p className='font-gerbera-h2 dark:text-light-gray-white'>Получили вашу анкету, проверим в ближайшее время.</p><br/>
+          <p className='font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-2'>После успешного прохождения проверки вам станут доступны основные функции приложения.</p>  
+          <h1 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-white w-[325px] h-[63px] text-center mt-7">
+          <br />
+          Теперь вы можете перейти на <p className='text-light-brand-green cursor-pointer' onClick={()=>location.reload()}>главную страницу</p>
           </h1>
+            </div>
+          ) : (
+            <div className='w-[310px] text-cventer'><br/><br/>
+            <p className='font-gerbera-h3 text-center dark:text-light-gray-white '> Спасибо! <br/>
+              Получили вашу анкету.<br/><br/>
+              Для завершения регистрации вашему законному опекуну  необходимо подписать<br/>
+                  <b className='font-gerbera-h3 text-center text-light-brand-green font-normal'>Согласие</b>* на участие несовершеннолетнего в благотворительном мероприятии.
+            </p><br />
+              <p className='font-gerbera-sub1 text-center text-light-gray-5 dark:text-light-gray-2'>*Вышлем файл с документом в личном сообщении в ближайшее время.</p><br/><br/>
+            <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white">
+            Теперь вы можете перейти на <p className='text-light-brand-green cursor-pointer' onClick={()=>location.reload()}>главную страницу</p>
+            </h1>
+                  
+            </div>
+              
+             )}
+          
         </div>
       ) : (
         <>
@@ -264,14 +299,14 @@ function RegistrationPage() {
             }}
           >
             <div
-              className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white"
+              className="flex flex-col justify-around items-center w-[360px] h-fit bg-light-gray-white dark:bg-light-gray-7-logo"
               onClick={() => {
                 setClickedCity(false);
               }}
             >
-              <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[520px] max-h-[559px] pt-[24px] pb-[28px]">
-                <div className="font-gerbera-h1 my-">Зарегистрироваться</div>
-                <div className="w-[328px] h-min-[360px] flex flex-col justify-between">
+              <div className="flex flex-col justify-between items-center w-fit h-fit min-h-[490px] max-h-[559px] pt-[24px] pb-[28px]">
+                <div className="font-gerbera-h1 dark:text-light-gray-white mb-9">Зарегистрироваться</div>
+                <div className="w-[328px] h-min-[360px] flex flex-col justify-between mb-9">
                   <Form.Field
                     name="last_name"
                     className="flex flex-col items-center"
@@ -290,6 +325,9 @@ function RegistrationPage() {
                     </Form.Control>
                     <Form.Message match="valueMissing" className="error">
                       Пожалуйста, введите вашу фамилию
+                      </Form.Message>
+                      <Form.Message  match={(value) => value.length < 3} className="error">
+                      Минимальное количество символов 3
                     </Form.Message>
                   </Form.Field>
 
@@ -311,6 +349,9 @@ function RegistrationPage() {
                     </Form.Control>
                     <Form.Message match="valueMissing" className="error">
                       Пожалуйста, введите ваше имя
+                      </Form.Message>
+                      <Form.Message  match={(value) => value.length < 3} className="error">
+                      Минимальное количество символов 3
                     </Form.Message>
                   </Form.Field>
                   <Form.Field
@@ -331,15 +372,17 @@ function RegistrationPage() {
                     </Form.Control>
                     <Form.Message match="valueMissing" className="error">
                       Пожалуйста, введите ваше отчество
+                      </Form.Message>
+                      <Form.Message  match={(value) => value.length < 3} className="error">
+                      Минимальное количество символов 3
                     </Form.Message>
                   </Form.Field>
                   <Form.Field
                     name="birthday"
-                    className="flex flex-col items-center"
-                  >
+                    className="flex flex-col items-center relative"
+                    >                    
                       <Form.Control asChild>
-                        <>
-                         <input
+                       <input
                         ref={calendarRef}
                         name="age"
                         className="formFieldBirthday bgImage"
@@ -349,24 +392,25 @@ function RegistrationPage() {
                           e.preventDefault();
                           setOpenCalendar(true);
                         }}
-                        defaultValue={localStorage.getItem('birthday') ?? ''}
+                        //defaultValue={localStorage.getItem('birthday') ?? ''}
+                        value={localStorage.getItem('birthday') ?? ''}
                         onChange={() => {
                           localStorage.removeItem('birthday');
                           localStorage.removeItem('isAdult');
                           setIsAdult(null);
                         }}
                           required
-                         
                           />  
-                           <CalendarIcon  className='fixed ml-[250px] mt-1 fill-[#BFBFBF]'/>
-                        </>
-                     
-                    </Form.Control>
-                    <Form.Message match="valueMissing" className="error">
+                   
+                      </Form.Control>
+                       <CalendarIcon className='absolute ml-[70%] mt-3 fill-[#BFBFBF]' />
+                     {/* <Form.Message match="valueMissing" className="error">
+                      Пожалуйста введите дату рождения
+                      </Form.Message> */}
+                      <Form.Message match={(value) => value.length < 10} className="error">
                       Пожалуйста введите дату рождения
                     </Form.Message>
                   </Form.Field>
-
                   <Form.Field
                     name="email"
                     className="flex flex-col items-center"
@@ -389,6 +433,9 @@ function RegistrationPage() {
                     </Form.Message>
                     <Form.Message match="typeMismatch" className="error">
                       Неверный имейл
+                      </Form.Message>
+                      <Form.Message  match={(value) => value.length < 3} className="error">
+                      Минимальное количество символов 3
                     </Form.Message>
                   </Form.Field>
                   <div>
@@ -411,7 +458,7 @@ function RegistrationPage() {
                       checked ? setChecked(false) : setChecked(true);
                     }}
                   >
-                    <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] text-left">
+                    <label className="font-gerbera-sub2 text-light-gray-6 w-[261px] text-left dark:text-light-gray-2 ">
                       Я принимаю условия{' '}
                       <b
                         className="text-light-brand-green font-normal text-left cursor-pointer"
@@ -437,7 +484,7 @@ function RegistrationPage() {
                         className="h-[142px] w-[142px] rounded-full"
                       />
                       </div>
-                      <Pencile  className="relative -mt-[25px] ml-[70px] rounded-full bg-light-gray-2 fill-light-gray-black"
+                      <Pencile  className="relative -mt-[25px] ml-[70px] rounded-full bg-light-gray-2 fill-light-gray-8-text dark:bg-light-gray-5 dark:fill-light-gray-1"
                       onClick={() => {
                         setIsModalOpen(true);
                       }} />
@@ -445,13 +492,13 @@ function RegistrationPage() {
                 ) : (
                   <div className="flex justify-between place-items-start my-4">
                     <div className="w-[235px] h-[72px] flex flex-col justify-between items-start">
-                      <h3 className="font-gerbera-h3 text-light-gray-black">
+                      <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
                         Сделайте свое фото
                       </h3>
                       <p
                         className={
                           !tryToSubmitWithoutPic
-                            ? 'font-gerbera-sub1 text-light-gray-6 text-left'
+                            ? 'font-gerbera-sub1 text-light-gray-6 text-left dark:text-light-gray-2'
                             : 'font-gerbera-sub1 text-light-error-red  text-left'
                         }
                       >
@@ -511,7 +558,7 @@ function RegistrationPage() {
                 onConfirm={() => {
                   setRegistrationComplete(true);
                   setRegistrationCompleteModal(false);
-                }}
+                  }}
                 title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
                 description=""
                 confirmText="Ок"
