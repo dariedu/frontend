@@ -6,17 +6,17 @@ import { useLocation } from 'react-router-dom';
 
 // Создаем типы для контекста
 interface IUserContext {
-  currentUser: IUser | null;
-  token: string | null;
-  isLoading: boolean;
-  error: string | null;
+  currentUser: IUser | null
+  token: string | null
+  isLoading: boolean
+  error: string | null
 }
 
 const defaultUserContext: IUserContext = {
   currentUser: null,
   token: null,
   isLoading: true,
-  error: null,
+  error: null
 };
 
 // Создаем сам контекст
@@ -30,10 +30,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const tgId = query.get('tg_id');
- // const tgId = '1567882993'
+ 
+  //const tgId = '1567882993'
   //const tgId = '205758925'
   //const tgId = '1695164858' // Евгений
   // Функция для получения токена и пользователя
@@ -85,7 +87,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [tgId]);
 
   return (
-    <UserContext.Provider value={{ currentUser, token, isLoading, error }}>
+    <UserContext.Provider value={{ currentUser, token, isLoading, error}}>
       {children}
     </UserContext.Provider>
   );

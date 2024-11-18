@@ -23,15 +23,17 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (currentUser?.id === currentUserId) {
-        setUser(currentUser);
-      } else {
-        try {
-          const fetchedUser = await getUserById(currentUserId, token);
-          setUser(fetchedUser);
-        } catch (error) {
-          console.error('Ошибка загрузки пользователя:', error);
-          setUser(null);
+      if (token){
+        if (currentUser?.id === currentUserId) {
+          setUser(currentUser);
+        } else {
+          try {
+            const fetchedUser = await getUserById(currentUserId, token);
+            setUser(fetchedUser);
+          } catch (error) {
+            console.error('Ошибка загрузки пользователя:', error);
+            setUser(null);
+          }
         }
       }
     };

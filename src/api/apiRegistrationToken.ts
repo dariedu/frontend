@@ -16,7 +16,7 @@ interface IUserRegistered {
   photo: Blob;
   birthday: string;
   is_adult: boolean | null;
-  //interests: string;
+  interests?: string;
   city: number;
   consent_to_personal_data: boolean;
 }
@@ -52,15 +52,13 @@ export const postRegistration = async (
     if (response.data) {
       return true
     }
-    //return JSON.parse(response.data);
-  } catch (err) {
+  } catch (err:any) {
     console.error('Post request postRegistration has failed', err);
-    throw new Error('Post request postRegistration has failed');
+    throw new Error(err.response.data.error);
   }
 };
 
 ////// работает корректно //////////
-
 export const postToken = async (token: TToken): Promise<TToken> => {
   try {
     const response: AxiosResponse<any> = await axios({
