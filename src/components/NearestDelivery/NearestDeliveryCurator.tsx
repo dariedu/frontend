@@ -10,13 +10,16 @@ import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery } from '../../api/apiDeliveries';
 //import { getUserById, IUser } from '../../api/userApi';
 import { UserContext } from '../../core/UserContext';
-import { IRouteSheet, assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+import { type IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 
+interface IDeliveryWithRouteSheets extends IDelivery {
+  delivery_routeSheets?: IRouteSheet[]
+}
 
 interface INearestDeliveryProps {
-  delivery: IDelivery
+  delivery: IDeliveryWithRouteSheets
   deliveryFilter: TDeliveryFilter
-  routeSheetsList?:IRouteSheet[]
+  //routeSheetsList?:IRouteSheet[]
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
@@ -24,7 +27,7 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   delivery,
   deliveryFilter,
-  routeSheetsList
+ // routeSheetsList
 }) => {
   const deliveryDate = new Date(delivery.date);
 
@@ -38,7 +41,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
   const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
 
-  
+  // console.log(delivery, "NearestDeliveryCurator")
   ///////////////////////////
   // function onSelectVolunteer(
   //   volunteerName: string,
@@ -53,7 +56,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
     const token = userValue.token;
    ////// используем контекст
 
-  
   
   // function getAllVolunteers() { 
   //   if (token && delivery.delivery_assignments) {
@@ -79,19 +81,16 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   //   volunteer_id: number
   //   delivery_id: number
   // };
-  
-  // routeSheetId:number,
-  // access:string,
-  // data: TRouteSheetRequest,
-  
+
   async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number) {
     let object:TRouteSheetRequest = {
       volunteer_id: volunteerId,
-      delivery_id: deliveryId
+      delivery_id: deliveryId,
+      routesheet_id:routeSheetId
     }
     if (token) {
       try {
-        let result = await assignRouteSheet(routeSheetId, token, object)
+        let result = await assignRouteSheet(token, object)
         if (result) {
           setAssignVolunteerSuccess(true)
         }
@@ -101,7 +100,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
     }
   }
   
-// console.log(delivery, "nearest Delivery curator")
+
 
   return (
     <>
@@ -211,7 +210,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
         {/* /////////////////////// */}
       </div>
-      {(routeSheetsList && routeSheetsList.length > 0) && delivery.delivery_assignments ? (
+      { delivery.delivery_assignments!=undefined && delivery.delivery_routeSheets && delivery.delivery_assignments.length > 0 && delivery.delivery_routeSheets.length > 0 ? (
        <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
          status="Активная"
@@ -219,7 +218,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         //  onStatusChange={() => {
         //   return setCurrentStatus('completed');
         //  }}
-         routeSheetsData={routeSheetsList}
+         routeSheetsData={delivery.delivery_routeSheets}
          completedRouteSheets={[]}
         // setCompletedRouteSheets={() => { }}
           listOfVolunteers={delivery.delivery_assignments}

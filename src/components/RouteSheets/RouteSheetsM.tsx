@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState} from 'react';
 import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 import menuIcon from '../../assets/icons/icons.png';
@@ -7,10 +7,10 @@ import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from './RouteSheetsView';
 //import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import { getRouteSheets, IRouteSheet } from '../../api/routeSheetApi';
-import { UserContext } from '../../core/UserContext';
+import {IRouteSheet} from '../../api/routeSheetApi';
+// import { UserContext } from '../../core/UserContext';
 // import { IUser } from '../../core/types';
-// import { assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+//  import { assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 //import { IDelivery } from '../../api/apiDeliveries';
 
@@ -38,7 +38,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   deliveryId
  // setCompletedRouteSheets,
 }) => {
-  const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
+
+  console.log(routeSheetsData, "routeSheetsData routeSheets")
+  console.log( listOfVolunteers, "listOfVolunteers routeSheets")
+  //const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
   const [selectedVolunteers, setSelectedVolunteers] =
     useState<{ name: string; avatar: string }[]>(Array(routeSheetsData.length).fill({
@@ -53,24 +56,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [isAllRoutesCompleted, setIsAllRoutesCompleted] = useState(false);
   const [isDeliveryCompletedModalOpen, setIsDeliveryCompletedModalOpen] = useState(false);
   const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false);
-  const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([]);
-console.log(listOfVolunteers, 'ListOfVolunteers')
-  // console.log(isAllRoutesCompleted, isDeliveryCompletedModalOpen, onStatusChange, setDeliveryCompletedOnce, setSelectedVolunteers)
-  
-  useEffect(() => {
-    // Загрузка данных маршрутных листов из API
-    const fetchRouteSheets = async () => {
-      if (!token) return;
-      try {
-        const data = await getRouteSheets(token);
-        setRouteSheets(data);
-      } catch (error) {
-        console.error('Ошибка загрузки маршрутных листов:', error);
-      }
-    };
 
-    fetchRouteSheets();
-  }, [token]);
+
 
   useEffect(() => {
     // Проверяем завершены ли все маршрутные листы
@@ -83,11 +70,11 @@ console.log(listOfVolunteers, 'ListOfVolunteers')
     }
   }, [completedRouteSheets, deliveryCompletedOnce]);
 
-  //const handleComplete = (index: number) => {
-    // setCompletedRouteSheets(prev =>
-    //   prev.map((completed, idx) => (idx === index ? true : completed)),
-    // );
-  //};
+  // const handleComplete = (index: number) => {
+  //   setCompletedRouteSheets(prev =>
+  //     prev.map((completed, idx) => (idx === index ? true : completed)),
+  //   );
+  // };
 
   // const handleConfirmDeliveryCompletion = () => {
   //   setIsDeliveryCompletedModalOpen(false);
@@ -126,11 +113,12 @@ console.log(listOfVolunteers, 'ListOfVolunteers')
 //   async function assignRoutSheetFunction(volunteerForRoutSheet: IUser, routeSheetId:number, deliveryId:number) {
 //     let data:TRouteSheetRequest = {
 //       volunteer_id: volunteerForRoutSheet.id,
-//       delivery_id: deliveryId
+//       delivery_id: deliveryId,
+//       routesheet_id:routeSheetId
 //    }
 //     if (token) {
 //       try {
-//         let result = await assignRouteSheet(routeSheetId, token, data);
+//         let result = await assignRouteSheet(token, data);
 //         if (result) {
 //           console.log('success')
 //         }
@@ -150,7 +138,7 @@ console.log(listOfVolunteers, 'ListOfVolunteers')
       </div>
 
       <div className="flex flex-col">
-        {routeSheets.map((routeSheet, index) => {
+        {routeSheetsData.map((routeSheet, index) => {
           const isVolunteerSelected =
           selectedVolunteers[index].name !== 'Не выбран';
           return (
@@ -200,7 +188,7 @@ console.log(listOfVolunteers, 'ListOfVolunteers')
                   </span>
                 </div>
                 {completedRouteSheets[index] ? (
-                  <span className="font-gerbera-sub2 text-light-gray-white flex items-center justify-center ml-4 bg-light-gray-3 rounded-[16px] w-[112px] h-[28px]">
+                  <span className="font-gerbera-sub2 text-light-gray-white flex items-center justify-center ml-4 bg-light-gray-3 rounded-[16px] w-[1px] h-[28px]">
                     Завершена
                   </span>
                 ) : isVolunteerSelected ? (

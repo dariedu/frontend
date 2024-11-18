@@ -135,7 +135,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
           
            {volunteer.tg_username ?  (
                   <a href={'https://t.me/' + (volunteer.tg_username.includes('@')? volunteer.tg_username.slice(1): volunteer.tg_username)} target="_blank" onClick={(e=>e.stopPropagation())}>
-                    <Small_sms className="w-[36px] h-[35px] ml-[90px]"/>
+                    <Small_sms className="w-[36px] h-[35px]"/>
              </a>
                ) : ""} 
         </div>
