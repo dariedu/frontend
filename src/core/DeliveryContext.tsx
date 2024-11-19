@@ -9,6 +9,7 @@ import React, {
 import {
   getAllDeliveries,
   getCuratorDeliveries,
+  ICuratorDeliveries,
   type IDelivery,
 } from '../api/apiDeliveries';
 import { UserContext } from './UserContext';
@@ -64,7 +65,6 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
         if (response) {
           setDeliveries(response);
           //console.log(response);
-
         } else {
           console.error('Ошибка получения доставок с сервера DaliveryContext');
           setError('Ошибка получения доставок с сервера DaliveryContext');
@@ -81,9 +81,50 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!token || hasFetchedCurator) return;
     setIsLoading(true);
     setError(null);
+
     try {
-      const response = await getCuratorDeliveries(token);
-      setDeliveries(response ?? []); // Устанавливаем пустой массив, если ответ `null` или `undefined`
+      const response: ICuratorDeliveries = await getCuratorDeliveries(token);
+
+      // Преобразование данных из API в формат IDelivery
+      const deliveriesFromResponse: IDelivery[] = [
+        ...response['выполняются доставки'],
+        ...response['активные доставки'],
+      ].map(item => ({
+        id: item.id_delivery,
+        date: '', // Замените на корректное значение даты
+        curator: {
+          id: 0,
+          tg_id: 0,
+          tg_username: '',
+          last_name: '',
+          name: '',
+          surname: '',
+          phone: '',
+          photo: '',
+          photo_view: null,
+        },
+        price: 0, // Укажите корректную цену
+        is_free: false,
+        is_active: true,
+        location: {
+          id: 0,
+          address: '',
+          link: '',
+          subway: '',
+          description: '',
+          city: {
+            id: 0,
+            city: '',
+          },
+        },
+        is_completed: false,
+        in_execution: true,
+        volunteers_needed: 0,
+        volunteers_taken: 0,
+        delivery_assignments: [],
+      }));
+
+      setDeliveries(deliveriesFromResponse);
       setHasFetchedCurator(true);
     } catch (err) {
       console.error('Failed to fetch curator deliveries:', err);
