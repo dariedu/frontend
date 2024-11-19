@@ -50,7 +50,6 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
 
-  //console.log(allAvaliableTasks, "allavaliable tasks")
 
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);

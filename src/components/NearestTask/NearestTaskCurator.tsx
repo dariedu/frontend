@@ -6,7 +6,7 @@ import {
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
+//import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 //import RouteSheets from '../RouteSheets/RouteSheets';
 import { type ITask } from '../../api/apiTasks';
 
@@ -37,12 +37,12 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =
     useState(false); //// модальное окно для подтверждения отмены доставки
 
-  function onSelectVolunteer(
-    volunteerName: string,
-    volunteerAvatar: string,
-  ): void {
-    console.log(volunteerName + ' ' + volunteerAvatar);
-  }
+  // function onSelectVolunteer(
+  //   volunteerName: string,
+  //   volunteerAvatar: string,
+  // ): void {
+  //   console.log(volunteerName + ' ' + volunteerAvatar);
+  // }
   return (
     <>
       <div
@@ -209,14 +209,15 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
       {/* ///// раскрываем полные детали активной доставуи для куратора///// */}
       {taskFilter == 'nearest' || taskFilter == 'active' ? (
         <Modal isOpen={fullViewCurator} onOpenChange={setFullViewCurator}>
-          <ListOfVolunteers
-            onSelectVolunteer={onSelectVolunteer}
+          NO
+          {/* <ListOfVolunteers
+           // onSelectVolunteer={onSelectVolunteer}
             onTakeRoute={() => {}}
             showActions={true}
             onClose={function (): void {
               throw new Error('Function not implemented.');
             }}
-          />
+          /> */}
         </Modal>
       ) : (
         ''

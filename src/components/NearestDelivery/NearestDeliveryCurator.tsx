@@ -1,4 +1,4 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import {
   getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
@@ -8,9 +8,9 @@ import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery } from '../../api/apiDeliveries';
-//import { getUserById, IUser } from '../../api/userApi';
+import { type IRouteSheet} from '../../api/routeSheetApi';
+import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { UserContext } from '../../core/UserContext';
-import { type IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 
 interface IDeliveryWithRouteSheets extends IDelivery {
   delivery_routeSheets?: IRouteSheet[]
@@ -19,7 +19,6 @@ interface IDeliveryWithRouteSheets extends IDelivery {
 interface INearestDeliveryProps {
   delivery: IDeliveryWithRouteSheets
   deliveryFilter: TDeliveryFilter
-  //routeSheetsList?:IRouteSheet[]
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
@@ -27,7 +26,6 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   delivery,
   deliveryFilter,
- // routeSheetsList
 }) => {
   const deliveryDate = new Date(delivery.date);
 
@@ -35,71 +33,35 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [fullViewActive, setFullViewActive] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewNearest, setFullViewNearest] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
 
-  const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter); /// статус доставки 'nearest' | 'active' | 'completed'
+  const currentStatus = deliveryFilter; /// статус доставки 'nearest' | 'active' | 'completed'
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
-  const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
-  const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
+  const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]);
+  const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
 
-  // console.log(delivery, "NearestDeliveryCurator")
-  ///////////////////////////
-  // function onSelectVolunteer(
-  //   volunteerName: string,
-  //   volunteerAvatar: string,
-  // ): void {
-  //   console.log(volunteerName + ' ' + volunteerAvatar);
-  // }
-  ////////////////////////
-
-    ////// используем контекст юзера
-    const userValue = useContext(UserContext);
-    const token = userValue.token;
+   ///// используем контекст юзера
+   const userValue = useContext(UserContext);
+   const token = userValue.token;
    ////// используем контекст
-
   
-  // function getAllVolunteers() { 
-  //   if (token && delivery.delivery_assignments) {
-  //     let usersArr: IUser[] = [];
-  //     Promise.allSettled(delivery.delivery_assignments.map(id => getUserById(id, token)))
-  //       .then(responses => responses.forEach((result, num) => {
-  //         if (result.status == "fulfilled") {
-  //           usersArr.push(result.value)
-  //         }
-  //         if (result.status == "rejected") {
-  //           console.log(`${num} user was not fetched`)
-  //         }
-  //       })).finally(() => setVolunteers(usersArr)
-  //       )
-  //   }
-  // }
-  
-  // assignRouteSheet = async (
-  //   routeSheetId:number,
-  //   access:string,
-  //   data: TRouteSheetRequest,
-  // type TRouteSheetRequest = {
-  //   volunteer_id: number
-  //   delivery_id: number
-  // };
-
-  async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number) {
-    let object:TRouteSheetRequest = {
-      volunteer_id: volunteerId,
-      delivery_id: deliveryId,
-      routesheet_id:routeSheetId
-    }
+  ////запрашиваем все записанные на волонтеров маршрутные листы
+  async function requestRouteSheetsAssignments() {
     if (token) {
       try {
-        let result = await assignRouteSheet(token, object)
-        if (result) {
-          setAssignVolunteerSuccess(true)
+        const response = await getRouteSheetAssignments(token);
+        if (response) {
+          let filtered = response.filter(i => i.delivery == delivery.id)
+          setAssignedRouteSheets(filtered)
+          setAssignedRouteSheetsSuccess(true);
         }
       } catch (err) {
-        setAssignVolunteerFail(true)
+        console.log(err)
       }
     }
   }
-  
+
+useEffect(() => {requestRouteSheetsAssignments()}, [])
+
 
 
   return (
@@ -207,27 +169,20 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         ) : (
           ''
         )}
-
         {/* /////////////////////// */}
       </div>
-      { delivery.delivery_assignments!=undefined && delivery.delivery_routeSheets && delivery.delivery_assignments.length > 0 && delivery.delivery_routeSheets.length > 0 ? (
+      { delivery.delivery_assignments!= undefined && delivery.delivery_routeSheets && delivery.delivery_assignments.length > 0 && delivery.delivery_routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
        <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
-         status="Активная"
-         onClose={() => setFullViewActive(false)}
-        //  onStatusChange={() => {
-        //   return setCurrentStatus('completed');
-        //  }}
-         routeSheetsData={delivery.delivery_routeSheets}
-         completedRouteSheets={[]}
-        // setCompletedRouteSheets={() => { }}
-          listOfVolunteers={delivery.delivery_assignments}
-          onVolunteerAssign={onVolunteerAssign}
-          deliveryId={delivery.id}
+        status={deliveryFilter== 'nearest' ? 'Ближайшая' : deliveryFilter ==  'active' ? 'Активная' : 'Завершенная'}
+        onClose={() => setFullViewActive(false)}
+        routeSheetsData={delivery.delivery_routeSheets}
+        listOfVolunteers={delivery.delivery_assignments}
+        deliveryId={delivery.id}
+        assignedRouteSheets={assignedRouteSheets}
        />
      </Modal>
       ): ("")
-       
       }
       <Modal
         isOpen={isCuratorFeedbackModalOpen}
@@ -255,8 +210,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         confirmText="Закрыть"
         isSingleButton={true}
       />
-
-      {/* ///// раскрываем полные детали активной доставуи для куратора///// */}
+      {/* ///// раскрываем полные детали активной доставки для куратора///// */}
       {currentStatus == 'nearest' ? (
         delivery.delivery_assignments ? (
           <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
@@ -271,33 +225,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       ) : (
         ''
       )}
-<ConfirmModal
-  isOpen={assignVolunteerSuccess}
-  onOpenChange={setAssignVolunteerSuccess}
-    onConfirm = {() => {setAssignVolunteerSuccess(false)}}
-  title={
-    <p>
-    Волонтер успешно назначен на доставку!
-    </p>
-  }
-  description=""
-  confirmText="Ок"
-  isSingleButton={true}
-      />
-      <ConfirmModal
-  isOpen={assignVolunteerFail}
-  onOpenChange={setAssignVolunteerFail}
-    onConfirm = {() => {setAssignVolunteerFail(false)}}
-  title={
-    <p>
-      Упс, что-то пошло не так<br />
-      Попробуйте позже
-    </p>
-  }
-  description=""
-  confirmText="Ок"
-  isSingleButton={true}
-/>
     </>
   );
 };

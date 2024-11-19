@@ -1,104 +1,46 @@
 import React, {useState} from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
-//import { IUser } from '../../core/types';
-// import avatar1 from '../../assets/avatar.svg';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
-// import { assignRouteSheet,  TRouteSheetRequest} from '../../api/routeSheetApi';
-//import { UserContext } from '../../core/UserContext';
-// import { IRouteSheet } from '../../api/routeSheetApi';
-// import { Modal } from '../ui/Modal/Modal';
-// import RouteSheets from '../RouteSheets/RouteSheets';
-//import RouteSheetsView from '../RouteSheets/RouteSheetsView';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-//import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
 
-// interface IVolunteer {
-//   volunteerName: string;
-//   avatar: string;
-// }
 
 interface ListOfVolunteersProps {
   listOfVolunteers:  TVolunteerForDeliveryAssignments[]
   onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
-  // routeSheetsMy: IRouteSheet[]
-  // onSelectVolunteer: (volunteerName: string, volunteerAvatar: string) => void;
-  // onTakeRoute: () => void;
-  // onClose: () => void; // Добавляем onClose
   showActions?: boolean; // Добавляем пропс для контроля видимости кнопок
-  //onVolunteerClick?: () => {}
   deliveryId?: number
   routeSheetId?: number
   routeSheetName?: string
-  onVolunteerAssign?:(volunteerId: number, deliveryId: number, routeSheetId: number) => {}
+  onVolunteerAssign?: (volunteerId: number, deliveryId: number, routeSheetId: number) => {}
+  assignVolunteerFail?: boolean
+  assignVolunteerSuccess?: boolean
+  setAssignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
+  setAssignVolunteerFail?:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   listOfVolunteers,
   onOpenChange,
   showActions,
-  //onVolunteerClick,
   deliveryId,
   routeSheetId,
   routeSheetName,
   onVolunteerAssign,
-  
-  // routeSheetsMy,
-  //showActions=true
+  assignVolunteerFail,
+  assignVolunteerSuccess,
+  setAssignVolunteerFail,
+  setAssignVolunteerSuccess
 }) => {
   const [volunteerClicked, setVolunteerClicked] = useState(false);
   const [volunteerId, setVolunteerId] = useState<number>();
   const [volunteerName, setVolunteerName]= useState<string>('')
 
      
-  //const [isClickedLeft, setIsClickedLeft] = useState(false);
-  //const [isClickedRight, setIsClickedRight] = useState(false);
- // const [showActions, setShowActions] = useState(false)
-  //const [volunteerForRoutSheet, setVolunteerForRoutSheet] = useState<IUser>();
-  //const [openRoutSheetPage, setOpenRoutSheetPage] = useState(false);
-  //const [routeSheets, setRouteSheets] = useState<boolean[]>([]);
-  // const handleClickLeft = () => {
-  //   setIsClickedLeft(true);
-  // };
-
-  // const handleClickRight = () => {
-  //   setIsClickedRight(true);
-  //   //onTakeRoute();
-  // };
-
-
-//   function handleVolunteerClick(volunteer:IUser) {
-//     setVolunteerForRoutSheet(volunteer)
-//     setShowActions(true)
-// }
-
-
-//   async function assignRoutSheetFunction(volunteerForRoutSheet: IUser, routeSheetId:number, deliveryId:number) {
-//     let data:TRouteSheetRequest = {
-//       volunteer_id: volunteerForRoutSheet.id,
-//       delivery_id: deliveryId
-//    }
-//     if (token) {
-//       try {
-//         let result = await assignRouteSheet(routeSheetId, token, data);
-//         if (result) {
-//           console.log('success')
-//         }
-//       } catch (err) {
-//         console.log(err, 'assignRoutSheetFunction list of volunteers')
-//       }
-//     }
-  // }
-  
-  // function onVolunteerChoose() {
-    
-  // }
 
   return (
     <div className={showActions? "space-y-4 w-[360px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo" : "w-[310px] rounded-[16px] flex flex-col items-center mt-3 space-y-4 "} onClick={e => {e.stopPropagation() }
 }>
-      {/* <div  className="space-y-4 bg-light-gray-white rounded-[16px] w-[328px] p-4" onClick={e => { setShowActions(false); e.stopPropagation() }
-}> */}
         {/* Список волонтёров */}
       {listOfVolunteers.map((volunteer, index) => (
         <div
@@ -162,19 +104,49 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   <ConfirmModal
   isOpen={volunteerClicked}
   onOpenChange={setVolunteerClicked}
-    onConfirm = {() => {onVolunteerAssign(volunteerId, deliveryId, routeSheetId)}}
+  onConfirm={() => { onVolunteerAssign(volunteerId, deliveryId, routeSheetId); setVolunteerClicked(false) }}
   onCancel={()=>setVolunteerClicked(false)}
   title={` Назначить волонтера ${volunteerName} на ${routeSheetName}?`}
   description=""
   confirmText="Назначить"
   isSingleButton={false}
 />
-  ): ("")}
-      
-      {/* <Modal isOpen={openRoutSheetPage} onOpenChange={setOpenRoutSheetPage}>
-        <RouteSheets status='Ближайшая' routeSheetsData={routeSheetsMy} onClose={() => setOpenRoutSheetPage(false)} onStatusChange={() => { }}
-    completedRouteSheets={[false, false, false]} setCompletedRouteSheets={setRouteSheets} />
-      </Modal> */}
+      ) : ("")}
+      {onVolunteerAssign && assignVolunteerFail && setAssignVolunteerFail ? (
+        <>
+      <ConfirmModal
+      isOpen={assignVolunteerFail}
+      onOpenChange={setAssignVolunteerFail}
+        onConfirm = {() => {setAssignVolunteerFail(false)}}
+      title={
+        <p>
+          Упс, что-то пошло не так<br />
+          Попробуйте позже
+        </p>
+      }
+      description=""
+      confirmText="Ок"
+      isSingleButton={true}
+    />
+        </>
+      ) : ("")}
+      {onVolunteerAssign  && assignVolunteerSuccess && setAssignVolunteerSuccess ? (
+        <>
+        <ConfirmModal
+      isOpen={assignVolunteerSuccess}
+      onOpenChange={setAssignVolunteerSuccess}
+        onConfirm = {() => {setAssignVolunteerSuccess(false)}}
+      title={
+        <p>
+        Волонтер успешно назначен на доставку!
+        </p>
+      }
+      description=""
+      confirmText="Ок"
+      isSingleButton={true}
+          />
+        </>
+      ):("")}
       </div> 
   );
 };
