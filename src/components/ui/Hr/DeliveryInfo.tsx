@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ListOfVolunteers from '../../ListOfVolunteers/ListOfVolunteers';
+//import ListOfVolunteers from '../../ListOfVolunteers/ListOfVolunteers';
 
 interface IDeliveryInfoProps {}
 
@@ -7,8 +7,8 @@ const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
   // Mock data that will eventually come from the backend
   const [startTime, setStartTime] = useState<string>('13:00');
   const [peopleCount, setPeopleCount] = useState<number>(5);
-  const [isVolunteersListOpen, setIsVolunteersListOpen] =
-    useState<boolean>(false);
+  // const [isVolunteersListOpen, setIsVolunteersListOpen] =
+  //   useState<boolean>(false);
 
   // Simulate fetching data from the backend
   useEffect(() => {
@@ -18,16 +18,16 @@ const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
   }, []);
 
   // Заглушки для пропсов ListOfVolunteers
-  const handleSelectVolunteer = (
-    volunteerName: string,
-    volunteerAvatar: string,
-  ) => {
-    console.log('Selected volunteer:', volunteerName, volunteerAvatar);
-  };
+  // const handleSelectVolunteer = (
+  //   volunteerName: string,
+  //   volunteerAvatar: string,
+  // ) => {
+  //   console.log('Selected volunteer:', volunteerName, volunteerAvatar);
+  // };
 
-  const handleTakeRoute = () => {
-    console.log('Route taken');
-  };
+  // const handleTakeRoute = () => {
+  //   console.log('Route taken');
+  // };
 
   return (
     <div className="w-[360px] flex flex-col items-center bg-light-gray-white">
@@ -52,13 +52,13 @@ const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
       </div>
       <button
         className="btn-M-WhiteDefault font-gerbera-h3 w-[328px] h-[48px] text-light-brand-green mt-[20px] mb-[32px]"
-        onClick={() => setIsVolunteersListOpen(prev => !prev)}
+        // onClick={() => setIsVolunteersListOpen(prev => !prev)}
       >
         Список записавшихся волонтеров
       </button>
 
       {/* Показать или скрыть компонент ListOfVolunteers при нажатии на кнопку */}
-      {isVolunteersListOpen && (
+      {/* { {isVolunteersListOpen && (
         <ListOfVolunteers
           showActions={false}
           onSelectVolunteer={handleSelectVolunteer}
@@ -67,7 +67,7 @@ const DeliveryInfo: React.FC<IDeliveryInfoProps> = () => {
             throw new Error('Function not implemented.');
           }}
         />
-      )}
+      )} } */}
     </div>
   );
 };

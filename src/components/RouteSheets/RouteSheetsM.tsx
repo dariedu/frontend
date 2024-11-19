@@ -1,134 +1,120 @@
-import React, { useEffect, useState} from 'react';
-import avatarIcon from '../../assets/route_sheets_avatar.svg';
+import React, {useState, useContext, useEffect} from 'react';
+//import avatarIcon from '../../assets/route_sheets_avatar.svg';
 import arrowIcon from '../../assets/icons/arrow_down.png';
-import menuIcon from '../../assets/icons/icons.png';
+//import menuIcon from '../../assets/icons/icons.png';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
-//import curator from '../../assets/icons/curator.svg';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from './RouteSheetsView';
-//import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import {IRouteSheet} from '../../api/routeSheetApi';
-// import { UserContext } from '../../core/UserContext';
-// import { IUser } from '../../core/types';
-//  import { assignRouteSheet, TRouteSheetRequest } from '../../api/routeSheetApi';
+import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
-//import { IDelivery } from '../../api/apiDeliveries';
+import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+import { UserContext } from '../../core/UserContext';
+//import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 
 interface RouteSheetsProps {
-  status: 'Активная' | 'Ближайшая' | 'Завершена' | 'Нет доставок';
-  routeSheetsData: IRouteSheet[];
-  onClose: () => void;
-  // onStatusChange: () => void;
-  completedRouteSheets: boolean[];
+  status: 'Активная' | 'Ближайшая' | 'Завершенная' 
+  routeSheetsData: IRouteSheet[]
+  onClose: () => void
+  //completedRouteSheets: boolean[];
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
-  onVolunteerAssign: (volunteerId: number, deliveryId: number, routeSheetId: number) => {}
-  deliveryId:number
-  //setCompletedRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
+  deliveryId: number
+  assignedRouteSheets:IRouteSheetAssignments[]
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   status,
   routeSheetsData,
   onClose,
-  // onStatusChange,
-  completedRouteSheets,
+  //completedRouteSheets,
   listOfVolunteers,
-  onVolunteerAssign,
-  deliveryId
- // setCompletedRouteSheets,
+  deliveryId,
+  assignedRouteSheets
 }) => {
 
-  console.log(routeSheetsData, "routeSheetsData routeSheets")
-  console.log( listOfVolunteers, "listOfVolunteers routeSheets")
-  //const { token } = useContext(UserContext); // Получаем токен из контекста пользователя
+ console.log(routeSheetsData, "routeSheetsData")
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
-  const [selectedVolunteers, setSelectedVolunteers] =
-    useState<{ name: string; avatar: string }[]>(Array(routeSheetsData.length).fill({
-      name: 'Не выбран',
-      avatar: avatarIcon,
-    }),
-    );
+  // const [selectedVolunteers, setSelectedVolunteers] =
+  //   useState<{ name: string; avatar: string }[]>(Array(routeSheetsData.length).fill({
+  //     name: 'Не выбран',
+  //     avatar: avatarIcon,
+  //   }),
+  //   );
+  interface IfilteredRouteSheet extends IRouteSheet{
+    volunteerFullName?:string
+  }
   
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(
     Array(routeSheetsData.length).fill(false),
   );
-  const [isAllRoutesCompleted, setIsAllRoutesCompleted] = useState(false);
-  const [isDeliveryCompletedModalOpen, setIsDeliveryCompletedModalOpen] = useState(false);
-  const [deliveryCompletedOnce, setDeliveryCompletedOnce] = useState(false);
 
+  const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
+  const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
+  const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
+  const [filteredSuccess, setFilteredSuccess] = useState(false)
+   /// используем контекст юзера
+   const userValue = useContext(UserContext);
+   const token = userValue.token;
+  //// используем контекст
+  
+////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
+  function findAssignedRouteSheets() {
+    let filtered: number[] = [];
+    const routeSheetsWithVName: IfilteredRouteSheet[]=[];
+    routeSheetsData.forEach(i => routeSheetsWithVName.push(i));
 
+    routeSheetsData.forEach((item) => filtered.push(item.id))
+    let final:{ id: number,  volunteerId: number, volunteerFullName:string}[] = [];
+    for (let i = 0; i < filtered.length; i++){
+      assignedRouteSheets.forEach(r => {
+        if (r.route_sheet == filtered[i])
+          final.push({ id: r.route_sheet, volunteerId: r.volunteer, volunteerFullName: "" })
+      });
 
-  useEffect(() => {
-    // Проверяем завершены ли все маршрутные листы
-    if (
-      completedRouteSheets.every(completed => completed) &&
-      !deliveryCompletedOnce
-    ) {
-      setIsAllRoutesCompleted(true);
-      setIsDeliveryCompletedModalOpen(true); // Показываем модальное окно
+      final.forEach(i => {
+        listOfVolunteers.forEach(y => {
+          if (y.id == i.volunteerId) {
+            i.volunteerFullName = `${y.name} ${y.last_name}`
+          }
+        })
+      });
+      
+      final.forEach((i) => {
+        routeSheetsWithVName.forEach((y => {
+          if (y.id == i.id) {
+         y.volunteerFullName = i.volunteerFullName
+       }
+     }))
+   })
+      setFiltered(routeSheetsWithVName);
+      setFilteredSuccess(true)
     }
-  }, [completedRouteSheets, deliveryCompletedOnce]);
+  }
+  useEffect(()=>{findAssignedRouteSheets()}, [assignVolunteerSuccess])
 
-  // const handleComplete = (index: number) => {
-  //   setCompletedRouteSheets(prev =>
-  //     prev.map((completed, idx) => (idx === index ? true : completed)),
-  //   );
-  // };
+  /////// записываем маршрутный лист на волонтера
+  async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number) {
+    let object:TRouteSheetRequest = {
+      volunteer_id: volunteerId,
+      delivery_id: deliveryId,
+      routesheet_id:routeSheetId
+    }
+    if (token) {
+      try {
+        let result = await assignRouteSheet(token, object)
+        if (result == true) {
+          setAssignVolunteerSuccess(true)
+        }
+      } catch (err) {
+        setAssignVolunteerFail(true)
+      }
+    }
+  }
+  
 
-  // const handleConfirmDeliveryCompletion = () => {
-  //   setIsDeliveryCompletedModalOpen(false);
-  //   setDeliveryCompletedOnce(true);
-  //   onStatusChange();
-  // };
+  //let assigned = assignedRouteSheets.find(r=>{r.route_sheet == routeS.id})
 
-  // const handleVolunteerSelect = (
-  //   index: number,
-  //   volunteerName: string,
-  //   volunteerAvatar: string,
-  // ) => {
-  //   setSelectedVolunteers(prev =>
-  //     prev.map((volunteer, idx) =>
-  //       idx === index
-  //         ? { name: volunteerName, avatar: volunteerAvatar }
-  //         : volunteer,
-  //     ),
-  //   );
-  //   setOpenVolunteerLists(prev =>
-  //     prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
-  //   );
-  // };
-
-  // const handleTakeRoute = (index: number) => {
-  //   setSelectedVolunteers(prev =>
-  //     prev.map((volunteer, idx) =>
-  //       idx === index ? { name: 'Куратор', avatar: curator } : volunteer,
-  //     ),
-  //   );
-  //   setOpenVolunteerLists(prev =>
-  //     prev.map((isOpen, idx) => (idx === index ? false : isOpen)),
-  //   );
-  // };
-
-//   async function assignRoutSheetFunction(volunteerForRoutSheet: IUser, routeSheetId:number, deliveryId:number) {
-//     let data:TRouteSheetRequest = {
-//       volunteer_id: volunteerForRoutSheet.id,
-//       delivery_id: deliveryId,
-//       routesheet_id:routeSheetId
-//    }
-//     if (token) {
-//       try {
-//         let result = await assignRouteSheet(token, data);
-//         if (result) {
-//           console.log('success')
-//         }
-//       } catch (err) {
-//         console.log(err, 'assignRoutSheetFunction list of volunteers')
-//       }
-//     }
-// }
-
-  return (
+  return ( filteredSuccess &&
     <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col overflow-y-auto max-h-full" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center mb-4">
         <button onClick={onClose} className="mr-2">
@@ -136,16 +122,13 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         </button>
         <h2 className="font-gerbera-h1 text-lg">{status} доставка</h2>
       </div>
-
       <div className="flex flex-col">
-        {routeSheetsData.map((routeSheet, index) => {
-          const isVolunteerSelected =
-          selectedVolunteers[index].name !== 'Не выбран';
+        {filtered.map((routeS, index) => {
           return (
-            <div key={routeSheet.id} className="mb-4 p-2 border rounded-lg">
+            <div key={routeS.id} className="mb-4 p-2 border rounded-lg">
               <div className="flex items-center justify-between w-full mb-2">
                 <span className="font-gerbera-h3 text-light-gray-5">
-                  {`Маршрутный лист: ${routeSheet.name}`}
+                  {`Маршрутный лист: ${routeS.name}`}
                 </span>
                 <div
                   className="w-6 h-6 ml-2 cursor-pointer"
@@ -178,26 +161,15 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     )
                   }
                 >
-                  <img
+                  {/* <img
                     src={selectedVolunteers[index].avatar}
                     alt="avatar"
                     className="w-8 h-8 rounded-full mr-3"
-                  />
+                  /> */}
                   <span className="font-gerbera-h3 text-light-gray-8" >
-                    {selectedVolunteers[index].name}
+                    {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? routeS.volunteerFullName : 'Не выбран' }
                   </span>
                 </div>
-                {completedRouteSheets[index] ? (
-                  <span className="font-gerbera-sub2 text-light-gray-white flex items-center justify-center ml-4 bg-light-gray-3 rounded-[16px] w-[1px] h-[28px]">
-                    Завершена
-                  </span>
-                ) : isVolunteerSelected ? (
-                  <img
-                    src={menuIcon}
-                    alt="menu"
-                    className="w-[36px] h-[35px] cursor-pointer"
-                  />
-                ) : null}
               </div>
 
               {openVolunteerLists[index]&& (
@@ -205,33 +177,26 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                   listOfVolunteers={listOfVolunteers}
                   onOpenChange={() => { }}
                   showActions={false}
-                  //onVolunteerClick={() => { }}
                   onVolunteerAssign={onVolunteerAssign}
                   deliveryId={deliveryId}
-                  routeSheetName={`Маршрутный лист: ${routeSheet.name}`}
-                  routeSheetId={routeSheet.id}
+                  routeSheetName={`Маршрутный лист: ${routeS.name}`}
+                  routeSheetId={routeS.id}
+                  setAssignVolunteerFail={setAssignVolunteerFail}
+                  setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+                  assignVolunteerFail={assignVolunteerFail}
+                  assignVolunteerSuccess={assignVolunteerSuccess}
                 />
               )}
 
               {openRouteSheets[index] && (
                 <RouteSheetsView
-                  routes={routeSheet.address.map(addr => ({
-                    address: addr.address || 'Адрес не указан', // Используем поле address из TAddress
-                    additionalInfo: addr.link || '', // Используем поле link для доп. информации, если оно существует
-                    personName: addr.beneficiary || 'Имя не указано', // Имя получателя (beneficiary)
-                    avatar: avatarIcon, // Пока что статичная иконка, так как в данных нет поля для аватара
-                    needsPhoto: false, // Если необходима, можно добавить логику на основе условия
-                  }))}
-                  //onComplete={() => handleComplete(index)}
-                  isCompleted={completedRouteSheets[index]}
-                  isVolunteerSelected={isVolunteerSelected}
+                  routes={routeS.address.map(addr => (addr))}
                 />
               )}
             </div>
           );
         })}
       </div>
-
       {/* {isAllRoutesCompleted && isDeliveryCompletedModalOpen && (
         <ConfirmModal
           title="Доставка завершена"
@@ -243,6 +208,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           isSingleButton={true}
         />
       )} */}
+      
     </div>
   );
 };

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
-//import CalendarCurator from '../../pages/Curator/CalendarPageCurator/CalendarCurator';
-// import MainTabCurator from '../../pages/Curator/MainPageCurator/MainTabCurator';
 import './index.css';
 
 import HomeIcon from '../../assets/icons/tap_home.svg?react';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
 import CuratorIcon from '../../assets/icons/curator.svg?react';
 import BonusesIcon from '../../assets/icons/bonus.svg?react';
-import Curator from '../../pages/Curator/CuratorTab/CuratorTab';
+import CuratorTab from '../../pages/Curator/CuratorTab/CuratorTab';
 
 //////volunteer
 import MainTabVolunteer from '../../pages/Volunteer/MainTabVolunteer/MainTabVolunteer';
@@ -35,18 +33,13 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
         {userRole === 'curator' ? (
           <>
             <Tabs.Content value="tab1" className="TabsContent">
-              {/* <MainTabCurator
-                switchTab={function (): void {
-                  throw new Error('Function not implemented.');
-                }}
-              /> */}
               <MainTabVolunteer switchTab={setActiveTab} />
             </Tabs.Content>
             <Tabs.Content value="tab2" className="TabsContent">
               <CalendarTabVolunteer />
             </Tabs.Content>
             <Tabs.Content value="tab3" className="TabsContent">
-              <Curator />
+              <CuratorTab />
             </Tabs.Content>
             <Tabs.Content value="tab4" className="TabsContent">
               <BankTab />

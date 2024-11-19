@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
-import RouteSheets from '../RouteSheets/RouteSheets';
+//import RouteSheets from '../RouteSheets/RouteSheets';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 //import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
@@ -58,7 +58,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   return (
     <div key={delivery.id}>
       {/* ///// раскрываем полные детали активной доставки для волонтера///// */}
-      {currentStatus == 'active' ? (
+      {/* {currentStatus == 'active' ? (
         fullView == true ? (
           <RouteSheets
             status="Активная"
@@ -67,7 +67,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             routeSheetsData={[]}
             completedRouteSheets={[]}
             setCompletedRouteSheets={() =>{}}
-          />) : ("")) : ("")}
+          />) : ("")) : ("")} */}
       <div
         className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
       >

@@ -15,7 +15,6 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 interface INearestTaskProps {
   task: ITask;
-  //volunteer: boolean;
   taskFilter: TTaskFilter;
   cancelFunc: (task: ITask) => {}
 }
@@ -25,16 +24,11 @@ type TTaskFilter = 'nearest' | 'active' | 'completed';
 const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   task,
   cancelFunc,
-  //volunteer,
   taskFilter,
-  //booked = false,
 }) => {
   const deliveryDate = new Date(task.start_date);
- // const currentDate = new Date();
 
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
-
-  //const [currentStatus, setCurrentStatus] = useState<TTaskFilter>(taskFilter); /// статус доставки 'nearest' | 'active' | 'completed'
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
 
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
@@ -54,13 +48,6 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
     : task.curator.tg_username;
 }
   
-
-  // function onSelectVolunteer(
-  //   volunteerName: string,
-  //   volunteerAvatar: string,
-  // ): void {
-  //   console.log(volunteerName + ' ' + volunteerAvatar);
-  // }
 
 
   return (
@@ -108,30 +95,6 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
             }
           </div>
         </div>
-        {/* /////////////////////// */}
-        {/* {<div className="flex w-fit mt-[10px]">
-            <img
-              src={
-                task.location.subway && task.location.subway.length != 0
-                  ? '../src/assets/icons/metro_station.svg'
-                  : '../src/assets/icons/onlineIcon.svg'
-              }
-            />
-            <div className="flex flex-col justify-center items-start pl-2 max-w-[170px]">
-              <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                {task.location.subway && task.location.subway.length != 0
-                  ? task.location.subway
-                  : 'Онлайн'}
-              </h1>
-              {task.location.address && task.location.address.length != 0 ? (
-                <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
-                  {task.location.address}
-                </p>
-              ) : (
-                ''
-              )}
-            </div>
-          </div>} */}
         {/* /////////////////////// */}
         { taskFilter == 'completed' ? ( '' ) : (
             <div className="flex justify-between items-center mt-[14px]">
@@ -250,18 +213,6 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         confirmText="Закрыть"
         isSingleButton={true}
       />
-      {/* <ConfirmModal
-        isOpen={isConfirmDeliveryModalOpen}
-        onOpenChange={setIsConfirmDeliveryModalOpen}
-        onConfirm={() => {
-          setIsConfirmDeliveryModalOpen(false);
-          setIsDeliveryConfirmedModalOpen(true);
-        }}
-        title={<p>Вы подтверждаете участие?</p>}
-        description=""
-        confirmText="Да"
-        cancelText="Нет"
-      /> */}
       <ConfirmModal
         isOpen={isCancelDeliveryModalOpen}
         onOpenChange={setIsCancelDeliveryModalOpen}
@@ -284,15 +235,6 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         confirmText="Ок"
         isSingleButton={true}
       />
-      {/* <ConfirmModal
-        isOpen={isDeliveryConfirmedModalOpen}
-        onOpenChange={setIsDeliveryConfirmedModalOpen}
-        onConfirm={() => setIsDeliveryConfirmedModalOpen(false)}
-        title="Участие подтверждено"
-        description=""
-        confirmText="Ок"
-        isSingleButton={true}
-      /> */}
     </>
   );
 };
