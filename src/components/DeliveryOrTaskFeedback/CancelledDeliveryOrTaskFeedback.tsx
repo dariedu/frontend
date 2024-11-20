@@ -21,7 +21,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
     fb1Cancel: localStorage.getItem('fb1Cancel') ?? '',
   });
 
-  const [buttonActive, setButtonActive] = useState(false)
+ const buttonActive = true;
  const [fedbackSendFail, setFedbackSendFail] = useState(false)
 
   ////// используем контекст
@@ -41,11 +41,11 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
     localStorage.setItem(fieldName, value);
   }
 
-  function handleInfoInput() {
-    if (feedbacks.fb1Cancel.length > 5) {
-      setButtonActive(true)
-    } else setButtonActive(false)
-  }
+  // function handleInfoInput() {
+  //   if (feedbacks.fb1Cancel.length >= 0 ) {
+  //     setButtonActive(true)
+  //   } else setButtonActive(false)
+  // }
 
 
   async function handleDeliveryOrTaskCancelledFeedbackSubmit(deliveryId: number) {
@@ -111,20 +111,20 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
-                  required
+                  
                   defaultValue={localStorage.getItem('fb1Cancel') ?? ''}
                   onChange={e => {
                     handleFormFieldChange('fb1Cancel', e.target.value);
-                    handleInfoInput()
+                    //handleInfoInput()
                   }}
                 />
               </Form.Control>
-              <Form.Message
+              {/* <Form.Message
                 match={(value) => value.length < 10}
                 className="font-gerbera-sub2 text-light-error-red line-clamp-3"
               >
                 Сообщение слишком короткое, минимальное количество символов 10
-              </Form.Message>
+              </Form.Message> */}
             </Form.Field>
           </div>
           <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4 mb-4 `}

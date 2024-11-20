@@ -23,17 +23,16 @@ interface IUserRegistered {
 
 type TRegisterationFormData = FormData;
 
-type TToken = {
-  tg_id: number;
-  access?: string;
-};
 
-interface ITokenBlacklist {
-  refresh: string;
+type TPostTokenResponse = {
+  refresh: string
+  access: string
 }
-interface ITokenRefresh extends ITokenBlacklist {
-  access: string;
-}
+
+// interface ITokenBlacklist {
+//   refresh: string;
+// }
+
 
 ////// работает корректно //////////
 export const postRegistration = async (
@@ -59,13 +58,13 @@ export const postRegistration = async (
 };
 
 ////// работает корректно //////////
-export const postToken = async (token: TToken): Promise<TToken> => {
+export const postToken = async (tgId:number): Promise<TPostTokenResponse> => {
   try {
-    const response: AxiosResponse<any> = await axios({
+    const response: AxiosResponse<TPostTokenResponse> = await axios({
       url: tokenUrl,
       method: 'POST',
       data: {
-        tg_id: token.tg_id,
+        tg_id: tgId,
       },
       headers: {
         accept: 'application/json',
@@ -80,57 +79,48 @@ export const postToken = async (token: TToken): Promise<TToken> => {
   }
 };
 
-export const postTokenBlacklist = async (
-  refresh: ITokenBlacklist,
-): Promise<number> => {
-  try {
-    const response: AxiosResponse<string> = await axios({
-      url: `${tokenUrl}blacklist/`,
-      method: 'POST',
-      data: JSON.stringify(refresh),
-      headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-        'cross-origin-opener-policy': 'same-origin',
-      },
-    });
-    return response.status;
-  } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
-  }
-};
+// export const postTokenBlacklist = async (
+//   refresh: ITokenBlacklist,
+// ): Promise<number> => {
+//   try {
+//     const response: AxiosResponse<string> = await axios({
+//       url: `${tokenUrl}blacklist/`,
+//       method: 'POST',
+//       data: JSON.stringify(refresh),
+//       headers: {
+//         accept: 'application/json',
+//         'Content-Type': 'application/json',
+//         'cross-origin-opener-policy': 'same-origin',
+//       },
+//     });
+//     return response.status;
+//   } catch (err: any) {
+//     console.error('Post request postTokenBlacklist has failed', err);
+//     throw new Error('Post request postTokenBlacklist has failed');
+//   }
+// };
+
 //Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
 export const postTokenRefresh = async (
-  refresh: ITokenBlacklist,
-): Promise<ITokenRefresh> => {
+  refresh: string
+): Promise<TPostTokenResponse> => {
   try {
-    const response: AxiosResponse<string> = await axios({
+    const response: AxiosResponse<TPostTokenResponse> = await axios({
       url: `${tokenUrl}refresh/`,
       method: 'POST',
-      data: JSON.stringify(refresh),
+      data: {
+        refresh:refresh
+      },
       headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
         'cross-origin-opener-policy': 'same-origin',
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
     });
-    return JSON.parse(response.data);
+    return response.data;
   } catch (err: any) {
-    console.error('Post request postTaskAccept has failed', err);
-    throw new Error('Post request postTaskAccept has failed');
-  }
-};
-
-export const getToken = async (tg_id: number) => {
-  try {
-    const tokenData = await postToken({
-      tg_id,
-    });
-    console.log('Token:', tokenData);
-    return tokenData;
-  } catch (error) {
-    console.error('Error fetching token:', error);
+    console.error('Post request postTokenRefresh has failed', err);
+    throw new Error('Post request postTokenRefresh has failed');
   }
 };
 
@@ -138,7 +128,5 @@ export const getToken = async (tg_id: number) => {
 export type {
   IUserRegistered,
   TRegisterationFormData,
-  TToken,
-  ITokenBlacklist,
-  ITokenRefresh,
+  TPostTokenResponse,
 };
