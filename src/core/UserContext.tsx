@@ -1,7 +1,7 @@
 // UserContext.tsx
 import React, { createContext, useState, useEffect } from 'react';
 import { IUser, getUserById, getUsers } from '../api/userApi';
-import { postToken } from '../api';
+import { postToken, postTokenRefresh, type TPostTokenResponse } from '../api/apiRegistrationToken';
 import { useLocation } from 'react-router-dom';
 
 // Создаем типы для контекста
@@ -45,16 +45,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       if (tgId) {
-        console.log(`Получаем токен для tg_id: ${tgId}`);
-        const tokenData = await postToken({
-          tg_id: Number(tgId),
-        });
+        const tokenData:TPostTokenResponse = await postToken(Number(tgId));
 
-        if (tokenData && tokenData.access) {
-          console.log(
-            `Получен токен для tg_id: ${tgId}, access: ${tokenData.access}`,
-          );
-          setToken(tokenData.access);
+        if (tokenData) {
+          const mainToken = await postTokenRefresh(tokenData.refresh)
+          if (mainToken) {
+            setToken(mainToken.access);
+          }
 
           // Передаем токен в getUsers
           const users = await getUsers(tokenData.access);

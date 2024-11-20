@@ -252,7 +252,7 @@ try {
         isSingleButton={true}
       />
       {cancelId ? (
-      <Modal isOpen={cancelDeliveryReasonOpenModal} onOpenChange={setCancelDeliveryReasonOpenModal} >
+      <Modal isOpen={cancelDeliveryReasonOpenModal} onOpenChange={()=>{}} >
       <CancelledDeliveryOrTaskFeedback
       onOpenChange={setCancelDeliveryReasonOpenModal}
       onSubmitFidback={setIsCancelledDeliveryFeedbackSubmited}
@@ -263,7 +263,7 @@ try {
       ) : ""}
 
       {cancelTaskId ? (
-      <Modal isOpen={cancelTaskReasonOpenModal} onOpenChange={setCancelTaskReasonOpenModal} >
+      <Modal isOpen={cancelTaskReasonOpenModal} onOpenChange={()=>{}} >
       <CancelledDeliveryOrTaskFeedback
       onOpenChange={setCancelTaskReasonOpenModal}
       onSubmitFidback={setIsCancelledTaskFeedbackSubmited}
