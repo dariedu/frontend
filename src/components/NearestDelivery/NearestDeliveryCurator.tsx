@@ -7,28 +7,33 @@ import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskF
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import { type IDelivery } from '../../api/apiDeliveries';
-import { type IRouteSheet} from '../../api/routeSheetApi';
+import { type IDelivery, TCuratorDelivery, getDeliveryById } from '../../api/apiDeliveries';
+import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { UserContext } from '../../core/UserContext';
+//import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
 
-interface IDeliveryWithRouteSheets extends IDelivery {
-  delivery_routeSheets?: IRouteSheet[]
-}
+
+// interface IDeliveryWithRouteSheets extends IDelivery {
+//   delivery_routeSheets?: IRouteSheet[]
+// }
 
 interface INearestDeliveryProps {
-  delivery: IDeliveryWithRouteSheets
+  //delivery: IDelivery
+  curatorDelivery:TCuratorDelivery
   deliveryFilter: TDeliveryFilter
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
-  delivery,
+  //delivery,
+  curatorDelivery,
   deliveryFilter,
 }) => {
-  const deliveryDate = new Date(delivery.date);
 
+  
+  const [delivery, setDelivery] = useState<IDelivery>()
   const [fullViewCompleted, setFullViewCompleted] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewActive, setFullViewActive] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewNearest, setFullViewNearest] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
@@ -39,34 +44,82 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]);
   const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
 
+  const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
+ //const [listOfVolunteers, setListOfVolunteers]= useState<TVolunteerForDeliveryAssignments[]>([])///запоминаем список волонтеров, чтобы его можно было изменить из компонентов
    ///// используем контекст юзера
    const userValue = useContext(UserContext);
    const token = userValue.token;
-   ////// используем контекст
-  
-  ////запрашиваем все записанные на волонтеров маршрутные листы
-  async function requestRouteSheetsAssignments() {
-    if (token) {
-      try {
-        const response = await getRouteSheetAssignments(token);
-        if (response) {
-          let filtered = response.filter(i => i.delivery == delivery.id)
-          setAssignedRouteSheets(filtered)
-          setAssignedRouteSheetsSuccess(true);
-        }
-      } catch (err) {
-        console.log(err)
+  ////// используем контекст
+  const [deliveryDate, setDeliveryDate] = useState<Date>();
+
+
+  async function requestMyDelivery() { 
+     if (token) {
+       try {
+         const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);
+         if (result) {
+           setDelivery(result)
+           setDeliveryDate(new Date(result.date))
+         }
+       } catch (err) {
+         console.log("requestEachMyDelivery() NearestDeliveryCurator has failed")
+          }
+     }
       }
+  
+
+   //// 4. запрашиваем все маршрутные листы по отдельности
+ function requestEachMyRouteSheet() {
+   let routesArr: IRouteSheet[] = [];
+     if (token) {
+       
+       Promise.allSettled(curatorDelivery.id_route_sheet.map(routeS => getRouteSheetById(token, routeS)))
+         .then(responses => responses.forEach((result, num) => {
+           if (result.status == "fulfilled") {
+             routesArr.push(result.value)
+           }
+           if (result.status == "rejected") {
+             console.log(`${num} delivery was not fetched`)
+           }
+         })).finally(() => {setRouteSheets(routesArr)}
+         )
     }
   }
+    ////запрашиваем все записанные на волонтеров маршрутные листы
+    async function requestRouteSheetsAssignments() {
+      if (token) {
+        try {
+          const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
+          if (response) {
+            let filtered = response.filter(i => i.delivery == curatorDelivery.id_delivery)
+            setAssignedRouteSheets(filtered)
+            setAssignedRouteSheetsSuccess(true);
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
 
-useEffect(() => {requestRouteSheetsAssignments()}, [])
+
+  useEffect(() => {
+    requestMyDelivery()
+    requestEachMyRouteSheet();
+    requestRouteSheetsAssignments();
+  }, [])
 
 
+//   useEffect(() => {
+//     if (delivery.delivery_assignments) {
+//       setListOfVolunteers(delivery.delivery_assignments)
+//     }
+// },[delivery.delivery_assignments, assignedRouteSheetsSuccess])
 
   return (
     <>
-      <div
+      {(delivery !== undefined && deliveryDate!=undefined) && (
+        <>
+           <div
         className={`${fullViewActive == true ? 'hidden ' : ' '} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
@@ -101,6 +154,7 @@ useEffect(() => {requestRouteSheetsAssignments()}, [])
                 src="../src/assets/icons/arrow_right.png"
                 className="cursor-pointer"
                 onClick={() => {
+                  //console.log(delivery.delivery_assignments,"assignments", delivery.delivery_routeSheets, "delivery.delivery_routeSheets", "delivery.delivery_routeSheets.length > 0", assignedRouteSheetsSuccess, "assignedRouteSheetsSuccess")
                   setFullViewActive(true);
                 }}
               />
@@ -171,13 +225,14 @@ useEffect(() => {requestRouteSheetsAssignments()}, [])
         )}
         {/* /////////////////////// */}
       </div>
-      { delivery.delivery_assignments!= undefined && delivery.delivery_routeSheets && delivery.delivery_assignments.length > 0 && delivery.delivery_routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
+      { routeSheets && routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
        <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
         status={deliveryFilter== 'nearest' ? 'Ближайшая' : deliveryFilter ==  'active' ? 'Активная' : 'Завершенная'}
         onClose={() => setFullViewActive(false)}
-        routeSheetsData={delivery.delivery_routeSheets}
-        listOfVolunteers={delivery.delivery_assignments}
+        routeSheetsData={routeSheets}
+        listOfVolunteers={curatorDelivery.volunteers}
+       // changeListOfVolunteers={setListOfVolunteers}
         deliveryId={delivery.id}
         assignedRouteSheets={assignedRouteSheets}
        />
@@ -212,19 +267,19 @@ useEffect(() => {requestRouteSheetsAssignments()}, [])
       />
       {/* ///// раскрываем полные детали активной доставки для куратора///// */}
       {currentStatus == 'nearest' ? (
-        delivery.delivery_assignments ? (
           <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
-            listOfVolunteers={delivery.delivery_assignments}
+            listOfVolunteers={curatorDelivery.volunteers}
+            //changeListOfVolunteers={setListOfVolunteers}
             onOpenChange={setFullViewNearest}
+            deliveryId={delivery.id}
             showActions={true}
           />
         </Modal>
-        ): ("")
-       
       ) : (
         ''
       )}
+      </>)}
     </>
   );
 };

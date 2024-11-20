@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-//import avatarIcon from '../../assets/route_sheets_avatar.svg';
+import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
 import arrowIcon from '../../assets/icons/arrow_down.png';
 //import menuIcon from '../../assets/icons/icons.png';
 import leftArrowIcon from '../../assets/icons/arrow_left.png';
@@ -10,13 +10,13 @@ import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { UserContext } from '../../core/UserContext';
 //import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-
-
+import Small_sms from "./../../assets/icons/small_sms.svg?react";
+import * as Avatar from '@radix-ui/react-avatar';
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
   routeSheetsData: IRouteSheet[]
   onClose: () => void
-  //completedRouteSheets: boolean[];
+  //changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
   deliveryId: number
   assignedRouteSheets:IRouteSheetAssignments[]
@@ -26,7 +26,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   status,
   routeSheetsData,
   onClose,
-  //completedRouteSheets,
+ // changeListOfVolunteers,
   listOfVolunteers,
   deliveryId,
   assignedRouteSheets
@@ -41,7 +41,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   //   }),
   //   );
   interface IfilteredRouteSheet extends IRouteSheet{
-    volunteerFullName?:string
+    volunteerFullName?: string
+    telegramNik?:string
   }
   
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(
@@ -64,17 +65,18 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
     routeSheetsData.forEach(i => routeSheetsWithVName.push(i));
 
     routeSheetsData.forEach((item) => filtered.push(item.id))
-    let final:{ id: number,  volunteerId: number, volunteerFullName:string}[] = [];
+    let final:{ id: number,  volunteerId: number, volunteerFullName:string, telegramNik:string}[] = [];
     for (let i = 0; i < filtered.length; i++){
       assignedRouteSheets.forEach(r => {
         if (r.route_sheet == filtered[i])
-          final.push({ id: r.route_sheet, volunteerId: r.volunteer, volunteerFullName: "" })
+          final.push({ id: r.route_sheet, volunteerId: r.volunteer, volunteerFullName: "", telegramNik:"" })
       });
 
       final.forEach(i => {
         listOfVolunteers.forEach(y => {
           if (y.id == i.volunteerId) {
             i.volunteerFullName = `${y.name} ${y.last_name}`
+            i.telegramNik = y.tg_username
           }
         })
       });
@@ -82,7 +84,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       final.forEach((i) => {
         routeSheetsWithVName.forEach((y => {
           if (y.id == i.id) {
-         y.volunteerFullName = i.volunteerFullName
+            y.volunteerFullName = i.volunteerFullName
+            y.telegramNik = i.telegramNik
        }
      }))
    })
@@ -167,7 +170,40 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     className="w-8 h-8 rounded-full mr-3"
                   /> */}
                   <span className="font-gerbera-h3 text-light-gray-8" >
-                    {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? routeS.volunteerFullName : 'Не выбран' }
+                    <div className='flex justify-between items-center w-[290px]'>
+                      <div className='flex w-fit items-center '>
+                        {routeS.volunteerFullName && routeS.volunteerFullName.length ? (
+                        <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
+                        {/* <Avatar.Image
+                          className="w-full h-full object-cover"
+                          src={volunteer.avatar}
+                          alt={volunteer.volunteerName}
+                        /> */}
+                          <Avatar.Fallback
+                            className="w-full h-full flex items-center justify-center text-white bg-black"
+                            delayMs={600}
+                           >
+                          {routeS.volunteerFullName?.charAt(0)}
+                          </Avatar.Fallback>
+                          </Avatar.Root>
+                        ) : (
+                            <AvatarIcon  />
+                        )}
+              
+                        {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? (
+                          <p className='ml-3'>{routeS.volunteerFullName}</p>
+                        ) : (
+                            <p className='ml-3'>Не выбран</p>
+                    )}
+                      </div>
+                    
+                    {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
+                    <a href={'https://t.me/' + (routeS.telegramNik.includes('@')? routeS.telegramNik.slice(1): routeS.telegramNik)} target="_blank" onClick={(e=>e.stopPropagation())}>
+                    <Small_sms className="w-[36px] h-[35px]"/>
+                    </a>
+                    ):""}
+                  </div>
+                    
                   </span>
                 </div>
               </div>
@@ -175,6 +211,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               {openVolunteerLists[index]&& (
                 <ListOfVolunteers
                   listOfVolunteers={listOfVolunteers}
+                  //changeListOfVolunteers={changeListOfVolunteers}
                   onOpenChange={() => { }}
                   showActions={false}
                   onVolunteerAssign={onVolunteerAssign}
