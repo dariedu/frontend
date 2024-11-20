@@ -5,8 +5,8 @@ import ThemeIcon from '../../../assets/icons/dark_theame.svg?react';
 
 const ThemeToggle = () => {
 
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light'); ///тема из телеграма
-
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(window.Telegram?.WebApp?.colorScheme || 'light'); ///тема из телеграма
+console.log(window.Telegram?.WebApp?.colorScheme, "Theme toggle")
   useEffect(() => {
   let color = window.Telegram?.WebApp?.colorScheme || 'light';
   setColorScheme(color);

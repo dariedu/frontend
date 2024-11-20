@@ -6,7 +6,7 @@ interface IThemeContextProps {
 }
 
 const ThemeContext = createContext<IThemeContextProps>({
-  theme: 'light',
+  theme: window.Telegram?.WebApp?.colorScheme || 'light',
   toggleTheme: () => {},
 });
 
@@ -14,8 +14,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
 
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light'); ///тема из телеграма
-
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(window.Telegram?.WebApp?.colorScheme || 'light'); ///тема из телеграма
+  console.log(window.Telegram?.WebApp?.colorScheme, "Theme context")
   useEffect(() => {
   let color = window.Telegram?.WebApp?.colorScheme || 'light';
   setColorScheme(color);
