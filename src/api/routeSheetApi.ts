@@ -78,7 +78,7 @@ type TRouteSheetRequest = {
 
 //// кастомный тип для некоторых компонетов куратора
 type TRouteSheetIndividual = {
-  deliveryId: number
+  // deliveryId: number
   routeSheets: IRouteSheet[]
   }
 

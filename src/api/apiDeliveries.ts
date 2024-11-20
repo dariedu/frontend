@@ -45,7 +45,7 @@ interface IDelivery {
   in_execution: boolean
   volunteers_needed: number
   volunteers_taken: number
-  delivery_assignments?: TVolunteerForDeliveryAssignments[] ///этот пункт добавляю в процессе рендера списка записавшихся волонтеров для куратора
+  //delivery_assignments?: TVolunteerForDeliveryAssignments[] ///этот пункт добавляю в процессе рендера списка записавшихся волонтеров для куратора
 }
 
 //// тип для ответа для getVolunteerDeliveries

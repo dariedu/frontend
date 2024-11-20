@@ -1,6 +1,5 @@
 import React from 'react';
-// import avatar from '../../assets/avatar.svg';
-// import avatarNeed from '../../assets/icons/iconNeedPhoto.svg';
+import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
 
 interface IRouteSheetsViewProps {
@@ -50,11 +49,12 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           </div>
           {/* If avatar or placeholder */}
           <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center">
-            {/* <img
-              src={route.needsPhoto ? avatarNeed : avatar}
-              alt="icon"
-              className="w-[32px] h-[32px]"
-            /> */}
+            {route.link && route.link.length > 0 ? (
+            <img className="w-[32px] h-[32px] rounded-full bg-light-gray-4" src={route.link} />
+            ) : (
+                <Avatar className="w-[32px] h-[32px] rounded-full"/>
+            )}
+            
           </div>
         </div>
       ))}
