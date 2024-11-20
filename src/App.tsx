@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState} from 'react';
 import RegistrationPage from './pages/Registration/RegistrationPage.tsx';
 import VolunteerPage from './pages/Volunteer/VolunteerPage.tsx';
 import CuratorPage from './pages/Curator/CuratorPage.tsx';
@@ -19,20 +19,43 @@ const App: React.FC = () => {
     tg.ready();
   }, []);
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
+  const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
+ 
 
-  if (!currentUser) {
-    // Пользователь не зарегистрирован
-    return <RegistrationPage />;
-  } else if (currentUser.is_staff) {
-    // Пользователь зарегистрирован и является сотрудником
-    return <CuratorPage />;
-  } else {
-    // Пользователь зарегистрирован, но не является сотрудником
-    return <VolunteerPage />;
+   function getDeviceType() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /mobile|iphone|ipad|ipod|webos|android|iemobile|opera mini|windows phone|blackberry|bb|playbook|mini|windows\sce|palm/i.test(userAgent);
+
+     if (isMobile) {
+        setDeviceType("mobile");
+      } else {
+        setDeviceType("desktop");
+      }
   }
+  
+useEffect(() => {
+getDeviceType()
+}, [])
+  
+  if (deviceType == "desktop") {
+    return <div className='flex justify-center items-center h-screen'>Пожалуйста, откройте приложение на мобильном устройстве</div>
+  } else {
+    if (isLoading) {
+      return <div>Загрузка...</div>;
+    }
+  
+    if (!currentUser) {
+      // Пользователь не зарегистрирован
+      return <RegistrationPage />;
+    } else if (currentUser.is_staff) {
+      // Пользователь зарегистрирован и является сотрудником
+      return <CuratorPage />;
+    } else {
+      // Пользователь зарегистрирован, но не является сотрудником
+      return <VolunteerPage />;
+    }
+  }
+  
 };
 
 export default App;

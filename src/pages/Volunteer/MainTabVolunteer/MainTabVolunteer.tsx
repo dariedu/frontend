@@ -56,6 +56,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const userValue = useContext(UserContext);
   const token = userValue.token;
   ////// используем контекст
+  useEffect(() => {
+    console.log(window.Telegram?.WebApp?.platform, "window.Telegram?.WebApp?.platform MainTabVolunteer")
+},[])
+  
 
   ///// убираем все неактивные (завершенные заявки из списка)
   function filterDeliveries() {
