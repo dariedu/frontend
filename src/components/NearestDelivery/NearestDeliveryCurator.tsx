@@ -7,11 +7,13 @@ import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskF
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import { type IDelivery, TCuratorDelivery, getDeliveryById } from '../../api/apiDeliveries';
+import { type IDelivery, TCuratorDelivery, getDeliveryById, TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
-import { UserContext } from '../../core/UserContext';
+//import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
 //import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
+import Arrow_right from './../../assets/icons/arrow_right.svg?react'
 
 
 // interface IDeliveryWithRouteSheets extends IDelivery {
@@ -41,16 +43,20 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const currentStatus = deliveryFilter; /// статус доставки 'nearest' | 'active' | 'completed'
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
-  const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]);
+  
+  const [listOfVolunteers, setListOfVolunteers] = useState<TVolunteerForDeliveryAssignments[]>([])
+  const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
   const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
 
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
  //const [listOfVolunteers, setListOfVolunteers]= useState<TVolunteerForDeliveryAssignments[]>([])///запоминаем список волонтеров, чтобы его можно было изменить из компонентов
-   ///// используем контекст юзера
-   const userValue = useContext(UserContext);
-   const token = userValue.token;
+   
+  ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+   const token = tokenContext.token;
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
+
 
 
   async function requestMyDelivery() { 
@@ -60,6 +66,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
          if (result) {
            setDelivery(result)
            setDeliveryDate(new Date(result.date))
+           setListOfVolunteers(curatorDelivery.volunteers)
          }
        } catch (err) {
          console.log("requestEachMyDelivery() NearestDeliveryCurator has failed")
@@ -149,15 +156,12 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               Доставка{' '}
             </p>
 
-            {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
-              <img
-                src="../src/assets/icons/arrow_right.png"
-                className="cursor-pointer"
-                onClick={() => {
-                  //console.log(delivery.delivery_assignments,"assignments", delivery.delivery_routeSheets, "delivery.delivery_routeSheets", "delivery.delivery_routeSheets.length > 0", assignedRouteSheetsSuccess, "assignedRouteSheetsSuccess")
-                  setFullViewActive(true);
-                }}
-              />
+                {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
+                    <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+                    onClick={() => {
+                      setFullViewActive(true);
+                    }}
+                  />
             ) : currentStatus == 'completed' ? (
               <img
                 src="../src/assets/icons/arrow_down.png"
@@ -209,7 +213,11 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           </>
         ) : (
           ''
-        )}
+            )}
+            {currentStatus == 'active' &&
+              <button className='btn-B-GreenDefault'>
+                Завершить доставку
+              </button>}
         {currentStatus == 'completed' && fullViewCompleted ? (
           <button
             className="btn-B-GreenDefault  mt-[20px]"
@@ -231,10 +239,11 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         status={deliveryFilter== 'nearest' ? 'Ближайшая' : deliveryFilter ==  'active' ? 'Активная' : 'Завершенная'}
         onClose={() => setFullViewActive(false)}
         routeSheetsData={routeSheets}
-        listOfVolunteers={curatorDelivery.volunteers}
-       // changeListOfVolunteers={setListOfVolunteers}
+        listOfVolunteers={listOfVolunteers}
+        changeListOfVolunteers={setListOfVolunteers}
         deliveryId={delivery.id}
         assignedRouteSheets={assignedRouteSheets}
+        changeAssignedRouteSheets={requestRouteSheetsAssignments}
        />
      </Modal>
       ): ("")
@@ -269,11 +278,11 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       {currentStatus == 'nearest' ? (
           <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
-            listOfVolunteers={curatorDelivery.volunteers}
-            //changeListOfVolunteers={setListOfVolunteers}
+            listOfVolunteers={listOfVolunteers}
+            changeListOfVolunteers={setListOfVolunteers}
             onOpenChange={setFullViewNearest}
             deliveryId={delivery.id}
-            showActions={true}
+            showActions={false}
           />
         </Modal>
       ) : (

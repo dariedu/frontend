@@ -7,14 +7,14 @@ import React, {
 } from 'react';
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import filterIcon from '../../assets/icons/filter.svg';
-import arrowDownIcon from '../../assets/icons/arrow_down.png';
+import Filter from "./../../assets/icons/filter.svg?react"
 import FilterCurator from '../FilterCurator/FilterCurator';
 import InputDate from '../InputDate/InputDate';
 import { DeliveryContext } from '../../core/DeliveryContext';
 import { getTasksCategories, TTaskCategory } from '../../api/apiTasks';
-import { UserContext } from '../../core/UserContext';
 import { Modal } from '../ui/Modal/Modal';
+import { TokenContext } from '../../core/TokenContext';
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 interface ICalendarProps {
   selectedDate: Date;
@@ -26,10 +26,10 @@ interface ICalendarProps {
 }
 
 const Calendar: React.FC<ICalendarProps> = ({
-  headerName = 'Календарь',
-  showHeader = true,
-  showFilterButton = true,
-  showDatePickerButton = true,
+  headerName='Календарь',
+  showHeader=true,
+  showFilterButton,
+  showDatePickerButton=true,
   selectedDate,
   setSelectedDate,
 }) => {
@@ -38,7 +38,7 @@ const Calendar: React.FC<ICalendarProps> = ({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [filterCategories, setFilterCategories] = useState<number[]>([]);
   const [categories, setCategories] = useState<TTaskCategory[]>([]);
-  const { token } = useContext(UserContext);
+  const { token } = useContext(TokenContext);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const startX = useRef(0);
@@ -60,7 +60,7 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   useEffect(() => {
     fetchCategories();
-  }, [token]);
+  }, []);
 
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
@@ -90,14 +90,14 @@ const Calendar: React.FC<ICalendarProps> = ({
         key={index}
         className="flex flex-col items-center w-[32px] h-[44px] select-none"
       >
-        <span className="text-xs pb-2 text-gray-500">
-          {format(day, 'EE', { locale: ru }).slice(0, 2)}
+        <span className="text-xs pb-2 text-gray-500 dark:text-light-gray-4" >
+          {format(day, 'EE', { locale: ru }).slice(0, 1).toUpperCase()+format(day, 'EE', { locale: ru }).slice(1, 2)}
         </span>
         <button
           className={`font-gerbera-sub2 w-6 h-6 flex items-center justify-center rounded-full ${
             isSameDay(selectedDate, day)
-              ? 'bg-light-brand-green text-white'
-              : 'text-black'
+              ? 'bg-light-brand-green text-light-gray-white'
+              : 'text-light-gray-black dark:text-light-gray-white'
           }`}
           onClick={() => handleDayClick(day)}
           draggable={false}
@@ -161,50 +161,36 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   return (
     <>
-      <div className="p-4 bg-white w-[360px] rounded-[16px] relative select-none">
+      <div className="p-4 bg-light-gray-white dark:bg-light-gray-7-logo w-[360px] rounded-[16px] relative select-none">
         <div className="flex justify-between items-center mb-4">
           {showHeader && (
-            <h2 className="font-gerbera-h1 text-lg">{headerName}</h2>
+            <h2 className="font-gerbera-h1 text-lg  dark:text-light-gray-white">{headerName}</h2>
           )}
           {(showFilterButton || showDatePickerButton) && (
             <div className="flex space-x-2">
               {showFilterButton && (
-                <button
-                  className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-                  onClick={() => setIsFilterOpen(true)}
-                  draggable={false}
-                >
-                  <img
-                    src={filterIcon}
-                    alt="filter"
-                    className="w-8 h-8"
-                    draggable={false}
-                  />
-                </button>
+                  <Filter onClick={() => setIsFilterOpen(true)} className='cursor-pointer rounded-full bg-light-gray-1 fill-[#0A0A0A] dark:bg-light-gray-6 dark:fill-[#F8F8F8]'/>
               )}
               {showDatePickerButton && (
                 <button
-                  className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 bg-light-gray-white dark:bg-light-gray-7-logo rounded-full flex items-center justify-center"
                   onClick={handleOpenDatePicker}
                   draggable={false}
                 >
-                  <img
-                    src={arrowDownIcon}
-                    alt="arrow down"
-                    className="w-4 h-4"
-                    draggable={false}
+                  <Arrow_down  className={` fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
                   />
+
                 </button>
               )}
             </div>
           )}
         </div>
 
-        <div className="absolute left-0 flex items-center">
-          <span className="font-gerbera-sub1 text-light-gray-4 w-[35px] rotate-[-90deg] flex items-center justify-center">
-            {format(selectedDate, 'LLLL', { locale: ru })}
+        <div className="absolute left-4 flex items-center">
+          <span className="font-gerbera-sub1 text-light-gray-4 w-[20px] rotate-[-90deg] flex items-center justify-center">
+            {format(selectedDate, 'LLLL', { locale: ru }).slice(0,1).toUpperCase()+format(selectedDate, 'LLLL', { locale: ru }).slice(1)}
           </span>
-          <div className="border-r h-[48px] border-gray-300" />
+          <div className="border-r h-[48px] border-light-gray-2" />
         </div>
 
         <div

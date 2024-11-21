@@ -9,7 +9,7 @@ import BeneficiaryIcon from '../../assets/icons/beneficiary.svg?react';
 import AboutIcon from '../../assets/icons/about.svg?react';
 import { getBallCorrectEndingName } from '../helperFunctions/helperFunctions';
 import { getVolunteerDeliveries, type IVolunteerDeliveries } from '../../api/apiDeliveries';
-import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import BecameCurator from '../BecameCurator/BecameCurator';
 import { Modal } from '../ui/Modal/Modal';
@@ -36,7 +36,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   isVolunteer
 }) => {
 
-  const {token} = useContext(UserContext);  //// берем токен из юзер контекст
+  const {token} = useContext(TokenContext);  //// берем токен из юзер контекст
   const [myPast, setMyPast] = useState<number>(0);
   const [notEnoughtPointsOpenModal, setNotEnoughtPointsOpenModal] = useState(false);
   const [becameCuratorOpen, setBecameCuratorOpen] = useState(false);

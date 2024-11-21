@@ -7,6 +7,7 @@ import TelegramIcon from '../../../assets/icons/telegram.svg?react';
 import Big_pencilIcon from '../../../assets/icons/big_pencil.svg?react';
 import { UserContext } from '../../../core/UserContext';
 import { patchUser } from '../../../api/userApi';
+import { TokenContext } from '../../../core/TokenContext';
 
 interface IVolunteerDataProps {
   geo: string;
@@ -22,7 +23,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   phone,
   telegram,
 }) => {
-  const { currentUser, token } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
+  const { token } = useContext(TokenContext)
 
   if (!currentUser) {
     return <div>Пользователь не найден</div>;

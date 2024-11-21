@@ -9,6 +9,7 @@ import { IUser } from '../../core/types';
 import { metier, patchUser } from '../../api/userApi';
 import InputOptions, { type T } from '../../pages/Registration/InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
+import { TokenContext } from '../../core/TokenContext';
 
 type TAboutMeProps = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -18,7 +19,8 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
   type TReasons = keyof typeof requestBody;
    ////// используем контекст
   const userValue = useContext(UserContext);
-  const token = userValue.token;
+  const tokenContext = useContext(TokenContext);
+  const token = tokenContext.token;
   const userId = userValue.currentUser?.id
   const userMetier = userValue.currentUser?.metier
   const aboutMe = userValue.currentUser?.interests;
@@ -60,7 +62,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
             if (response) {
               if (userValue.currentUser) {
                 userValue.currentUser.metier = metierName as string;
-                userValue.currentUser.interests=requestBody.about_me
+                userValue.currentUser.interests = requestBody.about_me
               }
           requestBody.about_me = "";
           localStorage.removeItem("about_me");
@@ -88,7 +90,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
         <button onClick={()=>onClose(false)} className="mr-2">
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] dark:fill-light-gray-1 fill-light-gray-black' />
         </button>
-        <h2 className='text-light-gray-black dark:text-light-gray-1'>История</h2>
+        <h2 className='text-light-gray-black dark:text-light-gray-1'>Обо мне</h2>
       </div>
       <div className="z-[51] w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
         
@@ -128,6 +130,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
                    handleFormFieldChange('about_me', e.target.value);
                    handleInfoInput()
                   }}
+                  placeholder={"Кто вы по профессии и/или образованию? Какие у вас увлечения и хобби? Почему решили стать волонтёром и помогаете ли где‑то ещё? Какие у вас любимые фильмы и музыкальные исполнители? Откуда вы родом?  Какая у вас любимая еда?"}
                 />
               </Form.Control>
               <Form.Message
@@ -145,9 +148,6 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
 
               } else e.preventDefault();
 
-              // if (requestSent) {
-              //   e.preventDefault()
-              // }
           }}
           >Сохранить</button>
         </Form.Root>

@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import Big_pencil from './../../assets/icons/big_pencil.svg?react'
-import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
 import { createRequestMessage, type TRequestMessageRequest } from '../../api/requestMessageApi';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
@@ -23,8 +23,8 @@ const BecameCurator = () => {
   //const [requestSent, setRequestSent] = useState(false);
 
     ////// используем контекст
-    const userValue = useContext(UserContext);
-    const token = userValue.token;
+    const tokenContext = useContext(TokenContext);
+    const token = tokenContext.token;;
   ////// используем контекст
   
 

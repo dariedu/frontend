@@ -6,6 +6,7 @@ import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { IUser } from '../../core/types';
 import { getUserById } from '../../api/userApi';
+import { TokenContext } from '../../core/TokenContext';
 
 interface IProfileUserProps {
   onClose: () => void
@@ -18,8 +19,12 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   currentUserId,
   IsVolunteer
 }) => {
-  const { currentUser, token, isLoading } = useContext(UserContext);
+  const { currentUser, isLoading } = useContext(UserContext);
   const [user, setUser] = useState<IUser | null>(null);
+   ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+   const token = tokenContext.token;
+  ////// используем контекст
 
   useEffect(() => {
     const fetchUser = async () => {

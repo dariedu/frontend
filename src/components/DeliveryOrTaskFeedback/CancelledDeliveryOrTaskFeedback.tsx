@@ -2,9 +2,10 @@ import { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/feedbackApi';
-import { UserContext } from '../../core/UserContext';
+
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import Big_pencil from './../../assets/icons/big_pencil.svg?react'
+import { TokenContext } from '../../core/TokenContext';
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
@@ -25,8 +26,8 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
  const [fedbackSendFail, setFedbackSendFail] = useState(false)
 
   ////// используем контекст
-  const userValue = useContext(UserContext);
-  const token = userValue.token;
+  const tokenContext = useContext(TokenContext);
+  const token = tokenContext.token;
   ////// используем контекст
 
 

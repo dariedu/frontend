@@ -10,13 +10,15 @@ import routerConfig from './routesConfig.ts';
 // import CuratorPage from './pages/Curator/CuratorPage';
 // import VolunteerPage from './pages/Volunteer/VolunteerPage';
 import { DeliveryProvider } from './core/DeliveryContext.tsx';
+import { TokenProvider } from './core/TokenContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <Router>
         <UserProvider>
-          <DeliveryProvider>
+          <TokenProvider>
+           <DeliveryProvider>
             <Routes>
               <Route path={routerConfig[0].path} element={<App />} />
               {/* <Route
@@ -27,7 +29,8 @@ createRoot(document.getElementById('root')!).render(
               <Route path={routerConfig[3].path} element={<VolunteerPage />} /> */}
             </Routes>
           </DeliveryProvider>
-        </UserProvider>
+        </TokenProvider>
+       </UserProvider>
       </Router>
     </ThemeProvider>
   </StrictMode>,

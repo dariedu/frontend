@@ -143,30 +143,30 @@ const InputDate: React.FC<IInputDateProps> = ({
       let dayClass = '';
 
       if (isSameMonth(day, currentMonth))
-        dayClass += ' text-black w-[48px] h-[49px]';
-      else dayClass += ' text-light-gray-5';
+        dayClass += 'text-black dark:text-light-gray-1 w-[48px] h-[49px]';
+      else dayClass += ' text-light-gray-5 dark:text-light-gray-3';
       if (selectionMode === 'single' && isSelectedSingle)
-        dayClass += ' bg-light-brand-green rounded-full text-white';
+        dayClass += 'bg-light-brand-green rounded-full text-white';
       if (selectionMode === 'range') {
         if (range.start && !range.end && isSameDay(day, range.start)) {
           // Только начальная дата выбрана
           dayClass +=
-            ' bg-white text-black border border-gray-300 rounded-full';
+            ' bg-light-gray-white dark:bg-light-gray-6 text-black border border-4 border-light-gray-2 dark:border-light-gray-5 rounded-full';
         } else if (isStart && isEnd) {
           // Начальная и конечная даты совпадают
           dayClass +=
-            ' bg-white text-black border border-gray-300 rounded-full';
+            ' bg-light-gray-white dark:bg-light-gray-6 text-black border border-4 border-light-gray-2 dark:border-light-gray-5 rounded-full';
         } else if (isStart) {
           // Начало диапазона
           dayClass +=
-            ' bg-white text-black border border-gray-300 rounded-l-full';
+            ' bg-light-gray-white dark:bg-light-gray-6 text-black border border-4 border-light-gray-2 dark:border-light-gray-5 rounded-l-full';
         } else if (isEnd) {
           // Конец диапазона
           dayClass +=
-            ' bg-white text-black border border-gray-300 rounded-r-full';
+            ' bg-light-gray-white dark:bg-light-gray-6 text-black border border-4 border-light-gray-2 dark:border-light-gray-5 rounded-r-full';
         } else if (isWithinSelectedRange) {
           // Дата внутри выбранного диапазона
-          dayClass += ' bg-light-gray-2';
+          dayClass += 'bg-light-gray-2 dark:bg-light-gray-5';
         }
       }
 
@@ -178,7 +178,7 @@ const InputDate: React.FC<IInputDateProps> = ({
         >
           {isWithinSelectedRange && (
             <div
-              className={`absolute inset-0 bg-light-gray-2 z-0 ${isStart ? 'rounded-l-full' : isEnd ? 'rounded-r-full' : ''}`}
+              className={`absolute inset-0 bg-light-gray-2 dark:bg-light-gray-5 z-0 ${isStart ? 'rounded-l-full' : isEnd ? 'rounded-r-full' : ''}`}
             ></div>
           )}
           <div
@@ -196,11 +196,11 @@ const InputDate: React.FC<IInputDateProps> = ({
   return (
     <>
       <div
-        className="w-[360px] flex flex-col items-center justify-center bg-light-gray-white rounded-t-2xl h-[570px]"
+        className="w-[360px] flex flex-col items-center justify-center bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl h-[570px] "
         onClick={e => e.stopPropagation()}
       >
         {/* Поле ввода с иконкой календаря */}
-        <div className="relative w-[328px] mt-[56px]">
+        <div className="relative w-[328px] mt-[56px] ">
           <input
             type="text"
             value={
@@ -215,7 +215,7 @@ const InputDate: React.FC<IInputDateProps> = ({
                     : format(startOfDay(new Date()), 'MM/dd/yyyy')
             }
             placeholder={format(startOfDay(new Date()), 'MM/dd/yyyy')}
-            className="outline-none font-gerbera-h3 text-light-gray-8 bg-light-gray-1 rounded-[16px] w-[328px] h-[48px] px-4"
+            className="outline-none font-gerbera-h3 text-light-gray-8 bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl w-[328px] h-[48px] px-4"
             readOnly
           />
           {selectionMode === 'range' && (
@@ -228,7 +228,7 @@ const InputDate: React.FC<IInputDateProps> = ({
           )}
         </div>
 
-        <span className="w-[328px] text-left font-gerbera-sub1 text-light-gray-5 pb-[12px] pl-[16px]">
+        <span className="w-[328px] text-left font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3 pb-[12px] pl-[16px]">
           ММ/ДД/ГГГГ
         </span>
 
@@ -236,8 +236,8 @@ const InputDate: React.FC<IInputDateProps> = ({
         <div
           className={
             isYearOpen || isMonthOpen
-              ? 'flex justify-around py-[23px] items-center w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5 rounded-t-2xl'
-              : 'py-[23px] flex justify-between items-center w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5 rounded-t-2xl'
+              ? 'flex justify-around py-[23px] items-center w-[360px] h-[64px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-3 font-gerbera-h3 text-light-gray-5 rounded-t-2xl'
+              : 'py-[23px] flex justify-between items-center w-[360px] h-[64px] bg-light-gray-1 font-gerbera-h3 text-light-gray-5 dark:bg-light-gray-6 dark:text-light-gray-3  rounded-t-2xl'
           }
         >
           <div
@@ -282,8 +282,8 @@ const InputDate: React.FC<IInputDateProps> = ({
                   onOpenChange={setIsMonthOpen}
                   noColor={true}
                 >
-                  <div className="fixed w-[360px] bg-light-gray-1 rounded-t-2xl mb-[20px]">
-                    <div className="mx-4 pt-[12px] bg-light-gray-1 h-[386px] overflow-y-auto">
+                  <div className="fixed w-[360px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl mb-[20px]">
+                    <div className="mx-4 pt-[12px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[386px] overflow-y-auto">
                       {months.map(month => (
                         <div
                           key={month}
@@ -351,8 +351,8 @@ const InputDate: React.FC<IInputDateProps> = ({
                   onOpenChange={setIsYearOpen}
                   noColor={true}
                 >
-                  <div className="fixed w-[360px]  bg-light-gray-1 rounded-t-2xl mb-[20px]">
-                    <div className="mx-4 pt-[12px] bg-light-gray-1 h-[386px] overflow-y-auto">
+                  <div className="fixed w-[360px]  bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl mb-[20px]">
+                    <div className="mx-4 pt-[12px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[386px] overflow-y-auto">
                       {years.map(year => (
                         <div
                           key={year}
@@ -381,8 +381,8 @@ const InputDate: React.FC<IInputDateProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-center bg-light-gray-1 w-[360px]">
-          <div className="grid grid-cols-7 text-center mt-2 mb-2 text-sm text-gray-500 w-[328px]">
+        <div className="flex flex-col items-center bg-light-gray-1 dark:bg-light-gray-6 w-[360px]">
+          <div className="grid grid-cols-7 text-center mt-2 mb-2 text-sm text-light-gray-8-text dark:text-light-gray-1 w-[328px]">
             <span>Пн</span>
             <span>Вт</span>
             <span>Ср</span>
@@ -395,7 +395,7 @@ const InputDate: React.FC<IInputDateProps> = ({
             {renderCalendarDays()}
           </div>
           <div className="flex justify-end mt-5 mb-12 w-[328px] font-gerbera-h3">
-            <button className="text-light-gray-3 mr-[32px]" onClick={onClose}>
+            <button className="text-light-gray-3 dark:text-light-gray-4 mr-[32px]" onClick={onClose}>
               Закрыть
             </button>
             <button

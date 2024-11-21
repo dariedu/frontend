@@ -2,7 +2,8 @@ import {useState, useContext, useEffect} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
 import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 import { getVolunteerDeliveries, postDeliveryCancel, type IDelivery, type IVolunteerDeliveries } from '../../../api/apiDeliveries';
-import { UserContext } from '../../../core/UserContext';
+//import { UserContext } from '../../../core/UserContext';
+import { TokenContext } from '../../../core/TokenContext';
 ///import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import { getMonthCorrectEndingName, getMetroCorrectName } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
@@ -37,10 +38,10 @@ const CalendarTabVolunteer = () => {
   const [cancelTaskId, setCancelTaskId] = useState<number>();
   const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] =  useState(false);
 
-  ////// используем контекст юзера, чтобы вывести количество доступных баллов
-   const userValue = useContext(UserContext);
-   const token = userValue.token;
-  ////// используем контекст
+  ///// используем контекст токена
+  const tokenContext = useContext(TokenContext);
+  const token = tokenContext.token;
+ ////// используем контекст
 
   async function getMyDeliveries() {
     const current: IDelivery[] = [];
@@ -95,7 +96,7 @@ const CalendarTabVolunteer = () => {
 
   useEffect(() => {
     getMyDeliveries();
-  }, [token, cancelDeliverySuccess])
+  }, [cancelDeliverySuccess])
 
   useEffect(() => {
     getAllMyFeedbacks()
@@ -103,7 +104,7 @@ const CalendarTabVolunteer = () => {
 
     useEffect(() => {
     getAllMyTasks()
-  }, [token, cancelTaskSuccess])
+  }, [cancelTaskSuccess])
 
 
  ////функция чтобы волонтер отменил взятую доставку

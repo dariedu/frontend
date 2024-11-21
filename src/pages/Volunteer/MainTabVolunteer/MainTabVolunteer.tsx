@@ -9,7 +9,8 @@ import {
   type IDelivery,
   type IVolunteerDeliveries,
 } from '../../../api/apiDeliveries';
-import { UserContext } from '../../../core/UserContext';
+//import { UserContext } from '../../../core/UserContext';
+import { TokenContext } from '../../../core/TokenContext';
 import {
   getMetroCorrectName,
   getMonthCorrectEndingName,
@@ -53,9 +54,11 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);
-  const userValue = useContext(UserContext);
-  const token = userValue.token;
-  ////// используем контекст
+    ///// используем контекст токена
+    const tokenContext = useContext(TokenContext);
+    const token = tokenContext.token;
+   ////// используем контекст
+
   useEffect(() => {
     console.log(window.Telegram?.WebApp?.platform, "window.Telegram?.WebApp?.platform MainTabVolunteer")
 },[])
@@ -103,7 +106,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   useEffect(() => {
     getAllTasks();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     getMyDeliveries();

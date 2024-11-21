@@ -4,7 +4,6 @@ import {
   type IVolunteerDeliveries,
   type IDelivery,
 } from '../../api/apiDeliveries';
-import { UserContext } from '../../core/UserContext';
 import { getMyTasks, type ITask } from '../../api/apiTasks';
 import {
   getBallCorrectEndingName,
@@ -21,6 +20,7 @@ import Filter from './../../assets/icons/filter.svg?react';
 import { Modal } from '../ui/Modal/Modal';
 import FilterPromotions from '../FilterPromotions/FilterPromotions';
 import { TPromotionCategory } from '../../api/apiPromotions';
+import { TokenContext } from '../../core/TokenContext';
 
 interface IHistoryProps {
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,7 +40,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     subway?: string;
   };
 
-  let { token } = useContext(UserContext); //// берем токен из юзер контекст
+  let { token } = useContext(TokenContext); //// берем токен из токен контекст
   const [myPastDeliveries, setMyPastDeliveries] = useState<IDelivery[]>([]);
   const [myPastTasks, setMyPastTasks] = useState<ITask[]>([]);
   const [myPastPromotions, setMyPastPromotions] = useState<IPromotion[]>([]);
