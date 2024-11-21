@@ -9,26 +9,27 @@ import {
 } from '../../api/apiDeliveries';
 import { UserContext } from '../../core/UserContext';
 import { getMetroCorrectName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
-
+import { TokenContext } from '../../core/TokenContext';
 
 interface ListOfVolunteersProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
- // changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
+  changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
-  showActions?: boolean; // Добавляем пропс для контроля видимости кнопок
-  deliveryId?: number
+  showActions: boolean; // Добавляем пропс для контроля видимости кнопок
+  deliveryId: number
   routeSheetId?: number
   routeSheetName?: string
   onVolunteerAssign?: (volunteerId: number, deliveryId: number, routeSheetId: number) => {}
   assignVolunteerFail?: boolean
   assignVolunteerSuccess?: boolean
   setAssignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
-  setAssignVolunteerFail?:React.Dispatch<React.SetStateAction<boolean>>
+  setAssignVolunteerFail?: React.Dispatch<React.SetStateAction<boolean>>
+  assignedVolunteerName?:string
 }
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   listOfVolunteers,
-  //changeListOfVolunteers,
+  changeListOfVolunteers,
   onOpenChange,
   showActions,
   deliveryId,
@@ -38,7 +39,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   assignVolunteerFail,
   assignVolunteerSuccess,
   setAssignVolunteerFail,
-  setAssignVolunteerSuccess
+  setAssignVolunteerSuccess,
+  assignedVolunteerName
 }) => {
   const [volunteerClicked, setVolunteerClicked] = useState(false);
   const [volunteerId, setVolunteerId] = useState<number>();
@@ -52,10 +54,13 @@ const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] =
 const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
 const [takeDeliveryFailString, setTakeDeliveryFailString] =
   useState<string>(''); //переменная для записи названия ошибки при взятии доставки
-     
+  const [askCurator, setAskCurator] = useState(false) ///спрашиваем куратора точно ли он хочет записать доставку на себя
+  
   const userValue = useContext(UserContext);
   const currentUser = userValue.currentUser;
-  const token = userValue.token;
+  ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+  const token = tokenContext.token;
 
   ////функция чтобы волонтер взял доставку
     async function getDelivery(delivery: IDelivery) {
@@ -97,7 +102,7 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
               photo: currentUser.photo
               })
           }
-        //changeListOfVolunteers(list)
+        changeListOfVolunteers(list)
           }
         }
       } catch (err) {
@@ -129,7 +134,7 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
     }
 
   return (
-    <div className={showActions? "space-y-4 w-[360px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo" : "w-[310px] rounded-[16px] flex flex-col items-center mt-3 space-y-4 "} onClick={e => {e.stopPropagation() }
+    <div className={"space-y-4 w-[360px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
 }>
         {/* Список волонтёров */}
       {listOfVolunteers.map((volunteer, index) => (
@@ -150,7 +155,9 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
             {/* <Avatar.Image
               className="w-full h-full object-cover"
               src={volunteer.photo}
+              
             /> */}
+              {/* <img src={volunteer.photo} className='w-[40px] h-[40px]'/> */}
             <Avatar.Fallback
               className="w-full h-full flex items-center justify-center text-white bg-black"
               delayMs={600}
@@ -182,7 +189,7 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
           </button>
           <button
             className={'btn-M-GreenClicked'}
-            onClick={() => { deliveryId ? getDeliveryId(deliveryId) : ()=>{}}}
+            onClick={()=>setAskCurator(true)}
           >
             Забрать себе
           </button>
@@ -195,7 +202,7 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
   onOpenChange={setVolunteerClicked}
   onConfirm={() => { onVolunteerAssign(volunteerId, deliveryId, routeSheetId); setVolunteerClicked(false) }}
   onCancel={()=>setVolunteerClicked(false)}
-  title={`Назначить волонтера ${volunteerName} на ${routeSheetName}?`}
+  title={assignedVolunteerName && assignedVolunteerName.length > 0 ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: `Назначить волонтёра ${volunteerName} на ${routeSheetName}?`}
   description=""
   confirmText="Назначить"
   isSingleButton={false}
@@ -236,13 +243,26 @@ const [takeDeliveryFailString, setTakeDeliveryFailString] =
           />
         </>
       ) : ("")}
+      <ConfirmModal
+        isOpen={askCurator}
+        onOpenChange={setAskCurator}
+        onConfirm={() => {
+          deliveryId ? getDeliveryId(deliveryId) : () => { };
+          setAskCurator(false)
+        }}
+        title={`Вы уверены, что хотите записаться на доставку в качестве волонтёра`}
+        description=""
+        confirmText="Да"
+        cancelText='Отменить'
+        isSingleButton={false}
+      />
        <ConfirmModal
         isOpen={takeDeliverySuccess}
         onOpenChange={setTakeDeliverySuccess}
         onConfirm={() => {
           setTakeDeliverySuccess(false);
         }}
-        title={`Доставка ${takeDeliverySuccessDateName} в календаре, теперь вы можете назначить смаршрутный лист`}
+        title={`Доставка ${takeDeliverySuccessDateName} в календаре, теперь Вы можете назначить маршрутный лист`}
         description=""
         confirmText="Ок"
         isSingleButton={true}

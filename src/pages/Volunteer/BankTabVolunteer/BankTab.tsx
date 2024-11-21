@@ -10,7 +10,7 @@ import { UserContext } from '../../../core/UserContext';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import Filter from "./../../../assets/icons/filter.svg?react"
 import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
-
+import { TokenContext } from '../../../core/TokenContext';
 
 const BankTab:React.FC = () => {
 
@@ -47,9 +47,12 @@ const BankTab:React.FC = () => {
 
    ////// используем контекст юзера, чтобы вывести количество доступных баллов 
     const userValue = useContext(UserContext);
-    const userPoints = userValue.currentUser?.point;
-    const token = userValue.token;
-   ////// используем контекст
+  const userPoints = userValue.currentUser?.point;
+   ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+   const token = tokenContext.token;
+  ////// используем контекст
+
   
   
   async function reqAllPromotions() {

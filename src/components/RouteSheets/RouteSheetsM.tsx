@@ -1,63 +1,62 @@
 import React, {useState, useContext, useEffect} from 'react';
 import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
-import arrowIcon from '../../assets/icons/arrow_down.png';
-//import menuIcon from '../../assets/icons/icons.png';
-import leftArrowIcon from '../../assets/icons/arrow_left.png';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import RouteSheetsView from './RouteSheetsView';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
-import { UserContext } from '../../core/UserContext';
-//import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+//import { UserContext } from '../../core/UserContext';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import * as Avatar from '@radix-ui/react-avatar';
+import Arrow_right from './../../assets/icons/arrow_right.svg?react';
+import Arrow_down from './../../assets/icons/arrow_down.svg?react';
+import { TokenContext } from '../../core/TokenContext';
+import { Modal } from '../ui/Modal/Modal';
+
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
   routeSheetsData: IRouteSheet[]
   onClose: () => void
-  //changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
+  changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
   deliveryId: number
-  assignedRouteSheets:IRouteSheetAssignments[]
+  assignedRouteSheets: IRouteSheetAssignments[]
+  changeAssignedRouteSheets:()=>{}
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   status,
   routeSheetsData,
   onClose,
- // changeListOfVolunteers,
+  changeListOfVolunteers,
   listOfVolunteers,
   deliveryId,
-  assignedRouteSheets
+  assignedRouteSheets,
+  changeAssignedRouteSheets
 }) => {
 
- console.log(routeSheetsData, "routeSheetsData")
+
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
-  // const [selectedVolunteers, setSelectedVolunteers] =
-  //   useState<{ name: string; avatar: string }[]>(Array(routeSheetsData.length).fill({
-  //     name: 'Не выбран',
-  //     avatar: avatarIcon,
-  //   }),
-  //   );
+
   interface IfilteredRouteSheet extends IRouteSheet{
     volunteerFullName?: string
     telegramNik?:string
   }
   
-  const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(
-    Array(routeSheetsData.length).fill(false),
-  );
+  
+  const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
 
   const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
   const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
-   /// используем контекст юзера
-   const userValue = useContext(UserContext);
-   const token = userValue.token;
-  //// используем контекст
-  
+
+  ///// используем контекст токена
+  const tokenContext = useContext(TokenContext);
+  const token = tokenContext.token;
+ ////// используем контекст
+
+
 ////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
   function findAssignedRouteSheets() {
     let filtered: number[] = [];
@@ -95,6 +94,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   }
   useEffect(()=>{findAssignedRouteSheets()}, [assignVolunteerSuccess])
 
+
   /////// записываем маршрутный лист на волонтера
   async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number) {
     let object:TRouteSheetRequest = {
@@ -106,6 +106,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       try {
         let result = await assignRouteSheet(token, object)
         if (result == true) {
+          changeAssignedRouteSheets()
           setAssignVolunteerSuccess(true)
         }
       } catch (err) {
@@ -118,19 +119,17 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   //let assigned = assignedRouteSheets.find(r=>{r.route_sheet == routeS.id})
 
   return ( filteredSuccess &&
-    <div className="w-[360px] bg-white p-4 rounded-lg shadow-md flex flex-col overflow-y-auto max-h-full" onClick={(e)=>e.stopPropagation()}>
-      <div className="flex items-center mb-4">
-        <button onClick={onClose} className="mr-2">
-          <img src={leftArrowIcon} alt="back" className="w-6 h-6" />
-        </button>
-        <h2 className="font-gerbera-h1 text-lg">{status} доставка</h2>
+    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl  flex flex-col overflow-y-auto max-h-full pb-[74px]" onClick={(e)=>e.stopPropagation()}>
+      <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
+        <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757]  cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
+        <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
         {filtered.map((routeS, index) => {
           return (
-            <div key={routeS.id} className="mb-4 p-2 border rounded-lg">
+            <div key={routeS.id} className="mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo p-4 min-h-[124px] flex flex-col justify-around ">
               <div className="flex items-center justify-between w-full mb-2">
-                <span className="font-gerbera-h3 text-light-gray-5">
+                <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
                   {`Маршрутный лист: ${routeS.name}`}
                 </span>
                 <div
@@ -143,13 +142,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     )
                   }
                 >
-                  <img
-                    src={arrowIcon}
-                    alt="arrow"
-                    className={`w-6 h-6 transform ${
-                      openRouteSheets[index] ? 'rotate-180' : ''
-                    }`}
+                  <Arrow_down  className={`mt-2 fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
                   />
+
                 </div>
               </div>
 
@@ -170,8 +165,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     className="w-8 h-8 rounded-full mr-3"
                   /> */}
                   <span className="font-gerbera-h3 text-light-gray-8" >
-                    <div className='flex justify-between items-center w-[290px]'>
-                      <div className='flex w-fit items-center '>
+                    <div className='flex justify-between items-center w-[320px]'>
+                      <div className='flex w-fit items-center text-light-gray-black dark:text-light-gray-white'>
                         {routeS.volunteerFullName && routeS.volunteerFullName.length ? (
                         <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
                         {/* <Avatar.Image
@@ -208,12 +203,21 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 </div>
               </div>
 
-              {openVolunteerLists[index]&& (
-                <ListOfVolunteers
+              {openVolunteerLists[index] && (
+                <Modal isOpen={openVolunteerLists[index]} onOpenChange={()=>{setOpenVolunteerLists(prev =>
+                  prev.map((isOpen, idx) =>
+                    idx === index ? isOpen ? false: true : isOpen,
+                  ),
+                )}}>
+                  <ListOfVolunteers
                   listOfVolunteers={listOfVolunteers}
-                  //changeListOfVolunteers={changeListOfVolunteers}
-                  onOpenChange={() => { }}
-                  showActions={false}
+                  changeListOfVolunteers={changeListOfVolunteers}
+                  onOpenChange={()=>{setOpenVolunteerLists(prev =>
+                    prev.map((isOpen, idx) =>
+                      idx === index ? isOpen ? false: true : isOpen,
+                    ),
+                  )}}
+                  showActions={true}
                   onVolunteerAssign={onVolunteerAssign}
                   deliveryId={deliveryId}
                   routeSheetName={`Маршрутный лист: ${routeS.name}`}
@@ -222,7 +226,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                   setAssignVolunteerSuccess={setAssignVolunteerSuccess}
                   assignVolunteerFail={assignVolunteerFail}
                   assignVolunteerSuccess={assignVolunteerSuccess}
+                  assignedVolunteerName={routeS.volunteerFullName}
                 />
+                </Modal>
+                
               )}
 
               {openRouteSheets[index] && (

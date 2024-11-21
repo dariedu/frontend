@@ -12,7 +12,8 @@ import {
   ICuratorDeliveries,
   type IDelivery,
 } from '../api/apiDeliveries';
-import { UserContext } from './UserContext';
+//import { UserContext } from './UserContext';
+import { TokenContext } from './TokenContext';
 import { isSameDay, parseISO, isAfter } from 'date-fns';
 
 interface IDeliveryContext {
@@ -48,9 +49,10 @@ export const DeliveryProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
   const [hasFetchedCurator, setHasFetchedCurator] = useState<boolean>(false);
 
-  //////////////////////////////////////////////////////
-  const userValue = useContext(UserContext);
-  const token = userValue.token;
+
+   ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+   const token = tokenContext.token;
   ////// используем контекст
 
   const fetchAllDeliveries = async () => {

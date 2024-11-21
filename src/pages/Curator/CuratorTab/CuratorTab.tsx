@@ -1,20 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { UserContext } from '../../../core/UserContext';
+//import { UserContext } from '../../../core/UserContext';
 //import { type IRouteSheet, type TRouteSheetIndividual, getRouteSheetById } from '../../../api/routeSheetApi';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries } from '../../../api/apiDeliveries';
 import NearestDeliveryCurator from '../../../components/NearestDelivery/NearestDeliveryCurator';
-
+import { TokenContext } from '../../../core/TokenContext';
 
 const CuratorTab: React.FC = () => {
-  const { currentUser, isLoading } = useContext(UserContext);
+  // const { currentUser, isLoading } = useContext(UserContext);
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Загрузка...</div>;
+  // }
 
-  if (!currentUser) {
-    return <div>Пользователь не найден</div>;
-  }
+  // if (!currentUser) {
+  //   return <div>Пользователь не найден</div>;
+  // }
 
   // interface IDeliveryWithRouteSheets extends IDelivery {
   //   delivery_routeSheets?: IRouteSheet[]
@@ -33,10 +33,15 @@ const CuratorTab: React.FC = () => {
   // const [assignRouteSheetsToFullDeliveryObjectInProcessSuccess, setAssignRouteSheetsToFullDeliveryObjectInProcessSuccess] = useState(false);
   
   
-   ////// используем контекст юзера
-    const userValue = useContext(UserContext);
-    const token = userValue.token;
-   ////// используем контекст
+  //  ////// используем контекст юзера
+  //   const userValue = useContext(UserContext);
+  //   const token = userValue.token;
+  //  ////// используем контекст
+
+   ///// используем контекст токена
+   const tokenContext = useContext(TokenContext);
+   const token = tokenContext.token;
+  ////// используем контекст
 
   // На этой странице мы запрашиваем все доставки куратора, после чего запрашиваем полный объект доставок записанных на куратора
   // в полный объект доставки добавляем необходимую информацию о записавшихся волонтерах
@@ -186,7 +191,7 @@ async function getMyCuratorDeliveries() {
   ///// 6. отправляю полный обхъект доставок в NearestDeliveryCurator с соответствующим статусом 
 
   return (
-    <div className="flex-col min-h-[80vh] bg-light-gray-1  dark:bg-light-gray-black ">
+    <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-screen overflow-y-auto">
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 ? (
         curatorInProcessDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
       //  let curatorDel = curatorInProcessDeliveries.find(i => i.id_delivery == del.id)

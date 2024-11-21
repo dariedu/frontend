@@ -11,41 +11,41 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
 }) => {
   console.log(routes, "routes RouteSheetsView")
   return (
-    <div>
+    <div className='flex flex-col items-center justify-normal'>
       {/* Route Details */}
       {routes.map((route, index) => (
         <div
           key={index}
-          className="w-full bg-light-gray-1 p-4 rounded-lg flex justify-between items-center mb-4 mt-[12px] "
+          className="w-full bg-light-gray-1 dark:bg-light-gray-6 p-4 rounded-2xl flex justify-between items-center mt-[12px] "
         >
           <div className="flex flex-col items-start h-fit">
-            <p className="font-gerbera-h3 text-light-gray-8 mb-[4px]">
+            <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1">
               {route.address}
             </p>
            
-            <p className="font-gerbera-sub1">
+            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
             {route.beneficiar[0].full_name}
             </p>
-            {route.beneficiar[0].category && route.beneficiar[0].category.length > 0 ? (
-            <p className="font-gerbera-sub1 text-light-gray-5">
+            {route.beneficiar[0].category && route.beneficiar[0].category.length > 0 && (
+            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
             Категория: {route.beneficiar[0].category}
             </p>
-            ): ""}
-            {route.beneficiar[0].phone && route.beneficiar[0].phone.length > 0 ? (
-            <p className="font-gerbera-sub1 text-light-gray-5">
+            )}
+            {route.beneficiar[0].phone && route.beneficiar[0].phone.length > 0 && (
+            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
             Основной телефон: {route.beneficiar[0].phone}
           </p>
-            ) : ""}
-            {route.beneficiar[0].second_phone && route.beneficiar[0].second_phone.length > 0 ? (
-            <p className="font-gerbera-sub1 text-light-gray-5">
+            )}
+            {route.beneficiar[0].second_phone && route.beneficiar[0].second_phone.length > 0 && (
+            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
             Запасной телефон: {route.beneficiar[0].second_phone}
           </p>
-            ) : ""}
-             {route.beneficiar[0].comment && route.beneficiar[0].comment.length > 0 ? (
-                <p className="font-gerbera-sub1 mb-[4px]">
+            )}
+             {route.beneficiar[0].comment && route.beneficiar[0].comment.length > 0 && (
+                <p className="font-gerbera-sub1 mb-[4px] text-light-gray-5 dark:text-light-gray-3">
                Комментарий: {route.beneficiar[0].comment}
                  </p>
-            ):""} 
+            )} 
           </div>
           {/* If avatar or placeholder */}
           <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center">
@@ -58,19 +58,6 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           </div>
         </div>
       ))}
-
-      {/* Complete Button - Render only if not completed */}
-      {/* {!isCompleted && (
-        <button
-          className={`btn-M-GreenDefault w-full mt-4 ${
-            !isVolunteerSelected ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-          //onClick={onComplete}
-          disabled={!isVolunteerSelected}
-        >
-          Завершить
-        </button>
-      )} */}
     </div>
   );
 };
