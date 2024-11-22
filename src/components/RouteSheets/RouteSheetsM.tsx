@@ -5,13 +5,13 @@ import RouteSheetsView from './RouteSheetsView';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
-//import { UserContext } from '../../core/UserContext';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import * as Avatar from '@radix-ui/react-avatar';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import { TokenContext } from '../../core/TokenContext';
 import { Modal } from '../ui/Modal/Modal';
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -21,7 +21,8 @@ interface RouteSheetsProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
   deliveryId: number
   assignedRouteSheets: IRouteSheetAssignments[]
-  changeAssignedRouteSheets:()=>{}
+  changeAssignedRouteSheets: () => {}
+  completeDeliveryFunc: (deliveryId: number)=> Promise<void>
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
@@ -32,7 +33,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   listOfVolunteers,
   deliveryId,
   assignedRouteSheets,
-  changeAssignedRouteSheets
+  changeAssignedRouteSheets,
+  completeDeliveryFunc
 }) => {
 
 
@@ -50,6 +52,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
+  const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
 
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
@@ -119,8 +122,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   //let assigned = assignedRouteSheets.find(r=>{r.route_sheet == routeS.id})
 
   return ( filteredSuccess &&
-    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl  flex flex-col overflow-y-auto max-h-full pb-[74px]" onClick={(e)=>e.stopPropagation()}>
-      <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
+    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl h-screen flex flex-col overflow-y-auto justify-between pb-[74px]" onClick={(e)=>e.stopPropagation()}>
+      <div>
+              <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
         <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757]  cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
@@ -241,17 +245,23 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           );
         })}
       </div>
-      {/* {isAllRoutesCompleted && isDeliveryCompletedModalOpen && (
-        <ConfirmModal
-          title="Доставка завершена"
-          description="+4 балла"
-          confirmText="Ok"
-          onConfirm={handleConfirmDeliveryCompletion}
-          isOpen={isDeliveryCompletedModalOpen}
-          onOpenChange={() => setIsDeliveryCompletedModalOpen(false)}
-          isSingleButton={true}
-        />
-      )} */}
+      </div>
+
+      {status == 'Активная' &&
+              <button className='btn-B-GreenDefault mt-10 self-center' onClick={()=>setAskCuratorCompleteDelivery(true)}>
+                Завершить доставку
+              </button>}
+      <ConfirmModal
+        isOpen={askCuratorCompleteDelivery}
+        onOpenChange={setAskCuratorCompleteDelivery}
+        onConfirm={() => { completeDeliveryFunc(deliveryId); setAskCuratorCompleteDelivery(false)} }
+        onCancel={() => setAskCuratorCompleteDelivery(false)}
+        title="Вы уверены, что хотите завершить доставку?"
+        cancelText='Закрыть'
+        description=""
+        confirmText="Завершить"
+        isSingleButton={false}
+      />
       
     </div>
   );

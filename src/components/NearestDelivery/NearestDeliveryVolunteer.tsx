@@ -1,17 +1,21 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
-//import RouteSheets from '../RouteSheets/RouteSheets';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
-//import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
-import { Modal } from '../ui/Modal/Modal';
+import { ModalTop } from '../ui/Modal/ModalTop';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import { Modal } from '../ui/Modal/Modal';
 import { type IDelivery } from '../../api/apiDeliveries';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 import Arrow_right from './../../assets/icons/arrow_right.svg?react'
 import Metro_station from './../../assets/icons/metro_station.svg?react'
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
-
+import { TokenContext } from '../../core/TokenContext';
+import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+import { UserContext } from '../../core/UserContext';
+import { getRouteSheetById, type IRouteSheet } from '../../api/routeSheetApi';
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
+import RouteSheetsVolunteer from '../RouteSheets/RouteSheetsVolunteer';
+
 
 interface INearestDeliveryProps {
   delivery: IDelivery;
@@ -20,9 +24,6 @@ interface INearestDeliveryProps {
   isFeedbackSubmitedModalOpen?:boolean
   setIsFeedbackSubmitedModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
   feedbackSubmited?: boolean
-  // cancelDeliveryReasonOpenModal?:boolean
-  // setCancelDeliveryReasonOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
- // setCancelDeliverySuccess?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -42,9 +43,14 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   const currentStatus = status;
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false); //// модальное окно для отмены доставки
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
-  
+  const [myRouteSheet, setMyRouteSheet] = useState<IRouteSheetAssignments[]>(); /// записываем результат функции requestRouteSheetsAssignments()
+  const [routeSheets, setRouteSheets]= useState<IRouteSheet[]>()
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
 
+   ///// используем контекст токена
+  const { token } = useContext(TokenContext);
+  const {currentUser} = useContext(UserContext)
+  ////// используем контекст
 
   /////////////////////////////
   let curatorTelegramNik = delivery.curator.tg_username;
@@ -55,19 +61,64 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   }
   ///////////////////////////////////
 
+    ////запрашиваем все записанные на волонтеров маршрутные листы
+    async function requestRouteSheetsAssignments() {
+      if (token) {
+        try {
+          const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
+          if (response) {
+          let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id)
+            if (filtered) {
+              setMyRouteSheet(filtered)
+           }
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      }
+  }
+  
+  useEffect(() => {
+    requestRouteSheetsAssignments()
+  },[])
+
+     //// 4. запрашиваем все маршрутные листы по отдельности
+ function requestEachMyRouteSheet() {
+  let routesArr: IRouteSheet[] = [];
+    if (token && myRouteSheet) {
+      
+      Promise.allSettled(myRouteSheet.map(routeS => getRouteSheetById(token, routeS.route_sheet)))
+        .then(responses => responses.forEach((result, num) => {
+          if (result.status == "fulfilled") {
+            routesArr.push(result.value)
+          }
+          if (result.status == "rejected") {
+            console.log(`${num} delivery was not fetched`)
+          }
+        })).finally(() => { setRouteSheets(routesArr)}
+        )
+   }
+ }
+
+  useEffect(() => {
+    requestEachMyRouteSheet()
+}, [myRouteSheet])
+
   return (
     <div key={delivery.id}>
       {/* ///// раскрываем полные детали активной доставки для волонтера///// */}
-      {/* {currentStatus == 'active' ? (
-        fullView == true ? (
-          <RouteSheets
-            status="Активная"
-            onClose={() => setFullView(false)}
-            onStatusChange={() => {}}
-            routeSheetsData={[]}
-            completedRouteSheets={[]}
-            setCompletedRouteSheets={() =>{}}
-          />) : ("")) : ("")} */}
+      {currentStatus == 'active' && routeSheets && (
+        <ModalTop onOpenChange={setFullView} isOpen={fullView}>
+         <RouteSheetsVolunteer
+          status={status == 'nearest' ? 'Ближайшая' : status ==  'active' ? 'Активная' : 'Завершенная'}
+          onClose={() => setFullView(false)}
+          routeSheetsData={routeSheets}
+          deliveryId={delivery.id}
+          curatorName={`${delivery.curator.name} ${delivery.curator.last_name}`}
+          curatorTelegramNik={curatorTelegramNik}
+          /> 
+       </ModalTop>
+          )}
       <div
         className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
       >

@@ -9,7 +9,7 @@ interface IRouteSheetsViewProps {
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes
 }) => {
-  console.log(routes, "routes RouteSheetsView")
+  
   return (
     <div className='flex flex-col items-center justify-normal'>
       {/* Route Details */}
