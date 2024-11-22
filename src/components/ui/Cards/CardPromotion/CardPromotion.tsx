@@ -53,12 +53,14 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
           <p className="font-gerbera-sub2 text-light-gray-black w-[159px] h-[17px] dark:text-light-gray-1 overflow-hidden">
             {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
           </p>
-          {promotion.start_date ? (
+          {!promotion.is_permanent ? (
             <p className="font-gerbera-sub1 text-light-brand-green ">
               {day + ' ' + month}
             </p>
           ) : (
-            ''
+            <p className="font-gerbera-sub1 text-light-brand-green ">
+            В любое время
+          </p>
           )}
           <p className="font-gerbera-sub1 text-light-gray-3 overflow-hidden h-[15px]">
             {promotion.address}

@@ -164,7 +164,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             </p>
 
                 {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
-                    <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+                    <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"
                     onClick={() => {
                       setFullViewActive(true);
                     }}

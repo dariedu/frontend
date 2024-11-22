@@ -481,7 +481,7 @@ function RegistrationPage() {
                     <div className=" bg-light-gray-1 rounded-full flex justify-center items-center">
                       <img
                         src={uploadedPictureLink}
-                        className="h-[142px] w-[142px] rounded-full"
+                        className="h-[142px] w-[142px] rounded-full object-cover"
                       />
                       </div>
                       <Pencile  className="relative -mt-[25px] ml-[70px] rounded-full bg-light-gray-2 fill-light-gray-8-text dark:bg-light-gray-5 dark:fill-light-gray-1"

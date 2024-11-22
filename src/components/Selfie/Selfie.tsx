@@ -73,7 +73,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
             <>
               <img
                 src={uploadedFileLink}
-                className="h-[142px] w-[140px] size-fit rounded-full"
+                className="h-[142px] w-[140px] size-fit rounded-full object-cover"
                 onClick={e => {
                   e.preventDefault;
                 }}

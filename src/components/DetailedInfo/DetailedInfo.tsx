@@ -139,7 +139,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           }}
           className="btn-M-WhiteDefault"
         >
-          Отменить
+          Закрыть
         </button>
       </div>
       ) : (

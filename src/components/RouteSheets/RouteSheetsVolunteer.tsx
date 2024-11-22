@@ -1,14 +1,12 @@
-import React, {useState, useContext, useEffect} from 'react';
-import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
-import RouteSheetsView from './RouteSheetsView';
+import React, {useState} from 'react';
+// import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
+import RouteSheetsViewVolunteer from './RouteSheetsViewVolunteer';
 import {IRouteSheet} from '../../api/routeSheetApi';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
-import * as Avatar from '@radix-ui/react-avatar';
+// import * as Avatar from '@radix-ui/react-avatar';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
-import { TokenContext } from '../../core/TokenContext';
-import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import { IDelivery } from '../../api/apiDeliveries';
+
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -31,30 +29,19 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
 
-  interface IfilteredRouteSheet extends IRouteSheet{
-    volunteerFullName?: string
-    telegramNik?:string
-  }
-  
-  
-  const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
-
-  // const [filteredSuccess, setFilteredSuccess] = useState(false)
-  // const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
 
   ///// используем контекст токена
-  const {token} = useContext(TokenContext);
-
+ // const {token} = useContext(TokenContext);
  ////// используем контекст
-
+console.log(deliveryId)
 
 
 
 
   return ( 
-    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl  flex flex-col overflow-y-auto max-h-full" onClick={(e)=>e.stopPropagation()}>
+    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
-        <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757]  cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
+        <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
@@ -79,9 +66,9 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
         {routeSheetsData.map((routeS, index) => {
           return (
-            <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo p-4 min-h-[60px] flex flex-col justify-around ">
+            <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
               <div className="flex items-center justify-between w-full mb-2">
-                <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
+                <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4 p-4">
                   {`Маршрутный лист: ${routeS.name}`}
                 </span>
                 <div
@@ -94,27 +81,16 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                     )
                   }
                 >
-                  <Arrow_down  className={`mt-2 fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
+                  <Arrow_down  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
                   />
 
                 </div>
               </div>
 
-              <div className="flex items-center justify-between ">
-                <div
-                  className="flex items-center cursor-pointer"
-                  onClick={() =>
-                    setOpenVolunteerLists(prev =>
-                      prev.map((isOpen, idx) =>
-                        idx === index ? isOpen ? false: true : isOpen,
-                      ),
-                    )
-                  }
-                >
-                </div>
+              <div className="flex items-center justify-between">
               </div>
               {openRouteSheets[index] && (
-                <RouteSheetsView
+                <RouteSheetsViewVolunteer
                   routes={routeS.address.map(addr => (addr))}
                 />
               )}
