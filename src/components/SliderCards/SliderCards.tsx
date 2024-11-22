@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import CardTask from '../ui/Cards/CardTask/CardTask';
 import { getAllDeliveries, type IDelivery } from '../../api/apiDeliveries';
-import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
 
 interface SliderCardsProps {
   showTitle?: boolean;
@@ -19,7 +19,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   const [hasMoved, setHasMoved] = useState<boolean>(false); // Новое состояние для отслеживания движения
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
-  const { token } = useContext(UserContext);
+  const { token } = useContext(TokenContext);
 
   // Получение данных из API при монтировании компонента
   useEffect(() => {

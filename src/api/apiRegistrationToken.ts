@@ -29,11 +29,6 @@ type TPostTokenResponse = {
   access: string
 }
 
-// interface ITokenBlacklist {
-//   refresh: string;
-// }
-
-
 ////// работает корректно //////////
 export const postRegistration = async (
   user: TRegisterationFormData,
@@ -79,26 +74,28 @@ export const postToken = async (tgId:number): Promise<TPostTokenResponse> => {
   }
 };
 
-// export const postTokenBlacklist = async (
-//   refresh: ITokenBlacklist,
-// ): Promise<number> => {
-//   try {
-//     const response: AxiosResponse<string> = await axios({
-//       url: `${tokenUrl}blacklist/`,
-//       method: 'POST',
-//       data: JSON.stringify(refresh),
-//       headers: {
-//         accept: 'application/json',
-//         'Content-Type': 'application/json',
-//         'cross-origin-opener-policy': 'same-origin',
-//       },
-//     });
-//     return response.status;
-//   } catch (err: any) {
-//     console.error('Post request postTokenBlacklist has failed', err);
-//     throw new Error('Post request postTokenBlacklist has failed');
-//   }
-// };
+export const postTokenBlacklist = async (
+  refresh: string,
+): Promise<number> => {
+  try {
+    const response: AxiosResponse<string> = await axios({
+      url: `${tokenUrl}blacklist/`,
+      method: 'POST',
+      data: {
+        refresh: refresh
+      },
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
+    return response.status;
+  } catch (err: any) {
+    console.error('Post request postTokenBlacklist has failed', err);
+    throw new Error('Post request postTokenBlacklist has failed');
+  }
+};
 
 //Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
 export const postTokenRefresh = async (

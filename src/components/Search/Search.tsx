@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import searchIcon from '../../assets/icons/search.svg';
 import metroIcon from '../../assets/icons/metro_station.svg';
 import { IUser } from '../../core/types';
-import { UserContext } from '../../core/UserContext';
 import { getVolunteers } from '../../api/userApi';
+import { TokenContext } from '../../core/TokenContext';
 
 interface ISearchProps {
   placeholder?: string;
@@ -23,7 +23,7 @@ const Search: React.FC<ISearchProps> = ({
   station = 'Станция не указана',
   address = 'Адрес не указан',
 }) => {
-  const { token } = useContext(UserContext);
+  const { token } = useContext(TokenContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [allVolunteers, setAllVolunteers] = useState<IUser[]>([]);

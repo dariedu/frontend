@@ -15,7 +15,6 @@ export {
   postToken,
   postTokenRefresh,
   postTokenBlacklist,
-  getToken,
 } from './apiRegistrationToken';
 
 export {
