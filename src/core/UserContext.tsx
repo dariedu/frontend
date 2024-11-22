@@ -40,8 +40,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchTokenAndUser = async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      if (tgId) {
+    if (tgId) {
+      try {
         const tokenData: TPostTokenResponse = await postToken(Number(tgId));
         if (tokenData) {
           const mainToken = await postTokenRefresh(tokenData.refresh)
@@ -61,13 +61,20 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
               setError('Ошибка при получении данных пользователя');
             } finally {
               setIsLoading(false)
-        }
+            }
           }      
+        } else {
+          setIsLoading(false);
+          console.error('Ошибка при получении токена:', error);
         }
-      }
-    } catch (error) {
+      } catch (error) {
+      setIsLoading(false)
       console.error('Ошибка при получении токена:', error);
+       }
+    } else {
+      console.error("tgId was not provided")
     }
+  
   };
 
   useEffect(() => {
