@@ -1,27 +1,24 @@
 import React, { useState, useEffect, useContext} from 'react';
 import {
+  getBallCorrectEndingName,
   getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
 import RouteSheetsM from '../RouteSheets/RouteSheetsM';
 import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
+import { ModalTop } from '../ui/Modal/ModalTop';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import { type IDelivery, TCuratorDelivery, getDeliveryById, TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
+import { type IDelivery, TCuratorDelivery, getDeliveryById, TVolunteerForDeliveryAssignments, postDeliveryComplete } from '../../api/apiDeliveries';
 import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
-//import { UserContext } from '../../core/UserContext';
 import { TokenContext } from '../../core/TokenContext';
-//import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
 import Arrow_right from './../../assets/icons/arrow_right.svg?react'
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 
-// interface IDeliveryWithRouteSheets extends IDelivery {
-//   delivery_routeSheets?: IRouteSheet[]
-// }
 
 interface INearestDeliveryProps {
-  //delivery: IDelivery
   curatorDelivery:TCuratorDelivery
   deliveryFilter: TDeliveryFilter
 }
@@ -29,7 +26,6 @@ interface INearestDeliveryProps {
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
-  //delivery,
   curatorDelivery,
   deliveryFilter,
 }) => {
@@ -40,20 +36,21 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [fullViewActive, setFullViewActive] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewNearest, setFullViewNearest] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
 
-  const currentStatus = deliveryFilter; /// статус доставки 'nearest' | 'active' | 'completed'
+  const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter) ; /// статус доставки 'nearest' | 'active' | 'completed'
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
   
   const [listOfVolunteers, setListOfVolunteers] = useState<TVolunteerForDeliveryAssignments[]>([])
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
   const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
+  const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
+
 
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
- //const [listOfVolunteers, setListOfVolunteers]= useState<TVolunteerForDeliveryAssignments[]>([])///запоминаем список волонтеров, чтобы его можно было изменить из компонентов
+
    
   ///// используем контекст токена
-   const tokenContext = useContext(TokenContext);
-   const token = tokenContext.token;
+   const {token} = useContext(TokenContext);
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
 
@@ -69,10 +66,24 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
            setListOfVolunteers(curatorDelivery.volunteers)
          }
        } catch (err) {
-         console.log("requestEachMyDelivery() NearestDeliveryCurator has failed")
+         console.log("requestMyDelivery() NearestDeliveryCurator has failed")
           }
      }
-      }
+  }
+  
+  async function requestDeliveryComplete(deliveryId:number) {
+    if (token && delivery) {
+      try {
+        const result: IDelivery = await postDeliveryComplete(token, deliveryId, delivery);
+        if (result) {
+          setCurrentStatus('completed')
+          setCompleteDeliverySuccess(true)
+        }
+      } catch (err) {
+        console.log("requestDeliveryComplete, NearestDeliveryCurator has failed")
+     }
+   } 
+  }
   
 
    //// 4. запрашиваем все маршрутные листы по отдельности
@@ -116,11 +127,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   }, [])
 
 
-//   useEffect(() => {
-//     if (delivery.delivery_assignments) {
-//       setListOfVolunteers(delivery.delivery_assignments)
-//     }
-// },[delivery.delivery_assignments, assignedRouteSheetsSuccess])
+
 
   return (
     <>
@@ -157,21 +164,19 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             </p>
 
                 {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
-                    <Arrow_right  className={`fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+                    <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"
                     onClick={() => {
                       setFullViewActive(true);
                     }}
                   />
-            ) : currentStatus == 'completed' ? (
-              <img
-                src="../src/assets/icons/arrow_down.png"
-                className={`${!fullViewCompleted ? 'rotate-180' : ''} cursor-pointer`}
-                onClick={() => {
-                  fullViewCompleted == true
-                    ? setFullViewCompleted(false)
-                    : setFullViewCompleted(true);
-                }}
-              />
+                ) : currentStatus == 'completed' ? (
+                    <Arrow_down className={` ${!fullViewCompleted ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
+                  onClick={() => {
+                    fullViewCompleted == true
+                      ? setFullViewCompleted(false)
+                      : setFullViewCompleted(true);
+                  }}
+                />
             ) : (
               ''
             )}
@@ -214,10 +219,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         ) : (
           ''
             )}
-            {currentStatus == 'active' &&
-              <button className='btn-B-GreenDefault'>
-                Завершить доставку
-              </button>}
+          
         {currentStatus == 'completed' && fullViewCompleted ? (
           <button
             className="btn-B-GreenDefault  mt-[20px]"
@@ -234,7 +236,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
       </div>
       { routeSheets && routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
-       <Modal isOpen={fullViewActive} onOpenChange={setFullViewActive}>
+       <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
         status={deliveryFilter== 'nearest' ? 'Ближайшая' : deliveryFilter ==  'active' ? 'Активная' : 'Завершенная'}
         onClose={() => setFullViewActive(false)}
@@ -244,8 +246,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         deliveryId={delivery.id}
         assignedRouteSheets={assignedRouteSheets}
         changeAssignedRouteSheets={requestRouteSheetsAssignments}
+        completeDeliveryFunc={requestDeliveryComplete}
        />
-     </Modal>
+     </ModalTop>
       ): ("")
       }
       <Modal
@@ -257,7 +260,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
           volunteer={false}
           delivery={true}
-          deliveryOrTaskId={0}
+          deliveryOrTaskId={curatorDelivery.id_delivery}
         />
       </Modal>
       <ConfirmModal
@@ -288,7 +291,24 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       ) : (
         ''
       )}
-      </>)}
+        </>)}
+      {delivery &&
+        <ConfirmModal
+        isOpen={completeDeliverySuccess}
+        onOpenChange={setCompleteDeliverySuccess}
+        onConfirm={() => setCompleteDeliverySuccess(false)}
+        title={
+          <p>
+            Доставка завершена
+            <br /> +{delivery.price} {getBallCorrectEndingName(delivery.price)}
+          </p>
+        }
+        description=""
+        confirmText="Закрыть"
+        isSingleButton={true}
+      />
+         }
+        
     </>
   );
 };

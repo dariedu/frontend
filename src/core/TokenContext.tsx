@@ -35,7 +35,7 @@ const fetchRefreshToken = async () => {
            if (mainToken) {
              setToken(mainToken.access);
              setRefresh(mainToken.refresh)
-             console.log(mainToken, "token refreshed")
+            //  console.log(mainToken, "token refreshed")
            }
          } else {
           if (tgId) {
@@ -43,7 +43,7 @@ const fetchRefreshToken = async () => {
                if (mainToken) {
                 setToken(mainToken.access);
                 setRefresh(mainToken.refresh)
-                 console.log(mainToken, "first token received")
+                //  console.log(mainToken, "first token received")
                }
              }
          }

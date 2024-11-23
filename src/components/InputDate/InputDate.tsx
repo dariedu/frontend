@@ -15,10 +15,9 @@ import {
   isBefore,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import calendarIcon from '../../assets/icons/filter.svg';
-import arrowLeftIcon from '../../assets/icons/arrow_left.png';
-import arrowRightIcon from '../../assets/icons/arrow_right.png';
-import arrowDownIcon from '../../assets/icons/arrow_down_s.png';
+import CalendarIcon from '../../assets/icons/filter.svg?react';
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
+import Arrow_right from './../../assets/icons/arrow_right.svg?react'
 import FilterCurator from '../FilterCurator/FilterCurator';
 import { TTaskCategory } from '../../api/apiTasks';
 import { Modal } from '../ui/Modal/Modal';
@@ -223,7 +222,7 @@ const InputDate: React.FC<IInputDateProps> = ({
               className="absolute right-2 top-1/2 transform -translate-y-1/2"
               onClick={() => setIsFilterOpen(true)}
             >
-              <img src={calendarIcon} alt="calendar" className="w-6 h-6" />
+              <CalendarIcon className="w-6 h-6" />
             </button>
           )}
         </div>
@@ -253,7 +252,7 @@ const InputDate: React.FC<IInputDateProps> = ({
               {isYearOpen || isMonthOpen ? (
                 ''
               ) : (
-                <img src={arrowLeftIcon} alt="стрелка влево" />
+                <Arrow_right  className="rotate-180 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
               )}
             </button>
             <div className="relative">
@@ -273,7 +272,7 @@ const InputDate: React.FC<IInputDateProps> = ({
                 {isYearOpen ? (
                   ''
                 ) : (
-                  <img src={arrowDownIcon} alt="стрелка вниз" />
+                  <Arrow_down  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
                 )}
               </button>
               {isMonthOpen && (
@@ -307,7 +306,7 @@ const InputDate: React.FC<IInputDateProps> = ({
               {isYearOpen || isMonthOpen ? (
                 ''
               ) : (
-                <img src={arrowRightIcon} alt="стрелка вправо" />
+                <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
               )}
             </button>
           </div>
@@ -324,7 +323,7 @@ const InputDate: React.FC<IInputDateProps> = ({
               {isYearOpen || isMonthOpen ? (
                 ''
               ) : (
-                <img src={arrowLeftIcon} alt="стрелка влево" />
+                <Arrow_right  className=" rotate-180 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
               )}
             </button>
             <div>
@@ -341,7 +340,8 @@ const InputDate: React.FC<IInputDateProps> = ({
                 {isMonthOpen ? (
                   ''
                 ) : (
-                  <img src={arrowDownIcon} alt="стрелка вниз" />
+                  <Arrow_down  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
+                  // <img src={arrowDownIcon} alt="стрелка вниз" />
                 )}
               </button>
 
@@ -375,7 +375,7 @@ const InputDate: React.FC<IInputDateProps> = ({
               {isYearOpen || isMonthOpen ? (
                 ''
               ) : (
-                <img src={arrowRightIcon} alt="стрелка вправо" />
+                <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"/>
               )}
             </button>
           </div>

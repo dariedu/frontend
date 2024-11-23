@@ -177,7 +177,7 @@ const Calendar: React.FC<ICalendarProps> = ({
                   onClick={handleOpenDatePicker}
                   draggable={false}
                 >
-                  <Arrow_down  className={` fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+                  <Arrow_down  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
                   />
 
                 </button>

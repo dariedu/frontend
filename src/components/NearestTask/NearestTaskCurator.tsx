@@ -6,13 +6,11 @@ import {
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-//import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-//import RouteSheets from '../RouteSheets/RouteSheets';
+
 import { type ITask } from '../../api/apiTasks';
 
 interface INearestTaskProps {
   task: ITask;
-  //volunteer: boolean;
   taskFilter?: TTaskFilter;
 }
 
@@ -25,8 +23,6 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   const taskDate = new Date(task.start_date);
 
   const [fullViewCurator, setFullViewCurator] = useState(false);
-  // const [currentStatus, setCurrentStatus] = useState<TTaskFilter>(taskFilter); /// статус доставки 'nearest' | 'active' | 'completed'
-  // const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] =
     useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
@@ -37,12 +33,6 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =
     useState(false); //// модальное окно для подтверждения отмены доставки
 
-  // function onSelectVolunteer(
-  //   volunteerName: string,
-  //   volunteerAvatar: string,
-  // ): void {
-  //   console.log(volunteerName + ' ' + volunteerAvatar);
-  // }
   return (
     <>
       <div

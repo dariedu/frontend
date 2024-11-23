@@ -134,7 +134,7 @@ export const postDeliveryCancel = async (
 
 // берем доставку себе
 export const postDeliveryTake = async (
-  access: string|null,
+  access: string,
   deliveryId: number,
   delivery:IDelivery
 ): Promise<IDelivery> => {
@@ -154,6 +154,31 @@ export const postDeliveryTake = async (
     throw new Error(err.response.data.error)
   }
 };
+
+// куратор завершает доставку
+export const postDeliveryComplete = async (
+  access: string,
+  deliveryId: number,
+  delivery:IDelivery
+): Promise<IDelivery> => {
+  try {
+    const response: AxiosResponse<IDelivery> = await axios({
+      url: `${deliveriesUrl}${deliveryId}/complete/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+      data: delivery,
+    });
+    return response.data;
+  } catch (err: any) {
+    throw new Error(err.response.data.error)
+  }
+};
+
+
 
 // Получение доставок куратора
 export const getCuratorDeliveries = async (

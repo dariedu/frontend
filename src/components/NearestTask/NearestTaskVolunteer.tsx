@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import {
   getBallCorrectEndingName,
   getMonthCorrectEndingName,
-  //getVolunteerCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-//import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-//import RouteSheets from '../RouteSheets/RouteSheets';
 import { type ITask } from '../../api/apiTasks';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
@@ -80,12 +77,12 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               {task.category.name}{' '}
             </p>
             {taskFilter == 'nearest' || taskFilter == 'completed' ? (
-            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
             onClick={() => {
               fullView == true ? setFullView(false) : setFullView(true);
             }}/>
             ) : taskFilter == 'active' ? (
-              <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+              <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
               onClick={() => {
                 fullView == true ? setFullView(false) : setFullView(true);
               }}/>

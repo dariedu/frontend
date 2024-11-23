@@ -20,7 +20,7 @@ const App: React.FC = () => {
     tg.ready();
   }, []);
 
-  const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
+ const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
  
 
    function getDeviceType() {
