@@ -7,8 +7,6 @@ import {
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IDelivery } from '../../api/apiDeliveries';
-//import { ITask } from '../../api/apiTasks';
-//import { UserContext } from '../../core/UserContext';
 import Metro_station from './../../assets/icons/metro_station.svg?react'
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 
@@ -35,7 +33,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   takeDeliverySuccess,
   setTakeDeliverySuccess,
 }) => {
-  //const [isAddedToCalendar, setIsAddedToCalendar] = useState(false);
+
 
   const deliveryDate = new Date(delivery.date);
 

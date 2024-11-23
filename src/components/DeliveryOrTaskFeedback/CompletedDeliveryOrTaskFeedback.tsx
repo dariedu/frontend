@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/feedbackApi';
-
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import { TokenContext } from '../../core/TokenContext';
@@ -24,12 +23,11 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
     fb2: localStorage.getItem('fb2') ?? '',
   });
 
-  const [buttonActive, setButtonActive] = useState(false)
+ const [buttonActive, setButtonActive] = useState(false)
  const [fedbackSendFail, setFedbackSendFail] = useState(false)
 
   ////// используем контекст
-  const tokenContext = useContext(TokenContext);
-  const token = tokenContext.token;
+  const {token} = useContext(TokenContext);
   ////// используем контекст
 
 
@@ -58,18 +56,18 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
     if (volunteer) {
       if (delivery) {
       type = "completed_delivery";
-      fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошла доставка? что вам понравилось? что бы вы выпоменяли? Ответ: ${feedbacks.fb2}`
+      fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошла доставка? Что Вам понравилось? Что бы Вы поменяли? Ответ: ${feedbacks.fb1}`
       } else {
         type = "completed_task"
-        fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошло ваше участие в добром деле? что вам понравилось? что бы вы выпоменяли? Ответ: ${feedbacks.fb2}`
+        fedbackText = `На сколько приятным было общение с куратором? Ответ: ${feedbacks.fb1}, Как прошло Ваше участие в добром деле? Что Вам понравилось? Что бы Вы поменяли? Ответ: ${feedbacks.fb1}`
         }
     } else {
       if (delivery) {
         type = "completed_delivery";
-        fedbackText = `Поделитесь вашими впечатлениями от курирования доставки? Ответ: ${feedbacks.fb1}, Как прошла доставка? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb2}`
+        fedbackText = `Поделитесь вашими впечатлениями от курирования доставки? Как прошла доставка? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb1}`
       } else {
         type = "completed_task";
-        fedbackText = `Поделитесь вашими впечатлениями от курирования доброго дела? Ответ: ${feedbacks.fb1}, Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb2}`
+        fedbackText = `Поделитесь вашими впечатлениями от курирования доброго дела? Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb1}`
       }
     }
     
@@ -139,9 +137,9 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
             </Form.Field>
               <Form.Field name="fb2" className="mt-4">
                 {delivery ? (
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Как прошла доставка? что вам понравилось? что бы вы выпоменяли?</Form.Label>
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Как прошла доставка? Что Вам понравилось? Что бы Вы поменяли?</Form.Label>
                 ): (
-                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3  dark:text-light-gray">Как прошло ваше участие в добром деле? что вам понравилось? что бы вы выпоменяли?</Form.Label>   
+                  <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3  dark:text-light-gray">Как прошло Ваше участие в добром деле? Что Вам понравилось? Что бы Вы поменяли?</Form.Label>   
                 )
                  }
               
@@ -175,20 +173,17 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
         </Form.Root>
       </div>
       ) : (
-        <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white"
+        <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white "
         onClick={(e)=>e.stopPropagation()}>
-          <div className="flex items-center self-start mt-[25px] mx-4">
-            <img
-              src="../src/assets/icons/big_pencil.svg"
-              className="h-[32px] w-[32px]"
-            />
+            <div className="flex items-center self-start mt-[25px] mx-4">
+              <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
               {delivery ? (
-            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
-            Поделитесь вашими впечатлениями от курирования доставки
+            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray ">
+            Поделитесь Вашими впечатлениями от курирования доставки
             </p>
               ) : (
                 <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
-                Поделитесь вашими впечатлениями от курирования доброго дела
+                Поделитесь Вашими впечатлениями от курирования доброго дела
                 </p>
             )}
           </div>

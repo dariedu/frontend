@@ -1,24 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
 import { Modal } from '../ui/Modal/Modal';
 import Comment from '../Comment/Comment';
-
+import { TPhotoReport } from '../../api/apiPhotoReports';
+import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
+import { postPhotoReport } from '../../api/apiPhotoReports';
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface IRouteSheetsViewProps {
-  routes: TAddress[];
+  routes: TAddress[]
+  deliveryId:number
 }
 
 
-
 const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
-  routes
+  routes,
+  deliveryId
 }) => {
 
 const [uploadedFileLink, setUploadedFileLink] = useState(Array(routes.length).fill(''));
 const [fileUploaded, setFileUploaded] = useState<boolean[]>(Array(routes.length).fill(false))
 const [openComment, setOpenComment] = useState<boolean[]>(Array(routes.length).fill(false));
 const [comment, addComment] = useState(Array(routes.length).fill(''));
+const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
+const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
+const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
+const [sendMessage, setSendMessage] = useState<string>('')
+  
+  const { currentUser } = useContext(UserContext);
+  const {token} =useContext(TokenContext)
   
 function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
   if (e.target.files && e.target.files[0]) {
@@ -40,7 +52,49 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
     addComment(prev =>prev.map((string, idx) => idx === index ? comment : string))
     setOpenComment(prev =>prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))
   }
-  
+
+
+  async function submitPhotoReport(index: number) {
+    setSendMessage('')
+    if (currentUser && token) {
+      const obj: TPhotoReport = {
+        photo: uploadedFileLink[index],
+        comment: comment[index],
+        routeSheetId: currentUser?.id,
+        deliveryId:deliveryId
+      }
+      fetch(uploadedFileLink[index])
+      .then(res => res.blob())
+      .then(blob => {
+        setBlob(blob);
+      });
+
+      const formData = new FormData();
+      for (let key in obj) {
+        if (key == 'photo_view') {
+          formData.set('photo', blob, `photo.jpeg`);
+        }else if (key == 'photo_download') {
+          formData.set('photo', blob, `photo.jpeg`);
+        } else {
+          const typedKey = key as
+          | keyof TPhotoReport
+          | keyof typeof obj;
+         formData.set(typedKey, String(obj[typedKey])); 
+        }
+      }
+      
+      try {
+        let result = await postPhotoReport(token, obj);
+        if (result) {
+          setSendMessage(routes[index].address)
+          setSendPhotoReportSuccess(true)
+        }
+      } catch (err) {
+        setSendPhotoReportFail(true)
+        console.log(err)
+      }
+    }
+  }
 
   
   return (
@@ -122,7 +176,7 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
                       prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>
           Добавить комментарий
           </button>
-          <button className='btn-B-WhiteDefault' onClick={()=>{}}>
+          <button className='btn-B-WhiteDefault' onClick={()=>submitPhotoReport(index)}>
           Отправить
           </button>
           </div>
@@ -132,7 +186,34 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
          </Modal>
         </div>
       ))}
-      
+        <ConfirmModal
+      isOpen={sendPhotoReportFail}
+      onOpenChange={setSendPhotoReportFail}
+      onConfirm={() => setSendPhotoReportFail(false)}
+      title={
+        <p>
+          Упс, что-то пошло не так
+          <br /> Попробуйте позже.
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+      />
+      <ConfirmModal
+      isOpen={sendPhotoReportSuccess}
+      onOpenChange={setSendPhotoReportSuccess}
+      onConfirm={() => setSendPhotoReportSuccess(false)}
+      title={
+        <p>
+          Фотоотчет по адресу:<br/> {sendMessage}
+         <br/> успешно отправлен.
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+    />
     </div>
   );
 };

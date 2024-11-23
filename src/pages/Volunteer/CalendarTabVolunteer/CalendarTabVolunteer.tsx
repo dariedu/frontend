@@ -51,9 +51,12 @@ const CalendarTabVolunteer = () => {
        if (token) {
          let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
          if (result) {
-           result['мои активные доставки'].forEach(i => { current.push(i)});
-           result['мои завершенные доставки'].forEach(i => { past.push(i)});
-           //result['свободные доставки'].forEach(i => { avaliable.push(i)});     
+           result['мои активные доставки'].forEach(i => { current.push(i) });
+           result['мои завершенные доставки'].filter(i => {
+             let timeDiff = Math.abs(+new Date() - +new Date(i.date));
+             let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+             if(diffDays <= 5) return i
+           }).forEach(i => { past.push(i) });
            setMyCurrent(current);
            setMyPast(past)}
     }

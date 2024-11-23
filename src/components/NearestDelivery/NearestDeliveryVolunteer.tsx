@@ -146,7 +146,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               Доставка{' '}
             </p>
             {currentStatus == 'nearest' || currentStatus == 'completed' ? (
-            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} fill-[#D7D7D7] stroke-[#D7D7D7] dark:fill-[#575757] dark:stroke-[#575757] cursor-pointer`}
+            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
             onClick={() => {
               fullView == true ? setFullView(false) : setFullView(true);
             }}/>

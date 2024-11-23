@@ -7,7 +7,8 @@ const CuratorTab: React.FC = () => {
 
    const [curatorActiveDeliveries, setCuratorActiveDeliveries] = useState<TCuratorDelivery[]>([])
    const [curatorInProcessDeliveries, setCuratorInProcessDeliveries] = useState<TCuratorDelivery[]>([])
-
+  const [curatorCompletedDeliveries, setCuratorCompletedDeliveries] = useState<TCuratorDelivery[]>([])
+  
    ///// используем контекст токена
    const tokenContext = useContext(TokenContext);
    const token = tokenContext.token;
@@ -18,6 +19,7 @@ const CuratorTab: React.FC = () => {
 async function getMyCuratorDeliveries() {
   const activeDeliveries: TCuratorDelivery[] = [];
   const inProcessDeliveries: TCuratorDelivery[] = [];
+  const myCompletedDeliveries: TCuratorDelivery[] = []
   try {
      if (token) {
        let result: ICuratorDeliveries = await getCuratorDeliveries(token);
@@ -28,6 +30,8 @@ async function getMyCuratorDeliveries() {
          result['выполняются доставки'].forEach((i: TCuratorDelivery) => { inProcessDeliveries.push(i) });
          setCuratorInProcessDeliveries(inProcessDeliveries)/// запоминаем результат
          /////////////////////
+         result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i) })
+         setCuratorCompletedDeliveries(myCompletedDeliveries)
        }
   }
   } catch (err) {
@@ -42,20 +46,27 @@ async function getMyCuratorDeliveries() {
 
   return (
     <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-screen overflow-y-auto">
-      {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 ? (
+      {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
         curatorInProcessDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
             return(<div key={index}>
               <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' />
             </div>)
         })
-      ) : ("")}
-      {curatorActiveDeliveries && curatorActiveDeliveries.length >0 ? (
+      )}
+      {curatorActiveDeliveries && curatorActiveDeliveries.length >0 && (
         curatorActiveDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
           return (<div key={index}>
             <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' />
           </div>)
         })
-      ) : ("")}
+      )}
+      {curatorCompletedDeliveries && curatorCompletedDeliveries.length >0 && (
+       curatorCompletedDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
+          return (<div key={index}>
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' />
+          </div>)
+        })
+      )}
  
     </div>
   );

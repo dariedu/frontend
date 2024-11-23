@@ -1,12 +1,9 @@
 import React, {useState} from 'react';
-// import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
 import RouteSheetsViewVolunteer from './RouteSheetsViewVolunteer';
 import {IRouteSheet} from '../../api/routeSheetApi';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
-// import * as Avatar from '@radix-ui/react-avatar';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
-
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -28,13 +25,6 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
 
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
-
-
-  ///// используем контекст токена
- // const {token} = useContext(TokenContext);
- ////// используем контекст
-console.log(deliveryId)
-
 
 
 
@@ -92,6 +82,7 @@ console.log(deliveryId)
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
                   routes={routeS.address.map(addr => (addr))}
+                 deliveryId = {deliveryId}
                 />
               )}
             </div>

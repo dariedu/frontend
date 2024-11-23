@@ -14,7 +14,7 @@ import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { TokenContext } from '../../core/TokenContext';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react'
-
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 
 
@@ -169,16 +169,14 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
                       setFullViewActive(true);
                     }}
                   />
-            ) : currentStatus == 'completed' ? (
-              <img
-                src="../src/assets/icons/arrow_down.png"
-                className={`${!fullViewCompleted ? 'rotate-180' : ''} cursor-pointer`}
-                onClick={() => {
-                  fullViewCompleted == true
-                    ? setFullViewCompleted(false)
-                    : setFullViewCompleted(true);
-                }}
-              />
+                ) : currentStatus == 'completed' ? (
+                    <Arrow_down className={` ${!fullViewCompleted ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
+                  onClick={() => {
+                    fullViewCompleted == true
+                      ? setFullViewCompleted(false)
+                      : setFullViewCompleted(true);
+                  }}
+                />
             ) : (
               ''
             )}
@@ -262,7 +260,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
           volunteer={false}
           delivery={true}
-          deliveryOrTaskId={0}
+          deliveryOrTaskId={curatorDelivery.id_delivery}
         />
       </Modal>
       <ConfirmModal
