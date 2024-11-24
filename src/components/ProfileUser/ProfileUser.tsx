@@ -56,7 +56,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
       <div className="fixed z-50 top-0 bg-light-gray-1  dark:bg-light-gray-black rounded-[16px] shadow-lg w-[360px] max-h-[100vh] flex flex-col overflow-x-hidden">
       <div className="flex items-center mb-[4px] bg-white dark:bg-light-gray-7-logo dark:text-light-gray-1 rounded-b-2xl w-full h-[60px] p-[16px]">
         <button onClick={onClose} className="mr-2">
-          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] dark:fill-light-gray-1 fill-light-gray-black' />
+          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] ' />
         </button>
         <h2>{profileTitle}</h2>
       </div>

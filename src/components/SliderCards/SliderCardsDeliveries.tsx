@@ -8,7 +8,7 @@ type TSliderCardsDeliveriesProps = {
   deliveries: IDelivery[]
   myDeliveries: IDelivery[]
   switchTab: React.Dispatch<React.SetStateAction<string>>;
-  getDelivery: (delivery: IDelivery) =>{}
+  getDelivery: (delivery: IDelivery) =>void
   stringForModal: string
   takeDeliverySuccess: boolean
   setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
