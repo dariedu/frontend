@@ -50,7 +50,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
-
+  const [takeDeliveryModal, setTakeDeliveryModal] = useState(false)///просим подтвердить пользователя чтобы взять доставку
+  const [deliveryForReservation, setDeliveryForReservation] = useState<IDelivery>();/// запоминаем доставку которую пользователь хочет взять
+  const [takeTaskModal, setTakeTaskModal] = useState(false)///просим подтвердить пользователя чтобы взять доброе дело
+  const [taskForReservation, setTaskForReservation] = useState<ITask>();/// запоминаем таск который пользователь хочет взять
 
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);
@@ -114,7 +117,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   }, [deliveries, takeDeliverySuccess]);
 
   ////функция чтобы волонтер взял доставку
-  async function getDelivery(delivery: IDelivery) {
+  async function getDeliveryFromServer(delivery: IDelivery) {
     const id: number = delivery.id;
     const deliveryDate = new Date(delivery.date);
     const date = deliveryDate.getDate();
@@ -135,6 +138,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         if (result) {
           setTakeDeliverySuccess(true);
           setTakeDeliverySuccessDateName(finalString);
+          setDeliveryForReservation(undefined)
         }
       }
     } catch (err) {
@@ -155,8 +159,27 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
     }
   }
 
+  function getDelivery(delivery: IDelivery) {
+    const deliveryDate = new Date(delivery.date);
+    const date = deliveryDate.getDate();
+    const month = getMonthCorrectEndingName(deliveryDate);
+    const hours =
+      deliveryDate.getHours() < 10
+        ? '0' + deliveryDate.getHours()
+        : deliveryDate.getHours();
+    const minutes =
+      deliveryDate.getMinutes() < 10
+        ? '0' + deliveryDate.getMinutes()
+        : deliveryDate.getMinutes();
+    const subway = getMetroCorrectName(delivery.location.subway);
+    const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
+    setTakeDeliverySuccessDateName(finalString)
+    setDeliveryForReservation(delivery);
+    setTakeDeliveryModal(true)
+  }
+
   ////функция чтобы волонтер взял оброе дело
-  async function getTask(task: ITask) {
+  async function getTaskFromServer(task: ITask) {
     const id: number = task.id;
     const taskDate = new Date(task.start_date);
     const date = taskDate.getDate();
@@ -194,6 +217,24 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         setTakeTaskFailString(`Упс, что то пошло не так, попробуйте позже`);
       }
     }
+  }
+
+  function getTask(task: ITask) {
+    const taskDate = new Date(task.start_date);
+    const date = taskDate.getDate();
+    const month = getMonthCorrectEndingName(taskDate);
+    const hours =
+      taskDate.getHours() < 10
+        ? '0' + taskDate.getHours()
+        : taskDate.getHours();
+    const minutes =
+      taskDate.getMinutes() < 10
+        ? '0' + taskDate.getMinutes()
+        : taskDate.getMinutes();
+    const finalString = `\"${task.name.slice(0, 1).toUpperCase() + task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
+    setTakeTaskSuccessDateName(finalString);
+    setTaskForReservation(task);
+    setTakeTaskModal(true)
   }
 
   return (
@@ -261,7 +302,43 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
           )}
         </div>
       </div>
-
+      {deliveryForReservation && 
+        <ConfirmModal
+        isOpen={takeDeliveryModal}
+        onOpenChange={setTakeDeliveryModal}
+        onConfirm={() => {
+          getDeliveryFromServer(deliveryForReservation);
+          setTakeDeliveryModal(false)
+        }}
+        onCancel={() => {
+          setTakeDeliveryModal(false);
+        }}
+        title={`Записаться на доставку ${takeDeliverySuccessDateName}?`}
+        description=""
+        confirmText="Записаться"
+        cancelText="Отменить"
+        isSingleButton={false}
+      />
+      }
+      {taskForReservation &&
+        <ConfirmModal
+          isOpen={takeTaskModal}
+          onOpenChange={setTakeTaskModal}
+          onConfirm={() => {
+            getTaskFromServer(taskForReservation);
+            setTakeTaskModal(false)
+          }}
+          onCancel={() => {
+            setTakeTaskModal(false);
+          }}
+          title={`Записаться на доброе дело ${takeTaskSuccessDateName}?`}
+        description=""
+        confirmText="Записаться"
+        cancelText="Отменить"
+        isSingleButton={false}
+      />
+      }
+      
       <ConfirmModal
         isOpen={takeDeliveryFail}
         onOpenChange={setTakeDeliveryFail}

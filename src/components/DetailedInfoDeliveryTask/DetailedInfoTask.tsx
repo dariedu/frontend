@@ -16,7 +16,7 @@ type TDetailedInfoTaskProps = {
   isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-  getTask: (delivery: ITask) =>{}
+  getTask: (delivery: ITask) =>void
   stringForModal: string
   takeTaskSuccess: boolean
   setTakeTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>

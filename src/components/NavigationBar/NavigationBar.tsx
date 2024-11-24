@@ -3,7 +3,6 @@ import { UserContext } from '../../core/UserContext';
 import * as Avatar from '@radix-ui/react-avatar';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import LogoText from './../../assets/logoText.svg?react';
-//import bell from '../../assets/icons/Notifications.svg';
 import ProfileUser from '../ProfileUser/ProfileUser';
 
 interface INavigationBarProps {

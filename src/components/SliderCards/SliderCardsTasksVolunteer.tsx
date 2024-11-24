@@ -6,7 +6,7 @@ import { type ITask } from '../../api/apiTasks';
 interface SliderCardsProps {
   tasks:ITask[]
   switchTab: React.Dispatch<React.SetStateAction<string>>
-  getTask: (delivery: ITask) =>{}
+  getTask: (delivery: ITask) =>void
   stringForModal: string
   takeTaskSuccess: boolean
   setTakeTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>

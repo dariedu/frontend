@@ -2,9 +2,7 @@ import {useState, useContext, useEffect} from 'react'
 import Calendar from "../../../components/Calendar/Calendar";
 import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 import { getVolunteerDeliveries, postDeliveryCancel, type IDelivery, type IVolunteerDeliveries } from '../../../api/apiDeliveries';
-//import { UserContext } from '../../../core/UserContext';
 import { TokenContext } from '../../../core/TokenContext';
-///import DeliveryType from '../../../components/ui/Hr/DeliveryType';
 import { getMonthCorrectEndingName, getMetroCorrectName } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
@@ -166,15 +164,9 @@ try {
     <>
       <div className="mt-2 mb-4 flex flex-col items-center overflow-x-hidden" >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        {myCurrent.length == 0 && myPast.length == 0 ? (
-          <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
-            <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-            <p className='font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7'>Пока нет запланированных<br/>добрых дел</p>
-        </div>
-        ): ""}
         <div className='flex flex-col h-full mb-20 overflow-auto'>
           {myCurrent.length > 0 ?
-              (myCurrent.map((i) => {
+              (myCurrent.sort((a, b) =>{return +new Date(a.date) - +new Date(b.date)}).map((i) => {
                 const currentStatus = i.in_execution == true ? "active" : "nearest";
                 return(
                 <div key={i.id}>
@@ -183,7 +175,26 @@ try {
               })
             ) : ""
           }
-          {myPast.length > 0 ? (
+          {allMyTasks && allMyTasks.length > 0 ? (
+            allMyTasks.sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => {
+              let taskFilter:'nearest' | 'active' | 'completed';
+              if (!task.is_completed) {
+                let date = new Date();
+                let taskDate = new Date(task.start_date)
+                taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
+                return (<div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+                </div>
+                )
+              } else {
+                taskFilter = 'completed';
+                return(<div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+                </div>)
+              }
+            })
+          ) : ""}
+                {myPast.length > 0 ? (
             myPast.map((i: IDelivery) => (
               completedDeliveryFeedbacks.length > 0 ? (
                 completedDeliveryFeedbacks.includes(i.id) ? (
@@ -200,23 +211,12 @@ try {
             </div>)
             ))) : ""
           }
-          {allMyTasks && allMyTasks.length > 0 ? (
-            allMyTasks.map(task => {
-              let taskFilter:'nearest' | 'active' | 'completed';
-              if (task.is_completed) {
-                taskFilter = 'completed';
-                return(<div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
-                </div>)
-              }
-              let date = new Date();
-              let taskDate = new Date(task.start_date)
-              taskFilter = ((+date - +taskDate) > 0)? "active": "nearest";
-              return(<div key={task.id}>
-                <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
-              </div>)
-            })
-          ): "" }
+          {myCurrent.length == 0 && allMyTasks.length == 0 ? (
+          <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
+            <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
+            <p className='font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7'>Пока нет запланированных<br/>добрых дел</p>
+        </div>
+        ): ""}
         </div>
       </div>    
       <ConfirmModal

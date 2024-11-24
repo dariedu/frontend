@@ -11,7 +11,7 @@ import OnlineIcon from './../../../../assets/icons/onlineIcon.svg?react'
 type TCardDeliveryProps = {
   task: ITask
    switchTab: React.Dispatch<React.SetStateAction<string>>;
-   getTask: (delivery: ITask) =>{}
+   getTask: (delivery: ITask) =>void
    stringForModal: string
    takeTaskSuccess: boolean
    setTakeTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>
