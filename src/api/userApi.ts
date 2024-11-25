@@ -124,6 +124,32 @@ export const patchUser = async (
   }
 };
 
+// Частичное обновление информации о пользователе (метод PATCH)
+export const patchUserPicture = async (
+  id: number,
+  photo:Blob,
+  token:string
+): Promise<IUser> => {
+  if (!id) throw new Error('Invalid userId');
+
+  try {
+    const response: AxiosResponse<IUser> = await axios.patch(
+      `${usersEndpoint}${id}/`,
+      photo.text,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error patching user:', error);
+    throw new Error('Failed to patch user');
+  }
+};
+
 
 export const getUserByTelegramId = async (
   tgId: number,

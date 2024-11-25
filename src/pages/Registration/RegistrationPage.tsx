@@ -44,6 +44,7 @@ function RegistrationPage() {
     useRef(null);
   const [concentOpenModal, setConcentOpenModal] = useState(false); /// открываем окно с условиями обработки персональных данных
   const [registrationComplete, setRegistrationComplete] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   ///// данные для инпута для выбора города
   const [clickedCity, setClickedCity] = useState(false);
@@ -161,6 +162,7 @@ function RegistrationPage() {
 
   ////отправляем данные на сервер
   async function fetchRegistration(user: TRegisterationFormData) {
+   
     try {
       const response = await postRegistration(user);
       if (response == true) {
@@ -172,9 +174,12 @@ function RegistrationPage() {
       if (e == 'Error: Access token refresh failed: invalid_grant: Token has been expired or revoked.') {
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
         setRegistrationCompleteModal(true);
+        setIsSending(false)
       } else {
-         setRequestSent(false)
-      setRegistrationhasFailed(true)
+        setRequestSent(false)
+        setRegistrationhasFailed(true)
+        setIsSending(false)
+        
       }
     }
   }
@@ -199,6 +204,7 @@ function RegistrationPage() {
 
   //////функция для сабмита формы
   async function onFormSubmit() {
+    setIsSending(true)
     setRequestSent(true);
 
     const userUnchangableValues: TUserUnchangableValues = {
@@ -599,6 +605,11 @@ function RegistrationPage() {
     />
         </>
       )}
+      <Modal onOpenChange={setIsSending} isOpen={isSending}>
+     <div className='h-screen items-center flex flex-col justify-center'>
+        <img className='h-10' src="./../../src/assets/icons/mainLogo.gif"/>
+      </div>;
+      </Modal>
     </>
   );
 }

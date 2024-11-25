@@ -42,7 +42,9 @@ getDeviceType()
     return <div className='flex justify-center items-center h-screen'>Пожалуйста, откройте приложение на мобильном устройстве</div>
   } else {
     if (isLoading) {
-      return <div>Загрузка...</div>;
+      return <div className='h-screen items-center flex flex-col justify-center'>
+        <img className='h-10' src="./../../src/assets/icons/mainLogo.gif"/>
+      </div>;
     }
   
     if (!currentUser) {
@@ -55,7 +57,7 @@ getDeviceType()
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
     }
-  }
+   }
   
 };
 

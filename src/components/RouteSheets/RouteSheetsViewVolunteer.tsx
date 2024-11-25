@@ -61,39 +61,44 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
         photo: uploadedFileLink[index],
         comment: comment[index],
         routeSheetId: currentUser?.id,
-        deliveryId:deliveryId
+        deliveryId: deliveryId,
+        //address:'36'
       }
-      fetch(uploadedFileLink[index])
+     let result1 = await fetch(uploadedFileLink[index])
       .then(res => res.blob())
       .then(blob => {
         setBlob(blob);
+        return blob
       });
 
-      const formData = new FormData();
-      for (let key in obj) {
-        if (key == 'photo_view') {
-          formData.set('photo', blob, `photo.jpeg`);
-        }else if (key == 'photo_download') {
-          formData.set('photo', blob, `photo.jpeg`);
-        } else {
-          const typedKey = key as
-          | keyof TPhotoReport
-          | keyof typeof obj;
-         formData.set(typedKey, String(obj[typedKey])); 
+      if (result1 && currentUser) {
+        const formData = new FormData();
+        for (let key in obj) {
+          if (key == 'photo_view') {
+            formData.set('photo', blob, `photo.jpeg`);
+          }else if (key == 'photo_download') {
+            formData.set('photo', blob, `photo.jpeg`);
+          } else {
+            const typedKey = key as
+            | keyof TPhotoReport
+            | keyof typeof obj;
+           formData.set(typedKey, String(obj[typedKey])); 
+          }
+        }
+        
+        try {
+          let result = await postPhotoReport(token, obj);
+          if (result) {
+            setSendMessage(routes[index].address)
+            setSendPhotoReportSuccess(true)
+          }
+        } catch (err) {
+          setSendPhotoReportFail(true)
+          console.log(err)
         }
       }
+}
       
-      try {
-        let result = await postPhotoReport(token, obj);
-        if (result) {
-          setSendMessage(routes[index].address)
-          setSendPhotoReportSuccess(true)
-        }
-      } catch (err) {
-        setSendPhotoReportFail(true)
-        console.log(err)
-      }
-    }
   }
 
   
