@@ -5,12 +5,9 @@ import ThemeIcon from '../../../assets/icons/dark_theame.svg?react';
 
 const ThemeToggle = () => {
 
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(window.Telegram?.WebApp?.colorScheme || 'light'); ///тема из телеграма
-console.log(window.Telegram?.WebApp?.colorScheme, "Theme toggle")
-  useEffect(() => {
-  let color = window.Telegram?.WebApp?.colorScheme || 'light';
-  setColorScheme(color);
-},[])
+  //const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(window.Telegram?.WebApp?.colorScheme); ///тема из телеграма
+  const colorScheme = window.Telegram?.WebApp?.colorScheme || 'light'; ///тема из телеграма
+
 
   let colorTheme: 'light' | 'dark';
   if (localStorage.getItem('dariEduColorTheme') != undefined) {
@@ -26,28 +23,36 @@ console.log(window.Telegram?.WebApp?.colorScheme, "Theme toggle")
     const root = window.document.documentElement;
     root.classList.remove(theme === 'light' ? 'dark' : 'light');
     root.classList.add(theme);
-    localStorage.setItem('dariEduColorTheme', theme)
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
+    theme === 'light' ?
+    localStorage.setItem('dariEduColorTheme', 'dark') 
+    : localStorage.setItem('dariEduColorTheme', 'light') 
+  };
+
+  const setSystemTheme = () => {
+    setTheme(window.Telegram?.WebApp?.colorScheme);
   };
 
   return (
     <div className="flex items-center space-x-4 ">
       <div className="flex items-center ">
         <ThemeIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black ' />
-        {/* <img src={themeIcon} alt="themeIcon" className="mr-[14px]" /> */}
         <label
           className="text-left font-gerbera-h3 text-light-gray-black dark:text-light-gray-1 w-[211px] ml-[14px]"
           htmlFor="theme-switch"
         >
           {theme === 'light' ? 'Светлая тема' : 'Тёмная тема'}
         </label>
+        <button onClick={() => { localStorage.removeItem('dariEduColorTheme'); setSystemTheme()}} className='h-6 rounded-full bg-light-brand-green w-16 font-gerbera-sub1 absolute ml-48 text-light-gray-white'>
+          Системная
+        </button>
       </div>
       <Switch.Root
         id="theme-switch"
-        className="w-10 h-6 bg-light-brand-green rounded-full relative shadow-inner "
+        className="w-10 h-6 bg-light-brand-green rounded-full relative shadow-inner"
         checked={theme === 'dark'}
         onCheckedChange={toggleTheme}
       >

@@ -242,7 +242,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
       >
         <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-[360px] rounded-b-2xl h-[60px]">
           <button onClick={() => onClose(false)} className="mr-2">
-            <RightArrowIcon className="rotate-180 w-9 h-9 mr-[8px] dark:fill-light-gray-1 fill-light-gray-black" />
+          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
           </button>
           <div className="flex justify-between w-[280px] items-center">
             <h2 className="text-light-gray-black dark:text-light-gray-1">

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import GeoIcon from '../../../assets/icons/geo.svg?react';
 import EmailIcon from '../../../assets/icons/email.svg?react';
 import BirthdayIcon from '../../../assets/icons/birthday.svg?react';
@@ -9,17 +9,21 @@ import { UserContext } from '../../../core/UserContext';
 import { patchUser} from '../../../api/userApi';
 import { TokenContext } from '../../../core/TokenContext';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
+import { fetchCities, type TCity } from '../../../api/cityApi';
+import InputOptions, {type T} from '../../../pages/Registration/InputOptions';
 
 interface IVolunteerDataProps {
-  geo: string;
-  email: string;
-  birthday: string;
-  phone: string;
-  telegram: string;
+  geo: string
+  geoIndex:number
+  email: string
+  birthday: string
+  phone: string
+  telegram: string
 }
 
 export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   geo,
+  geoIndex,
   email,
   phone,
   telegram,
@@ -30,40 +34,73 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   const [confirmUpdate, setConfirmUpdate] = useState(false);
   const [updateDataSuccess, setUpdateDataSuccess] = useState(false);
   const [updateDataFail, setUpdateDataFail] = useState(false);
+  const [askUpdateCity, setAskUpdateCity] = useState(false);
+  const [userEmail, setUserEmail] = useState(email)
+  const [askUpdateEmail, setAskUpdateEmail] = useState(false);
+  
 
   if (!currentUser) {
     return <div>Пользователь не найден</div>;
   }
 
+   ///// данные для инпута для выбора города
+   const [clickedCity, setClickedCity] = useState(false);
+   const [cityOptions, setCityOptions] = useState<[number, string][]>([
+     [1, 'Москва'],
+     [3, 'другой'],
+   ]);
+   const [cityIndex, setCityIndex] = useState<T>(1);
+   ///// данные для инпута для выбора города
+ 
+   ////// запрашиваем города и пушим их в cityOptions для формирования инпута
+   async function reqCitiesList() {
+     let arr: [number, string][] = [];
+     try {
+       const result: TCity[] = await fetchCities();
+       result.forEach(res => {
+         arr.push([res.id, res.city]);
+       });
+     } catch (err) {
+       console.error(err, 'reqCiliesList has failed, registrationPage');
+     } finally {
+       if (arr.length > 0) {
+         setCityOptions(arr);
+       }
+     }
+   }
+ 
+   /////запрашиваем города один раз при загрузке страницы
+   useEffect(() => {
+     reqCitiesList();
+   }, []);
+ 
+
   const birthdayFormatted = currentUser.birthday
     ? new Date(currentUser.birthday).toLocaleDateString()
     : 'Дата рождения не указана';
 
-  const [formData, setFormData] = useState({
+  const formData = {
     geo,
     email,
-    birthday: birthdayFormatted,
     phone,
-    telegram
-  });
+    telegram,
+    birthday: birthdayFormatted,
+  }
+
 
   const [isEditing, setIsEditing] = useState({
     geo: false,
     email: false,
-    birthday: false,
     phone: false,
-    telegram:false
+    telegram: false,
+    birthday: false,
   });
 
   // Обработчик для изменения значений полей
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: keyof typeof formData,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setFormData({
-      ...formData,
-      [field]: e.target.value,
-    });
+    setUserEmail(e.currentTarget.value)
   };
 
   // Функция для переключения режима редактирования
@@ -74,43 +111,40 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     }));
   };
 
-  // Функция для отправки обновленных данных на сервер
-  const handleSave = async (field: keyof typeof formData) => {
-    if (!currentUser || !token) return;
 
-    try {
-      // Отправляем обновленные данные на бэкенд
-      const updatedUser = await patchUser(
-        currentUser.id,
-        {
-          [field]: formData[field],
-        },
-        token,
-      );
 
-      console.log('Пользователь успешно обновлен:', updatedUser);
 
-      // Выключаем режим редактирования
-      setIsEditing(prev => ({
-        ...prev,
-        [field]: false,
-      }));
-    } catch (error) {
-      console.error('Ошибка при обновлении пользователя:', error);
+  async function handleSave(field: "email" | "geo", value: string) {
+    if (currentUser && token) {
+      try {
+        // Отправляем обновленные данные на бэкенд
+        const updatedUser = await patchUser(currentUser.id, { [field]: value },
+          token,
+        );
+        if (updatedUser) {
+          console.log(updatedUser)
+          setUpdateDataSuccess(true)
+        }
+      } catch (err) {
+        setUpdateDataFail(true)
+        console.log(err, "handleSave")
+      }
     }
   };
-  const handleSaveTelegramNik = async (data:string) => {
+
+  const handleSaveTelegramNik = async (data: string) => {
     if (!currentUser || !token) return;
     try {
       // Отправляем обновленные данные на бэкенд
       const updatedUser = await patchUser(
         currentUser.id,
         {
-          [telegram]: data,
+          [telegram]: data.toLowerCase(),
         },
         token,
       );
       if (updatedUser) {
+        console.log(updatedUser, "handleSaveTelegramNik")
         setUpdateDataSuccess(true)
       }
     } catch (error) {
@@ -119,50 +153,49 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     }
   };
 
-  const items = [
-    formData.geo,
-    formData.email,
-    formData.birthday,
-    formData.phone,
-    telegram,
-  ];
-  const iconsLinks = [
-    <GeoIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <PhoneIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-  ];
-
-  function updatePhone() {
-    Telegram.WebApp.sendData('/update_phone_number')
-    console.log( '/update_phone_number')
-  }
   function updateTelegram() {
     if (window.Telegram?.WebApp?.initDataUnsafe) {
       const initData = window.Telegram.WebApp.initDataUnsafe;
       const tgNik = initData.user?.username
-      const tgNikName = initData.user?.name
       console.log("tgNik", initData.user?.username)
-      console.log("tgNikName", tgNikName)
       if (tgNik) {
-        setNik(tgNik);
+        setNik(tgNik.toLowerCase());
         setConfirmUpdate(true)
       } else {
         setUpdateDataFail(true)
         console.log("Ник не был предоставлен приложением")
       }
     }
-  }
+  };
 
+  function updatePhone() {
+    window.Telegram.WebApp.sendData('/update_phone_number')
+    console.log( window.Telegram.WebApp.sendData('/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
+    window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')
+    console.log( window.Telegram.WebApp.answerWebAppQuery('/update_phone_number'), "window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')")
+  };
+
+  const items = [
+    formData.geo,
+    formData.email,
+    formData.phone,
+    telegram,
+    formData.birthday,
+  ];
+  const iconsLinks = [
+    <GeoIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <PhoneIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+  ];
 
 
   return (
     <div className="w-[360px] h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
       {items.map((_, index) => {
         const field = Object.keys(isEditing)[index] as keyof typeof formData;
-       // Если это поле telegram (последний элемент), не делаем его редактируемым
-        if (index === 4 || index === 3) {
+        if (index === 3 || index === 2) {
           return (
             <div
               className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
@@ -180,7 +213,57 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
               />
             </div>
           );
-        } else {
+        } else if (index === 4) {
+          return (
+            <div
+              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              key={index}
+            >
+              <div className="inline-flex items-center justify-start">
+                {iconsLinks[index]}
+                  <p className="ml-3.5 dark:text-light-gray-1">
+                    {formData[field]}
+                  </p>
+              </div>
+            </div>
+          )
+        } else if (index == 0) {
+          return (
+            <div
+          className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+          key={index}
+        >
+          <div className="inline-flex items-center justify-start">
+            {iconsLinks[index]}
+            {isEditing[field] ? (
+             <div>
+             <InputOptions
+               options={cityOptions}
+               clicked={clickedCity}
+               setClicked={setClickedCity}
+               choiceMade={cityIndex}
+               setChoiceMade={setCityIndex}
+               style={true}
+                  />
+              </div>
+              
+            ) : (
+              <p className="ml-3.5 dark:text-light-gray-1">
+                {formData[field]}
+              </p>
+            )}
+          </div>
+          <Big_pencilIcon
+            className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
+                onClick={() => {
+                  toggleEdit(field); if (isEditing.geo) {
+                    if (geoIndex != cityIndex) {
+                    setAskUpdateCity(true)
+                  }
+                } } }
+          />
+        </div>
+ )} else {
           return (
             <div
               className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
@@ -191,19 +274,25 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                 {isEditing[field] ? (
                   <input
                     className="ml-3.5 p-1 border rounded"
-                    value={formData[field]}
-                    onChange={e => handleInputChange(e, field)}
-                    onBlur={() => handleSave(field)}
+                    value={userEmail}
+                    onChange={e => handleInputChange(e)}
                   />
                 ) : (
                   <p className="ml-3.5 dark:text-light-gray-1">
-                    {formData[field]}
+                    {userEmail}
                   </p>
                 )}
               </div>
               <Big_pencilIcon
                 className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
-                onClick={() => toggleEdit(field)}
+                onClick={() => {
+                  toggleEdit(field); 
+                  if (isEditing.email) {
+                    if (email !== userEmail) {
+                    setAskUpdateEmail(true)
+                  }
+                } 
+                }}
               />
             </div>
           );
@@ -217,7 +306,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onCancel={() => setConfirmUpdate(false)}
        title={
          <p>
-           Ваш новый телеграм ник: ${nik}.
+           Ваш новый телеграм ник: {nik}.
            <br /> Обновить?
          </p>
        }
@@ -227,6 +316,41 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         isSingleButton={false}
         zIndex={true}
         />}
+        {cityIndex && cityOptions.find(i => i[0] == cityIndex) &&
+       <ConfirmModal
+       isOpen={askUpdateCity}
+       onOpenChange={setAskUpdateCity}
+        onConfirm={() => { setAskUpdateCity(false); handleSave('geo', `${cityIndex}`) }}
+        onCancel={() => setAskUpdateCity(false)}
+       title={
+         <p>
+           Ваш новый город: {cityOptions.find(i => i[0] == cityIndex)?.[1]}.
+           <br /> Обновить?
+         </p>
+       }
+       description=""
+        confirmText="Обновить"
+        cancelText='Закрыть'
+        isSingleButton={false}
+        zIndex={true}
+        />}
+              <ConfirmModal
+       isOpen={askUpdateEmail}
+       onOpenChange={setAskUpdateEmail}
+       onConfirm={() => { setAskUpdateEmail(false); handleSave('email', userEmail) }}
+        onCancel={() => { setAskUpdateEmail(false); setUserEmail(email) }}
+       title={
+         <p>
+           Ваш новый имейл: {userEmail}.
+           <br /> Обновить?
+         </p>
+       }
+       description=""
+        confirmText="Обновить"
+        cancelText='Сбросить'
+        isSingleButton={false}
+        zIndex={true}
+        />
       <ConfirmModal
        isOpen={updateDataSuccess}
        onOpenChange={setUpdateDataSuccess}
@@ -240,7 +364,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
       <ConfirmModal
        isOpen={updateDataFail}
        onOpenChange={setUpdateDataFail}
-        onConfirm={() => {setUpdateDataFail(false) }}
+        onConfirm={() => {setUpdateDataFail(false)}}
        title={
          <p>
            Упс, что-то пошло не так!

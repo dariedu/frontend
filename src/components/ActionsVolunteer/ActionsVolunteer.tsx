@@ -15,7 +15,7 @@ import BecameCurator from '../BecameCurator/BecameCurator';
 import { Modal } from '../ui/Modal/Modal';
 import History from '../History/History';
 import AboutMe from '../AboutMe/AboutMe';
-
+import Suggestions from '../Suggestion/Suggestions';
 
 interface IAction {
   label: string
@@ -41,7 +41,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   const [notEnoughtPointsOpenModal, setNotEnoughtPointsOpenModal] = useState(false);
   const [becameCuratorOpen, setBecameCuratorOpen] = useState(false);
   const [openHistoryPage, setOpenHistoryPage] = useState(false);
-  const [openAboutMePage, setOpenAboutMePage]= useState(false)
+  const [openAboutMePage, setOpenAboutMePage] = useState(false);
+  const [openSuggestionsPage, setOpenSuggestionsPage] = useState(false);
+
 /////проверяем сколько просшедших доставок у волонтера
   async function getMyDeliveries() {  
     try {
@@ -75,6 +77,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   function openAboutMe() {
     setOpenAboutMePage(true)
   }
+  function openSuggestion() {
+    setOpenSuggestionsPage(true)
+  }
 
 
   // Все действия
@@ -92,7 +97,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     },
     { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
-    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/> },
+    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSuggestion },
   ];
 
   // Фильтруем действия для отображения
@@ -158,6 +163,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       </Modal>  
       <Modal isOpen={openAboutMePage} onOpenChange={setOpenAboutMePage} zIndex={true}>
         <AboutMe onClose={setOpenAboutMePage} />
+      </Modal>  
+      <Modal isOpen={openSuggestionsPage} onOpenChange={setOpenSuggestionsPage} zIndex={true}>
+        <Suggestions onClose={setOpenSuggestionsPage} />
       </Modal>  
     </>
     
