@@ -88,7 +88,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
     <div className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-[360px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
       <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-[360px] rounded-b-2xl h-[60px]">
         <button onClick={()=>onClose(false)} className="mr-2">
-          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] dark:fill-light-gray-1 fill-light-gray-black' />
+        <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Обо мне</h2>
       </div>

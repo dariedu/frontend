@@ -165,8 +165,42 @@ export const submitFeedbackPromotioin = async (
     })
     return response.data
   } catch (err:any) {
-    console.log("submitFeedbackDelivery error", err)
-    throw new Error("post request submitFeedbackDelivery has error")
+    console.log("submitFeedbackPromotioin error", err)
+    throw new Error("post request submitFeedbackPromotioin has error")
+}
+}
+
+
+export const submitFeedbackSuggestion = async (
+  access: string,
+  type:TFeedbackTypes,
+  feedbackText: string,
+): Promise<TFeedback> => {
+
+
+ const object = {
+    "type": type,
+    "text": feedbackText,
+    "delivery": "",
+    "task": "",
+    "promotion": "",
+}
+   
+  try {
+    const response:AxiosResponse<TFeedback> = await axios({
+      url: `${feedbackUrl}submit/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+      data: object
+    })
+    return response.data
+  } catch (err:any) {
+    console.log("submitFeedbackSuggestion error", err)
+    throw new Error("post request submitFeedbackSuggestion has error")
 }
 }
 

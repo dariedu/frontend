@@ -63,7 +63,8 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
       <div className="w-full flex-grow overflow-y-auto ">
         <ProfilePic user={user} />
         <VolunteerData
-          geo={user.city ? `Город: ${user.city.city}` : 'Город не указан'}
+          geo={user.city ? `${user.city.city}` : 'Город не указан'}
+          geoIndex={user.city? user.city.id as number: 0}
           email={user.email || 'Эл. почта не указана'}
           birthday={
             user.birthday

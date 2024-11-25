@@ -87,7 +87,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
             if (mainToken) {
               try {
                 const users = await getUsers(mainToken.access);
-                const user = users.find(user => user.tg_id.toString() === tgId);
+                const user = users.find(user => user.tg_id == tgIdFromTgParams);
                 if (user) {
                   const fetchedUser = await getUserById(user.id, mainToken.access);
                   setCurrentUser(fetchedUser);
