@@ -55,7 +55,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
           <div className="flex items-center space-x-4">
             <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-light-gray-1 dark:bg-dark-gray-1 rounded-full" onClick={handleAvatarClick}>
               <Avatar.Image
-                src={currentUser.avatar || ''}
+                src={currentUser.photo || ''}
                 alt="Avatar"
                 className="w-10 h-10 object-cover rounded-full cursor-pointer"
                 onClick={handleAvatarClick}

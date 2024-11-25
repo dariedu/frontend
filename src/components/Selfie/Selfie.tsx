@@ -1,7 +1,6 @@
 import React, { useState, useRef, type Dispatch } from 'react';
 import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
-//import ReactCrop from 'react-image-crop';
 import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react'
 
@@ -13,7 +12,6 @@ interface ISelfieProps {
   setUploadedFileLink: Dispatch<React.SetStateAction<string>>;
   setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>;
   localeStorageName: string;
-  // blob: undefined | Blob
   setBlob: Dispatch<React.SetStateAction<Blob>>;
 }
 
@@ -65,7 +63,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
   return (
     <>
       <div
-        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full dark:bg-light-gray-7-logo"
+        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-[360px] dark:bg-light-gray-7-logo"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-8 relative">
