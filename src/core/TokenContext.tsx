@@ -26,16 +26,22 @@ export const TokenProvider: React.FC<{ children: React.ReactNode }> = ({
   const query = new URLSearchParams(location.search);
   const tgId = query.get('tg_id');
 
-
+  let tgIdFromTgParams: number;
+  useEffect(() => {
+   if (window.Telegram?.WebApp?.initDataUnsafe) {
+    const initData = window.Telegram.WebApp.initDataUnsafe;
+    tgIdFromTgParams = initData.user?.id;
+    console.log("init data unsafe tgId", initData.user?.id)
+  }
+}, [])
 
 const fetchRefreshToken = async () => {
       try {
-         if (refresh) {
+        if (refresh) {
         const mainToken = await postTokenRefresh(refresh)
            if (mainToken) {
              setToken(mainToken.access);
              setRefresh(mainToken.refresh)
-            //  console.log(mainToken, "token refreshed")
            }
          } else {
           if (tgId) {
@@ -43,9 +49,16 @@ const fetchRefreshToken = async () => {
                if (mainToken) {
                 setToken(mainToken.access);
                 setRefresh(mainToken.refresh)
-                //  console.log(mainToken, "first token received")
                }
-             }
+          } else {
+            if (tgIdFromTgParams) {
+              const mainToken = await postToken(tgIdFromTgParams)
+                 if (mainToken) {
+                  setToken(mainToken.access);
+                  setRefresh(mainToken.refresh)
+                 }
+               }
+             } 
          }
       } catch (err) {
       console.log(err, "fetchRefreshToken has failed tokenContext")

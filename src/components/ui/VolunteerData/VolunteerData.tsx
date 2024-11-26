@@ -31,6 +31,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext)
   const [nik, setNik] = useState<string>('');
+  const [updateNikFail, setUpdateNikFail] = useState(false);
+  const [noNeedToUpdateNik, setNoNeedToUpdateNik] = useState(false);
   const [confirmUpdate, setConfirmUpdate] = useState(false);
   const [updateDataSuccess, setUpdateDataSuccess] = useState(false);
   const [updateDataFail, setUpdateDataFail] = useState(false);
@@ -49,7 +51,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
      [1, 'Москва'],
      [3, 'другой'],
    ]);
-   const [cityIndex, setCityIndex] = useState<T>(1);
+  const [cityIndex, setCityIndex] = useState<T>(1);
+  const [updatePhoneModal, setUpdatePhoneModal] = useState(false)
    ///// данные для инпута для выбора города
  
    ////// запрашиваем города и пушим их в cityOptions для формирования инпута
@@ -116,11 +119,12 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
   async function handleSave(field: "email" | "geo", value: string) {
     if (currentUser && token) {
+
+      // const formData = new FormData(); // создаем объект FormData для передачи файла
+      // formData.set(field, value);
       try {
         // Отправляем обновленные данные на бэкенд
-        const updatedUser = await patchUser(currentUser.id, { [field]: value },
-          token,
-        );
+        const updatedUser = await patchUser(currentUser.id, {[field]: value}, token,);
         if (updatedUser) {
           console.log(updatedUser)
           setUpdateDataSuccess(true)
@@ -157,22 +161,25 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     if (window.Telegram?.WebApp?.initDataUnsafe) {
       const initData = window.Telegram.WebApp.initDataUnsafe;
       const tgNik = initData.user?.username
-      console.log("tgNik", initData.user?.username)
+     // console.log("tgNik", initData.user?.username)
       if (tgNik) {
+        if (tgNik.toLowerCase() == currentUser?.tg_username.toLowerCase()) {
+          setNoNeedToUpdateNik(true)
+        }
         setNik(tgNik.toLowerCase());
         setConfirmUpdate(true)
       } else {
-        setUpdateDataFail(true)
-        console.log("Ник не был предоставлен приложением")
+        setUpdateNikFail(true)
       }
     }
   };
 
   function updatePhone() {
-    window.Telegram.WebApp.sendData('/update_phone_number')
-    console.log( window.Telegram.WebApp.sendData('/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
-    window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')
-    console.log( window.Telegram.WebApp.answerWebAppQuery('/update_phone_number'), "window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')")
+    window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number')
+    console.log( window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
+    // window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')
+    // console.log( window.Telegram.WebApp.answerWebAppQuery('/update_phone_number'), "window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')")
+    setUpdatePhoneModal(true)
   };
 
   const items = [
@@ -209,7 +216,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
               </div>
               <Big_pencilIcon
                 className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
-                onClick={() => {index == 3 ? updatePhone() : updateTelegram()}}
+                onClick={() => {index == 2 ? updatePhone() : updateTelegram()}}
               />
             </div>
           );
@@ -298,7 +305,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
           );
         }
       })}
-      {nik && 
+      {nik ? 
        <ConfirmModal
        isOpen={confirmUpdate}
        onOpenChange={setConfirmUpdate}
@@ -315,7 +322,52 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         cancelText='Закрыть'
         isSingleButton={false}
         zIndex={true}
+        /> : 
+        <ConfirmModal
+       isOpen={updateNikFail}
+       onOpenChange={setUpdateNikFail}
+        onConfirm={() => { setUpdateNikFail(false) }}
+       title={
+         <p>
+           Упс, нет доступа к <br/>Вашему нику в телеграм.
+           <br />Попробуйте позже.
+         </p>
+       }
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+        zIndex={true}
         />}
+       <ConfirmModal
+       isOpen={noNeedToUpdateNik}
+       onOpenChange={setNoNeedToUpdateNik}
+        onConfirm={() => { setNoNeedToUpdateNik(false) }}
+       title={
+         <p>
+           Ваш телеграм ник в приложении "Дари Еду"
+           <br /> совпадает с ником в телеграм.
+         </p>
+       }
+       description=""
+        confirmText="Ок"
+        isSingleButton={true}
+        zIndex={true}
+        /> 
+      <ConfirmModal
+        isOpen={updatePhoneModal}
+        onOpenChange={setUpdatePhoneModal}
+        onConfirm={() => {setUpdatePhoneModal(false) }}
+        title={
+          <p>
+            Обновить номер телефона можно 
+            <br />только через телеграм бот.
+          </p>
+        }
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+        zIndex={true}
+         />
         {cityIndex && cityOptions.find(i => i[0] == cityIndex) &&
        <ConfirmModal
        isOpen={askUpdateCity}

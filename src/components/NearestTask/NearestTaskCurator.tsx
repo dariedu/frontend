@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
-  getMonthCorrectEndingName,
-  getVolunteerCorrectEndingName,
+  getBallCorrectEndingName,
+  getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import ListOfVolunteersTasks from '../ListOfVolunteers/ListOfVolunteersTask';
+import {postTaskComplete, type ITask } from '../../api/apiTasks';
+import { TokenContext } from '../../core/TokenContext';
+import { getUserById, type IUser } from '../../api/userApi';
+import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
-import { type ITask } from '../../api/apiTasks';
+
 
 interface INearestTaskProps {
   task: ITask;
-  taskFilter?: TTaskFilter;
+  taskFilter: TTaskFilter;
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -20,50 +25,123 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   task,
   taskFilter,
 }) => {
-  const taskDate = new Date(task.start_date);
 
+  const [filter, setFilter] = useState<TTaskFilter>(taskFilter)
   const [fullViewCurator, setFullViewCurator] = useState(false);
+  const [openVolunteerList, setOpenVolunteerList] = useState(false)
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] =
     useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
     useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  const [taskConfirmCompleteTask, setTaskConfirmCompleteTask] = useState(false);
 
-  const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] =
-    useState(false); //// модальное окно для отмены доставки
-  const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =
-    useState(false); //// модальное окно для подтверждения отмены доставки
 
+  const [taskCompleteSuccess, setTaskCompleteSuccess] = useState(false);
+  const [taskCompleteFail, setTaskCompleteFail] = useState(false);
+
+  const [list, setList] = useState<IUser[]>([]);
+
+
+ ///// работаем с датой //////////////
+ const taskStartDate = new Date(task.start_date);
+ const startDay = taskStartDate.getDate();
+ const startMonth = taskStartDate.toLocaleDateString("RU", {month:"short"});
+ 
+ const hours = taskStartDate ? String(taskStartDate.getHours()).padStart(2, '0') : '--';
+ const minutes = taskStartDate ? String(taskStartDate.getMinutes()).padStart(2, '0') : '--';
+ 
+ const taskEndDate = new Date(task.end_date);
+ const endDay = taskEndDate.getDate();
+ const endMonth = taskEndDate.toLocaleDateString("RU", {month:"short"})
+
+  let dateString: string;
+  let period: boolean;
+  if (startDay == endDay && startMonth == endMonth) {
+    period = false;
+   dateString = `${startDay} ${getMonthCorrectEndingName(taskStartDate)} в ${hours}:${minutes}`
+  } else {
+    period = true
+    if (startMonth == endMonth) {
+       dateString = `${startDay} - ${endDay} ${endMonth}`
+    } else {
+       dateString = `${startDay} ${startMonth} - ${endDay} ${endMonth}`
+    }
+ }
+  ///// работаем с датой //////////////
+  
+
+  const {token}= useContext(TokenContext)
+  
+  async function getVolunteers() {
+    if (token && task.volunteers && task.volunteers.length > 0) {
+      try {
+        const volunteerArr: IUser[] = []
+        Promise.allSettled(task.volunteers.map(id => getUserById(id, token)))
+          .then(responses => responses.forEach((result, num) => {
+            if (result.status == "fulfilled") {
+              volunteerArr.push(result.value)
+            }
+            if (result.status == "rejected") {
+              console.log(`${num} volunteer`)
+            }
+          })).finally(() => { setList(volunteerArr) }
+          )
+      } catch (err) {
+        console.log(err, "getVolunteers() nearestTaskCurator")
+      }
+    } 
+  }
+
+    useEffect(() => {
+      getVolunteers()
+    }, [])
+  
+  async function completeTask() {
+    if (token) {
+      try { 
+        let result = await postTaskComplete(task.id, token);
+        if (result) {
+          setTaskCompleteSuccess(true)
+        setFilter('completed')
+        }
+      } catch (err) {
+        console.log(err, 'completeTask() nearestTaskCurator')
+        setTaskCompleteFail(true)
+      }
+    }
+  }
+
+  
   return (
     <>
       <div
-        className={`${taskFilter == 'active' ? (fullViewCurator == true ? 'hidden' : '') : ''} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
-          {taskFilter == 'nearest' ? (
+          {filter == 'nearest' ? (
             <p className="btn-S-GreenDefault flex items-center justify-center">
               Ближайшее
             </p>
-          ) : taskFilter == 'active' ? (
+          ) : filter == 'active' ? (
             <p className="btn-S-GreenDefault flex items-center justify-center">
               Активное
             </p>
-          ) : taskFilter == 'completed' ? (
+          ) : filter == 'completed' ? (
             <p className="btn-S-GreenInactive flex items-center justify-center">
               Завершённое
             </p>
           ) : (
             ''
           )}
-
           <div className="flex items-center">
             <p
               className={
-                taskFilter == 'nearest'
+                filter == 'nearest'
                   ? 'font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2'
                   : 'font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2 cursor-pointer'
               }
               onClick={() => {
-                taskFilter == 'nearest'
+                filter == 'nearest'
                   ? ''
                   : fullViewCurator == true
                     ? setFullViewCurator(false)
@@ -72,44 +150,33 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
             >
               {task.category.name}{' '}
             </p>
-            {taskFilter == 'active' ? (
-              <img
-                src="../src/assets/icons/arrow_right.png"
-                className=" cursor-pointer"
-                onClick={() => {
-                  fullViewCurator == true
-                    ? setFullViewCurator(false)
-                    : setFullViewCurator(true);
+            {<Arrow_down className={`${fullViewCurator ? "" : "rotate-180"}  stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
+              onClick={() => {
+                    fullViewCurator == true
+                      ? setFullViewCurator(false)
+                      : setFullViewCurator(true);
                 }}
-              />
-            ) : taskFilter == 'completed' ? (
-              <img
-                src="../src/assets/icons/arrow_down.png"
-                className={`${!fullViewCurator ? 'rotate-180' : ''} cursor-pointer`}
-                onClick={() => {
-                  fullViewCurator == true
-                    ? setFullViewCurator(false)
-                    : setFullViewCurator(true);
-                }}
-              />
-            ) : (
-              ''
-            )}
+              />}
           </div>
         </div>
+        {fullViewCurator&& (filter == 'nearest' || filter == 'active') && task.description &&  task.description.length != 0 &&
+              <div className="w-[330px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+                <p className="font-gerbera-h3 text-light-gray-8-text text-start">
+                  Подробности
+                </p>
+                <p className="font-gerbera-sub1 text-light-gray-5 mt-[6px] text-start">
+                  {task.description}
+                </p>
+              </div>}
         {/* /////////////////////// */}
-        {taskFilter == 'active' ? (
-          ''
-        ) : taskFilter == 'nearest' ? (
+        {(filter == 'nearest' || filter == 'active') && (
           <div className="flex justify-between items-center mt-[20px]">
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-              <p className="font-gerbera-sub2 text-light-gray-5 ">
-                Время начала
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+              <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-3">
+                {period ? "Период выполнения" : "Время начала" } 
               </p>
-              <p className="font-gerbera-h3 text-light-gray-8">
-                {`${taskDate.getDate()}
-                  ${getMonthCorrectEndingName(taskDate)} в
-                  ${taskDate.getHours() < 10 ? '0' + taskDate.getHours() : taskDate.getHours()}:${taskDate.getMinutes() < 10 ? '0' + taskDate.getMinutes() : taskDate.getMinutes()}`}
+              <p className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
+              {dateString}
               </p>
             </div>
             <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
@@ -117,24 +184,32 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
               <p className="font-gerbera-h3 text-light-gray-8">
                 {task.volunteers_taken == 0
                   ? '0 из' + `${task.volunteers_needed}`
-                  : `${task.volunteers_taken + ' из ' + `${task.volunteers_needed}` + ' ' + getVolunteerCorrectEndingName(task.volunteers_needed)}`}
+                  : `${task.volunteers_taken + ' из ' + `${task.volunteers_needed}` + ' волонтёров'}`}
               </p>
             </div>
           </div>
-        ) : (
-          ''
         )}
-        {taskFilter == 'active' || taskFilter == 'completed' ? (
-          ''
-        ) : (
+        {(filter == 'active' || filter == 'nearest') && 
           <button
             className="btn-B-WhiteDefault mt-[20px]"
-            onClick={() => setFullViewCurator(true)}
+            onClick={() => setOpenVolunteerList(true)}
           >
             Список записавшихся волонтёров
           </button>
+        }
+       {filter == 'active' && fullViewCurator && (
+          <button
+            className="btn-B-GreenDefault  mt-[20px]"
+            onClick={e => {
+              e.preventDefault();
+              setTaskConfirmCompleteTask(true)
+            }}
+          >
+            Завершить
+          </button>
         )}
-        {taskFilter == 'completed' && fullViewCurator ? (
+        
+        {filter == 'completed' && fullViewCurator && (
           <button
             className="btn-B-GreenDefault  mt-[20px]"
             onClick={e => {
@@ -144,8 +219,6 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
           >
             Поделиться впечатлениями
           </button>
-        ) : (
-          ''
         )}
         {/* /////////////////////// */}
       </div>
@@ -175,42 +248,50 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         confirmText="Закрыть"
         isSingleButton={true}
       />
-      <ConfirmModal
-        isOpen={isCancelDeliveryModalOpen}
-        onOpenChange={setIsCancelDeliveryModalOpen}
+
+       <ConfirmModal
+        isOpen={taskConfirmCompleteTask}
+        onOpenChange={setTaskConfirmCompleteTask}
         onConfirm={() => {
-          setIsDeliveryCancelledModalOpen(true);
-          setIsCancelDeliveryModalOpen(false);
+          completeTask();
+          setTaskConfirmCompleteTask(false);
         }}
-        title={<p>Уверены, что хотите отменить участие?</p>}
+        title={<p>Уверены, что хотите завершить доброе дело?</p>}
         description=""
-        confirmText="Да"
-        cancelText="Нет"
+        confirmText="Завершить"
+        cancelText="Отменить"
+        isSingleButton={false}
       />
       <ConfirmModal
-        isOpen={isDeliveryCancelledModalOpen}
-        onOpenChange={setIsDeliveryCancelledModalOpen}
-        onConfirm={() => setIsDeliveryCancelledModalOpen(false)}
-        title="Участие отменено"
+        isOpen={taskCompleteSuccess}
+        onOpenChange={setTaskCompleteSuccess}
+        onConfirm={() => setTaskCompleteSuccess(false)}
+        title={<p>Доброе дело "{task.name.slice(0,1).toUpperCase()+task.name.slice(1)}" успешно завершено<br />
+          +{task.curator_price} {getBallCorrectEndingName(task.curator_price)}
+        </p>}
         description=""
         confirmText="Ок"
         isSingleButton={true}
       />
-      {/* ///// раскрываем полные детали активной доставуи для куратора///// */}
-      {taskFilter == 'nearest' || taskFilter == 'active' ? (
-        <Modal isOpen={fullViewCurator} onOpenChange={setFullViewCurator}>
-          NO
-          {/* <ListOfVolunteers
-           // onSelectVolunteer={onSelectVolunteer}
-            onTakeRoute={() => {}}
-            showActions={true}
-            onClose={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          /> */}
+ <ConfirmModal
+        isOpen={taskCompleteFail}
+        onOpenChange={setTaskCompleteFail}
+        onConfirm={() => setTaskCompleteFail(false)}
+        title={<p>
+          Упс, что-то пошло не так,<br/>
+          <br /> Попробуйте позже.
+        </p>}
+        description=""
+        confirmText="Ок"
+        isSingleButton={true}
+      />
+      {list.length > 0 && (
+        <Modal isOpen={openVolunteerList} onOpenChange={setOpenVolunteerList}>
+          <ListOfVolunteersTasks
+            listOfVolunteers={list} 
+            onOpenChange={setOpenVolunteerList}
+          />
         </Modal>
-      ) : (
-        ''
       )}
     </>
   );

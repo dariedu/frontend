@@ -136,7 +136,11 @@ const BankTab:React.FC = () => {
        const response = await postPromotionRedeem(chosenId, promotion, token);
        if (response) {
         setRedeemPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
-        setRedeemPromotionSuccess(true);
+         setRedeemPromotionSuccess(true);
+         if (userValue && userValue.currentUser) {
+            userValue.currentUser.point = userValue.currentUser.point-promotion.price
+         }
+        
       }
      }
    } catch (err) {
@@ -164,7 +168,10 @@ const BankTab:React.FC = () => {
         const response = await postPromotionCancel(chosenId, promotion, token);
         if (response) {
         setCancelPromotionSuccess(true)
-        setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
+          setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
+          if (userValue && userValue.currentUser && userValue.currentUser.point >=0) {
+            userValue.currentUser.point +=promotion.price
+         }
       }
       }
     } catch (err) {

@@ -83,17 +83,16 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   },[])
 
      //// 4. запрашиваем все маршрутные листы по отдельности
- function requestEachMyRouteSheet() {
+  function requestEachMyRouteSheet() {
   let routesArr: IRouteSheet[] = [];
     if (token && myRouteSheet) {
-      
       Promise.allSettled(myRouteSheet.map(routeS => getRouteSheetById(token, routeS.route_sheet)))
         .then(responses => responses.forEach((result, num) => {
           if (result.status == "fulfilled") {
             routesArr.push(result.value)
           }
           if (result.status == "rejected") {
-            console.log(`${num} delivery was not fetched`)
+            console.log(`${num} routeSheet was not fetched`)
           }
         })).finally(() => { setRouteSheets(routesArr)}
         )

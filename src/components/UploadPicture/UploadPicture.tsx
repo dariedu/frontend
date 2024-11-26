@@ -10,7 +10,6 @@ interface ISelfieProps {
   fileUploaded:boolean
   setFileUploaded: Dispatch<React.SetStateAction<boolean>>,
   updateUserAvatar: () => void
-  //setFile:Dispatch<React.SetStateAction<File|undefined>>
 }
 
 ////// Любой попап с загрузкой фото, text  это тот текст что будет под значком загрузки фото,
@@ -23,7 +22,6 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
   fileUploaded,
   setFileUploaded,
   updateUserAvatar,
-  //setFile
 }) => {
  
 
@@ -31,7 +29,6 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setUploadedFileLink(URL.createObjectURL(file));
-      //setFile(file)
       setFileUploaded(true);
     }
   }

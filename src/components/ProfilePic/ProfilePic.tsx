@@ -22,7 +22,6 @@ interface IProfilePicProps {
 const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [uploadedFileLink, setUploadedFileLink] = useState<string>();
-  //const [file, setFile]  = useState<File>();
   const [uploadFileModalOpen, setUploadFileModalOpen] = useState(false)
 
   // Обработка значений по умолчанию
@@ -41,34 +40,20 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
 
 
   async function updateUserAvatar() {
-    if (token && currentUser?.id &&uploadedFileLink) {
-
-     
+    if (token && currentUser?.id && uploadedFileLink) {
       let fileToSend = await fetch(uploadedFileLink)
       .then(res => res.blob())
       .then(blob => {
         return blob
-      });
-   
-    
-     
-    // const formData = new FormData(); // создаем объект FormData для передачи файла
-    //   formData.append('photo', fileToSend);
-
-
-      console.log()
+      }); 
+      const formData = new FormData(); // создаем объект FormData для передачи файла
+      formData.set('photo', fileToSend, `selfie-${user.tg_id}.jpeg`);
         try {
-        let result = await patchUserPicture(currentUser.id, 
-          fileToSend,
-          token)
-        if (result) {
+        let result = await patchUserPicture(currentUser.id, formData, token)
           console.log(" updateUserAvatar() success", result)
-        }
-      } catch (err) {
+        } catch (err) {
         console.log(err, "updateUserAvatar() error")
     }
-      
-      
   }
 }
 
@@ -80,11 +65,11 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
       <div className="h-[105px] w-[105px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center relative">
         <Avatar.Root>{
           fileUploaded && userAvatarSrc!==undefined ? (
-            <Avatar.Image src={userAvatarSrc} className='h-[105px] w-[105px] min-h-[105px] min-w-[105px] rounded-full object-cover' />
+            <Avatar.Image src={userAvatarSrc}  className='h-[105px] w-[105px] min-h-[105px] min-w-[105px] rounded-full object-cover' />
           ): user.photo && (
-            <Avatar.Image src={user.photo} className='h-[105px] w-[105px] min-h-[105px] min-w-[105px] rounded-full object-cover' />
+            <Avatar.Image src={user.photo} decoding='async'  loading='lazy' className='h-[105px] w-[105px] min-h-[105px] min-w-[105px] rounded-full object-cover' />
         )}
-          <Avatar.Fallback>
+          <Avatar.Fallback delayMs={1000}>
           <UserAvatar className="h-[75px] w-[75px] rounded-full object-cover fill-light-gray-white dark:fill-light-gray-3"/>
           </Avatar.Fallback>
         </Avatar.Root>
@@ -115,8 +100,6 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
           fileUploaded={fileUploaded}
           setFileUploaded={setFileUploaded}
           updateUserAvatar={updateUserAvatar}
-          //file={file}
-          //setFile={setFile}
         />
       </Modal>
    </>
