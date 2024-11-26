@@ -34,12 +34,17 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
         {/* Image Section */}
         <div className="relative">
           {promotion.picture ? (
-            <img
-              src={promotion.picture}
+        
+   
+               <img
+             src={promotion.picture}
               alt={promotion.name}
-              draggable={false} // Prevent default image dragging
+              srcSet={`${promotion.picture} 640w, ${promotion.picture} 750w, ${promotion.picture} 1280w, ${promotion.picture} 1x`}
+              decoding='async'
+              loading='lazy'
               className="w-[159px] h-[112px] object-cover rounded-[16px]"
-            />
+            /> 
+         
           ) : (
               <div className='w-[159px] h-[112px] bg-light-gray-2 '></div>
           )}

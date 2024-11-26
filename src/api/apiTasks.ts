@@ -40,7 +40,6 @@ interface ITask {
   volunteers?: number[];
 }
 
-
 // Запросить все задачи
 export const getAllAvaliableTasks = async (
   access: string
@@ -86,7 +85,7 @@ export const postTaskAccept = async (
 // Завершить задание
 export const postTaskComplete = async (
   taskId: number,
-  access: string | null,
+  access: string,
 ): Promise<ITask> => {
   try {
     const response: AxiosResponse<ITask> = await axios.post(
@@ -131,7 +130,7 @@ export const postTaskRefuse = async (
 
 // Получить список заданий куратора
 export const getTasksCurator = async (
-  access: string | null,
+  access: string,
 ): Promise<ITask[]> => {
   try {
     const response: AxiosResponse<ITask[]> = await axios.get(
@@ -216,6 +215,7 @@ export const getMyTasks = async (
     throw new Error('Get request getMyTasks has failed');
   }
 };
+
 // Получить свои задания без фильтров
 export const getMyTasksNoFilter = async (
   access: string | null,

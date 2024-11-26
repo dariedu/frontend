@@ -187,9 +187,8 @@ try {
                 </div>
                 )
               } else {
-                taskFilter = 'completed';
                 return(<div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} />
                 </div>)
               }
             })

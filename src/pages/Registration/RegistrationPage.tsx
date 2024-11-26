@@ -241,7 +241,7 @@ function RegistrationPage() {
     for (let key in user) {
       if (key == 'photo') {
         formData.set('photo', blob, `selfie-${user.tg_id}.jpeg`);
-        // setUrl(window.URL.createObjectURL(blob)) //// для тестирования скачивая фото из блоб на компьютер
+        //setUrl(window.URL.createObjectURL(blob)) //// для тестирования скачивая фото из блоб на компьютер
       } else if (key == 'consent_to_personal_data') {
         if (isAdult) {
           ///// еще одна проверка, если взвослый то отображаем согласился ли он предоставить персональные даннеы, если до 18 то ставим false

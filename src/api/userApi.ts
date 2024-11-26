@@ -102,20 +102,22 @@ export const updateUser = async (
 export const patchUser = async (
   id: number,
   userData: Partial<IUser>,
-  token:string
+  access:string
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
   try {
-    const response: AxiosResponse<IUser> = await axios.patch(
-      `${usersEndpoint}${id}/`,
-      userData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+    const response: AxiosResponse<IUser> = await axios({
+      url: `${usersEndpoint}${id}/`,
+      method: 'PATCH',
+      data: userData,
+      headers: {
+        accept: 'application/json',
+        'Content-Type': ' multipart/form-data',
+        'cross-origin-opener-policy': 'same-origin',
+        Authorization: `Bearer ${access}`,
       },
+    }
     );
     return response.data;
   } catch (error: any) {
@@ -127,21 +129,23 @@ export const patchUser = async (
 // Частичное обновление информации о пользователе (метод PATCH)
 export const patchUserPicture = async (
   id: number,
-  photo:Blob,
-  token:string
+  photo:FormData,
+  access:string
 ): Promise<IUser> => {
   if (!id) throw new Error('Invalid userId');
 
   try {
-    const response: AxiosResponse<IUser> = await axios.patch(
-      `${usersEndpoint}${id}/`,
-      photo.text,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+    const response: AxiosResponse<IUser> = await axios({
+      url: `${usersEndpoint}${id}/`,
+      method: 'PATCH',
+      data: photo,
+      headers: {
+        accept: 'application/json',
+        'Content-Type': ' multipart/form-data',
+        'cross-origin-opener-policy': 'same-origin',
+        Authorization: `Bearer ${access}`,
       },
+    }
     );
     return response.data;
   } catch (error: any) {

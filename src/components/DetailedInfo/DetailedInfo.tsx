@@ -111,14 +111,14 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       </div>
       ): ""}
       
-      {/* {promotion.picture.length > 0 ? (
+      {promotion.picture && (
         <img
           className="w-[328px] h-[205px] rounded-2xl mt-[14px]"
           src={promotion.picture}
+          decoding='async'
+          loading='lazy'
         />
-      ) : (
-        ''
-      )} */}
+      )}
       {!reserved ? (
         <div className="flex justify-between items-center mt-[14px]">
         <button
