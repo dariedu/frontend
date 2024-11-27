@@ -9,6 +9,7 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { type ITask } from '../../api/apiTasks';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
+import * as Avatar from '@radix-ui/react-avatar';
 
 interface INearestTaskProps {
   task: ITask;
@@ -119,7 +120,19 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         {fullView ? (
         task.curator?.name && task.curator.name.length > 0 ? (
           <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
-          <div className="flex">
+              <div className="flex">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Image
+                src={task.curator.photo || ''}
+                alt="Avatar"
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {task.curator.name ? task.curator.name[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
             {/* <img
               className="h-[32px] w-[32px] rounded-full"
               src={task.curator.photo}

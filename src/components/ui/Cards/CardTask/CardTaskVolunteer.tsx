@@ -2,11 +2,16 @@ import React, { useState} from 'react';
 import { type ITask } from '../../../../api/apiTasks';
 import {
   getBallCorrectEndingName,
-  // getMetroCorrectName,
 } from '../../../helperFunctions/helperFunctions';
 import { DetailedInfoTask } from '../../../DetailedInfoDeliveryTask/DetailedInfoTask';
-import OnlineIcon from './../../../../assets/icons/onlineIcon.svg?react'
-
+import Auto from './../../../../assets/icons/tasksIcons/auto.svg?react'
+import Check from './../../../../assets/icons/tasksIcons/check.svg?react'
+import Doc from './../../../../assets/icons/tasksIcons/doc.svg?react'
+import Event from './../../../../assets/icons/tasksIcons/event.svg?react'
+import List from './../../../../assets/icons/tasksIcons/list.svg?react'
+import Old from './../../../../assets/icons/tasksIcons/old.svg?react'
+import Text from './../../../../assets/icons/big_pencil.svg?react'
+import Kind from './../../../../assets/icons/tasksIcons/kind.svg?react'
 
 type TCardDeliveryProps = {
   task: ITask
@@ -41,20 +46,62 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getT
     } else {
        dateString = `${startDay} ${startMonth} - ${endDay} ${endMonth}`
     }
-   
   }
-  ///// работаем с датой //////////////
+
+  const tasksCateg = [
+    {
+      "id": 1,
+      "name": "Организация мероприятия",
+      "icon": <Event className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+    },
+    {
+      "id": 2,
+      "name": "Написание текста",
+      "icon": <Text className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+    },
+    {
+      "id": 3,
+      "name": "Раздача листовок",
+      "icon": <List className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+    },
+    {
+      "id": 4,
+      "name": "Проверка",
+      "icon": <Check className="w-[32px] h-[32px] bg-light-gray-white dark:bg-light-gray-5 fill-black  dark:fill-white  rounded-full stroke-black  dark:stroke-white "/>
+    },
+    {
+      "id": 5,
+      "name": "Подписание документов с новыми подопечными",
+      "icon": <Doc className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+    },
+    {
+      "id": 6,
+      "name": "Автодоставка",
+      "icon": <Auto className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+    },
+    {
+      "id": 7,
+      "name": "Сопровождение подопечного",
+      "icon": <Old className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+    }
+  ]
+
   
      return (
        <>
 
      <div className="p-4 bg-light-gray-1 rounded-2xl shadow w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
-      <div className="flex items-center">
+           <div className="flex items-center">
+          
              <div className="flex items-start justify-center">
-               <OnlineIcon className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+               {tasksCateg.find(i => i.id == task.category.id) ? (
+               tasksCateg.find(i => i.id == task.category.id)?.icon
+               ): (
+                 <Kind className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+               )}
           <div className='flex flex-col items-start ml-2'>
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
-               {task.name.slice(0, 1).toUpperCase()+task.name.slice(1)}
+               {task.category.name.slice(0, 1).toUpperCase()+task.category.name.slice(1)}
               </p>
           {/* <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p> */}
 
@@ -72,7 +119,7 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getT
           </div>
         </div>
            </div>
-         <DetailedInfoTask task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+         <DetailedInfoTask tasksCateg={tasksCateg} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
          </>
          )
 

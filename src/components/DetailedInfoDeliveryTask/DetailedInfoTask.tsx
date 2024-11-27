@@ -2,16 +2,16 @@ import React from 'react';
 import {
   getMonthCorrectEndingName,
   getBallCorrectEndingName,
-  //getMetroCorrectName,
 } from '../helperFunctions/helperFunctions';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { ITask } from '../../api/apiTasks';
-import OnlineIcon from './../../assets/icons/onlineIcon.svg?react'
 import Small_sms from './../../assets/icons/small_sms.svg?react'
-
+import Kind from './../../assets/icons/tasksIcons/kind.svg?react';
+import * as Avatar from '@radix-ui/react-avatar';
 
 type TDetailedInfoTaskProps = {
+  tasksCateg:{icon:any, id:number, name:string}[]
   task: ITask;
   isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -23,6 +23,7 @@ type TDetailedInfoTaskProps = {
 };
 
 const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
+  tasksCateg,
   task,
   isOpen,
   onOpenChange,
@@ -75,14 +76,19 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             <div
               className={'flex items-start'}
             >
-               <OnlineIcon className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />
+                 {tasksCateg.find(i => i.id == task.category.id) ? (
+               tasksCateg.find(i => i.id == task.category.id)?.icon
+               ): (
+                 <Kind className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+               )}
+               {/* <OnlineIcon className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" /> */}
               <div className="flex flex-col justify-center items-start pl-2 max-w-[170px]">
                 <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                 {task.name.slice(0, 1).toLocaleUpperCase()+task.name.slice(1)}
                 </h1>
-                  <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
+                  {/* <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[170px] dark:text-light-gray-3">
                     Онлайн
-                  </p>
+                  </p> */}
               </div>
             </div>
           </div>
@@ -108,11 +114,20 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
           </div>
           {task.curator.name && task.curator.name.length > 0 ? (
           <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
-          <div className="flex">
-            {/* <img
-              className="h-[32px] w-[32px] rounded-full"
-              src={task.curator.photo_view}
-            /> */}
+              <div className="flex">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-1 dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Image
+                src={task.curator.photo || ''}
+                alt="Avatar"
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {task.curator.name ? task.curator.name[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
+   
             <div className="felx flex-col justify-center items-start ml-4">
               <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                 {task.curator.name}
