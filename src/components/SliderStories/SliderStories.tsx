@@ -135,6 +135,7 @@ const SliderStories: React.FC = () => {
         <SliderStoriesView
           currentStoryIndex={currentStoryIndex}
           onClose={() => setCurrentStoryIndex(null)}
+          stories={stories}
         />
       )}
     </>
