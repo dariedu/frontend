@@ -88,7 +88,12 @@ const SliderStories: React.FC = () => {
       try {
         let result = await getStories(token);
         if (result) {
-          setStories(result)
+          let filtered = result.filter(story => {
+            if (
+              story.cover && story.title && story.text
+            ) return story
+          });
+          setStories(filtered)
         }
       } catch (err) {
         console.log(err)
@@ -105,7 +110,7 @@ const SliderStories: React.FC = () => {
     <>
       {/* Слайдер для историй */}
       <div
-        className="flex overflow-x-hidden space-x-4 p-4 w-[360px] bg-light-gray-white rounded-2xl mt-1"
+        className="flex overflow-x-hidden space-x-4 p-4 w-[360px] bg-light-gray-white rounded-2xl mt-1 dark:bg-light-gray-7-logo"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -115,19 +120,24 @@ const SliderStories: React.FC = () => {
         onTouchEnd={handleTouchEnd}
         style={{ cursor: 'grab', whiteSpace: 'nowrap' }}
       >
-        {stories.map((story, index) => (
-          <div key={story.id} className="inline-block">
-            <CardStories
-              imageSrc={story.cover}
-              title={story.title}
-              onClick={() => {
-                if (!isDragging) {
-                  setCurrentStoryIndex(index);
-                }
-              }}
-            />
-          </div>
-        ))}
+        {stories.map((story, index) => {
+          if (story.cover && story.title && story.text) {
+            return (
+        <div key={story.id} className="inline-block bg-light-gray-2 rounded-xl">
+              <CardStories
+                imageSrc={story.cover}
+                title={story.title}
+                onClick={() => {
+                  if (!isDragging) {
+                    setCurrentStoryIndex(index);
+                  }
+                }}
+              />
+            </div>
+            )
+          }
+})}
+      
       </div>
 
       {/* Полноэкранное отображение истории */}

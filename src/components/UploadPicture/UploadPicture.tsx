@@ -78,7 +78,7 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
           {fileUploaded ? 'Отличное фото!' : text}
           <br />
         </p>
-        {fileUploaded ? (
+        {fileUploaded && (
           <div className='flex justify-between w-[300px] space-x-4'>
              <button
             className="btn-M-GreenDefault"
@@ -100,8 +100,6 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
           </button>
           </div>
          
-        ) : (
-          ''
         )}
       </div>
     </>
