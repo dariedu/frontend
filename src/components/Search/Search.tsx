@@ -97,11 +97,14 @@ const Search: React.FC<ISearchProps> = ({
               className="flex items-center space-x-4 p-2 bg-light-gray-1 rounded-[16px] shadow cursor-pointer"
               onClick={() => onUserClick(user)}
             >
-              <img
-                src={user.avatar}
+              {user.photo && user.photo.length > 0 &&
+                <img
+                src={user.photo}
                 alt={user.name ?? 'аватар'}
                 className="w-8 h-8 rounded-full"
               />
+              }
+              
               <span className="font-gerbera-h3 text-light-gray-8-text">
                 {user.name}
               </span>
