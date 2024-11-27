@@ -9,6 +9,8 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IDelivery } from '../../api/apiDeliveries';
 import Metro_station from './../../assets/icons/metro_station.svg?react'
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
+import * as Avatar from '@radix-ui/react-avatar';
+
 
 type TDetailedInfoDelivery = {
   delivery: IDelivery
@@ -102,11 +104,19 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             {delivery.curator.name && delivery.curator.name.length > 0 ? (
             <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
-            <div className="flex">
-              {/* <img
-                className="h-[32px] w-[32px] rounded-full"
-                src={delivery.curator.photo}
-              /> */}
+                <div className="flex">
+                <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Image
+                src={delivery.curator.photo || ''}
+                alt="Avatar"
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {delivery.curator.name ? delivery.curator.name[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
               <div className="felx flex-col justify-center items-start ml-4">
                 <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                   {delivery.curator.name}

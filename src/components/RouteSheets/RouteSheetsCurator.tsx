@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import RouteSheetsView from './RouteSheetsView';
+import RouteSheetsView from './RouteSheetsViewCurator';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
@@ -119,8 +119,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   }
   
 
-  //let assigned = assignedRouteSheets.find(r=>{r.route_sheet == routeS.id})
-
   return ( filteredSuccess &&
     <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl h-screen flex flex-col overflow-y-auto pb-[74px]" onClick={(e)=>e.stopPropagation()}>
               <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
@@ -147,7 +145,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 >
                   <Arrow_down  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
                   />
-
                 </div>
               </div>
 
@@ -162,23 +159,13 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     )
                   }
                 >
-                  {/* <img
-                    src={selectedVolunteers[index].avatar}
-                    alt="avatar"
-                    className="w-8 h-8 rounded-full mr-3"
-                  /> */}
                   <span className="font-gerbera-h3 text-light-gray-8" >
                     <div className='flex justify-between items-center w-[320px]'>
                       <div className='flex w-fit items-center text-light-gray-black dark:text-light-gray-white'>
                         {routeS.volunteerFullName && routeS.volunteerFullName.length ? (
                         <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
-                        {/* <Avatar.Image
-                          className="w-full h-full object-cover"
-                          src={routeS.}
-                          alt={volunteer.volunteerName}
-                        /> */}
                           <Avatar.Fallback
-                            className="w-full h-full flex items-center justify-center text-white bg-black"
+                            className="w-full h-full flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
                             delayMs={600}
                            >
                           {routeS.volunteerFullName?.charAt(0)}
@@ -242,8 +229,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           );
         })}
       </div>
-     
-
       {status == 'Активная' &&
         <button className='btn-B-GreenDefault mt-10 self-center' onClick={()=>setAskCuratorCompleteDelivery(true)}>
          Завершить доставку

@@ -9,6 +9,7 @@ type TTaskCategory = {
   icon?: string;
 };
 
+
 interface ITask {
   id: number
   city: {

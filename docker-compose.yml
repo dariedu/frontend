@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context:
+        ./
+    container_name: "frontend"
+    networks:
+      - front
+    ports:
+      - "${CONNECT_LOCAL_PORT}:${PORT}"
+    env_file:
+      - .env
+    restart: always
+
+
+networks:
+  front:

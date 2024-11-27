@@ -12,7 +12,6 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   
   return (
     <div className='flex flex-col items-center justify-normal'>
-      {/* Route Details */}
       {routes.map((route, index) => (
         <div
           key={index}

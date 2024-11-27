@@ -13,7 +13,6 @@ import { getUserById, type IUser } from '../../api/userApi';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 
-
 interface INearestTaskProps {
   task: ITask;
   taskFilter: TTaskFilter;
