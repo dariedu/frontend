@@ -1,44 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import CardStories from '../ui/Cards/CardStories/CardStories';
 import SliderStoriesView from './SliderStoriesView';
-import storyImage1 from '../../assets/Storie.png';
-import storyImage2 from '../../assets/Storie1.png';
-import storyImage3 from '../../assets/Storie2.png';
-import storyImage4 from '../../assets/Storie3.png';
+import { getStories, type IStory } from '../../api/storiesApi';
+import { TokenContext } from '../../core/TokenContext';
 
-// Моковые данные для сторис
-const stories = [
-  {
-    id: 1,
-    title: 'Поиск волонтёров',
-    date: '31 сент.',
-    text: 'Не хватает волонтёров на доставку',
-    imageSrc: storyImage1,
-  },
-  {
-    id: 2,
-    title: 'Событие 2',
-    date: '1 окт.',
-    text: 'Описание события 2',
-    imageSrc: storyImage2,
-  },
-  {
-    id: 3,
-    title: 'Событие 3',
-    date: '2 окт.',
-    text: 'Описание события 3',
-    imageSrc: storyImage3,
-  },
-  {
-    id: 4,
-    title: 'Событие 4',
-    date: '3 окт.',
-    text: 'Описание события 4',
-    imageSrc: storyImage4,
-  },
-];
+
+
 
 const SliderStories: React.FC = () => {
+
+
+  const { token } = useContext(TokenContext);
+  const [stories, setStories] = useState<IStory[]>([]);
+
   const [currentStoryIndex, setCurrentStoryIndex] = useState<number | null>(
     null,
   );
@@ -108,6 +82,25 @@ const SliderStories: React.FC = () => {
     }, 0);
   };
 
+
+  async function getAllStories() {
+    if (token) {
+      try {
+        let result = await getStories(token);
+        if (result) {
+          setStories(result)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
+
+  useEffect(()=>{
+    getAllStories()
+  },[])
+
   return (
     <>
       {/* Слайдер для историй */}
@@ -125,7 +118,7 @@ const SliderStories: React.FC = () => {
         {stories.map((story, index) => (
           <div key={story.id} className="inline-block">
             <CardStories
-              imageSrc={story.imageSrc}
+              imageSrc={story.cover}
               title={story.title}
               onClick={() => {
                 if (!isDragging) {
