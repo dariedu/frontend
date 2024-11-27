@@ -8,7 +8,8 @@ import { UserContext } from '../../core/UserContext';
 import { TokenContext } from '../../core/TokenContext';
 import { postPhotoReport } from '../../api/apiPhotoReports';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-
+import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
+// import { UploadPic } from '../UploadPicture/UploadPicture';
 interface IRouteSheetsViewProps {
   routes: TAddress[]
   deliveryId:number
@@ -20,7 +21,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   deliveryId
 }) => {
 
-const [uploadedFileLink, setUploadedFileLink] = useState(Array(routes.length).fill(''));
+const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(Array(routes.length).fill(''));
 const [fileUploaded, setFileUploaded] = useState<boolean[]>(Array(routes.length).fill(false))
 const [openComment, setOpenComment] = useState<boolean[]>(Array(routes.length).fill(false));
 const [comment, addComment] = useState(Array(routes.length).fill(''));
@@ -28,23 +29,25 @@ const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фот�
 const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
 const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
 const [sendMessage, setSendMessage] = useState<string>('')
-  
+const [uploadPictureModal, setUploadPictureModal] = useState<boolean[]>(Array(routes.length).fill(false));
+const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes.length).fill(true)) ////  проверяем благополучатель на месте или нет
+
   const { currentUser } = useContext(UserContext);
   const {token} =useContext(TokenContext)
   
-function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
-  if (e.target.files && e.target.files[0]) {
-    const file = e.target.files[0];
-    let uploadedFilesList: string[] = [];
-    uploadedFileLink.forEach(i => uploadedFilesList.push(i));
-    uploadedFilesList[index] = URL.createObjectURL(file);
-    setUploadedFileLink(uploadedFilesList);
-    let fileUploadedList: boolean[] = [];
-    fileUploaded.forEach(i => fileUploadedList.push(i));
-    fileUploadedList[index] = true;
-    setFileUploaded(fileUploadedList);
-  }
-  }
+// function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
+//   if (e.target.files && e.target.files[0]) {
+//     const file = e.target.files[0];
+//     let uploadedFilesList: string[] = [];
+//     uploadedFileLink.forEach(i => uploadedFilesList.push(i));
+//     uploadedFilesList[index] = URL.createObjectURL(file);
+//     setUploadedFileLink(uploadedFilesList);
+//     let fileUploadedList: boolean[] = [];
+//     fileUploaded.forEach(i => fileUploadedList.push(i));
+//     fileUploadedList[index] = true;
+//     setFileUploaded(fileUploadedList);
+//   }
+//   }
   
   function handleAddComment(index: number, address: string, comment:string) {
     console.log(index, address, comment);
@@ -150,35 +153,35 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
             <img className="w-[32px] h-[32px] rounded-full bg-light-gray-4" src={route.link} />
               ) : ( */}
               {fileUploaded[index] ? (
-                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" >
-                  <input onChange={(e)=>handleFileChange(e, index)} type="file"  accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer'/>
+                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
+                  {/* <input onChange={(e)=>handleFileChange(e, index)} type="file"  accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer'/> */}
                   <img
                     src={uploadedFileLink[index]}
                     className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover"
                   />
                 </div>
               ) : (
-                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative">
-                  <input onChange={(e)=>handleFileChange(e, index)} type="file" accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer' />
+                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
+                  {/* <input onChange={(e)=>handleFileChange(e, index)} type="file" accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer' /> */}
                   <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
                 </div>
               )
-              
               }
-               
             {/* )} */}
           {/* </div> */}
           </div>
           {comment[index].length > 0 &&
-            <div className='w-[328px] bg-light-gray-1 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black font-gerbera-sub3 focus: outline-0 mt-2'
+            <div className='w-[328px] bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 focus: outline-0 mt-2'
             >Ваш комментарий к доставке:<br />
-            <p className='text-light-gray-4'>{comment[index]}</p>
+            <p className='text-light-gray-4 dark:text-light-gray-3'>{comment[index]}</p>
             </div>
           }
-          
-          <div className='h-[102px] flex flex-col justify-between mt-4'>
+          {!beneficiarOnSite[index] &&
+            <p className=' text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 mt-2'>Благополучателя нет на месте</p>
+          }
+          <div className='h-[102px] flex flex-col justify-between mt-2'>
           <button className='btn-B-WhiteDefault' onClick={()=>setOpenComment(prev =>
-                      prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>
+           prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>
           Добавить комментарий
           </button>
           <button className='btn-B-WhiteDefault' onClick={()=>submitPhotoReport(index)}>
@@ -188,7 +191,19 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
           <Modal onOpenChange={()=>setOpenComment(prev =>
           prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))} isOpen={openComment[index]}>
          <Comment name={route.address} onSave={handleAddComment} index={index} savedComment={comment[index]} />
-         </Modal>
+          </Modal>
+          <Modal isOpen={uploadPictureModal[index]} onOpenChange={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
+          <UploadPic
+          onOpenChange={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}
+          index={index}
+          setUploadedFileLink={setUploadedFileLink }
+          setFileUploaded={setFileUploaded}
+          fileUploaded={fileUploaded}
+          uploadedFileLink={uploadedFileLink}
+          beneficiarOnSite={beneficiarOnSite[index]}
+          setBeneficiarOnSite={setBeneficiarOnSite}
+        />
+    </Modal>
         </div>
       ))}
         <ConfirmModal
@@ -218,8 +233,9 @@ function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number):
       description=""
       confirmText="Закрыть"
       isSingleButton={true}
-    />
+      />
     </div>
+   
   );
 };
 

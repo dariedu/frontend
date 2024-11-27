@@ -35,7 +35,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
-      <div className="w-full h-[67px] bg-light-gray-white rounded-2xl flex items-center justify-between px-4 dark:bg-light-gray-6">
+      <div className="w-full h-[67px] bg-light-gray-white rounded-2xl flex items-center justify-between px-4 dark:bg-light-gray-7-logo">
                 <div className="flex">
                   {/* <img
                     className="h-[32px] w-[32px] rounded-full"
@@ -67,7 +67,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                     setOpenRouteSheets(prev =>
                       prev.map((isOpen, idx) =>
                         idx === index ? !isOpen : isOpen,
-                      ),
+                      )
                     )
                   }
                 >

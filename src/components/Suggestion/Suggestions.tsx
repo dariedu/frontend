@@ -60,7 +60,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
     
 
   return (
-    <div className="bg-light-gray-white dark:bg-light-gray-black rounded-[16px] w-[360px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+    <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] w-[360px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
@@ -78,7 +78,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
          >
           <div className='flex flex-col px-4'>
               <Form.Field name="about_presence" className="mt-4">           
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Расскажите в свободной форме</Form.Label>
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3 ml-3">Расскажите в свободной форме</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={15}

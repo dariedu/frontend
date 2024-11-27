@@ -142,10 +142,10 @@ const InputDate: React.FC<IInputDateProps> = ({
       let dayClass = '';
 
       if (isSameMonth(day, currentMonth))
-        dayClass += 'text-black dark:text-light-gray-1 w-[48px] h-[49px]';
+        dayClass += ' text-black dark:text-light-gray-1 w-[48px] h-[49px]';
       else dayClass += ' text-light-gray-5 dark:text-light-gray-3';
       if (selectionMode === 'single' && isSelectedSingle)
-        dayClass += 'bg-light-brand-green rounded-full text-white';
+        dayClass += ' bg-light-brand-green rounded-full text-white';
       if (selectionMode === 'range') {
         if (range.start && !range.end && isSameDay(day, range.start)) {
           // Только начальная дата выбрана
@@ -165,7 +165,7 @@ const InputDate: React.FC<IInputDateProps> = ({
             ' bg-light-gray-white dark:bg-light-gray-6 text-black border border-4 border-light-gray-2 dark:border-light-gray-5 rounded-r-full';
         } else if (isWithinSelectedRange) {
           // Дата внутри выбранного диапазона
-          dayClass += 'bg-light-gray-2 dark:bg-light-gray-5';
+          dayClass += ' bg-light-gray-2 dark:bg-light-gray-5';
         }
       }
 
