@@ -8,33 +8,32 @@ const storiesEndpoint = `${API_URL}/stories/`;
 
 // Интерфейс для данных истории
 export interface IStory {
-  id: number;
-  link: string;
-  link_name?: string;
-  cover?: string | null;
-  title?: string | null;
-  text?: string | null;
-  media_files?: string | null;
-  background?: string | null;
-  hidden?: boolean;
+  id: number
+  cover: string
+  title: string 
+  subtitle: string
+  text: string 
+  date:string
+  background: string 
+  hidden: boolean
 }
 
-// Типизация для параметров фильтрации
-interface IGetStoriesParams {
-  hidden?: boolean;
-}
 
 // Получение списка историй с возможным фильтром
-export const getStories = async (
-  params?: IGetStoriesParams,
-): Promise<IStory[]> => {
+export const getStories = async (token: string, hidden:boolean=false ): Promise<IStory[]> => {
   try {
-    const response: AxiosResponse<IStory[]> = await axios.get(storiesEndpoint, {
-      params: params,
-    });
+    const response: AxiosResponse<IStory[]> = await axios.get(
+      `${storiesEndpoint}?${hidden ? 1 : 0}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error('Error fetching stories:', error);
     throw new Error('Failed to fetch stories');
   }
 };
+

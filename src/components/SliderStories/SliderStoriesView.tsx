@@ -1,48 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import closeIcon from '../../assets/icons/closeIcon.svg';
-import storyImage1 from '../../assets/Text.png';
-import storyImage2 from '../../assets/Text (1).png';
+import { IStory } from '../../api/storiesApi';
 
-// Пример данных для сторис
-const stories = [
-  {
-    id: 1,
-    title: 'Поиск волонеров',
-    date: '31 сент.',
-    text: 'Не хватает волонтёров на доставку',
-    imageSrc: storyImage1,
-  },
-  {
-    id: 2,
-    title: 'Событие 2',
-    date: '1 окт.',
-    text: 'Описание события 2',
-    imageSrc: storyImage2,
-  },
-  {
-    id: 3,
-    title: 'Поиск волонеров',
-    date: '31 сент.',
-    text: 'Не хватает волонтёров на доставку',
-    imageSrc: storyImage1,
-  },
-  {
-    id: 4,
-    title: 'Событие 2',
-    date: '1 окт.',
-    text: 'Описание события 2',
-    imageSrc: storyImage2,
-  },
-];
 
 interface SliderStoriesViewProps {
   currentStoryIndex: number;
   onClose: () => void;
+  stories:IStory[]
 }
 
 const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   currentStoryIndex,
   onClose,
+  stories
 }) => {
   const [currentIndex, setCurrentIndex] = useState(currentStoryIndex);
   const touchStartX = useRef<number | null>(null);
@@ -166,7 +136,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
         <div className="flex flex-col items-center mt-[40px]">
           {/* Изображение */}
           <img
-            src={stories[currentIndex].imageSrc}
+            src={stories[currentIndex].cover}
             alt={stories[currentIndex].title}
             className="w-[360px] h-[634px] rounded-[16px] object-cover"
           />
@@ -188,7 +158,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
           onClick={handlePrev}
           className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
         >
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-white"
             fill="none"
@@ -201,14 +171,14 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
               strokeWidth={2}
               d="M15 19l-7-7 7-7"
             />
-          </svg>
+          </svg> */}
         </button>
 
         <button
           onClick={handleNext}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
         >
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-white"
             fill="none"
@@ -220,8 +190,8 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
               strokeLinejoin="round"
               strokeWidth={2}
               d="M9 5l7 7-7 7"
-            />
-          </svg>
+            /> */}
+          {/* </svg> */}
         </button>
       </div>
     </div>
