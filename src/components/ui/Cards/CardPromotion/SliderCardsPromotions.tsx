@@ -60,7 +60,7 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
 
   return (
     <div
-      className='sliderPromotionsScrollbar overflow-x-scroll flex space-x-1 py-2 w-[345px]'
+      className='sliderPromotionsScrollbar overflow-x-scroll flex space-x-1 py-2 w-full max-w-[400px]'
       //ref={sliderRef}
       // className={`overflow-x-hidden flex space-x-4 py-2 scrollbar-hide w-[360px] ${
       //   isDragging ? 'cursor-grabbing' : 'cursor-grab'

@@ -55,7 +55,7 @@ const Search: React.FC<ISearchProps> = ({
   }, [searchQuery, allVolunteers]);
 
   return (
-    <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] max-w-md w-[360px]">
+    <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] w-full max-w-[500px]">
       {showInfoSection && (
         <div className="flex justify-between items-center">
           <div className="flex">

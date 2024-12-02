@@ -66,7 +66,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
 
   return (
         <div
-        className="flex flex-col items-center justify-between p-6 h-[343px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl w-[360px]"
+        className="flex flex-col items-center justify-between p-6 h-[343px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl w-full max-w-[400px]"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-4 relative">

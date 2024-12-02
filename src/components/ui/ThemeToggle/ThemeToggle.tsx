@@ -37,9 +37,9 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="flex items-center space-x-4 ">
+    <div className="flex items-center space-x-4 justify-between w-full max-w-[350px]">
       <div className="flex items-center ">
-        <ThemeIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black ' />
+        <ThemeIcon className='w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black ' />
         <label
           className="text-left font-gerbera-h3 text-light-gray-black dark:text-light-gray-1 w-[211px] ml-[14px]"
           htmlFor="theme-switch"

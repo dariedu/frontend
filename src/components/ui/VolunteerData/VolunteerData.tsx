@@ -199,13 +199,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
 
   return (
-    <div className="w-[360px] h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
+    <div className="w-full max-w-[400px]  h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
       {items.map((_, index) => {
         const field = Object.keys(isEditing)[index] as keyof typeof formData;
         if (index === 3 || index === 2) {
           return (
             <div
-              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
               key={index}
             >
               <div className="inline-flex items-center justify-start">
@@ -223,7 +223,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         } else if (index === 4) {
           return (
             <div
-              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
               key={index}
             >
               <div className="inline-flex items-center justify-start">
@@ -237,7 +237,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         } else if (index == 0) {
           return (
             <div
-          className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+          className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
           key={index}
         >
           <div className="inline-flex items-center justify-start">
@@ -273,7 +273,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
  )} else {
           return (
             <div
-              className="w-[360px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
               key={index}
             >
               <div className="inline-flex items-center justify-start">

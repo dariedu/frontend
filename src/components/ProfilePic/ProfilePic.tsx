@@ -61,7 +61,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
 
   return (
     <>
-       <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full dark:bg-light-gray-7-logo">
+       <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full max-w-[400px] dark:bg-light-gray-7-logo">
       <div className="h-[105px] w-[105px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center relative">
         <Avatar.Root>{
           fileUploaded && userAvatarSrc!==undefined ? (

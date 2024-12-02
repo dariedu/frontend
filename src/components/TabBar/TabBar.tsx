@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
-import './index.css';
 
 import HomeIcon from '../../assets/icons/tap_home.svg?react';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
@@ -23,7 +22,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-[360px]">
+    <div className="relative w-full max-w-[400px] self-center">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -58,12 +57,12 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             </Tabs.Content>
           </>
         )}
-        <Tabs.List className="flex justify-between fixed bottom-0 w-[360px] h-[74px]">
+        <Tabs.List className="flex justify-between fixed bottom-0 w-full max-w-[400px] h-[74px]">
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
               {
                 'text-light-brand-green': activeTab === 'tab1',
                 'text-light-gray-4': activeTab !== 'tab1',
@@ -87,7 +86,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <Tabs.Trigger
             value="tab2"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
               {
                 'text-light-brand-green': activeTab === 'tab2',
                 'text-light-gray-4': activeTab !== 'tab2',
@@ -112,7 +111,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             <Tabs.Trigger
               value="tab3"
               className={classNames(
-                'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full',
+                'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
                 {
                   'text-light-brand-green': activeTab === 'tab3',
                   'text-light-gray-4': activeTab !== 'tab3',
@@ -137,7 +136,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <Tabs.Trigger
             value="tab4"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
               {
                 'text-light-brand-green': activeTab === 'tab4',
                 'text-light-gray-4': activeTab !== 'tab4',

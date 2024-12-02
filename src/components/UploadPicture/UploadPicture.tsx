@@ -36,7 +36,7 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
   return (
     <>
       <div
-        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-[360px] dark:bg-light-gray-7-logo"
+        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full max-w-[400px] dark:bg-light-gray-7-logo"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-8 relative">

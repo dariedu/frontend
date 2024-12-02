@@ -114,7 +114,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   return (
     <>
       <div
-        className={`w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`w-full max-w-[400px] py-[17px] px-4 h-fit  rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
           {filter == 'nearest' ? (
@@ -159,7 +159,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
           </div>
         </div>
         {fullViewCurator&& (filter == 'nearest' || filter == 'active') && task.description &&  task.description.length != 0 &&
-              <div className="w-[330px] min-h-[67px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+              <div className="w-full min-w-[330px] max-w-[370px] min-h-[67px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 text-start">
                   Подробности
                 </p>
@@ -178,7 +178,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
               {dateString}
               </p>
             </div>
-            <div className="bg-light-gray-1  dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
+            <div className="bg-light-gray-1  dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px]">
               <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">Записались</p>
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                 {task.volunteers_taken == 0
@@ -190,7 +190,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         )}
         {(filter == 'active' || filter == 'nearest') && 
           <button
-            className="btn-B-WhiteDefault mt-[20px]"
+            className="btn-B-WhiteDefault mt-[20px] self-center"
             onClick={() => setOpenVolunteerList(true)}
           >
             Список записавшихся волонтёров

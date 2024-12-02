@@ -42,7 +42,7 @@ const App: React.FC = () => {
 //     return <div className='flex justify-center items-center h-screen'>Пожалуйста, откройте приложение на мобильном устройстве</div>
 //   } else {
     if (isLoading) {
-      return <div className='h-screen items-center flex flex-col justify-center'>
+      return <div className='h-screen items-center flex flex-col justify-center '>
         <img className='h-10' src="./../../src/assets/icons/mainLogo.gif"/>
       </div>;
     }

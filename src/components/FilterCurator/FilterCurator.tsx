@@ -26,7 +26,7 @@ const FilterCurator: React.FC<IFilterCuratorProps> = ({
 
   return (
     <div
-      className="w-[360px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8 dark:bg-light-gray-7-logo"
+      className="w-full max-w-[400px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8 dark:bg-light-gray-7-logo"
       onClick={e => e.stopPropagation()}
     >
       <div className="h-fit flex flex-col justify-between">

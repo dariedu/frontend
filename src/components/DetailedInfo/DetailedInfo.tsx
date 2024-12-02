@@ -29,7 +29,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
 
   return (
-    <div className="w-[360px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
+    <div className="w-full max-w-[400px] flex flex-col h-fit rounded-t-2xl px-4 pt-[41px] pb-8 mt- bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
       <div className="flex align-middle justify-between">
         <div className="flex">
           <div className="flex flex-col ml-[14px] justify-center items-start">
@@ -78,7 +78,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       ) : (
         ''
       )} */}
-      <div className="flex justify-between items-center mt-[14px]">
+      <div className="w-full min-w-[328px] max-w-[360px] flex justify-between items-center mt-[14px]">
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
           <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-1 ">
             Время начала
@@ -103,7 +103,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         </div>
       </div>
       {promotion.description != undefined && promotion.description.length > 0 ? (
-      <div className="w-[328px] h-fit max-h-[125px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
+      <div className="w-full min-w-[328px] max-w-[360px] h-fit max-h-[125px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
         <p className="font-gerbera-sub1 text-light-gray-4 h-fit text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
           {promotion.description}
@@ -113,14 +113,14 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       
       {promotion.picture && (
         <img
-          className="w-[328px] h-[205px] rounded-2xl mt-[14px]"
+          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2xl mt-[14px]"
           src={promotion.picture}
           decoding='async'
           loading='lazy'
         />
       )}
       {!reserved ? (
-        <div className="flex justify-between items-center mt-[14px]">
+        <div className="w-full min-w-[328px] max-w-[360px] flex justify-between items-center mt-[14px] self-center">
         <button
           onClick={() => {
             if (makeReservationFunc) {
@@ -128,7 +128,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
               onOpenChange(false)
             }
           }}
-          className="btn-M-GreenDefault"
+          className="btn-M-GreenDefault "
         >
           Забронировать
         </button>
@@ -137,13 +137,13 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
               e.preventDefault();
               onOpenChange(false)
           }}
-          className="btn-M-WhiteDefault"
+          className="btn-M-WhiteDefault "
         >
           Закрыть
         </button>
       </div>
       ) : (
-       <div className="flex justify-between items-center mt-[14px]">
+       <div className="flex justify-between items-center mt-[14px] self-center">
        <button
          onClick={() => {
           if (cancelPromotion) {
@@ -151,7 +151,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             onOpenChange(false)
           }
          }}
-         className="btn-B-WhiteDefault"
+         className="btn-B-WhiteDefault self-center"
        >
          Отказаться
        </button>

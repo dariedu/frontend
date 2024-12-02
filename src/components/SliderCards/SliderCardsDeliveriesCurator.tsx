@@ -76,7 +76,7 @@ const SliderCardsDeliveriesCurator: React.FC<
   };
 
   return (
-    <div className="pt-3 w-[360px]">
+    <div className="pt-3 w-full max-w-[400px]">
       <div
         className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-[360px] pl-4 space-x-2"
         ref={sliderRef}

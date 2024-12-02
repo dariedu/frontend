@@ -237,14 +237,14 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   return (
     <>
       <div
-        className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-[360px] h-full flex flex-col items-center justify-start overflow-x-hidden"
+        className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] h-full flex flex-col items-center justify-start overflow-x-hidden"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-[360px] rounded-b-2xl h-[60px]">
+        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[400px] rounded-b-2xl h-[60px]">
           <button onClick={() => onClose(false)} className="mr-2">
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
           </button>
-          <div className="flex justify-between w-[280px] items-center">
+          <div className="flex justify-between w-[80%] max-w-[360px] items-center">
             <h2 className="text-light-gray-black dark:text-light-gray-1">
               История
             </h2>
@@ -256,7 +256,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full max-w-[400px]">
           {allMyPastCombined.length > 0 ? (
             filterCategories && filterCategories.length > 0 ? (
               allMyPastCombined
@@ -266,7 +266,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                 })
                 .map((past, index) => {
                   return (
-                    <div key={index+1000} className='flex flex-col items-center'>
+                    <div key={index+1000} className='flex flex-col items-center w-full max-w-[400px]'>
                       {index == 0 ? (
                         <div
                           key={index+past.dayMonthYearString}
@@ -287,7 +287,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                       )}
 
                       <div
-                        className="text-light-gray-6 h-fit w-[328px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
+                        className="text-light-gray-6 h-fit w-full min-w-[328px] max-w-[370px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
                         key={past.id}
                       >
                         <div className="flex justify-between mb-[6px]">
@@ -327,7 +327,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             ) : (
               allMyPastCombined.map((past, index) => {
                 return (
-                  <div key={index+1000} className='flex flex-col items-center'>
+                  <div key={index+1000} className='flex flex-col items-center w-full max-w-[400px]'>
                     {index == 0 ? (
                       <div
                         key={index+past.dayMonthYearString}
@@ -348,7 +348,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                     )}
 
                     <div
-                      className="text-light-gray-6 h-fit w-[328px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
+                      className="text-light-gray-6 h-fit w-full min-w-[328px] max-w-[370px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
                       key={past.id}
                     >
                       <div className="flex justify-between mb-[6px]">

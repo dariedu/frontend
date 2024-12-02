@@ -178,9 +178,9 @@ try {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col items-center overflow-x-hidden" >
+      <div className="mt-2 mb-4 flex flex-col items-center overflow-x-hidden " >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-        <div className='flex flex-col h-full mb-20 overflow-auto'>
+        <div className='flex flex-col h-full mb-20 overflow-auto w-full max-w-[400px]'>
           {myCurrent.length > 0 ?
               (myCurrent.sort((a, b) =>{return +new Date(a.date) - +new Date(b.date)}).map((i) => {
                 const currentStatus = i.in_execution == true ? "active" : "nearest";

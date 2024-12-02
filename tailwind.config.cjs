@@ -41,18 +41,6 @@ module.exports = {
           // 'brand-green': '#38AB78',
         },
       },
-      // fontSize: {
-      //   'H1-18': ['18px', '23px'],
-      //   'H2-16': ['16px', '20px'],
-      //   'H3-14': ['14px', '18px'],
-      //   'Subtitle1-10': ['10px', '13px'],
-      //   'Subtitle2-12': ['12px', '15px'],
-      // },
-      // fontFamily: {
-      //   gerbera: ['Gerbera'],
-      //   gerberaLight: ['GerberaLight'],
-      //   gerberaMedium: ['GerberaMedium'],
-      // },
     },
   },
   plugins: [

@@ -121,7 +121,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
        </ModalTop>
           )}
       <div
-        className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
+        className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
       >
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
@@ -199,7 +199,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
             fullView && (
-              <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+              <div className="w-full min-w-[330px] max-w-[370px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
@@ -227,7 +227,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
                 </a>
               </div>
             ) ) : (
-          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+          <div className="w-full min-w-[330px] max-w-[370px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
           <div className="flex">
           <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
@@ -258,7 +258,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
 
         {fullView ? (currentStatus == 'nearest' ? (
               <button
-                className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white"
+                className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {
                   e.preventDefault();
                   setIsCancelDeliveryModalOpen(true)
@@ -277,7 +277,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             </button>
             ): (
               <button
-                className="btn-B-GreenDefault  mt-[20px]"
+                className="btn-B-GreenDefault  mt-[20px] self-center"
                 onClick={e => {
                   e.preventDefault();
                   setIsModalOpen(true);

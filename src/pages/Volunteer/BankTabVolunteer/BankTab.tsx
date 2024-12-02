@@ -194,11 +194,11 @@ const BankTab:React.FC = () => {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden">
-        <div className="w-[360px] h-fit flex flex-col justify-between ">
+      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden  w-full max-w-[500px]">
+        <div className="w-full max-w-[500px] h-fit flex flex-col justify-between ">
           {userPoints !== undefined && userPoints !== null? (
           <Points points={Number(userPoints)} />
-          ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-[360px] h-[60px]'>
+          ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-full max-w-[500px] h-[60px]'>
               Данные по заработанным баллам временно недоступны
           </p>)}
         {/* <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/> */}

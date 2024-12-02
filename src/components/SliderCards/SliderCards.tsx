@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import CardTask from '../ui/Cards/CardTask/CardTask';
+//import CardTask from '../ui/Cards/CardTask/CardTask';
 import { getAllDeliveries, type IDelivery } from '../../api/apiDeliveries';
 import { TokenContext } from '../../core/TokenContext';
 
@@ -115,7 +115,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   };
 
   return (
-    <div className="pt-[16px] w-[360px]">
+    <div className="pt-[16px] w-full max-w-[400px]">
       {showTitle && (
         <h2 className="font-gerbera-h1 text-light-gray-black text-left pl-4">
           Другие добрые дела
@@ -143,7 +143,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({
             className=""
             onClickCapture={handleCardClick} // Добавили обработчик клика
           >
-            <CardTask delivery={delivery} switchTab={switchTab} />
+            {/* <CardTask delivery={delivery} switchTab={switchTab} /> */}
           </div>
         ))}
       </div>

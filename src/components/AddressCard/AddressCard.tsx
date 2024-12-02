@@ -19,7 +19,7 @@ export const AddressCard: React.FC<IAddressCardProps> = ({
   onSubmitClick,
 }) => {
   return (
-    <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-[16px] shadow-lg max-w-md w-[360px]">
+    <div className="bg-light-gray-white dark:bg-dark-gray-white p-4 rounded-2xl shadow-lg w-full max-w-[400px]">
       {/* Основная информация */}
       <div className="flex justify-between items-center">
         <div className="flex items-center">

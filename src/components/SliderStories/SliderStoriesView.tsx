@@ -110,7 +110,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
       // onTouchEnd={onTouchEndHandler}
       // onMouseDown={onMouseDownHandler}
     >
-      <div className="relative w-full h-full max-w-[360px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
+      <div className="relative h-full w-full max-w-[400px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
         {/* Прогресс-бар и кнопка закрытия */}
         <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
           {/* Прогресс-бар */}

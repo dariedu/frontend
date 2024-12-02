@@ -107,11 +107,11 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
 
   return (
     <>
-      <div className="space-y-[4px] bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-[360px] mt-1">
+      <div className="space-y-[4px] bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] mt-1">
       {/* Переключение темы */}
       {showThemeToggle && (
-        <div className="relative bg-light-gray-1 rounded-[16px]">
-          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-[16px] dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
+        <div className="relative bg-light-gray-1 rounded-2xl">
+          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-2xl dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
             <ThemeToggle />
           </div>
         </div>
