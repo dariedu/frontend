@@ -61,8 +61,15 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
        try {
          const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);
          if (result) {
+          // console.log(result, "request delivery")
            setDelivery(result)
            setDeliveryDate(new Date(result.date))
+          
+           curatorDelivery.volunteers.map(vol => {
+             if (vol.photo && !vol.photo.includes('https')) {
+               vol.photo = vol.photo.replace('http', 'https')
+             }
+           })
            setListOfVolunteers(curatorDelivery.volunteers)
          }
        } catch (err) {

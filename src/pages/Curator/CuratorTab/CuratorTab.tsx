@@ -49,7 +49,7 @@ async function getMyCuratorDeliveries() {
       try {
         let result = await getTasksCurator(token);
         if (result) {
-        //console.log(result, "getMyCuratorTasks")
+        console.log(result, "getMyCuratorTasks")
         setCurtorTasks(result)
         } 
       } catch (err) {

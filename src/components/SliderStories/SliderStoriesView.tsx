@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import closeIcon from '../../assets/icons/closeIcon.svg';
 import { IStory } from '../../api/storiesApi';
-
+import * as Avatar from '@radix-ui/react-avatar';
 
 interface SliderStoriesViewProps {
   currentStoryIndex: number;
@@ -104,13 +104,13 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-light-gray-white dark:bg-light-gray-black bg-opacity-80 flex justify-center items-center z-50 rounded-xl"
+      className="fixed inset-0 bg-light-gray-white dark:bg-light-gray-black bg-opacity-80 flex justify-center items-center z-50 rounded-xl "
       // onTouchStart={onTouchStartHandler}
       // onTouchMove={onTouchMoveHandler}
       // onTouchEnd={onTouchEndHandler}
       // onMouseDown={onMouseDownHandler}
     >
-      <div className="relative w-full h-full max-w-[360px] bg-light-gray-white dark:bg-light-gray-black rounded-2xl overflow-hidden ">
+      <div className="relative w-full h-full max-w-[360px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
         {/* Прогресс-бар и кнопка закрытия */}
         <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
           {/* Прогресс-бар */}
@@ -133,14 +133,15 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
         </div>
 
         {/* Контент сторис */}
-        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl">
+        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl ">
           {/* Изображение */}
-          <img
-            src={stories[currentIndex].cover}
-            alt={stories[currentIndex].title}
-            className="w-[360px] h-[634px] rounded-[16px] object-cover"
-          />
-
+          <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-[360px] h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>{
+           stories[currentIndex].cover && (
+            <Avatar.Image src={stories[currentIndex].cover} decoding='async'  loading='lazy' className='w-[360px] h-[734px] rounded-2xl object-cover' />
+        )}
+            <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-[360px] h-[734px] rounded-2xl'>
+          </Avatar.Fallback>
+        </Avatar.Root>
           {/* Текст поверх картинки */}
           <div className="text-light-gray-white font-gerbera-h2 bottom-28 absolute pl-[15px]">
             <div className="flex bg-light-brand-green w-[112px] h-[28px] items-center justify-center font-gerbera-sub2 text-light-gray-white rounded-full mb-[14px]">

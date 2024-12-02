@@ -71,6 +71,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
           let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id)
             if (filtered) {
               setMyRouteSheet(filtered)
+              console.log(filtered)
            }
           }
         } catch (err) {

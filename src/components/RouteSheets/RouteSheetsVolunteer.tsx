@@ -22,7 +22,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   curatorName,
   curatorTelegramNik
 }) => {
-
+console.log(routeSheetsData, "routesheetdata")
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
 
@@ -81,8 +81,9 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
+                  routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}
-                 deliveryId = {deliveryId}
+                  deliveryId = {deliveryId}
                 />
               )}
             </div>

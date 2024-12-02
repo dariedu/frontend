@@ -6,21 +6,24 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const photoReportsUrl = `${API_URL}/photo_reports/`;
 
 type TPhotoReport = {
-  photo: string
-  routeSheetId:number
+  photo: Blob | null
+  route_sheet_id: number
   comment: string
-  deliveryId:number
+  delivery_id: number
+  address: number
+  is_absent:boolean
 }
+
 
 export async function postPhotoReport(
   access: string,
-  object:TPhotoReport
+  object:FormData
 ):Promise<TPhotoReport> {
   try {
     const response: AxiosResponse<TPhotoReport> = await axios({
       url: photoReportsUrl,
       method: 'POST',
-      data:object,
+      data: object,
       headers: {
         Authorization: `Bearer ${access}`,
          accept: 'application/json',

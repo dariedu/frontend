@@ -58,6 +58,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
               const user = users.find(user => user.tg_id.toString() === tgId);
               if (user) {
                 const fetchedUser = await getUserById(user.id, mainToken.access);
+                if ( fetchedUser.photo && ! fetchedUser.photo.includes('https')) {
+                  fetchedUser.photo = fetchedUser.photo.replace('http', 'https')
+                }
                 setCurrentUser(fetchedUser);
               } else {
                 console.error('Пользователь не найден');
@@ -90,6 +93,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
                 const user = users.find(user => user.tg_id == tgIdFromTgParams);
                 if (user) {
                   const fetchedUser = await getUserById(user.id, mainToken.access);
+                  if ( fetchedUser.photo && ! fetchedUser.photo.includes('https')) {
+                    fetchedUser.photo = fetchedUser.photo.replace('http', 'https')
+                  }
                   setCurrentUser(fetchedUser);
                 } else {
                   console.error('Пользователь не найден');

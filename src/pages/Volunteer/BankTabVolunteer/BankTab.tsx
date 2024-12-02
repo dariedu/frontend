@@ -60,6 +60,11 @@ const BankTab:React.FC = () => {
       if (token) {
         const allPromotinsArr = await getAllPromotions(token);
         if (allPromotinsArr) {
+          allPromotinsArr.map(i => {
+            if (i.picture && !(i.picture?.includes('https'))) {
+             return i.picture = i.picture.replace('http', 'https')
+            }
+          })
         setPromotionsAll(allPromotinsArr);
         }
       }
@@ -74,6 +79,11 @@ const BankTab:React.FC = () => {
       if (token) {
         myPromotinsArr = await getMyPromotions(token);
         if (myPromotinsArr) {
+          myPromotinsArr.map(i => {
+            if (i.picture && !(i.picture?.includes('https'))) {
+             return i.picture = i.picture.replace('http', 'https')
+            }
+          })
       setPromotionsMy(myPromotinsArr)
         }
      }
@@ -81,7 +91,7 @@ const BankTab:React.FC = () => {
      console.error(err, 'reqMyPromotions has failed, BankTab');
    } 
  }
- 
+
   async function requestPromotionsCategories() {
     let categories: TPromotionCategory[] = [];
     try {
@@ -226,7 +236,7 @@ const BankTab:React.FC = () => {
         </Modal>
       <ConfirmModal isOpen={error} onOpenChange={setError} onConfirm={() => { setError(false); setRedeemPromotionErr("") }} title={redeemPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
       <ConfirmModal isOpen={cancelError} onOpenChange={setCancelError} onConfirm={() => { setCancelError(false); setCancelPromotionErr("") }} title={cancelPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
-        <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={`Отлично! ${redeemPromotionSuccessName} у вас в календаре`} description="" confirmText="Закрыть" isSingleButton={true} />
+        <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={<p>Отлично! <br/>Вы забронировали {redeemPromotionSuccessName}.</p>} description="" confirmText="Закрыть" isSingleButton={true} />
         <ConfirmModal isOpen={cancelPromotionSuccess} onOpenChange={setCancelPromotionSuccess} onConfirm={() => { setCancelPromotionSuccess(false); setCancelPromotionSuccessName('') }} title={`Участие в мероприятии ${cancelPromotionSuccessName} успешно отменено`} description="" confirmText="Закрыть" isSingleButton={true} />
        
     </>

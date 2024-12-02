@@ -55,6 +55,17 @@ const CalendarTabVolunteer = () => {
              let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
              if(diffDays <= 5) return i
            }).forEach(i => { past.push(i) });
+           
+           current.map(del => {
+             if (del.curator.photo && !del.curator.photo.includes('https')) {
+               del.curator.photo = del.curator.photo.replace('http', 'https')
+             }
+           })
+           past.map(del => {
+            if (del.curator.photo && !del.curator.photo.includes('https')) {
+              del.curator.photo = del.curator.photo.replace('http', 'https')
+            }
+          })
            setMyCurrent(current);
            setMyPast(past)}
     }
@@ -87,6 +98,11 @@ const CalendarTabVolunteer = () => {
       if (token) {
         let result: ITask[] = await getMyTasksNoFilter(token);
         if (result) {
+          result.map(task => {
+            if (task.curator.photo && !task.curator.photo.includes('https')) {
+             task.curator.photo = task.curator.photo.replace('http', 'https')
+           }
+         })
           setAllMyTasks(result)
         }
       }

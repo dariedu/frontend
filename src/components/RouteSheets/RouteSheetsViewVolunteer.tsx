@@ -12,14 +12,18 @@ import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
 // import { UploadPic } from '../UploadPicture/UploadPicture';
 interface IRouteSheetsViewProps {
   routes: TAddress[]
-  deliveryId:number
+  deliveryId: number,
+  routeSheetId:number
 }
 
 
 const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   routes,
-  deliveryId
+  deliveryId,
+  routeSheetId
 }) => {
+
+
 
 const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(Array(routes.length).fill(''));
 const [fileUploaded, setFileUploaded] = useState<boolean[]>(Array(routes.length).fill(false))
@@ -48,7 +52,8 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
 //     setFileUploaded(fileUploadedList);
 //   }
 //   }
-  
+
+
   function handleAddComment(index: number, address: string, comment:string) {
     console.log(index, address, comment);
     localStorage.removeItem('comment');
@@ -57,40 +62,50 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
   }
 
 
+
   async function submitPhotoReport(index: number) {
     setSendMessage('')
     if (currentUser && token) {
       const obj: TPhotoReport = {
-        photo: uploadedFileLink[index],
+        photo: blob,
         comment: comment[index],
-        routeSheetId: currentUser?.id,
-        deliveryId: deliveryId,
-        //address:'36'
+        route_sheet_id: routeSheetId,
+        delivery_id: deliveryId,
+        address: routes[index].id,
+        is_absent: beneficiarOnSite[index]
       }
-     let result1 = await fetch(uploadedFileLink[index])
-      .then(res => res.blob())
-      .then(blob => {
-        setBlob(blob);
-        return blob
-      });
 
-      if (result1 && currentUser) {
+
+      // let fileToSend = await fetch(uploadedFileLink)
+      // .then(res => res.blob())
+      // .then(blob => {
+      //   return blob
+      // }); 
+      // const formData = new FormData(); // создаем объект FormData для передачи файла
+      // formData.set('photo', fileToSend, `selfie-${user.tg_id}.jpeg`);
+
+      let blobPhoto = await fetch(uploadedFileLink[index])
+        .then(res => res.blob())
+        .then(blob1 => {
+          setBlob(blob1);
+          return blob1
+        });
+      // console.log(uploadedFileLink[index], "uploadedFileLink[index]");
+      // console.log(blobPhoto, "blobPhot")
+      if (blobPhoto && currentUser) {
         const formData = new FormData();
         for (let key in obj) {
-          if (key == 'photo_view') {
-            formData.set('photo', blob, `photo.jpeg`);
-          }else if (key == 'photo_download') {
-            formData.set('photo', blob, `photo.jpeg`);
+          if (key == 'photo') {
+            formData.set('photo', blobPhoto, `photo_report_delId_${deliveryId}_routeS_id_${routeSheetId}.jpeg`);
           } else {
             const typedKey = key as
-            | keyof TPhotoReport
-            | keyof typeof obj;
-           formData.set(typedKey, String(obj[typedKey])); 
+              | keyof TPhotoReport
+              | keyof typeof obj;
+            formData.set(typedKey, String(obj[typedKey]));
           }
         }
-        
         try {
-          let result = await postPhotoReport(token, obj);
+          let result = await postPhotoReport(token, formData);
           if (result) {
             setSendMessage(routes[index].address)
             setSendPhotoReportSuccess(true)
@@ -100,8 +115,7 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
           console.log(err)
         }
       }
-}
-      
+    }
   }
 
   
