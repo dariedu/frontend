@@ -39,7 +39,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
 }) => {
   const deliveryDate = new Date(delivery.date);
   //const currentDate = new Date();
-
+// console.log(delivery, "delivery")
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
   const currentStatus = status;
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false); //// модальное окно для отмены доставки
@@ -68,10 +68,9 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         try {
           const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
           if (response) {
-          let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id)
+            let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id && delivery.in_execution == true);
             if (filtered) {
               setMyRouteSheet(filtered)
-              console.log(filtered)
            }
           }
         } catch (err) {
@@ -116,7 +115,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
           routeSheetsData={routeSheets}
           deliveryId={delivery.id}
           curatorName={`${delivery.curator.name} ${delivery.curator.last_name}`}
-          curatorTelegramNik={curatorTelegramNik}
+            curatorTelegramNik={curatorTelegramNik}
+            curatorImg={delivery.curator.photo}
           /> 
        </ModalTop>
           )}
@@ -203,8 +203,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
-                src={delivery.curator.photo || ''}
-                alt="Avatar"
+                src={delivery.curator.photo}
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
               />
               <Avatar.Fallback
@@ -231,8 +230,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
           <div className="flex">
           <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
-                src={delivery.curator.photo || ''}
-                alt="Avatar"
+                src={delivery.curator.photo}
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
               />
               <Avatar.Fallback

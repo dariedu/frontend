@@ -16,6 +16,8 @@ import { Modal } from '../ui/Modal/Modal';
 import History from '../History/History';
 import AboutMe from '../AboutMe/AboutMe';
 import Suggestions from '../Suggestion/Suggestions';
+import Support from '../Support/Support';
+
 
 interface IAction {
   label: string
@@ -43,7 +45,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   const [openHistoryPage, setOpenHistoryPage] = useState(false);
   const [openAboutMePage, setOpenAboutMePage] = useState(false);
   const [openSuggestionsPage, setOpenSuggestionsPage] = useState(false);
-
+  const [openSupportPage, setOpenSupportPage] = useState(false);
 /////проверяем сколько просшедших доставок у волонтера
   async function getMyDeliveries() {  
     try {
@@ -80,6 +82,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
   function openSuggestion() {
     setOpenSuggestionsPage(true)
   }
+  function openSupport() {
+    setOpenSupportPage(true)
+  }
 
 
   // Все действия
@@ -97,7 +102,8 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     },
     { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
-    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSuggestion },
+    { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, onClick: openSuggestion },
+    { label: 'Техническая поддержка', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSupport },
   ];
 
   // Фильтруем действия для отображения
@@ -110,7 +116,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       <div className="space-y-[4px] bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] mt-1">
       {/* Переключение темы */}
       {showThemeToggle && (
-        <div className="relative bg-light-gray-1 rounded-2xl">
+        <div className="relative rounded-2xl">
           <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-2xl dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
             <ThemeToggle />
           </div>
@@ -166,6 +172,9 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       </Modal>  
       <Modal isOpen={openSuggestionsPage} onOpenChange={setOpenSuggestionsPage} zIndex={true}>
         <Suggestions onClose={setOpenSuggestionsPage} />
+      </Modal>  
+      <Modal isOpen={openSupportPage} onOpenChange={setOpenSupportPage} zIndex={true}>
+        <Support onClose={setOpenSupportPage} />
       </Modal>  
     </>
     

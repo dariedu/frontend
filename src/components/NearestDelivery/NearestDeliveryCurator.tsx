@@ -216,7 +216,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             </div>
             {delivery.volunteers_taken == 0 ? ("") : (
               <button
-              className="btn-B-WhiteDefault mt-[20px]"
+              className="btn-B-WhiteDefault mt-[20px] self-center"
               onClick={() => setFullViewNearest(true)}
             >
               Список записавшихся волонтёров
@@ -229,7 +229,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           
         {currentStatus == 'completed' && fullViewCompleted ? (
           <button
-            className="btn-B-GreenDefault  mt-[20px]"
+            className="btn-B-GreenDefault  mt-[20px] self-center"
             onClick={e => {
               e.preventDefault();
               setIsCuratorFeedbackModalOpen(true);

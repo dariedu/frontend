@@ -12,7 +12,8 @@ const FedbackTypesFromServer = {
   'canceled_promotion': 'Отмененное поощрение',
   'completed_task': 'Завершенное доброе дело',
   'canceled_task': 'Отмененное доброе дело',
-  'suggestion': 'Вопросы и предложения'
+  'suggestion': 'Вопросы и предложения',
+  'support': 'Техническая поддержка'
 }
 
 type TFeedbackTypes = keyof typeof FedbackTypesFromServer;

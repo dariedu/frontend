@@ -194,7 +194,7 @@ const BankTab:React.FC = () => {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden  w-full max-w-[500px]">
+      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden h-fit w-full max-w-[500px]">
         <div className="w-full max-w-[500px] h-fit flex flex-col justify-between ">
           {userPoints !== undefined && userPoints !== null? (
           <Points points={Number(userPoints)} />

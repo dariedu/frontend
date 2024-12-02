@@ -135,11 +135,11 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
         {/* Контент сторис */}
         <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl ">
           {/* Изображение */}
-          <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-[360px] h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>{
+          <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-full max-w-[400px] h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>{
            stories[currentIndex].cover && (
-            <Avatar.Image src={stories[currentIndex].cover} decoding='async'  loading='lazy' className='w-[360px] h-[734px] rounded-2xl object-cover' />
+            <Avatar.Image src={stories[currentIndex].cover} decoding='async'  loading='lazy' className='w-full max-w-[400px] h-[734px] rounded-2xl object-cover' />
         )}
-            <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-[360px] h-[734px] rounded-2xl'>
+            <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-full max-w-[400px] h-[734px] rounded-2xl'>
           </Avatar.Fallback>
         </Avatar.Root>
           {/* Текст поверх картинки */}

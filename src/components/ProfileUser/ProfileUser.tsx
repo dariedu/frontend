@@ -77,7 +77,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
         {IsVolunteer ? (
         isCurrentUser && (
           <ActionsVolunteer
-            visibleActions={['История', 'Обо мне', 'Подать заявку на должность куратора', 'Вопросы и предложения']}
+            visibleActions={['История', 'Обо мне', 'Подать заявку на должность куратора', 'Вопросы и предложения','Техническая поддержка']}
               showThemeToggle={true}
               isVolunteer={IsVolunteer}
           />
@@ -85,7 +85,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
         ) : (
           isCurrentUser && (
             <ActionsVolunteer
-              visibleActions={['История', 'Обо мне', 'Вопросы и предложения']}
+              visibleActions={['История', 'Обо мне', 'Вопросы и предложения', 'Техническая поддержка']}
                 showThemeToggle={true}
                 isVolunteer={IsVolunteer}
             />

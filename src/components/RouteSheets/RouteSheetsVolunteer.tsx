@@ -4,6 +4,7 @@ import {IRouteSheet} from '../../api/routeSheetApi';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
+import * as Avatar from '@radix-ui/react-avatar';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -11,7 +12,8 @@ interface RouteSheetsProps {
   onClose: () => void
   deliveryId: number
   curatorName:string
-  curatorTelegramNik:string
+  curatorTelegramNik: string
+  curatorImg:string
 }
 
 const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
@@ -20,9 +22,11 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   onClose,
   deliveryId,
   curatorName,
-  curatorTelegramNik
+  curatorTelegramNik,
+  curatorImg
 }) => {
-console.log(routeSheetsData, "routesheetdata")
+  // console.log(routeSheetsData, "routesheetdata")
+  // console.log(curatorImg, 'curator img')
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
 
@@ -36,11 +40,19 @@ console.log(routeSheetsData, "routesheetdata")
       </div>
       <div className="flex flex-col">
       <div className="w-full h-[67px] bg-light-gray-white rounded-2xl flex items-center justify-between px-4 dark:bg-light-gray-7-logo">
-                <div className="flex">
-                  {/* <img
-                    className="h-[32px] w-[32px] rounded-full"
-                    src={delivery.curator.photo}
-                  /> */}
+          <div className="flex">
+            
+          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Image
+                src={curatorImg}
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {curatorName? curatorName[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
                   <div className="felx flex-col justify-center items-start ml-4">
                     <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                       {curatorName}

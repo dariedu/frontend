@@ -83,7 +83,14 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
             if (result.status == "rejected") {
               console.log(`${num} volunteer`)
             }
-          })).finally(() => { setList(volunteerArr) }
+          })).finally(() => {
+            volunteerArr.forEach(vol => {
+              if (vol.photo && !vol.photo.includes('https')) {
+                vol.photo = vol.photo.replace('http', 'https')
+              }
+            })
+            setList(volunteerArr)
+          }
           )
       } catch (err) {
         console.log(err, "getVolunteers() nearestTaskCurator")

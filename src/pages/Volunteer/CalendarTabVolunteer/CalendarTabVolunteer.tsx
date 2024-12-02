@@ -65,7 +65,8 @@ const CalendarTabVolunteer = () => {
             if (del.curator.photo && !del.curator.photo.includes('https')) {
               del.curator.photo = del.curator.photo.replace('http', 'https')
             }
-          })
+           })
+        
            setMyCurrent(current);
            setMyPast(past)}
     }
@@ -178,7 +179,7 @@ try {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col items-center overflow-x-hidden " >
+      <div className="mt-2 mb-4 flex flex-col h-fit items-center overflow-x-hidden " >
         <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         <div className='flex flex-col h-full mb-20 overflow-auto w-full max-w-[400px]'>
           {myCurrent.length > 0 ?
