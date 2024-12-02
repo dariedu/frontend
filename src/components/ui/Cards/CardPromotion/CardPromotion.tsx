@@ -6,7 +6,7 @@ import {
 import DetailedInfo from '../../../DetailedInfo/DetailedInfo';
 import { Modal } from '../../Modal/Modal';
 import { type IPromotion } from '../../../../api/apiPromotions';
-
+import * as Avatar from '@radix-ui/react-avatar';
 
 
 // Интерфейс для пропсов CardPromotion
@@ -28,23 +28,20 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
   return (
     <>
       <div
-        className="w-[159px] bg-light-gray-white rounded-2xl shadow-md overflow-hidden flex flex-col h-[182px] select-none dark:bg-light-gray-7-logo"
+        className="w-[159px] bg-light-gray-white rounded-2xl shadow-md overflow-hidden flex flex-col h-[190px] select-none dark:bg-light-gray-6"
         onClick={() => setOpenFullView(true)}
       >
         {/* Image Section */}
         <div className="relative">
           {promotion.picture ? (
-        
-   
-            <img
-              //src="{{ url_for('static', filename='promotion.picture')}}"
-                src='https://cdn.poizon.com/pro-img/origin-img/20230721/f1213edb65e24a37b39eeeb1b3f7420f.jpg?w=1080&q=75'
-              alt={promotion.name}
-             // srcSet={`${promotion.picture} 640w, ${promotion.picture} 750w, ${promotion.picture} 1280w, ${promotion.picture} 1x`}
-              decoding='async'
-              loading='lazy'
-              className="w-[159px] h-[112px] object-cover rounded-[16px]"
-            /> 
+          <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-[159px] h-[112px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>{
+            promotion.picture && (
+             <Avatar.Image src={promotion.picture} decoding='async'  loading='lazy' className='w-[159px] h-[112px] object-cover rounded-2xl' />
+         )}
+              <Avatar.Fallback delayMs={2000} className='bg-light-gray-2 dark:bg-light-gray-5 rounded-t-2xl w-full h-full'>
+                
+           </Avatar.Fallback>
+         </Avatar.Root>
          
           ) : (
               <div className='w-[159px] h-[112px] bg-light-gray-2 '></div>

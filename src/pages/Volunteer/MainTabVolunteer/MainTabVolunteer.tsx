@@ -85,6 +85,12 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
           result['мои активные доставки'].forEach(i => {
             current.push(i);
           });
+          current.map(i => {
+            if (i.curator.photo && !(i.curator.photo.includes('https'))) {
+             return i.curator.photo = i.curator.photo.replace('http', 'https')
+            }
+          })
+
           setMyCurrent(current);
         }
       }
@@ -98,6 +104,11 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       if (token) {
         let result: ITask[] = await getAllAvaliableTasks(token);
         if (result) {
+          result.map(i => {
+            if (i.curator.photo && !(i.curator.photo?.includes('https'))) {
+             return i.curator.photo = i.curator.photo.replace('http', 'https')
+            }
+          })
           setAllAvaliableTasks(result);
         }
       }
@@ -135,6 +146,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       if (token) {
         let result: IDelivery = await postDeliveryTake(token, id, delivery);
         if (result) {
+          ////меняем адрес фото
+          if (result.curator.photo && !result.curator.photo.includes('https')){
+            result.curator.photo = result.curator.photo.replace('http', 'https')
+          }
           setTakeDeliverySuccess(true);
           setTakeDeliverySuccessDateName(finalString);
           setDeliveryForReservation(undefined)
@@ -196,6 +211,9 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       if (token) {
         let result: ITask = await postTaskAccept(id, token);
         if (result) {
+          if (result.curator.photo && !result.curator.photo.includes('https')) {
+           result.curator.photo = result.curator.photo.replace('http', 'https')
+             }
           setTakeTaskSuccess(true);
           setTakeTaskSuccessDateName(finalString);
         }
@@ -238,7 +256,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden">
+      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[500px] ">
         <div>
           <SliderStories />
           {myCurrent.length > 0

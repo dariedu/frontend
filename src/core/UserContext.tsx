@@ -1,6 +1,6 @@
 // UserContext.tsx
 import React, { createContext, useState, useEffect } from 'react';
-import { IUser, getUserById, getUsers } from '../api/userApi';
+import { IUser, getCurrentUser } from '../api/userApi';
 import { postToken, postTokenRefresh, type TPostTokenResponse } from '../api/apiRegistrationToken';
 import { useLocation } from 'react-router-dom';
 
@@ -54,11 +54,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           const mainToken = await postTokenRefresh(tokenData.refresh)
           if (mainToken) {
             try {
-              const users = await getUsers(mainToken.access);
-              const user = users.find(user => user.tg_id.toString() === tgId);
+              const users = await getCurrentUser(mainToken.access);
+              let user = users[0]
               if (user) {
-                const fetchedUser = await getUserById(user.id, mainToken.access);
-                setCurrentUser(fetchedUser);
+                if ( user.photo && ! user.photo.includes('https')) {
+                  user.photo = user.photo.replace('http', 'https')
+                 }
+                setCurrentUser(user);
               } else {
                 console.error('Пользователь не найден');
                 setError('Пользователь не найден');
@@ -86,11 +88,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
             const mainToken = await postTokenRefresh(tokenData.refresh)
             if (mainToken) {
               try {
-                const users = await getUsers(mainToken.access);
-                const user = users.find(user => user.tg_id == tgIdFromTgParams);
+                const users = await getCurrentUser(mainToken.access);
+                let user = users[0]
                 if (user) {
-                  const fetchedUser = await getUserById(user.id, mainToken.access);
-                  setCurrentUser(fetchedUser);
+                  if ( user.photo && ! user.photo.includes('https')) {
+                    user.photo = user.photo.replace('http', 'https')
+                  }
+                  setCurrentUser(user);
                 } else {
                   console.error('Пользователь не найден');
                   setError('Пользователь не найден');

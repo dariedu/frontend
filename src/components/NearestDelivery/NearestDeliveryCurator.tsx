@@ -61,8 +61,15 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
        try {
          const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);
          if (result) {
+          // console.log(result, "request delivery")
            setDelivery(result)
            setDeliveryDate(new Date(result.date))
+          
+           curatorDelivery.volunteers.map(vol => {
+             if (vol.photo && !vol.photo.includes('https')) {
+               vol.photo = vol.photo.replace('http', 'https')
+             }
+           })
            setListOfVolunteers(curatorDelivery.volunteers)
          }
        } catch (err) {
@@ -134,7 +141,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       {(delivery !== undefined && deliveryDate!=undefined) && (
         <>
            <div
-        className={`${fullViewActive == true ? 'hidden ' : ' '} w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`${fullViewActive == true ? 'hidden ' : ' '} w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
           {/* //////// */}
@@ -209,7 +216,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             </div>
             {delivery.volunteers_taken == 0 ? ("") : (
               <button
-              className="btn-B-WhiteDefault mt-[20px]"
+              className="btn-B-WhiteDefault mt-[20px] self-center"
               onClick={() => setFullViewNearest(true)}
             >
               Список записавшихся волонтёров
@@ -222,7 +229,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           
         {currentStatus == 'completed' && fullViewCompleted ? (
           <button
-            className="btn-B-GreenDefault  mt-[20px]"
+            className="btn-B-GreenDefault  mt-[20px] self-center"
             onClick={e => {
               e.preventDefault();
               setIsCuratorFeedbackModalOpen(true);

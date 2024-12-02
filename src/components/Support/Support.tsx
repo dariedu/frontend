@@ -6,54 +6,54 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
 import { submitFeedbackSuggestion} from '../../api/feedbackApi';
 
-type TSuggestions = {
+type TSupport = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
+const Support:React.FC<TSupport> = ({onClose}) => {
 
   const {token}= useContext(TokenContext);
   const [requestBody, setRequestBody] = useState({
-    suggestion: localStorage.getItem('suggestion') ?? "",
+    support: localStorage.getItem('support') ?? "",
   });
 
   const [buttonActive, setButtonActive] = useState(false)
-  const [requestSuggestionFail, setRequestSuggestionFail] = useState(false)
-  const [requestSuggestionSuccess, setRequestSuggestionSuccess] = useState(false)
+  const [requestSupportFail, setRequestSupportFail] = useState(false)
+  const [requestSupportSuccess, setRequestSupportSuccess] = useState(false)
 
    
   // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
   function handleFormFieldChange(value: string) {
     setRequestBody({
       ...requestBody,
-   ['suggestion'] : value,
+   ['support'] : value,
     });
-    localStorage.setItem('suggestion', value);
+    localStorage.setItem('support', value);
   }
 
   async function handleRequestSubmit() {
     if (token) {
-      let suggestionString = `Поделитесь Вашими вопросами и предложениями: Ответ: ${requestBody.suggestion}`
+      let suggestionString = `Постарайтесь подробно описать проблему: Ответ: ${requestBody.support}`
       try {
-        let result = await submitFeedbackSuggestion(token, 'suggestion', suggestionString) ;
+        let result = await submitFeedbackSuggestion(token, 'support', suggestionString) ;
         if (result) {
-          setRequestSuggestionSuccess(true);
-          localStorage.removeItem('suggestion');
+          setRequestSupportSuccess(true);
+          localStorage.removeItem('support');
           setRequestBody({
             ...requestBody,
-         ['suggestion'] : "",
+         ['support'] : "",
           });
 
         }
       } catch (err) {
         console.log(err)
-        setRequestSuggestionFail(true)
+        setRequestSupportFail(true)
        }
      }
    }
 
   function handleInfoInput() {
-    if (requestBody.suggestion.length > 5) {
+    if (requestBody.support.length > 5) {
       setButtonActive(true)
     } else setButtonActive(false)
     }
@@ -64,7 +64,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
-          Поделитесь Вашими вопросами и предложениями
+          Постарайтесь подробно описать проблему
           </p>
         </div>
       <div className="z-[51] w-full max-w-[400px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
@@ -85,7 +85,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
                   className="w-full min-w-[328px] max-w-[370px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
-                  defaultValue={localStorage.getItem('suggestion') ??  ""}
+                  defaultValue={localStorage.getItem('support') ??  ""}
                   onChange={e => {
                    handleFormFieldChange(e.target.value);
                    handleInfoInput()
@@ -112,9 +112,9 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
         </Form.Root>
       </div>
       <ConfirmModal
-        isOpen={requestSuggestionFail}
-        onOpenChange={setRequestSuggestionFail}
-        onConfirm={() => {setRequestSuggestionFail(false);}}
+        isOpen={requestSupportFail}
+        onOpenChange={setRequestSupportFail}
+        onConfirm={() => {setRequestSupportFail(false);}}
         title={<p>
           Упс, что-то пошло не так!<br />
           Попробуйте позже
@@ -125,9 +125,9 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
         zIndex={true}
       />
       <ConfirmModal
-        isOpen={requestSuggestionSuccess}
-        onOpenChange={setRequestSuggestionSuccess}
-        onConfirm={() => {setRequestSuggestionSuccess(false); onClose(false)}}
+        isOpen={requestSupportSuccess}
+        onOpenChange={setRequestSupportSuccess}
+        onConfirm={() => {setRequestSupportSuccess(false); onClose(false)}}
         title={"Спасибо, что поделились!"}
         description=""
         confirmText="Ок"
@@ -139,4 +139,4 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
   );
 };
 
-export default Suggestions;
+export default Support;

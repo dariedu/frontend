@@ -1,11 +1,28 @@
 import axios, { AxiosResponse } from 'axios';
 import { IUser } from '../core/types';
 
+
 // Устанавливаем URL API
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
-
 // Эндпоинты для работы с пользователями
 const usersEndpoint = `${API_URL}/users/`;
+
+
+export const getCurrentUser = async (access: string): Promise<IUser[]> => {
+  try {
+    const response: AxiosResponse<IUser[]> = await axios.get(`${API_URL}/current_user/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+  return response.data
+  } catch (err:any){
+    console.error('Error fetching current user:', err);
+    throw new Error('Failed to fetch current user');
+}
+}
+
+
 
 // Получение списка пользователей с возможными фильтрами
 export const getUsers = async (access: string): Promise<IUser[]> => {

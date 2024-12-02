@@ -55,7 +55,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <>
           <div
-            className="w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
+            className="w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
             onClick={e => {
               e.stopPropagation();
             }}
@@ -103,7 +103,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             </div>
             {/* /////////////////////// */}
             {delivery.curator.name && delivery.curator.name.length > 0 ? (
-            <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+            <div className="w-full min-w-[330px] max-w-[370px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
                 <div className="flex">
                 <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
@@ -137,7 +137,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             {delivery.location.description &&
             delivery.location.description.length != 0 ? (
-              <div className="w-[330px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+              <div className="w-full min-w-[330px] max-w-[370px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
                 <p className="font-gerbera-h3 text-light-gray-8-text text-start">
                   Подробности
                 </p>
@@ -152,7 +152,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* ///////!delivery.is_free || ///////// */}
             {!canBook? (
               <button
-                className="btn-B-WhiteDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green"
+                className="btn-B-WhiteDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green self-center"
                 onClick={e => {
                   e.preventDefault();
                   onOpenChange(false);
@@ -162,7 +162,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               </button>
             ) : !delivery.is_free ? (
               <button
-              className="btn-B-GreenInactive  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green"
+              className="btn-B-GreenInactive  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green self-center"
               onClick={e => {
                 e.preventDefault();
                 onOpenChange(false);
@@ -172,7 +172,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             </button>
             ) : (
               <button
-                className="btn-B-GreenDefault  mt-[20px]"
+                className="btn-B-GreenDefault  mt-[20px] self-center"
                 onClick={e => {
                   e.preventDefault();
                   getDelivery(delivery)

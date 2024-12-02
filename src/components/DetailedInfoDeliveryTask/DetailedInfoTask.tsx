@@ -67,7 +67,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <div
-          className="w-[362px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
+          className="w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
           onClick={e => {
             e.stopPropagation();
           }}
@@ -113,7 +113,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             </div>
           </div>
           {task.curator.name && task.curator.name.length > 0 ? (
-          <div className="w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+          <div className="w-full min-w-[330px] max-w-[370px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-1 dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
@@ -150,7 +150,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
           ) : ''}
 
           {task.description && task.description.length != 0 ? (
-            <div className="w-[330px] h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
+            <div className="w-full min-w-[330px] max-w-[370px] h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
               <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                 Подробности
                 <p className="font-gerbera-sub2 text-light-gray-2 text-start pt-2 dark:text-light-gray-3">
@@ -162,7 +162,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             ''
           )}
           <button
-              className="btn-B-GreenDefault  mt-[20px]"
+              className="btn-B-GreenDefault  mt-[20px] self-center"
               onClick={e => {
                 e.preventDefault();
                 getTask(task)

@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import RouteSheetsViewVolunteer from './RouteSheetsViewVolunteer';
 import {IRouteSheet} from '../../api/routeSheetApi';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
+import * as Avatar from '@radix-ui/react-avatar';
+import { getPhotoReports, type TServerResponsePhotoReport} from '../../api/apiPhotoReports';
+import { TokenContext } from '../../core/TokenContext';
+import { UserContext } from '../../core/UserContext';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -11,7 +15,8 @@ interface RouteSheetsProps {
   onClose: () => void
   deliveryId: number
   curatorName:string
-  curatorTelegramNik:string
+  curatorTelegramNik: string
+  curatorImg:string
 }
 
 const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
@@ -20,27 +25,59 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   onClose,
   deliveryId,
   curatorName,
-  curatorTelegramNik
+  curatorTelegramNik,
+  curatorImg
 }) => {
+  // console.log(routeSheetsData, "routesheetdata")
+  // console.log(curatorImg, 'curator img')
+
+  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
+  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
+  const { token } = useContext(TokenContext);
+  const { currentUser } = useContext(UserContext);
 
 
-  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
-
-
+  ///запрашиваем все репорты и отбираем только отчеты этого пользователя
+  async function requestPhotoReports() {
+    if (token && currentUser) {
+      try {
+        let result = await getPhotoReports(token);
+        let filtered = result.filter(report => {
+          if (report.user.id == currentUser.id)
+           return report
+        })
+        setMyPhotoReports(filtered)
+      } catch (err) {
+        console.log(err, " getPhotoReports failed RouteSheetVolunteer")
+    }
+  }
+  }
+  
+  useEffect(() => {
+    requestPhotoReports()
+  }, [])
 
   return ( 
-    <div className="w-[360px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
+    <div className="w-full max-w-[400px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
       <div className="w-full h-[67px] bg-light-gray-white rounded-2xl flex items-center justify-between px-4 dark:bg-light-gray-7-logo">
-                <div className="flex">
-                  {/* <img
-                    className="h-[32px] w-[32px] rounded-full"
-                    src={delivery.curator.photo}
-                  /> */}
+          <div className="flex">
+            
+          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Image
+                src={curatorImg}
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {curatorName? curatorName[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
                   <div className="felx flex-col justify-center items-start ml-4">
                     <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                       {curatorName}
@@ -81,8 +118,10 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
+                  photoReports={myPhotoReports}
+                  routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}
-                 deliveryId = {deliveryId}
+                  deliveryId = {deliveryId}
                 />
               )}
             </div>

@@ -266,7 +266,7 @@ function RegistrationPage() {
   return (
     <>
       {registrationComplete ? (
-        <div className="flex flex-col justify-center items-center w-[360px] bg-light-gray-white dark:bg-light-gray-7-logo h-screen">
+        <div className="flex flex-col justify-center items-center w-full max-w-[500px] bg-light-gray-white dark:bg-light-gray-7-logo h-screen">
           <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]' />
           {isAdult ? (
             <div className='w-[310px] text-cventer'><br/>

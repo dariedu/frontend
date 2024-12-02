@@ -7,7 +7,7 @@ interface IPointsProps {
 
 const Points: React.FC<IPointsProps> = ({ points }) => {
   return (
-    <div className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow w-[360px] h-[60px] dark:bg-light-gray-7-logo">
+    <div className="flex items-center justify-between p-4 bg-light-gray-white rounded-[16px] shadow w-full max-w-[400px] h-[60px] dark:bg-light-gray-7-logo">
       {/* Текст */}
       <span className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">В вашей копилке</span>
 

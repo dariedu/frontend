@@ -93,6 +93,17 @@ const SliderStories: React.FC = () => {
               story.cover && story.title && story.text
             ) return story
           });
+
+          result.map(i => {
+            if (i.cover&& !(i.cover?.includes('https'))) {
+             return i.cover = i.cover.replace('http', 'https')
+            }
+          })
+          result.map(i => {
+            if (i.background && !(i.background?.includes('https'))) {
+             return i.background = i.background.replace('http', 'https')
+            }
+          })
           setStories(filtered)
         }
       } catch (err) {
@@ -110,7 +121,7 @@ const SliderStories: React.FC = () => {
     <>
       {/* Слайдер для историй */}
       <div
-        className="flex overflow-x-hidden space-x-4 p-4 w-[360px] bg-light-gray-white rounded-2xl mt-1 dark:bg-light-gray-7-logo"
+        className="flex overflow-x-hidden space-x-4 p-4 w-full max-w-[400px] bg-light-gray-white rounded-2xl mt-1 dark:bg-light-gray-7-logo"
         ref={sliderRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -123,7 +134,7 @@ const SliderStories: React.FC = () => {
         {stories.map((story, index) => {
           if (story.cover && story.title && story.text) {
             return (
-        <div key={story.id} className="inline-block bg-light-gray-2 rounded-xl">
+        <div key={story.id} className="inline-block bg-light-gray-2 rounded-xl dark:bg-light-gray-6">
               <CardStories
                 imageSrc={story.cover}
                 title={story.title}

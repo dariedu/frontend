@@ -17,7 +17,7 @@ const ListOfVolunteersTasks: React.FC<ListOfVolunteersProps> = ({
 
 
   return (
-    <div className={"space-y-4 w-[360px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
+    <div className={"space-y-4 w-full max-w-[400px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
 }>
       {
         listOfVolunteers.map((volunteer, index) => (

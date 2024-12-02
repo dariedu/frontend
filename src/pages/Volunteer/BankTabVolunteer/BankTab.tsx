@@ -60,6 +60,11 @@ const BankTab:React.FC = () => {
       if (token) {
         const allPromotinsArr = await getAllPromotions(token);
         if (allPromotinsArr) {
+          allPromotinsArr.map(i => {
+            if (i.picture && !(i.picture?.includes('https'))) {
+             return i.picture = i.picture.replace('http', 'https')
+            }
+          })
         setPromotionsAll(allPromotinsArr);
         }
       }
@@ -74,6 +79,11 @@ const BankTab:React.FC = () => {
       if (token) {
         myPromotinsArr = await getMyPromotions(token);
         if (myPromotinsArr) {
+          myPromotinsArr.map(i => {
+            if (i.picture && !(i.picture?.includes('https'))) {
+             return i.picture = i.picture.replace('http', 'https')
+            }
+          })
       setPromotionsMy(myPromotinsArr)
         }
      }
@@ -81,7 +91,7 @@ const BankTab:React.FC = () => {
      console.error(err, 'reqMyPromotions has failed, BankTab');
    } 
  }
- 
+
   async function requestPromotionsCategories() {
     let categories: TPromotionCategory[] = [];
     try {
@@ -184,11 +194,11 @@ const BankTab:React.FC = () => {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden">
-        <div className="w-[360px] h-fit flex flex-col justify-between ">
+      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden h-fit w-full max-w-[500px]">
+        <div className="w-full max-w-[500px] h-fit flex flex-col justify-between ">
           {userPoints !== undefined && userPoints !== null? (
           <Points points={Number(userPoints)} />
-          ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-[360px] h-[60px]'>
+          ) : (<p className='flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-white rounded-[16px] shadow w-full max-w-[500px] h-[60px]'>
               Данные по заработанным баллам временно недоступны
           </p>)}
         {/* <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/> */}
@@ -226,7 +236,7 @@ const BankTab:React.FC = () => {
         </Modal>
       <ConfirmModal isOpen={error} onOpenChange={setError} onConfirm={() => { setError(false); setRedeemPromotionErr("") }} title={redeemPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
       <ConfirmModal isOpen={cancelError} onOpenChange={setCancelError} onConfirm={() => { setCancelError(false); setCancelPromotionErr("") }} title={cancelPromotionErr} description="" confirmText="Закрыть" isSingleButton={true} />
-        <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={`Отлично! ${redeemPromotionSuccessName} у вас в календаре`} description="" confirmText="Закрыть" isSingleButton={true} />
+        <ConfirmModal isOpen={redeemPromotionSuccess} onOpenChange={setRedeemPromotionSuccess} onConfirm={() => { setRedeemPromotionSuccess(false); setRedeemPromotionSuccessName('') }} title={<p>Отлично! <br/>Вы забронировали {redeemPromotionSuccessName}.</p>} description="" confirmText="Закрыть" isSingleButton={true} />
         <ConfirmModal isOpen={cancelPromotionSuccess} onOpenChange={setCancelPromotionSuccess} onConfirm={() => { setCancelPromotionSuccess(false); setCancelPromotionSuccessName('') }} title={`Участие в мероприятии ${cancelPromotionSuccessName} успешно отменено`} description="" confirmText="Закрыть" isSingleButton={true} />
        
     </>
