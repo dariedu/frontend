@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import RouteSheetsViewVolunteer from './RouteSheetsViewVolunteer';
 import {IRouteSheet} from '../../api/routeSheetApi';
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
+import { getPhotoReports, type TServerResponsePhotoReport} from '../../api/apiPhotoReports';
+import { TokenContext } from '../../core/TokenContext';
+import { UserContext } from '../../core/UserContext';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -28,9 +31,31 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   // console.log(routeSheetsData, "routesheetdata")
   // console.log(curatorImg, 'curator img')
 
-  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
+  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
+  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
+  const { token } = useContext(TokenContext);
+  const { currentUser } = useContext(UserContext);
 
 
+  ///запрашиваем все репорты и отбираем только отчеты этого пользователя
+  async function requestPhotoReports() {
+    if (token && currentUser) {
+      try {
+        let result = await getPhotoReports(token);
+        let filtered = result.filter(report => {
+          if (report.user.id == currentUser.id)
+           return report
+        })
+        setMyPhotoReports(filtered)
+      } catch (err) {
+        console.log(err, " getPhotoReports failed RouteSheetVolunteer")
+    }
+  }
+  }
+  
+  useEffect(() => {
+    requestPhotoReports()
+  }, [])
 
   return ( 
     <div className="w-full max-w-[400px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
@@ -93,6 +118,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
+                  photoReports={myPhotoReports}
                   routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}
                   deliveryId = {deliveryId}

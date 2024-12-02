@@ -1,31 +1,35 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
 import { Modal } from '../ui/Modal/Modal';
 import Comment from '../Comment/Comment';
-import { TPhotoReport } from '../../api/apiPhotoReports';
+import { TPhotoReport, type TServerResponsePhotoReport  } from '../../api/apiPhotoReports';
 import { UserContext } from '../../core/UserContext';
 import { TokenContext } from '../../core/TokenContext';
 import { postPhotoReport } from '../../api/apiPhotoReports';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
-// import { UploadPic } from '../UploadPicture/UploadPicture';
+
+
 interface IRouteSheetsViewProps {
   routes: TAddress[]
   deliveryId: number,
-  routeSheetId:number
+  routeSheetId: number,
+  photoReports: TServerResponsePhotoReport[]
 }
 
 
 const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   routes,
   deliveryId,
-  routeSheetId
+  routeSheetId,
+  photoReports
 }) => {
 
 
-
+  
 const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(Array(routes.length).fill(''));
+//const [routeAddressId, setRouteAddressId] = useState<number[]>(Array(routes.length).fill(NaN));
 const [fileUploaded, setFileUploaded] = useState<boolean[]>(Array(routes.length).fill(false))
 const [openComment, setOpenComment] = useState<boolean[]>(Array(routes.length).fill(false));
 const [comment, addComment] = useState(Array(routes.length).fill(''));
@@ -51,8 +55,22 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
 //     fileUploadedList[index] = true;
 //     setFileUploaded(fileUploadedList);
 //   }
-//   }
+  //   }
+// const [object, setObj] = useState({})
+  function checkoForUploadedReports() {
+  const obj:any = {}
+    if (photoReports.length > 0 && routes.length > 0) {
+      photoReports.forEach(report => {
+     obj[`${report.address}`] = report.photo_download
+   })
 
+    }
+    // setObj(obj)
+}
+
+  useEffect(() => {
+    checkoForUploadedReports()
+  }, [])
 
   function handleAddComment(index: number, address: string, comment:string) {
     console.log(index, address, comment);
@@ -76,22 +94,12 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
       }
 
 
-      // let fileToSend = await fetch(uploadedFileLink)
-      // .then(res => res.blob())
-      // .then(blob => {
-      //   return blob
-      // }); 
-      // const formData = new FormData(); // создаем объект FormData для передачи файла
-      // formData.set('photo', fileToSend, `selfie-${user.tg_id}.jpeg`);
-
       let blobPhoto = await fetch(uploadedFileLink[index])
         .then(res => res.blob())
         .then(blob1 => {
           setBlob(blob1);
           return blob1
         });
-      // console.log(uploadedFileLink[index], "uploadedFileLink[index]");
-      // console.log(blobPhoto, "blobPhot")
       if (blobPhoto && currentUser) {
         const formData = new FormData();
         for (let key in obj) {
@@ -177,6 +185,9 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
               ) : (
                 <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
                   {/* <input onChange={(e)=>handleFileChange(e, index)} type="file" accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer' /> */}
+                  {/* <img src={ uploadedFileLink[index]} /> */}
+            
+                  
                   <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
                 </div>
               )
