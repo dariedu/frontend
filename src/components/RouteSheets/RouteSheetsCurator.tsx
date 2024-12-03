@@ -13,6 +13,7 @@ import { TokenContext } from '../../core/TokenContext';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
+
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
   routeSheetsData: IRouteSheet[]
@@ -53,6 +54,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
+
+
 
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
@@ -118,6 +121,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
     }
   }
   
+
+
 
   return ( filteredSuccess &&
     <div className="w-full max-w-[400px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl h-screen flex flex-col overflow-y-auto pb-[74px]" onClick={(e)=>e.stopPropagation()}>
@@ -222,6 +227,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               )}
               {openRouteSheets[index] && (
                 <RouteSheetsView
+                  //deliveryId={ deliveryId}
                   routes={routeS.address.map(addr => (addr))}
                 />
               )}
