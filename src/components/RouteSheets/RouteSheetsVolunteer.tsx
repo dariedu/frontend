@@ -94,7 +94,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
         {routeSheetsData.map((routeS, index) => {
           return (
             <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
-              <div className="flex items-center justify-between w-full mb-2">
+              <div className="flex items-center justify-between w-[96%] mb-2">
                 <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4 p-4">
                   {`Маршрутный лист: ${routeS.name}`}
                 </span>

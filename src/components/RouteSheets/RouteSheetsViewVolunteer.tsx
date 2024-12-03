@@ -72,7 +72,7 @@ const {token} =useContext(TokenContext)
       });
       photoReports.forEach(report => {
         if (arr.indexOf(report.address) != -1) {
-          obj[arr.indexOf(report.address)][1] = report.photo_download
+          obj[arr.indexOf(report.address)][1] = report.photo_view
         }
       })
       obj.forEach((i, index)=> {
@@ -147,7 +147,6 @@ const {token} =useContext(TokenContext)
   
   return (
     <div className='flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full'>
-      {/* Route Details */}
       {routes.map((route, index) => (
         <div
           key={index}
@@ -186,22 +185,21 @@ const {token} =useContext(TokenContext)
             )} 
           </div>
             </div>
-              {fileUploaded[index] ? (
-                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
+            {(array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0) ?
+                (<button className='w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-brand-green'><a  href={object[array.indexOf(route.beneficiar[0].address)][1]}>Ссылка</a></button>)
+                : (
+                  fileUploaded[index] ?
+                    (<div className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative" onClick={() => setUploadPictureModal(prev => prev.map((isOpen, ind) => ind == index ? !isOpen : isOpen))}>
                   <img
                     src={uploadedFileLink[index]}
-                    className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover"
+                    className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover absolute"
                   />
-                </div>
-              ) : (
-                <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
-                  {(array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0) ?
-                    <img src={object[array.indexOf(route.beneficiar[0].address)][1]} className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
-                    : <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
-                  }
-                </div>
-              )
-              }
+                  </div>) : (
+                  <div className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative" onClick={() => setUploadPictureModal(prev => prev.map((isOpen, ind) => ind == index ? !isOpen : isOpen))}>
+                    <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full absolute"/>
+                  </div>    
+                )
+              )}
           </div>
           {comment[index].length > 0 &&
             <div className='w-[328px] bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 focus: outline-0 mt-2'
@@ -218,7 +216,7 @@ const {token} =useContext(TokenContext)
            prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>
           Добавить комментарий
           </button>}
-            <button className={unactive[index] == "Отправить" ? 'btn-B-GreenDefault' : 'btn-B-WhiteDefault cursor-default'}  onClick={() => {
+            <button className={unactive[index] == "Отправить" ? 'btn-B-WhiteDefault' : 'btn-B-WhiteDefault cursor-default'}  onClick={() => {
              unactive[index] == 'Отправка' ? ()=>{} : submitPhotoReport(index)
             }}>
               {unactive[index]}

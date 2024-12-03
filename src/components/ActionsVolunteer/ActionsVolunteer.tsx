@@ -3,6 +3,7 @@ import ThemeToggle from '../ui/ThemeToggle/ThemeToggle';
 import CuratorIcon from '../../assets/icons/application_curator.svg?react';
 import HistoryIcon from '../../assets/icons/history.svg?react';
 import QuestionsIcon from '../../assets/icons/questions.svg?react';
+import SupportIcon from '../../assets/icons/support.svg?react';
 import DonateIcon from '../../assets/icons/donate.svg?react';
 import InviteIcon from '../../assets/icons/invite_friend.svg?react';
 import BeneficiaryIcon from '../../assets/icons/beneficiary.svg?react';
@@ -103,7 +104,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, onClick: openSuggestion },
-    { label: 'Техническая поддержка', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSupport },
+    { label: 'Техническая поддержка', icon: <SupportIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSupport },
   ];
 
   // Фильтруем действия для отображения
