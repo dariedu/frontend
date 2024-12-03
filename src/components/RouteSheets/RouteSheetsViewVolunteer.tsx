@@ -39,9 +39,10 @@ const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
 const [sendMessage, setSendMessage] = useState<string>('')
 const [uploadPictureModal, setUploadPictureModal] = useState<boolean[]>(Array(routes.length).fill(false));
 const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes.length).fill(true)) ////  проверяем благополучатель на месте или нет
-
-  const { currentUser } = useContext(UserContext);
-  const {token} =useContext(TokenContext)
+const [unactive, setUnactive] = useState<('Отправить' | 'Отправка' | 'Отправлен')[]>(Array(routes.length).fill('Отправить'));
+  
+const { currentUser } = useContext(UserContext);
+const {token} =useContext(TokenContext)
   
 // function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
 //   if (e.target.files && e.target.files[0]) {
@@ -55,18 +56,34 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
 //     fileUploadedList[index] = true;
 //     setFileUploaded(fileUploadedList);
 //   }
-  //   }
-// const [object, setObj] = useState({})
-  function checkoForUploadedReports() {
-  const obj:any = {}
-    if (photoReports.length > 0 && routes.length > 0) {
-      photoReports.forEach(report => {
-     obj[`${report.address}`] = report.photo_download
-   })
+//   }
 
+  const [object, setObj] = useState<[number, string][]>([]);/// массив с сылками на фотографии с фотоотчетов
+  const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
+
+   function checkoForUploadedReports() {
+    const arr: number[] = [];
+    const obj: [number, string][] = [];
+
+    if (photoReports.length > 0 && routes.length > 0) {
+      routes.forEach(route => {
+        obj.push([route.beneficiar[0].address, ""])
+        arr.push(route.beneficiar[0].address)
+      });
+      photoReports.forEach(report => {
+        if (arr.indexOf(report.address) != -1) {
+          obj[arr.indexOf(report.address)][1] = report.photo_download
+        }
+      })
+      obj.forEach((i, index)=> {
+        if (i[1].length > 0) {
+          setUnactive(prev =>prev.map((string, idx) => idx === index ? 'Отправлен' : string))
+        }
+  })
+      setObj(obj)
+      setArr(arr)
     }
-    // setObj(obj)
-}
+  }
 
   useEffect(() => {
     checkoForUploadedReports()
@@ -81,7 +98,9 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
 
 
 
+
   async function submitPhotoReport(index: number) {
+    setUnactive(prev =>prev.map((string, idx) => idx === index ? 'Отправка' : string))
     setSendMessage('')
     if (currentUser && token) {
       const obj: TPhotoReport = {
@@ -92,8 +111,6 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
         address: routes[index].id,
         is_absent: beneficiarOnSite[index]
       }
-
-
       let blobPhoto = await fetch(uploadedFileLink[index])
         .then(res => res.blob())
         .then(blob1 => {
@@ -111,15 +128,16 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
               | keyof typeof obj;
             formData.set(typedKey, String(obj[typedKey]));
           }
-        }
-        try {
-          let result = await postPhotoReport(token, formData);
-          if (result) {
-            setSendMessage(routes[index].address)
-            setSendPhotoReportSuccess(true)
-          }
+        };
+
+      try {
+        await postPhotoReport(token, formData);
+        setSendMessage(routes[index].address)
+        setSendPhotoReportSuccess(true)
+        setUnactive(prev =>prev.map((string, idx) => idx === index ? 'Отправлен' : string))
         } catch (err) {
-          setSendPhotoReportFail(true)
+        setSendPhotoReportFail(true)
+        setUnactive(prev =>prev.map((string, idx) => idx === index ? 'Отправить' : string))
           console.log(err)
         }
       }
@@ -168,15 +186,8 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
             )} 
           </div>
             </div>
-          
-          {/* If avatar or placeholder */}
-          {/* <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center"> */}
-            {/* {route.link && route.link.length > 0 ? (
-            <img className="w-[32px] h-[32px] rounded-full bg-light-gray-4" src={route.link} />
-              ) : ( */}
               {fileUploaded[index] ? (
                 <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
-                  {/* <input onChange={(e)=>handleFileChange(e, index)} type="file"  accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer'/> */}
                   <img
                     src={uploadedFileLink[index]}
                     className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover"
@@ -184,16 +195,13 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
                 </div>
               ) : (
                 <div className="w-[32px] h-[32px] rounded-full flex items-center justify-center relative" onClick={()=>setUploadPictureModal(prev=>prev.map((isOpen, ind)=>ind==index? !isOpen:isOpen))}>
-                  {/* <input onChange={(e)=>handleFileChange(e, index)} type="file" accept="image/*" className='w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full bg-none absolute opacity-0 cursor-pointer' /> */}
-                  {/* <img src={ uploadedFileLink[index]} /> */}
-            
-                  
-                  <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
+                  {(array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0) ?
+                    <img src={object[array.indexOf(route.beneficiar[0].address)][1]} className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
+                    : <Avatar className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full" />
+                  }
                 </div>
               )
               }
-            {/* )} */}
-          {/* </div> */}
           </div>
           {comment[index].length > 0 &&
             <div className='w-[328px] bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 focus: outline-0 mt-2'
@@ -204,13 +212,16 @@ const [beneficiarOnSite, setBeneficiarOnSite] = useState<boolean[]>(Array(routes
           {!beneficiarOnSite[index] &&
             <p className=' text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 mt-2'>Благополучателя нет на месте</p>
           }
-          <div className='h-[102px] flex flex-col justify-between mt-2'>
-          <button className='btn-B-WhiteDefault' onClick={()=>setOpenComment(prev =>
+          <div className='h-fit flex flex-col justify-between mt-2 space-y-2'>
+            {unactive[index] == "Отправить" &&
+          <button className='btn-B-WhiteDefault' onClick={() => setOpenComment(prev =>
            prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>
           Добавить комментарий
-          </button>
-          <button className='btn-B-WhiteDefault' onClick={()=>submitPhotoReport(index)}>
-          Отправить
+          </button>}
+            <button className={unactive[index] == "Отправить" ? 'btn-B-GreenDefault' : 'btn-B-WhiteDefault cursor-default'}  onClick={() => {
+             unactive[index] == 'Отправка' ? ()=>{} : submitPhotoReport(index)
+            }}>
+              {unactive[index]}
           </button>
           </div>
           <Modal onOpenChange={()=>setOpenComment(prev =>
