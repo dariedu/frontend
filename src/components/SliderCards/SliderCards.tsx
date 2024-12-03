@@ -5,12 +5,12 @@ import { TokenContext } from '../../core/TokenContext';
 
 interface SliderCardsProps {
   showTitle?: boolean;
-  switchTab: React.Dispatch<React.SetStateAction<string>>;
+  //switchTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SliderCards: React.FC<SliderCardsProps> = ({
   showTitle = true,
-  switchTab,
+  //switchTab,
 }) => {
   const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
   const [dragStart, setDragStart] = useState<number>(0);
