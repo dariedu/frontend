@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { type IPromotion } from './../../api/apiPromotions.ts';
 import { getBallCorrectEndingName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal.tsx';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 interface IDefaultInfoProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -34,7 +35,8 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
 
 
   return (
-    <div className="w-full max-w-[500px] flex flex-col h-fit max-h-screen overflow-y-scroll rounded-t-2xl px-4 pt-[41px] pb-8 bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
+    <div className=" w-full max-w-[500px] flex flex-col h-fit max-h-screen overflow-y-scroll rounded-t-2xl px-4 pt-[20px] pb-8 bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
+    
       <div className="flex align-middle justify-between">
         <div className="flex">
           <div className="flex flex-col ml-[14px] justify-center items-start">
@@ -46,7 +48,11 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             </p>
           </div>
         </div>
-        <p className="font-gerbera-sub2 text-light-gray-3 mr-2 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
+        <div className='flex justify-center items-center'>
+           <p className="font-gerbera-sub2 text-light-gray-3 mr-2 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
+        <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />
+        </div>
+       
       </div>
       {optional ? "" : (
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px] dark:bg-light-gray-6">

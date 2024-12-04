@@ -149,7 +149,7 @@ export const postDeliveryTake = async (
       },
       data: delivery,
     });
-    return response.data;
+    return response.data
   } catch (err: any) {
     throw new Error(err.response.data.error)
   }

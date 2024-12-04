@@ -155,7 +155,7 @@ const {token} =useContext(TokenContext)
           <div className='flex w-full items-center justify-between'>
             <div className='flex justify-center items-center'>
               {/* <p className='rounded-full bg-light-brand-green text-light-gray-white h-6 w-6 min-w-6 min-h-6 text-center'>{index+1}</p> */}
-          <div className="flex flex-col items-start h-fit ml-3">
+          <div className="flex flex-col items-start h-fit ">
             <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1">
               {route.address}
             </p>
@@ -186,7 +186,7 @@ const {token} =useContext(TokenContext)
           </div>
             </div>
             {(array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0) ?
-                (<button className='w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-brand-green'><a  href={object[array.indexOf(route.beneficiar[0].address)][1]}>Ссылка</a></button>)
+                (<button className='w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green'><a  href={object[array.indexOf(route.beneficiar[0].address)][1]}>Ссылка</a></button>)
                 : (
                   fileUploaded[index] ?
                     (<div className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative" onClick={() => setUploadPictureModal(prev => prev.map((isOpen, ind) => ind == index ? !isOpen : isOpen))}>

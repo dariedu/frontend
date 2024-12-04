@@ -23,7 +23,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [uploadedFileLink, setUploadedFileLink] = useState<string>();
   const [uploadFileModalOpen, setUploadFileModalOpen] = useState(false)
-  const [updatePicSuccess, setUpdatePicSuccess] = useState(false);
+  // const [updatePicSuccess, setUpdatePicSuccess] = useState(false);
   const [updatePicFail, setUpdatePicFail] = useState(false);
 
   // Обработка значений по умолчанию
@@ -52,7 +52,6 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
       formData.set('photo', fileToSend, `selfie-${user.tg_id}.jpeg`);
         try {
           await patchUserPicture(currentUser.id, formData, token)
-          setUpdatePicSuccess(true)
           user.photo = uploadedFileLink
         } catch (err) {
         setUpdatePicFail(true)
@@ -94,7 +93,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
           {userVolunteerHours} {getHourCorrectEndingName(userVolunteerHours)}
         </p>
         </div>
-        <ConfirmModal
+        {/* <ConfirmModal
         isOpen={updatePicSuccess}
         onOpenChange={setUpdatePicSuccess}
         onConfirm={() => {
@@ -105,7 +104,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
         confirmText="Ок"
           isSingleButton={true}
           zIndex={true}
-      />
+      /> */}
       <ConfirmModal
         isOpen={updatePicFail}
         onOpenChange={setUpdatePicFail}

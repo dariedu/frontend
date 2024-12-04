@@ -17,7 +17,7 @@ export const CheckboxElementRight: React.FC<TCheckElementProps> = ({
   checked,
 }) => {
   return checked ? (
-    <div className="flex justify-between w-[315px] items-center text-light-gray-5 ">
+    <div className="flex justify-between w-full items-center text-light-gray-5 ">
       {children}
       <Checkbox.Root
         className="bg-light-gray-1 rounded-full w-6 h-6 flex justify-center items-center mr-4  dark:bg-light-gray-5"
@@ -32,10 +32,10 @@ export const CheckboxElementRight: React.FC<TCheckElementProps> = ({
       </Checkbox.Root>
     </div>
   ) : (
-    <div className="flex justify-between w-[315px] items-center  ">
+    <div className="flex justify-between w-full items-center  ">
       {children}
       <Checkbox.Root
-        className="bg-light-gray-1 rounded-full w-6 h-6 flex justify-center items-center mr-4 dark:bg-light-gray-5"
+        className="bg-light-gray-1 rounded-full w-6 h-6 flex justify-center items-center dark:bg-light-gray-5"
         onClick={() => {
           onClickFunc(obj);
         }}

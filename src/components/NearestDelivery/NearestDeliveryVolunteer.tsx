@@ -199,9 +199,9 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
             fullView && (
-              <div className="w-full min-w-[330px]h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+              <div className="w-full min-w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
-              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
               <Avatar.Image
                 src={delivery.curator.photo}
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
@@ -228,7 +228,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             ) ) : (
           <div className="w-full min-w-[330px]  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
           <div className="flex">
-          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
               <Avatar.Image
                 src={delivery.curator.photo}
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"

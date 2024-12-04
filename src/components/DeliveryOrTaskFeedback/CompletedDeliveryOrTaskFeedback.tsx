@@ -51,6 +51,8 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
 
   
   async function handleDeliveryOrTaskFeedbackSubmit(deliveryId: number, volunteer: boolean) {
+      
+console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId)
     let type: TFeedbackTypes;
     let fedbackText: string;
     if (volunteer) {
@@ -70,10 +72,10 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
         fedbackText = `Поделитесь вашими впечатлениями от курирования доброго дела? Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb1}`
       }
     }
-    
     if (token) {
       try {
         const response = await submitFeedbackDeliveryoOrTask(token, delivery, type, fedbackText, deliveryId)
+     
         if (response) {
         feedbacks.fb1 = "";
         feedbacks.fb2 = "";
@@ -118,7 +120,7 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('fb1') ?? ''}
@@ -146,7 +148,7 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="w-full bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   defaultValue={localStorage.getItem('fb2') ?? ''}
                   onChange={e => {
@@ -173,7 +175,7 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
         </Form.Root>
       </div>
       ) : (
-        <div className="w-[360px] flex flex-col rounded-t-2xl bg-light-gray-white "
+        <div className=" flex flex-col rounded-t-2xl bg-light-gray-white "
         onClick={(e)=>e.stopPropagation()}>
             <div className="flex items-center self-start mt-[25px] mx-4">
               <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
@@ -209,7 +211,7 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
                 <Form.Control asChild>
                   <TextareaAutosize
                     maxRows={10}
-                    className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                    className="w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                   placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                     required
                     defaultValue={localStorage.getItem('fb1') ?? ''}
