@@ -22,7 +22,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
   return (
-    <div className="relative w-full max-w-[400px] self-center">
+    <div className="relative w-full max-w-[500px] self-center">
       <Tabs.Root
         className="TabsRoot"
         value={activeTab}
@@ -57,7 +57,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             </Tabs.Content>
           </>
         )}
-        <Tabs.List className="flex justify-between fixed bottom-0 w-full max-w-[400px] h-[74px]">
+        <Tabs.List className="flex justify-between fixed bottom-0 w-full max-w-[500px] h-[74px]">
           {/* Вкладка "Главная" */}
           <Tabs.Trigger
             value="tab1"

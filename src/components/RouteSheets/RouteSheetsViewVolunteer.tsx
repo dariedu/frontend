@@ -89,8 +89,8 @@ const {token} =useContext(TokenContext)
     checkoForUploadedReports()
   }, [])
 
-  function handleAddComment(index: number, address: string, comment:string) {
-    console.log(index, address, comment);
+  function handleAddComment(index: number, comment:string) {
+    // console.log(index, address, comment);
     localStorage.removeItem('comment');
     addComment(prev =>prev.map((string, idx) => idx === index ? comment : string))
     setOpenComment(prev =>prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))
@@ -154,32 +154,32 @@ const {token} =useContext(TokenContext)
         >
           <div className='flex w-full items-center justify-between'>
             <div className='flex justify-center items-center'>
-              <p className='rounded-full bg-light-brand-green text-light-gray-white h-6 w-6 min-w-6 min-h-6 text-center'>{index+1}</p>
+              {/* <p className='rounded-full bg-light-brand-green text-light-gray-white h-6 w-6 min-w-6 min-h-6 text-center'>{index+1}</p> */}
           <div className="flex flex-col items-start h-fit ml-3">
             <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1">
               {route.address}
             </p>
            
-            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
+            <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
             {route.beneficiar[0].full_name}
             </p>
             {route.beneficiar[0].category && route.beneficiar[0].category.length > 0 && (
-            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
+            <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
             Категория: {route.beneficiar[0].category}
             </p>
             )}
             {route.beneficiar[0].phone && route.beneficiar[0].phone.length > 0 && (
-            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
+            <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
             Основной телефон: {route.beneficiar[0].phone}
           </p>
             )}
             {route.beneficiar[0].second_phone && route.beneficiar[0].second_phone.length > 0 && (
-            <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3">
+            <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
             Запасной телефон: {route.beneficiar[0].second_phone}
           </p>
             )}
              {route.beneficiar[0].comment && route.beneficiar[0].comment.length > 0 && (
-                <p className="font-gerbera-sub1 mb-[4px] text-light-gray-5 dark:text-light-gray-3">
+                <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3">
                Комментарий: {route.beneficiar[0].comment}
                  </p>
             )} 
@@ -202,7 +202,7 @@ const {token} =useContext(TokenContext)
               )}
           </div>
           {comment[index].length > 0 &&
-            <div className='w-[328px] bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 focus: outline-0 mt-2'
+            <div className='w-[328px] mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl py-4 px-3 text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 focus: outline-0'
             >Ваш комментарий к доставке:<br />
             <p className='text-light-gray-4 dark:text-light-gray-3'>{comment[index]}</p>
             </div>
@@ -210,7 +210,7 @@ const {token} =useContext(TokenContext)
           {!beneficiarOnSite[index] &&
             <p className=' text-light-gray-black dark:text-light-gray-1 font-gerbera-sub3 mt-2'>Благополучателя нет на месте</p>
           }
-          <div className='h-fit flex flex-col justify-between mt-2 space-y-2'>
+          <div className='h-fit flex flex-col justify-between mt-4 space-y-2'>
             {unactive[index] == "Отправить" &&
           <button className='btn-B-WhiteDefault' onClick={() => setOpenComment(prev =>
            prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))}>

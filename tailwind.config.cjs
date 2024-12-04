@@ -12,7 +12,7 @@ module.exports = {
       colors: {
         light: {
           'gray-white': '#FFFFFF',
-          'gray-1': '#F8F8F8',
+          'gray-1': '#F6F6F6',
           'gray-2': '#D7D7D7',
           'gray-3': '#BFBFBF',
           'gray-4': '#888888',
@@ -29,7 +29,7 @@ module.exports = {
         },
         dark: {
           // 'gray-white': '#000000',
-          'gray-1': '#070707',
+         // 'gray-1': '#070707',
           // 'gray-2': '#DFDFDF',
           // 'gray-3': '#575757',
           // 'gray-4': '#888888',
@@ -48,43 +48,43 @@ module.exports = {
       const newUtilities = {
         '.font-gerbera-st': {
           fontFamily: 'Gerbera',
-          fontSize: '24px',
-          lineHeight: '28px',
+          fontSize: '26px',
+          lineHeight: '130%',
         },
         '.font-gerbera-h1': {
           fontFamily: 'Gerbera',
-          fontSize: '18px',
-          lineHeight: '23px',
+          fontSize: '20px',
+          lineHeight: '130%',
         },
 
         '.font-gerbera-h2': {
           fontFamily: 'Gerbera',
-          fontSize: '16px',
-          lineHeight: '20px',
+          fontSize: '18px',
+          lineHeight: '130%',
         },
 
         '.font-gerbera-h3': {
           fontFamily: 'Gerbera',
-          fontSize: '14px',
-          lineHeight: '18px',
+          fontSize: '16px',
+          lineHeight: '130%',
         },
 
         '.font-gerbera-sub1': {
           fontFamily: 'GerberaLight',
-          fontSize: '10px',
-          lineHeight: '13px',
+          fontSize: '12px',
+          lineHeight: '130%',
         },
 
         '.font-gerbera-sub2': {
           fontFamily: 'Gerbera',
-          fontSize: '12px',
-          lineHeight: '15px',
+          fontSize: '14px',
+          lineHeight: '130%',
         },
 
         '.font-gerbera-sub3': {
           fontFamily: 'GerberaLight',
-          fontSize: '12px',
-          lineHeight: '15px',
+          fontSize: '14px',
+          lineHeight: '130%',
         },
       };
       addUtilities(newUtilities);

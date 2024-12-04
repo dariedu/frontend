@@ -237,7 +237,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   return (
     <>
       <div
-        className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] h-full flex flex-col items-center justify-start overflow-x-hidden"
+        className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[500px] h-full flex flex-col items-center justify-start overflow-x-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[400px] rounded-b-2xl h-[60px]">

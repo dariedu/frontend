@@ -85,7 +85,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
   }
 
   return (
-    <div className="bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[400px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
+    <div className="bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
       <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[400px] rounded-b-2xl h-[60px]">
         <button onClick={()=>onClose(false)} className="mr-2">
         <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
@@ -122,7 +122,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={15}
-                  className="w-full max-w-[370px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="w-full max-w-[400px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('about_me') ?? aboutMe ?? ""}

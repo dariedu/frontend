@@ -58,7 +58,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   }, [])
 
   return ( 
-    <div className="w-full max-w-[400px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
+    <div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
@@ -82,7 +82,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                     <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                       {curatorName}
                     </h1>
-                    <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
+                    <p className="font-gerbera-sub3 text-light-gray-5 text-start dark:text-light-gray-3">
                       Куратор
                     </p>
                   </div>
@@ -95,7 +95,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
           return (
             <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
               <div className="flex items-center justify-between w-[96%] mb-2">
-                <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4 p-4">
+                <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-4 p-4">
                   {`Маршрутный лист: ${routeS.name}`}
                 </span>
                 <div

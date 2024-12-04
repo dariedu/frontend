@@ -37,7 +37,7 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="flex items-center space-x-4 justify-between w-full max-w-[350px]">
+    <div className="flex items-center space-x-4 justify-between w-full ">
       <div className="flex items-center ">
         <ThemeIcon className='w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black ' />
         <label
@@ -46,7 +46,7 @@ const ThemeToggle = () => {
         >
           {theme === 'light' ? 'Светлая тема' : 'Тёмная тема'}
         </label>
-        <button onClick={() => { localStorage.removeItem('dariEduColorTheme'); setSystemTheme()}} className='h-6 rounded-full bg-light-brand-green w-16 font-gerbera-sub1 absolute ml-48 text-light-gray-white'>
+        <button onClick={() => { localStorage.removeItem('dariEduColorTheme'); setSystemTheme()}} className='h-6 px-1 rounded-full bg-light-brand-green w-fit font-gerbera-sub1 absolute ml-[55%] text-light-gray-white'>
           Системная
         </button>
       </div>

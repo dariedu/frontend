@@ -59,6 +59,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
               if (user) {
                 if ( user.photo && ! user.photo.includes('https')) {
                   user.photo = user.photo.replace('http', 'https')
+                  user.photo += '?_=' + Date.now()///добавляем временную метку, чтобы не брать фото из кэша
                  }
                 setCurrentUser(user);
               } else {
@@ -93,6 +94,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
                 if (user) {
                   if ( user.photo && ! user.photo.includes('https')) {
                     user.photo = user.photo.replace('http', 'https')
+                    user.photo += '?_=' + Date.now()///добавляем временную метку, чтобы не брать фото из кэша
                   }
                   setCurrentUser(user);
                 } else {

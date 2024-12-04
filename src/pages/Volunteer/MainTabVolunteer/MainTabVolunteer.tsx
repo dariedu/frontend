@@ -256,7 +256,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[400px] ">
+      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[500px] ">
         <div>
           <SliderStories />
           {myCurrent.length > 0
@@ -310,7 +310,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
               setTakeTaskSuccess={setTakeTaskSuccess}
             />
           ) : (
-            <div className="flex flex-col w-full max-w-[380px] items-center mt-8 h-[100px] justify-between ml-4 mb-5">
+            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between ml-4 mb-5">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="dark:text-light-gray-1">
                 Скоро тут появятся добрые дела

@@ -12,7 +12,7 @@ import { Modal } from '../ui/Modal/Modal';
 import { TokenContext } from '../../core/TokenContext';
 import { UserContext } from '../../core/UserContext';
 import { patchUserPicture } from '../../api/userApi';
-
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface IProfilePicProps {
   user: IUser;
@@ -23,6 +23,8 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [uploadedFileLink, setUploadedFileLink] = useState<string>();
   const [uploadFileModalOpen, setUploadFileModalOpen] = useState(false)
+  const [updatePicSuccess, setUpdatePicSuccess] = useState(false);
+  const [updatePicFail, setUpdatePicFail] = useState(false);
 
   // Обработка значений по умолчанию
   const userName = user.name ?? 'Неизвестный';
@@ -35,7 +37,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
   const userPoints = user.point ?? 0;
   const userVolunteerHours = user.volunteer_hour ?? 0;
 
- const {token} = useContext(TokenContext)
+  const {token} = useContext(TokenContext)
   const { currentUser } = useContext(UserContext);
 
 
@@ -49,9 +51,11 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
       const formData = new FormData(); // создаем объект FormData для передачи файла
       formData.set('photo', fileToSend, `selfie-${user.tg_id}.jpeg`);
         try {
-        let result = await patchUserPicture(currentUser.id, formData, token)
-          console.log(" updateUserAvatar() success", result)
+          await patchUserPicture(currentUser.id, formData, token)
+          setUpdatePicSuccess(true)
+          user.photo = uploadedFileLink
         } catch (err) {
+        setUpdatePicFail(true)
         console.log(err, "updateUserAvatar() error")
     }
   }
@@ -61,7 +65,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
 
   return (
     <>
-       <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full max-w-[400px] dark:bg-light-gray-7-logo">
+       <div className="flex flex-col items-center justify-between p-[32px] h-[275px] bg-light-gray-white rounded-2xl w-full max-w-[500px] dark:bg-light-gray-7-logo">
       <div className="h-[105px] w-[105px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center relative">
         <Avatar.Root>{
           fileUploaded && userAvatarSrc!==undefined ? (
@@ -89,7 +93,32 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
         <p className="w-[96px] h-[28px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 font-gerbera-sub2 text-light-gray-8-text rounded-2xl flex justify-center items-center">
           {userVolunteerHours} {getHourCorrectEndingName(userVolunteerHours)}
         </p>
-      </div>
+        </div>
+        <ConfirmModal
+        isOpen={updatePicSuccess}
+        onOpenChange={setUpdatePicSuccess}
+        onConfirm={() => {
+          setUpdatePicSuccess(false)
+        }}
+        title={"Фото успешно обновлено!"}
+        description=""
+        confirmText="Ок"
+          isSingleButton={true}
+          zIndex={true}
+      />
+      <ConfirmModal
+        isOpen={updatePicFail}
+        onOpenChange={setUpdatePicFail}
+        onConfirm={() => {
+          setUpdatePicFail(false)
+        }}
+        title={<p>Упс, что-то пошло не так<br />
+        Попробуйте позже</p>}
+        description=""
+        confirmText="Ок"
+          isSingleButton={true}
+          zIndex={true}
+      />
       </div>
       <Modal isOpen={uploadFileModalOpen} onOpenChange={setUploadFileModalOpen} zIndex={true}>
         <UploadPicture
@@ -101,8 +130,9 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
           setFileUploaded={setFileUploaded}
           updateUserAvatar={updateUserAvatar}
         />
-      </Modal>
-   </>
+      </Modal>     
+    </>
+    
    
   );
 };

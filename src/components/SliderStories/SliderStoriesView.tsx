@@ -104,13 +104,13 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-light-gray-white dark:bg-light-gray-black bg-opacity-80 flex justify-center items-center z-50 rounded-xl "
+      className="fixed -inset-7 bg-light-gray-white dark:bg-light-gray-black bg-opacity-80 flex justify-center items-center z-50 rounded-xl "
       onTouchStart={onTouchStartHandler}
       onTouchMove={onTouchMoveHandler}
       onTouchEnd={onTouchEndHandler}
       onMouseDown={onMouseDownHandler}
     >
-      <div className="relative h-full w-full max-w-[400px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
+      <div className="relative h-full w-full max-w-[500px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
         {/* Прогресс-бар и кнопка закрытия */}
         <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
           {/* Прогресс-бар */}
@@ -140,7 +140,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
           </Avatar.Fallback>
         </Avatar.Root>
           {/* Текст поверх картинки */}
-          <div className="text-light-gray-white font-gerbera-h2 bottom-28 absolute pl-[15px]">
+          <div className="text-light-gray-white font-gerbera-h2 bottom-44 absolute pl-[15px]">
             <div className="flex bg-light-brand-green font-gerbera-h3 w-[112px] h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
               {new Date(stories[currentIndex].date).toLocaleDateString()}
             </div>

@@ -119,14 +119,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
   async function handleSave(field: "email" | "geo", value: string) {
     if (currentUser && token) {
-
       // const formData = new FormData(); // создаем объект FormData для передачи файла
       // formData.set(field, value);
       try {
         // Отправляем обновленные данные на бэкенд
         const updatedUser = await patchUser(currentUser.id, {[field]: value}, token,);
         if (updatedUser) {
-          console.log(updatedUser)
+          //console.log(updatedUser)
           setUpdateDataSuccess(true)
         }
       } catch (err) {
@@ -148,7 +147,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         token,
       );
       if (updatedUser) {
-        console.log(updatedUser, "handleSaveTelegramNik")
+        //console.log(updatedUser, "handleSaveTelegramNik")
         setUpdateDataSuccess(true)
       }
     } catch (error) {
@@ -175,8 +174,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   };
 
   function updatePhone() {
-    window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number')
-    console.log( window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
+  //  window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number')
+   // console.log( window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
     // window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')
     // console.log( window.Telegram.WebApp.answerWebAppQuery('/update_phone_number'), "window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')")
     setUpdatePhoneModal(true)
@@ -199,13 +198,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
 
   return (
-    <div className="w-full max-w-[400px]  h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
+    <div className="w-full max-w-[500px] h-[410px] bg-light-gray-white dark:bg-light-gray-7-logo flex flex-col justify-between mt-1 rounded-2xl">
       {items.map((_, index) => {
         const field = Object.keys(isEditing)[index] as keyof typeof formData;
         if (index === 3 || index === 2) {
           return (
             <div
-              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] h-[66px] flex items-center justify-between px-4"
               key={index}
             >
               <div className="inline-flex items-center justify-start">
@@ -223,7 +222,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         } else if (index === 4) {
           return (
             <div
-              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] h-[66px] flex items-center justify-between px-4"
               key={index}
             >
               <div className="inline-flex items-center justify-start">
@@ -237,7 +236,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         } else if (index == 0) {
           return (
             <div
-          className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
+          className="w-full min-w-[346px] h-[66px] flex items-center justify-between px-4"
           key={index}
         >
           <div className="inline-flex items-center justify-start">
@@ -253,7 +252,6 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                style={true}
                   />
               </div>
-              
             ) : (
               <p className="ml-3.5 dark:text-light-gray-1">
                 {formData[field]}
@@ -273,19 +271,19 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
  )} else {
           return (
             <div
-              className="w-full min-w-[346px] max-w-[380px] h-[66px] flex items-center justify-between px-3.5"
+              className="w-full min-w-[346px] h-[66px] flex items-center justify-between px-4"
               key={index}
             >
               <div className="inline-flex items-center justify-start">
                 {iconsLinks[index]}
                 {isEditing[field] ? (
                   <input
-                    className="ml-3.5 p-1 border rounded"
+                    className="px-4 rounded-2xl outline-none py-[18px] w-[240px] h-[54px] text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
                     value={userEmail}
                     onChange={e => handleInputChange(e)}
                   />
                 ) : (
-                  <p className="ml-3.5 dark:text-light-gray-1">
+                  <p className="ml-3.5 dark:text-light-gray-1 ">
                     {userEmail}
                   </p>
                 )}
@@ -329,7 +327,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onConfirm={() => { setUpdateNikFail(false) }}
        title={
          <p>
-           Упс, нет доступа к <br/>Вашему нику в телеграм.
+           Упс, нет доступа к <br/>Вашему нику в Telegram.
            <br />Попробуйте позже.
          </p>
        }
@@ -341,11 +339,11 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
        <ConfirmModal
        isOpen={noNeedToUpdateNik}
        onOpenChange={setNoNeedToUpdateNik}
-        onConfirm={() => { setNoNeedToUpdateNik(false) }}
+       onConfirm={() => { setNoNeedToUpdateNik(false); setConfirmUpdate(false) }}
        title={
          <p>
-           Ваш телеграм ник в приложении "Дари Еду"
-           <br /> совпадает с ником в телеграм.
+          Ваш телеграм ник <br />в приложении "Дари Еду"<br />
+          совпадает с ником в Telegram.
          </p>
        }
        description=""

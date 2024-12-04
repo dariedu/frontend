@@ -23,7 +23,7 @@ const SliderCardsTaskVolunteer: React.FC<SliderCardsProps> = ({
 
 
   return (
-    <div className="mt-1 pt-3 w-full max-w-[400px] bg-light-gray-white rounded-2xl dark:bg-light-gray-7-logo overflow-x-hidden">
+    <div className="mt-1 pt-3 w-full max-w-[500px] bg-light-gray-white rounded-2xl dark:bg-light-gray-7-logo overflow-x-hidden">
       <div
         className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-[360px] pl-4 space-x-2"
       >

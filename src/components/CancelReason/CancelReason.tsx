@@ -22,7 +22,7 @@ const CancelReason = () => {
 
   return (
     <>
-      <div className="w-full max-w-[400px] h-fit flex flex-col rounded-t-2xl mt-2">
+      <div className="w-full max-w-[500px] h-fit flex flex-col rounded-t-2xl mt-2">
         <p>Причина отмены?</p>
         <Form.Root
           className="mt-[29px]"

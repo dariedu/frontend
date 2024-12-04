@@ -1,6 +1,5 @@
 import React from 'react';
 import CardPromotion from './CardPromotion';
-//import image from '../../../../assets/avatar.svg';
 import { type IPromotion, type TPromotionCategory } from '../../../../api/apiPromotions';
 import './SliderCardStyles.css';
 
@@ -60,7 +59,7 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
 
   return (
     <div
-      className='sliderPromotionsScrollbar overflow-x-scroll flex space-x-1 py-2 w-full max-w-[400px]'
+      className='sliderPromotionsScrollbar overflow-x-scroll flex space-x-2 py-2 w-full max-w-[500px]'
       //ref={sliderRef}
       // className={`overflow-x-hidden flex space-x-4 py-2 scrollbar-hide w-[360px] ${
       //   isDragging ? 'cursor-grabbing' : 'cursor-grab'

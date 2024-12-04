@@ -21,7 +21,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
   myDeliveries.forEach(i => arrOfMyDeliveriesId.push(i.id));
   
   return (
-    <div className="pt-3 w-full max-w-[400px]">
+    <div className="pt-3 w-full max-w-[500px]">
       <div
         className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-full max-w-[500px] pl-4 space-x-2"
       >

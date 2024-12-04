@@ -76,7 +76,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
             handleRequestSubmit()
           }}
          >
-          <div className='flex flex-col px-4 w-full  max-w-[400]'>
+          <div className='flex flex-col px-4 w-full  max-w-[500]'>
               <Form.Field name="about_presence" className="mt-4">           
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3 ml-3">Расскажите в свободной форме</Form.Label>
               <Form.Control asChild>

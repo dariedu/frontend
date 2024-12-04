@@ -194,7 +194,7 @@ const BankTab:React.FC = () => {
   
   return (
     <>
-      <div className="mt-2 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden h-fit w-full max-w-[500px]">
+      <div className="mt-1 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden h-fit w-full max-w-[500px]">
         <div className="w-full max-w-[500px] h-fit flex flex-col justify-between ">
           {userPoints !== undefined && userPoints !== null? (
           <Points points={Number(userPoints)} />
@@ -205,14 +205,14 @@ const BankTab:React.FC = () => {
         </div>
         <div className='flex flex-col h-fit mb-16 '>
           <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo ' >
-          <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
+          <div className='flex justify-between mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Обменять баллы</h1>
               {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
                 <Filter onClick={()=>{setOpenFilter(true)}} className='cursor-pointer rounded-full bg-light-gray-1 fill-[#0A0A0A] dark:bg-light-gray-6 dark:fill-[#F8F8F8]'/>
             )}
           
           </div>
-            {promotionsAll.length == 0 ? (<div className='flex flex-col w-[300px] items-center mt-10 h-[120px] justify-between ml-4'>
+            {promotionsAll.length == 0 ? (<div className='flex flex-col w-full items-center mt-10 h-[120px] justify-between ml-4'>
               <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='dark:text-light-gray-1'>Скоро тут появятся доступные поощрения</p>
           </div>) : (
@@ -220,10 +220,10 @@ const BankTab:React.FC = () => {
           )}
         </div>
         <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo' >
-          <div className='flex justify-between ml-4 mr-[14px] pt-[20px]'>
+          <div className='flex justify-between  mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
             </div>{promotionsMy.length == 0 ? 
-              (<div className='flex flex-col w-[300px] items-center mt-10 h-[100px] justify-between ml-4'>
+              (<div className='flex flex-col w-full items-center mt-10 h-[100px] justify-between ml-4'>
                 <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
               <p className='dark:text-light-gray-1'>Скоро тут появятся ваши планы</p>
             </div>)
