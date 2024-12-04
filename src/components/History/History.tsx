@@ -237,15 +237,15 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   return (
     <>
       <div
-        className="bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] h-full flex flex-col items-center justify-start overflow-x-hidden"
+        className="bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-full flex flex-col items-center justify-start overflow-x-hidden"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[400px] rounded-b-2xl h-[60px]">
-          <button onClick={() => onClose(false)} className="mr-2">
-          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
+        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] px-4">
+          <button onClick={() => onClose(false)} >
+          <RightArrowIcon className='rotate-180 w-9 h-9 stroke-[#D7D7D7] dark:stroke-[#575757]' />
           </button>
-          <div className="flex justify-between w-[80%] max-w-[360px] items-center">
-            <h2 className="text-light-gray-black dark:text-light-gray-1">
+          <div className="flex justify-between w-full items-center">
+            <h2 className="text-light-gray-black dark:text-light-gray-1 ml-2">
               История
             </h2>
             <Filter
@@ -256,7 +256,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full max-w-[400px]">
+        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full ">
           {allMyPastCombined.length > 0 ? (
             filterCategories && filterCategories.length > 0 ? (
               allMyPastCombined

@@ -55,13 +55,13 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <>
           <div
-            className="w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
+            className="w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
             onClick={e => {
               e.stopPropagation();
             }}
           >
-            <div className="flex justify-between w-full">
-              <div className="flex items-start">
+            <div className="flex">
+              <div className="flex justify-between w-full">
                 <div className="flex w-fit items-start">
                 <Metro_station  className='w-[32px] h-[32px] bg-[#F8F8F8] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
                   <div className="flex flex-col justify-center items-start pl-2 w-max-[290px]">
@@ -80,19 +80,19 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             </div>
 
             {/* /////////////////////// */}
-            <div className="flex justify-between items-center mt-[14px]">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-3">
+            <div className="flex justify-center items-center mt-[14px] space-x-2">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
                   Время начала
                 </p>
-                <p className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
+                <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                   {`${deliveryDate.getDate()}
               ${getMonthCorrectEndingName(deliveryDate)} в
               ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub2 text-light-gray-black dark:text-light-gray-3">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
                   Начисление баллов
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
@@ -103,7 +103,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             </div>
             {/* /////////////////////// */}
             {delivery.curator.name && delivery.curator.name.length > 0 ? (
-            <div className="w-full min-w-[330px] max-w-[370px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+            <div className="w-full min-w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
                 <div className="flex">
                 <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
@@ -121,7 +121,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                   {delivery.curator.name}
                 </h1>
-                <p className="font-gerbera-sub2 text-light-gray-2 text-start dark:text-light-gray-3">
+                <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
                   Куратор
                 </p>
               </div>

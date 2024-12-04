@@ -60,7 +60,7 @@ const Support:React.FC<TSupport> = ({onClose}) => {
     
 
   return (
-    <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[400px]  h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+    <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px]  h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">

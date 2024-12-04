@@ -56,10 +56,10 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
       type="canceled_delivery"
       fedbackText = `Поделитесь, пожалуйста, почему вы отказались от участия в доставке? Ответ: ${feedbacks.fb1Cancel}`
       } else {
-        type="canceled_promotion"
+        type="canceled_task"
       fedbackText = `Поделитесь, пожалуйста, почему вы отказались от участия в добром деле? Ответ: ${feedbacks.fb1Cancel}`
     }
-    
+
     if (token) {
       try {
         const response = await submitFeedbackDeliveryoOrTask(token, delivery, type, fedbackText, deliveryId)
@@ -81,10 +81,10 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
 
   return (
     <>
-      <div className="w-full max-w-[400px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4">
-          <Big_pencil className=" w-[62px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
+          <Big_pencil className="w-[32px] h-[32px] min-w-[32px] min-h-[32px]  fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
           {delivery ? (
          <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
          Поделитесь, пожалуйста, почему вы отказались от участия в доставке?
@@ -101,7 +101,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
             handleDeliveryOrTaskCancelledFeedbackSubmit(deliveryOrTaskId)
           }}
          >
-          <div  className='flex flex-col px-4'>
+          <div  className='flex flex-col px-4 w-full' >
             <Form.Field name="fb1" className="mt-4">
             <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Расскажите в свободной форме</Form.Label>
               {/* <Form.Label className="font-gerbera-sub2 text-light-gray-4">
@@ -110,7 +110,7 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="w-full min-w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   
                   defaultValue={localStorage.getItem('fb1Cancel') ?? ''}

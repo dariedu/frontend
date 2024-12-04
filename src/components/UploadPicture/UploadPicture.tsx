@@ -1,14 +1,15 @@
-import React, { type Dispatch } from 'react';
+import React, { type Dispatch } from 'react'
 import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react'
 
+
 interface ISelfieProps {
-  text: string;
-  onOpenChange: Dispatch<React.SetStateAction<boolean>>;
+  text: string
+  onOpenChange: Dispatch<React.SetStateAction<boolean>>
   uploadedFileLink: string|undefined
   setUploadedFileLink: Dispatch<React.SetStateAction<string|undefined>>
   fileUploaded:boolean
-  setFileUploaded: Dispatch<React.SetStateAction<boolean>>,
+  setFileUploaded: Dispatch<React.SetStateAction<boolean>>
   updateUserAvatar: () => void
 }
 
@@ -22,6 +23,7 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
   fileUploaded,
   setFileUploaded,
   updateUserAvatar,
+
 }) => {
  
 
@@ -36,7 +38,7 @@ export const UploadPicture: React.FC<ISelfieProps> = ({
   return (
     <>
       <div
-        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full max-w-[400px] dark:bg-light-gray-7-logo"
+        className="flex flex-col items-center p-6 h-max-[343px] bg-light-gray-white rounded-t-2xl w-full max-w-[500px] dark:bg-light-gray-7-logo"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-8 relative">

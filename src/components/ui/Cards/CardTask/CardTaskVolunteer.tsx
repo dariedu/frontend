@@ -90,7 +90,7 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getT
      return (
        <>
 
-     <div className="p-4 bg-light-gray-1 rounded-2xl shadow w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
+     <div className="p-4 bg-light-gray-1 rounded-2xl w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
            <div className="flex items-center">
           
              <div className="flex items-start justify-center">

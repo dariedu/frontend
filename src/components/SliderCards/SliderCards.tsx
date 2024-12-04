@@ -115,7 +115,7 @@ const SliderCards: React.FC<SliderCardsProps> = ({
   };
 
   return (
-    <div className="pt-[16px] w-full max-w-[400px]">
+    <div className="pt-[16px] w-full max-w-[500px]">
       {showTitle && (
         <h2 className="font-gerbera-h1 text-light-gray-black text-left pl-4">
           Другие добрые дела

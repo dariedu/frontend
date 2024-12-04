@@ -53,7 +53,7 @@ const ProfileUser: React.FC<IProfileUserProps> = ({
   const profileTitle = isCurrentUser ? 'Мой профиль' : 'Профиль пользователя';
 
   return (
-      <div className="fixed z-50 top-0 bg-light-gray-1  dark:bg-light-gray-black rounded-[16px] shadow-lg w-full max-w-[400px] max-h-[100vh] flex flex-col overflow-x-hidden">
+      <div className="fixed z-50 top-0 bg-light-gray-1  dark:bg-light-gray-black rounded-[16px] shadow-lg w-full max-w-[500px] max-h-[100vh] flex flex-col overflow-x-hidden">
       <div className="flex items-center mb-[4px] bg-white dark:bg-light-gray-7-logo dark:text-light-gray-1 rounded-b-2xl w-full h-[60px] p-[16px]">
         <button onClick={onClose} className="mr-2">
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] ' />

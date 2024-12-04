@@ -57,8 +57,8 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);
     ///// используем контекст токена
-    const tokenContext = useContext(TokenContext);
-    const token = tokenContext.token;
+    const {token} = useContext(TokenContext);
+    // const token = tokenContext.token;
    ////// используем контекст
 
   useEffect(() => {
@@ -142,36 +142,37 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         : deliveryDate.getMinutes();
     const subway = getMetroCorrectName(delivery.location.subway);
     const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
-    try {
+    
       if (token) {
-        let result: IDelivery = await postDeliveryTake(token, id, delivery);
+        try {
+        let result = await postDeliveryTake(token, id, delivery);
         if (result) {
-          ////меняем адрес фото
-          if (result.curator.photo && !result.curator.photo.includes('https')){
-            result.curator.photo = result.curator.photo.replace('http', 'https')
-          }
           setTakeDeliverySuccess(true);
           setTakeDeliverySuccessDateName(finalString);
           setDeliveryForReservation(undefined)
+          }
+        }
+        catch (err) {
+        if (err == 'Error: You have already taken this delivery') {
+          setTakeDeliveryFail(true);
+          setTakeDeliveryFailString(
+            `Ошибка, доставка ${finalString}, уже у вас в календаре`,
+          );
+        } else if ((err = ' Error: User does not confirmed')) {
+          setTakeTaskFail(true);
+          setTakeTaskFailString(
+            `Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`,
+          );
+         }  else {
+          setTakeDeliveryFail(true);
+          setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
         }
       }
-    } catch (err) {
-      if (err == 'Error: You have already taken this delivery') {
-        setTakeDeliveryFail(true);
-        setTakeDeliveryFailString(
-          `Ошибка, доставка ${finalString}, уже у вас в календаре`,
-        );
-      } else if ((err = ' Error: User does not confirmed')) {
-        setTakeTaskFail(true);
-        setTakeTaskFailString(
-          `Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`,
-        );
-      } else {
-        setTakeDeliveryFail(true);
-        setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
-      }
-    }
+    } 
   }
+
+
+
 
   function getDelivery(delivery: IDelivery) {
     const deliveryDate = new Date(delivery.date);
@@ -211,9 +212,6 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       if (token) {
         let result: ITask = await postTaskAccept(id, token);
         if (result) {
-          if (result.curator.photo && !result.curator.photo.includes('https')) {
-           result.curator.photo = result.curator.photo.replace('http', 'https')
-             }
           setTakeTaskSuccess(true);
           setTakeTaskSuccessDateName(finalString);
         }
@@ -256,7 +254,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[400px] ">
+      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[500px] ">
         <div>
           <SliderStories />
           {myCurrent.length > 0
@@ -310,7 +308,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
               setTakeTaskSuccess={setTakeTaskSuccess}
             />
           ) : (
-            <div className="flex flex-col w-full max-w-[380px] items-center mt-8 h-[100px] justify-between ml-4 mb-5">
+            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between ml-4 mb-5">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="dark:text-light-gray-1">
                 Скоро тут появятся добрые дела

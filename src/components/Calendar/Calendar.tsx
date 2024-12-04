@@ -161,7 +161,7 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   return (
     <>
-      <div className="p-4 bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[400px] rounded-2xl relative select-none">
+      <div className="p-4 bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px] rounded-2xl relative select-none">
         <div className="flex justify-between items-center mb-4">
           {showHeader && (
             <h2 className="font-gerbera-h1 text-lg  dark:text-light-gray-white">{headerName}</h2>

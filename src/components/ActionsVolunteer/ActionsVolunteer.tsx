@@ -114,7 +114,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
 
   return (
     <>
-      <div className="space-y-[4px] bg-light-gray-1 dark:bg-light-gray-black rounded-[16px] w-full max-w-[400px] mt-1">
+      <div className="space-y-1 bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] mt-1">
       {/* Переключение темы */}
       {showThemeToggle && (
         <div className="relative rounded-2xl">
@@ -127,14 +127,14 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       {/* Действия */}
       {filteredActions.map((action, index) => (
 
-        <div  key={index} className="flex items-center justify-between p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] shadow h-[66px]" onClick={action.onClick ? action.onClick : ()=>{}}>
+        <div  key={index} className="flex items-center justify-start p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] shadow h-[66px]" onClick={action.onClick ? action.onClick : ()=>{}}>
           <div className="flex items-center space-x-4">
-            {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (
+            {/* {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (
               <span>{action.icon}</span>
-            ) : (
+            ) : ( */}
               <span>{action.icon}</span>
-            )}
-            <span className="font-gerbera-h3 text-light-gray-black m-0 dark:text-light-gray-1">
+            {/* )} */}
+            <span className="text-left font-gerbera-h3 text-light-gray-black m-0 dark:text-light-gray-1">
               {action.label}
             </span>
           </div>

@@ -141,7 +141,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       {(delivery !== undefined && deliveryDate!=undefined) && (
         <>
            <div
-        className={`${fullViewActive == true ? 'hidden ' : ' '} w-full max-w-[400px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`${fullViewActive == true ? 'hidden ' : ' '} w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
           {/* //////// */}

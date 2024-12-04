@@ -28,7 +28,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
   return (
     <>
       <div
-        className="w-[159px] bg-light-gray-white rounded-2xl shadow-md overflow-hidden flex flex-col h-[190px] select-none dark:bg-light-gray-6"
+        className="w-[159px] bg-light-gray-white rounded-2xl overflow-hidden flex flex-col h-[190px] select-none dark:bg-light-gray-6"
         onClick={() => setOpenFullView(true)}
       >
         {/* Image Section */}
@@ -65,7 +65,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserve
             В любое время
           </p>
           )}
-          <p className="font-gerbera-sub1 text-light-gray-3 overflow-hidden h-[15px]">
+          <p className="font-gerbera-sub1 text-light-gray-4 overflow-hidden h-[15px]">
             {promotion.address}
           </p>
         </div>

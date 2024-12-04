@@ -16,7 +16,7 @@ const NextTask: React.FC<INextTaskProps> = ({
   taskPoints,
 }) => {
   return (
-    <div className="flex items-center justify-between bg-light-brand-green p-3.5 rounded-2xl w-full max-w-[400px] ">
+    <div className="flex items-center justify-between bg-light-brand-green p-3.5 rounded-2xl w-full max-w-[500px] ">
       {/* Левая часть с иконкой и названием задачи */}
       <div className="flex items-center">
         {/* Аватарка/Иконка */}

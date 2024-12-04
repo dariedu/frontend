@@ -105,16 +105,16 @@ export const submitFeedbackDeliveryoOrTask = async (
     "type": type,
     "text": feedbackText,
     "delivery": deliveryOrTaskId,
-     "task": "",
-    "promotion": "",
+    "task": '',
+    "promotion": '',
   }
   } else {
     object = {
       "type": type,
       "text": feedbackText,
-      "delivery": "",
+      "delivery": '',
       "task": deliveryOrTaskId,
-      "promotion": ""
+      "promotion": ''
     }
 }
    

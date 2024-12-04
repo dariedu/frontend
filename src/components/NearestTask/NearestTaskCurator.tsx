@@ -121,7 +121,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   return (
     <>
       <div
-        className={`w-full max-w-[400px] py-[17px] px-4 h-fit  rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
+        className={`w-full max-w-[500px] py-[17px] px-4 h-fit  rounded-2xl flex flex-col mt-1 bg-light-gray-white dark:bg-light-gray-7-logo`}
       >
         <div className="flex justify-between w-full">
           {filter == 'nearest' ? (
