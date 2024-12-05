@@ -12,9 +12,10 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 import * as Avatar from '@radix-ui/react-avatar';
 
 interface INearestTaskProps {
-  task: ITask;
-  taskFilter: TTaskFilter;
+  task: ITask
+  taskFilter: TTaskFilter
   cancelFunc: (task: ITask) => {}
+  feedbackSubmited:boolean
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -23,14 +24,15 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   task,
   cancelFunc,
   taskFilter,
+  feedbackSubmited
 }) => {
   const deliveryDate = new Date(task.start_date);
 
+  const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited)
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
 
-  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =
-    useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
+  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =  useState(false); ////// 
 
 
 
@@ -45,6 +47,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
     ? task.curator.tg_username.slice(1)
     : task.curator.tg_username;
 }
+  
   
 
   return (
@@ -179,7 +182,15 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               >
                 Отказаться
               </button>
-            ) : taskFilter == 'completed' ? (
+        ) : taskFilter == 'completed' && isFeedbackSubmited ? (
+          <button
+              className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+              onClick={e => {
+                e.preventDefault();
+              }}
+            >
+              Oтзыв отправлен
+            </button>) : (
             <button
               className="btn-B-GreenDefault  mt-[20px] self-center"
               onClick={e => {
@@ -189,9 +200,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
             >
               Поделиться впечатлениями
             </button>
-          ) : (
-            ''
-          )
+          ) 
         ): ""}
 
         {/* /////////////////////// */}
@@ -199,7 +208,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
         <CompletedDeliveryOrTaskFeedback
           onOpenChange={setIsModalOpen}
-          onSubmitFidback={setIsFeedbackSubmitedModalOpen}
+          onSubmitFidback={() => { setIsFeedbackSubmitedModalOpen(true); setIsFeedbackSubmited(true) }}
           volunteer={true}
           delivery={false}
           deliveryOrTaskId={task.id}
@@ -208,7 +217,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
       <ConfirmModal
         isOpen={isFeedbackSubmitedModalOpen}
         onOpenChange={setIsFeedbackSubmitedModalOpen}
-        onConfirm={() => setIsFeedbackSubmitedModalOpen(false)}
+        onConfirm={() => {setIsFeedbackSubmitedModalOpen(false)}}
         title={
           <p>
             Спасибо, что поделились!

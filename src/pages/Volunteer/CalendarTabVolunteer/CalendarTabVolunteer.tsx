@@ -29,6 +29,7 @@ const CalendarTabVolunteer = () => {
 
   const [allMyTasks, setAllMyTasks] = useState<ITask[]>([])
 
+  const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
   const [cancelTaskSuccess, setCancelTaskSuccess] = useState(false)  //// таск успешно отмемен
   const [cancelTaskFail, setCancelTaskFail]= useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
   const [cancelTaskSuccessString, setCancelTaskSuccessString] = useState<string>(""); ////// если доставка отменена то тут будут данные по отмененной доставке, метро, дата и время
@@ -80,13 +81,18 @@ const CalendarTabVolunteer = () => {
       try {
         let result:TMyFeedback[] = await getMyFeedbacks(token);
         if (result) {
-          let allMySubmitedFeedbacksForCompletedDeliveries:number[] = []
+          let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
+          let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
+          console.log(result, "feedbacks")
           result.forEach(i => {
             if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
               allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
+            } else if (typeof i.task == 'number' && i.type == 'completed_task') {
+              allMySubmitedFeedbacksForCompletedTasks.push(i.task)
             }
           })
           setCompletedDeliveryFeedbacks(allMySubmitedFeedbacksForCompletedDeliveries)
+          setCompletedTaskFeedbacks(allMySubmitedFeedbacksForCompletedTasks)
         }
       } catch (err) {
         console.log("getAllMyFeedbacks volunteer tab has failed")
@@ -200,13 +206,22 @@ try {
                 let taskDate = new Date(task.start_date)
                 taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
                 return (<div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} />
+                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} feedbackSubmited={true} />
                 </div>
                 )
               } else {
-                return(<div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} />
-                </div>)
+                return (
+                  completedTaskFeedbacks.includes(task.id) ? (
+                <div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={true}/>
+                </div>
+                ): (
+              <div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={false}/>
+                </div>
+                )
+                )
+ 
               }
             })
           ) : ""}

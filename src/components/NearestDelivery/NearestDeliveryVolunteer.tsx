@@ -37,6 +37,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   setIsFeedbackSubmitedModalOpen,
   feedbackSubmited,
 }) => {
+
   const deliveryDate = new Date(delivery.date);
   //const currentDate = new Date();
 // console.log(delivery, "delivery")
@@ -266,7 +267,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               </button>
             ): currentStatus == 'completed' ? feedbackSubmited ? (
               <button
-              className="btn-B-WhiteDefault mt-[20px]"
+              className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
               onClick={e => {
                 e.preventDefault();
               }}
