@@ -7,8 +7,8 @@ interface IUploadPicProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
   index:number
   setUploadedFileLink:React.Dispatch<React.SetStateAction<string[]>>
-  beneficiarOnSite: boolean
-  setBeneficiarOnSite: React.Dispatch<React.SetStateAction<boolean[]>>
+  beneficiarIsAbsent: boolean
+  setBeneficiarIsAbsent: React.Dispatch<React.SetStateAction<boolean[]>>
   uploadedFileLink: string[]
   fileUploaded:boolean[]
   setFileUploaded: React.Dispatch<React.SetStateAction<boolean[]>>
@@ -19,9 +19,9 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   onOpenChange,
   index,
   uploadedFileLink,
-  beneficiarOnSite,
+  beneficiarIsAbsent,
   setUploadedFileLink,
-  setBeneficiarOnSite,
+  setBeneficiarIsAbsent,
   setFileUploaded,
   fileUploaded
 }) => {
@@ -31,7 +31,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
  
 
   const handleCheckChange = (): void => {
-    setBeneficiarOnSite(prev =>
+    setBeneficiarIsAbsent(prev =>
       prev.map((isOpen, idx) => idx === index ? !isOpen : isOpen))
   }
   
@@ -110,7 +110,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           <br />
          </p>
       <div className='ml-20'>
-        {beneficiarOnSite ?
+        {!beneficiarIsAbsent ?
           (<CheckboxElement onCheckedChange={handleCheckChange} checked={false}>
           <p className="font-gerbera-sub2 dark:text-light-gray-3">Благополучателя нет на месте</p>
         </CheckboxElement>) :

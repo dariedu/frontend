@@ -67,7 +67,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
       <div className="w-full h-[67px] bg-light-gray-white rounded-2xl flex items-center justify-between px-4 dark:bg-light-gray-7-logo">
           <div className="flex">
             
-          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
+          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-1 dark:bg-light-gray-8-text rounded-full">
               <Avatar.Image
                 src={curatorImg}
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
