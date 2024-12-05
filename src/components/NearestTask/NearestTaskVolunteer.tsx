@@ -182,7 +182,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               >
                 Отказаться
               </button>
-        ) : taskFilter == 'completed' && isFeedbackSubmited ? (
+        ) : taskFilter == 'completed' &&  feedbackSubmited ? (
           <button
               className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
               onClick={e => {
@@ -190,7 +190,16 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               }}
             >
               Oтзыв отправлен
-            </button>) : (
+            </button>) : taskFilter == 'completed' && isFeedbackSubmited ? (
+             <button
+             className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+             onClick={e => {
+               e.preventDefault();
+             }}
+           >
+             Oтзыв отправлен
+           </button>
+            ): (
             <button
               className="btn-B-GreenDefault  mt-[20px] self-center"
               onClick={e => {

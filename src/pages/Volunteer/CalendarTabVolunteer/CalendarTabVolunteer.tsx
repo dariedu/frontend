@@ -11,6 +11,8 @@ import { Modal } from '../../../components/ui/Modal/Modal';
 import { getMyTasksNoFilter, postTaskRefuse, type ITask } from '../../../api/apiTasks';
 import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVolunteer';
 import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
+import { UserContext } from '../../../core/UserContext';
+
 
 const CalendarTabVolunteer = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());/// дата для календаря
@@ -18,28 +20,28 @@ const CalendarTabVolunteer = () => {
   const [myPast, setMyPast] = useState<IDelivery[]>([]) //// мои прошедшие доставки
 
   const [cancelDeliverySuccess, setCancelDeliverySuccess] = useState<boolean>(false) //// доставка успешно отмемена
-  const [cancelDeliveryFail, setCancelDeliveryFail]= useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
+  const [cancelDeliveryFail, setCancelDeliveryFail] = useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
   const [cancelDeliverySuccessString, setCancelDeliverySuccessString] = useState<string>(""); ////// если доставка отменена то тут будут данные по отмененной доставке, метро, дата и время
   const [cancelId, setCancelId] = useState<number>();
 
   const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
-  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] =  useState(false); ////// открываем модальное окно, чтобы проинформировать пользоватенля что фидбэк по завершенной заявке отправлен
+  const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы проинформировать пользоватенля что фидбэк по завершенной заявке отправлен
   const [cancelDeliveryReasonOpenModal, setCancelDeliveryReasonOpenModal] = useState(false);  /// модальное окно для отправки отзыва
-  const [isCancelledDeliveryFeedbackSubmited, setIsCancelledDeliveryFeedbackSubmited] =  useState(false);
+  const [isCancelledDeliveryFeedbackSubmited, setIsCancelledDeliveryFeedbackSubmited] = useState(false);
 
   const [allMyTasks, setAllMyTasks] = useState<ITask[]>([])
 
   const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
   const [cancelTaskSuccess, setCancelTaskSuccess] = useState(false)  //// таск успешно отмемен
-  const [cancelTaskFail, setCancelTaskFail]= useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
+  const [cancelTaskFail, setCancelTaskFail] = useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
   const [cancelTaskSuccessString, setCancelTaskSuccessString] = useState<string>(""); ////// если доставка отменена то тут будут данные по отмененной доставке, метро, дата и время
   const [cancelTaskReasonOpenModal, setCancelTaskReasonOpenModal] = useState(false);  /// модальное окно для отправки отзыва
   const [cancelTaskId, setCancelTaskId] = useState<number>();
-  const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] =  useState(false);
+  const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] = useState(false);
 
   ///// используем контекст токена
-  const tokenContext = useContext(TokenContext);
-  const token = tokenContext.token;
+  const { token } = useContext(TokenContext);
+  const { currentUser } = useContext(UserContext);
  ////// используем контекст
 
   async function getMyDeliveries() {
@@ -83,8 +85,8 @@ const CalendarTabVolunteer = () => {
         if (result) {
           let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
           let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
-          console.log(result, "feedbacks")
-          result.forEach(i => {
+          // console.log(result, "feedbacks")
+          result.filter(i=>i.user ==currentUser?.id).forEach(i => {
             if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
               allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
             } else if (typeof i.task == 'number' && i.type == 'completed_task') {

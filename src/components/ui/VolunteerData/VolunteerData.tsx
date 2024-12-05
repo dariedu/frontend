@@ -405,7 +405,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
        isOpen={updateDataSuccess}
        onOpenChange={setUpdateDataSuccess}
         onConfirm={() => {setUpdateDataSuccess(false) }}
-       title="Отлчино, данные обновлены!"
+        title={<p>Отлчино!<br /> Данные обновлены!</p>}
        description=""
        confirmText="Закрыть"
         isSingleButton={true}

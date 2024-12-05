@@ -21,6 +21,7 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 interface INearestDeliveryProps {
   curatorDelivery:TCuratorDelivery
   deliveryFilter: TDeliveryFilter
+  feedbackSubmited?:boolean
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
@@ -28,9 +29,10 @@ type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   curatorDelivery,
   deliveryFilter,
+  feedbackSubmited
 }) => {
 
-  
+  const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited);
   const [delivery, setDelivery] = useState<IDelivery>()
   const [fullViewCompleted, setFullViewCompleted] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
   const [fullViewActive, setFullViewActive] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
@@ -61,7 +63,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
        try {
          const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);
          if (result) {
-          // console.log(result, "request delivery")
            setDelivery(result)
            setDeliveryDate(new Date(result.date))
           
@@ -227,18 +228,25 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           ''
             )}
           
-        {currentStatus == 'completed' && fullViewCompleted ? (
-          <button
-            className="btn-B-GreenDefault  mt-[20px] self-center"
-            onClick={e => {
-              e.preventDefault();
-              setIsCuratorFeedbackModalOpen(true);
-            }}
-          >
-            Поделиться впечатлениями
-          </button>
-        ) : (
-          ''
+            {currentStatus == 'completed' && fullViewCompleted && (
+              isFeedbackSubmited ? (
+                <button
+                className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+              >
+                Oтзыв отправлен
+              </button>
+              ) : ( <button
+                className="btn-B-GreenDefault  mt-[20px] self-center"
+                onClick={e => {
+                  e.preventDefault();
+                  setIsCuratorFeedbackModalOpen(true);
+                }}
+              >
+                Поделиться впечатлениями
+              </button>)
         )}
         {/* /////////////////////// */}
       </div>
@@ -264,7 +272,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       >
         <DeliveryFeedback
           onOpenChange={setIsCuratorFeedbackModalOpen}
-          onSubmitFidback={() => setIsFeedbackSubmitedModalOpen(true)}
+          onSubmitFidback={() => { setIsFeedbackSubmitedModalOpen(true); setIsFeedbackSubmited(true) }}
           volunteer={false}
           delivery={true}
           deliveryOrTaskId={curatorDelivery.id_delivery}
