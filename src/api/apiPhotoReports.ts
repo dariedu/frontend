@@ -23,6 +23,7 @@ type TServerResponsePhotoReport = {
   photo_download: string
   photo_view: string
   route_sheet_id: number
+  is_absent:boolean
   user: {
     id: number
     last_name: string
