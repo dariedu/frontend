@@ -14,8 +14,9 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 
 
 interface INearestTaskProps {
-  task: ITask;
-  taskFilter: TTaskFilter;
+  task: ITask
+  taskFilter: TTaskFilter
+  feedbackSubmited:boolean
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -23,8 +24,12 @@ type TTaskFilter = 'nearest' | 'active' | 'completed';
 const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   task,
   taskFilter,
+  feedbackSubmited
 }) => {
 
+//  console.log(feedbackSubmited)
+  const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited);
+ // console.log(isFeedbackSubmited, 'is feedback submited')
   const [filter, setFilter] = useState<TTaskFilter>(taskFilter)
   const [fullViewCurator, setFullViewCurator] = useState(false);
   const [openVolunteerList, setOpenVolunteerList] = useState(false)
@@ -216,16 +221,29 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         )}
         
         {filter == 'completed' && fullViewCurator && (
-          <button
-            className="btn-B-GreenDefault  mt-[20px]"
+          feedbackSubmited ? (<button
+            className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+            onClick={e => {
+              e.preventDefault();
+            }}
+          >
+            Oтзыв отправлен
+          </button>) : isFeedbackSubmited ?(<button
+            className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+            onClick={e => {
+              e.preventDefault();
+            }}
+          >
+            Oтзыв отправлен
+          </button>): ( <button
+            className="btn-B-GreenDefault  mt-[20px] self-center"
             onClick={e => {
               e.preventDefault();
               setIsCuratorFeedbackModalOpen(true);
             }}
           >
             Поделиться впечатлениями
-          </button>
-        )}
+          </button>))}
         {/* /////////////////////// */}
       </div>
       <Modal
@@ -234,7 +252,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
       >
         <CompletedDeliveryOrTaskFeedback
           onOpenChange={setIsCuratorFeedbackModalOpen}
-          onSubmitFidback={setIsFeedbackSubmitedModalOpen}
+          onSubmitFidback={() => { setIsFeedbackSubmitedModalOpen(true); setIsFeedbackSubmited(true) }}
           volunteer={false}
           delivery={false}
           deliveryOrTaskId={task.id}
