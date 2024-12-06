@@ -20,7 +20,7 @@ interface IRouteSheetsViewProps {
   deliveryId: number
   routeSheetId: number
   photoReports: TServerResponsePhotoReport[]
-  updatePhotoReports: () => {}
+  // updatePhotoReports: () => {}
   sendPhotoReportSuccess: boolean
   setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -30,7 +30,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   deliveryId,
   routeSheetId,
   photoReports,
-  updatePhotoReports,
+  // updatePhotoReports,
   sendPhotoReportSuccess,
   setSendPhotoReportSuccess
 }) => {
