@@ -61,11 +61,16 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   async function requestMyDelivery() { 
      if (token) {
        try {
-         const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);
+         const result: IDelivery = await getDeliveryById(token, curatorDelivery.id_delivery);      
          if (result) {
-           setDelivery(result)
+          if (result.is_completed) { 
+            let timeDiff = Math.abs(+new Date() - +new Date(result.date));
+            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            if (diffDays <= 5) { setDelivery(result) }
+          } else {
+             setDelivery(result)
+          }
            setDeliveryDate(new Date(result.date))
-          
            curatorDelivery.volunteers.map(vol => {
              if (vol.photo && !vol.photo.includes('https')) {
                vol.photo = vol.photo.replace('http', 'https')
@@ -193,8 +198,8 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
         {currentStatus == 'nearest' ? (
           <>
-            <div className="flex justify-between items-center mt-[20px]">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="flex justify-between items-center mt-[20px] space-x-2">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full min-w-[165px] h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>
@@ -204,7 +209,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
                   ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-[161px] h-[62px] p-[12px]">
+              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-full min-w-[165px] h-[62px] p-[12px]">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Записались
                 </p>
@@ -229,7 +234,16 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             )}
           
             {currentStatus == 'completed' && fullViewCompleted && (
-              isFeedbackSubmited ? (
+              feedbackSubmited ? (
+                <button
+                className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+                onClick={e => {
+                  e.preventDefault();
+                }}
+              >
+                Oтзыв отправлен
+              </button>
+              ) : isFeedbackSubmited ? (
                 <button
                 className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
                 onClick={e => {

@@ -58,7 +58,7 @@ const CalendarTabVolunteer = () => {
              let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
              if(diffDays <= 5) return i
            }).forEach(i => { past.push(i) });
-           
+  
            current.map(del => {
              if (del.curator.photo && !del.curator.photo.includes('https')) {
                del.curator.photo = del.curator.photo.replace('http', 'https')
@@ -85,7 +85,7 @@ const CalendarTabVolunteer = () => {
         if (result) {
           let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
           let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
-          // console.log(result, "feedbacks")
+   
           result.filter(i=>i.user ==currentUser?.id).forEach(i => {
             if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
               allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)

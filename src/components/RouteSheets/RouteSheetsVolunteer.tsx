@@ -42,7 +42,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
     if (token && currentUser) {
       try {
         let result = await getPhotoReports(token);
-        let filtered = result.filter(report => {
+        let filtered = result.filter(report => report.delivery_id == deliveryId).filter(report => {
           if (report.user.id == currentUser.id)
            return report
         })

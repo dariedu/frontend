@@ -126,20 +126,20 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
 
   return ( filteredSuccess &&
     <div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl h-screen flex flex-col overflow-y-auto pb-[74px]" onClick={(e)=>e.stopPropagation()}>
-              <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
+        <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
         {filtered.map((routeS, index) => {
           return (
-            <div key={routeS.id} className="mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo p-4 min-h-[124px] flex flex-col justify-around ">
-              <div className="flex items-center justify-between w-full mb-2">
+            <div key={routeS.id} className="mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[124px] flex flex-col justify-around ">
+              <div className="flex items-center justify-between w-full mb-2 p-4">
                 <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
                   {`Маршрутный лист: ${routeS.name}`}
                 </span>
                 <div
-                  className="w-6 h-6 ml-2 cursor-pointer"
+                  className="w-6 h-6 cursor-pointer"
                   onClick={() =>
                     setOpenRouteSheets(prev =>
                       prev.map((isOpen, idx) =>
@@ -153,9 +153,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between ">
+              <div className="flex w-full items-center justify-between ">
                 <div
-                  className="flex items-center cursor-pointer"
+                  className="flex w-full items-center cursor-pointer "
                   onClick={() =>
                     setOpenVolunteerLists(prev =>
                       prev.map((isOpen, idx) =>
@@ -164,13 +164,13 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     )
                   }
                 >
-                  <span className="font-gerbera-h3 text-light-gray-8" >
-                    <div className='flex justify-between items-center w-[320px]'>
-                      <div className='flex w-fit items-center text-light-gray-black dark:text-light-gray-white'>
+                  <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 " >
+                    {/* <div className='flex justify-between items-center'> */}
+                      <div className='flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white'>
                         {routeS.volunteerFullName && routeS.volunteerFullName.length ? (
-                        <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
+                        <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
                           <Avatar.Fallback
-                            className="w-full h-full flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
+                            className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
                             delayMs={600}
                            >
                           {routeS.volunteerFullName?.charAt(0)}
@@ -181,12 +181,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                         )}
               
                         {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? (
-                          <p className='ml-3'>{routeS.volunteerFullName}</p>
+                          <p className='ml-3 w-full'>{routeS.volunteerFullName}</p>
                         ) : (
                             <p className='ml-3'>Не выбран</p>
                     )}
-                      </div>
-                    
                     {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
                     <a href={'https://t.me/' + (routeS.telegramNik.includes('@')? routeS.telegramNik.slice(1): routeS.telegramNik)} target="_blank" onClick={(e=>e.stopPropagation())}>
                     <Small_sms className="w-[36px] h-[35px]"/>
@@ -194,7 +192,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                     ):""}
                   </div>
                     
-                  </span>
+                  </div>
                 </div>
               </div>
 
@@ -227,7 +225,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               )}
               {openRouteSheets[index] && (
                 <RouteSheetsView
-                  //deliveryId={ deliveryId}
+                  deliveryId={ deliveryId}
                   routes={routeS.address.map(addr => (addr))}
                 />
               )}
