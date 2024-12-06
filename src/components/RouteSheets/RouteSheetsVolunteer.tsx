@@ -35,14 +35,14 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
   const { token } = useContext(TokenContext);
   const { currentUser } = useContext(UserContext);
-
+  
 
   ///запрашиваем все репорты и отбираем только отчеты этого пользователя
   async function requestPhotoReports() {
     if (token && currentUser) {
       try {
         let result = await getPhotoReports(token);
-        let filtered = result.filter(report => {
+        let filtered = result.filter(report => report.delivery_id == deliveryId).filter(report => {
           if (report.user.id == currentUser.id)
            return report
         })
@@ -110,7 +110,6 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                 >
                   <Arrow_down  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
                   />
-
                 </div>
               </div>
 

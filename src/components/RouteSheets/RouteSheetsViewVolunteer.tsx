@@ -60,19 +60,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-  // function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
-  //   if (e.target.files && e.target.files[0]) {
-  //     const file = e.target.files[0];
-  //     let uploadedFilesList: string[] = [];
-  //     uploadedFileLink.forEach(i => uploadedFilesList.push(i));
-  //     uploadedFilesList[index] = URL.createObjectURL(file);
-  //     setUploadedFileLink(uploadedFilesList);
-  //     let fileUploadedList: boolean[] = [];
-  //     fileUploaded.forEach(i => fileUploadedList.push(i));
-  //     fileUploadedList[index] = true;
-  //     setFileUploaded(fileUploadedList);
-  //   }
-  //   }
+
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
@@ -240,7 +228,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             </p>
           )}
           <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
-        
             {unactive[index] == 'Отправить' && (
               <button
                 className="btn-B-WhiteDefault"
@@ -257,7 +244,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             )}
             <button
               className={
-                unactive[index] == 'Отправить' ||  unactive[index] == 'Отправка'
+                unactive[index] == 'Отправить' || unactive[index] == 'Отправка'
                   ? 'btn-B-WhiteDefault'
                   : 'btn-B-GreenInactive cursor-default'
               }
@@ -276,75 +263,70 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               {unactive[index]}
             </button>
           </div>
-          <div className='flex items-center justify-between w-full mb-2 mt-4'>
-            <p
-                className="font-gerbera-h3 text-light-gray-5"
-              >
-                Дополнительно
-            </p>
+          <div className="flex items-center justify-between w-full mb-2 mt-4">
+            <p className="font-gerbera-h3 text-light-gray-5">Дополнительно</p>
             <div
-                  className="w-6 h-6 cursor-pointer"
-                  onClick={() =>
-                    setFullView(prev =>
-                      prev.map((isOpen, idx) =>
-                        idx === index ? !isOpen : isOpen,
-                      ),
-                    )
-                  }
-                >
-                  <Arrow_down  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : "" }`}
-                  />
+              className="w-6 h-6 cursor-pointer"
+              onClick={() =>
+                setFullView(prev =>
+                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                )
+              }
+            >
+              <Arrow_down
+                className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
+              />
+            </div>
+          </div>
+          {fullView[index] && (
+            <div className="flex justify-center items-center w-full">
+              <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
+                <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                  Благополучатель
+                  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar[0].full_name}
+                  </p>
                 </div>
-              </div>
-              {fullView[index] && (
-                <div className="flex justify-center items-center w-full">
-                  <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                    <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                      Благополучатель
+
+                {route.beneficiar[0].category &&
+                  route.beneficiar[0].category.length > 0 && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      Категория
                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {route.beneficiar[0].full_name}
+                        {route.beneficiar[0].category}
                       </p>
                     </div>
-
-                    {route.beneficiar[0].category &&
-                    route.beneficiar[0].category.length > 0 && (
-                    <div className='bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]'>
-                      Категория
-                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].category}
-                        </p>
-                    </div>
-                      )}
-                    {route.beneficiar[0].phone &&
-                    route.beneficiar[0].phone.length > 0 && (
-                      <div className='bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]'>
+                  )}
+                {route.beneficiar[0].phone &&
+                  route.beneficiar[0].phone.length > 0 && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Основной телефон
-                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].phone}
-                        </p>
+                      <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {route.beneficiar[0].phone}
+                      </p>
                     </div>
-                      )}
-                    {route.beneficiar[0].second_phone &&
-                    route.beneficiar[0].second_phone.length > 0 && (
-                      <div className='bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]'>
-                       Запасной телефон
-                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                         {route.beneficiar[0].second_phone}
-                        </p>
+                  )}
+                {route.beneficiar[0].second_phone &&
+                  route.beneficiar[0].second_phone.length > 0 && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      Запасной телефон
+                      <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {route.beneficiar[0].second_phone}
+                      </p>
                     </div>
-                      )}
-                    {route.beneficiar[0].comment &&
-                    route.beneficiar[0].comment.length > 0 && (
-                      <div className='bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]'>
+                  )}
+                {route.beneficiar[0].comment &&
+                  route.beneficiar[0].comment.length > 0 && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Информация
                       <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {route.beneficiar[0].comment}
-                        </p>
-                       </div>
-                      )}
-                  </div>
-                </div>
-              )}
+                      </p>
+                    </div>
+                  )}
+              </div>
+            </div>
+          )}
 
           <Modal
             onOpenChange={() =>

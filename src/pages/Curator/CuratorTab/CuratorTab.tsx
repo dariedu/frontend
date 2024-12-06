@@ -51,7 +51,16 @@ async function getMyCuratorDeliveries() {
       try {
         let result = await getTasksCurator(token);
         if (result) {
-        setCurtorTasks(result)
+         let filtered = result.filter(task => {
+            if (task.is_completed) {
+            let timeDiff = Math.abs(+new Date() - +new Date(task.end_date));
+            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            if(diffDays <= 5) return task
+            } else {
+              return task
+            }
+         })
+        setCurtorTasks(filtered)
         } 
       } catch (err) {
         console.log(err)
