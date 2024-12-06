@@ -160,7 +160,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               Активная
             </p>
           ) : currentStatus == 'completed' ? (
-            <p className="btn-S-GreenInactive flex items-center justify-center">
+            <p className="btn-S-GreenInactive flex items-center justify-center ">
               Завершённая
             </p>
           ) : (

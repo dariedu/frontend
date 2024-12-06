@@ -60,19 +60,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-  // function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
-  //   if (e.target.files && e.target.files[0]) {
-  //     const file = e.target.files[0];
-  //     let uploadedFilesList: string[] = [];
-  //     uploadedFileLink.forEach(i => uploadedFilesList.push(i));
-  //     uploadedFilesList[index] = URL.createObjectURL(file);
-  //     setUploadedFileLink(uploadedFilesList);
-  //     let fileUploadedList: boolean[] = [];
-  //     fileUploaded.forEach(i => fileUploadedList.push(i));
-  //     fileUploadedList[index] = true;
-  //     setFileUploaded(fileUploadedList);
-  //   }
-  //   }
+
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
@@ -293,7 +281,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           {fullView[index] && (
             <div className="flex justify-center items-center w-full">
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                   Благополучатель
                   <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                     {route.beneficiar[0].full_name}
@@ -302,7 +290,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 
                 {route.beneficiar[0].category &&
                   route.beneficiar[0].category.length > 0 && (
-                    <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Категория
                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {route.beneficiar[0].category}
@@ -311,7 +299,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   )}
                 {route.beneficiar[0].phone &&
                   route.beneficiar[0].phone.length > 0 && (
-                    <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Основной телефон
                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {route.beneficiar[0].phone}
@@ -320,7 +308,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   )}
                 {route.beneficiar[0].second_phone &&
                   route.beneficiar[0].second_phone.length > 0 && (
-                    <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Запасной телефон
                       <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {route.beneficiar[0].second_phone}
@@ -329,7 +317,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   )}
                 {route.beneficiar[0].comment &&
                   route.beneficiar[0].comment.length > 0 && (
-                    <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                       Информация
                       <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {route.beneficiar[0].comment}

@@ -85,12 +85,12 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   }, [myPhotoReports]);
 
   return (
-    <div className="flex flex-col items-center justify-normal bg-light-gray-1 space-y-1">
+    <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black space-y-1">
       {routes.map((route, index) => (
-        <div className='flex flex-col w-full h-fit bg-light-gray-white p-4 space-y-[14px] rounded-2xl mt-1'>
+        <div className='flex flex-col w-full h-fit bg-light-gray-white dark:bg-light-gray-7-logo p-4 space-y-[14px] rounded-2xl mt-1'>
           <div
             key={index}
-            className="w-full bg-light-gray-white dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-center "
+            className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center "
           >
             <div className="flex w-full items-center justify-between">
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white max-w-[80%]">
@@ -99,7 +99,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               {array.indexOf(route.beneficiar[0].address) != -1 &&
               object[array.indexOf(route.beneficiar[0].address)][1].length >
                 0 ? (
-                <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-brand-green">
+                <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
                   <a
                     href={object[array.indexOf(route.beneficiar[0].address)][1]}
                   >
@@ -113,7 +113,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
            
             {array.indexOf(route.beneficiar[0].address) != -1 &&
               comment[array.indexOf(route.beneficiar[0].address)][1].length > 0 && (
-            <div className="self-start w-full mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
+            <div className="self-start w-full mt-2 bg-light-gray-1 dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
               Комментарий
               <br />
               <p className="text-light-gray-5 font-gerbera-sub3 dark:text-light-gray-3 mt-[6px]">
@@ -129,7 +129,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           )}
           </div>
           <div className="w-full">
-            <div className="flex items-center justify-between w-full">
+            <div className="flex items-center justify-between w-full ">
               <p className="font-gerbera-h3 text-light-gray-5">Дополнительно</p>
               <div
                 className="w-6 h-6 cursor-pointer mt-[14px]"
@@ -147,9 +147,9 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               </div>
             </div>
             {fullView[index] && (
-              <div className="flex justify-center items-center w-full">
+              <div className="flex justify-center items-center w-full mt-[14px]">
                 <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                  <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                  <div className="bg-light-gray-1  dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Благополучатель
                     <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                       {route.beneficiar[0].full_name}
@@ -158,7 +158,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
 
                   {route.beneficiar[0].category &&
                     route.beneficiar[0].category.length > 0 && (
-                      <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                         Категория
                         <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                           {route.beneficiar[0].category}
@@ -167,7 +167,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                     )}
                   {route.beneficiar[0].phone &&
                     route.beneficiar[0].phone.length > 0 && (
-                      <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                         Основной телефон
                         <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                           {route.beneficiar[0].phone}
@@ -176,7 +176,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                     )}
                   {route.beneficiar[0].second_phone &&
                     route.beneficiar[0].second_phone.length > 0 && (
-                      <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                         Запасной телефон
                         <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                           {route.beneficiar[0].second_phone}
@@ -185,7 +185,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                     )}
                   {route.beneficiar[0].comment &&
                     route.beneficiar[0].comment.length > 0 && (
-                      <div className="bg-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                         Информация
                         <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                           {route.beneficiar[0].comment}

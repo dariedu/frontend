@@ -55,7 +55,7 @@
     @apply w-[328px] h-12 min-h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-6 text-light-gray-white;
   }
   .btn-B-GreenInactive {
-    @apply w-[328px] h-12 min-h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white;
+    @apply w-[328px] h-12 min-h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-3 text-light-gray-white dark:bg-light-gray-6;
   }
   .btn-B-WhiteDefault {
     @apply w-[328px] h-12 min-h-12 rounded-[40px] font-gerbera-h3  bg-light-gray-1 text-light-brand-green dark:bg-light-gray-6 dark:text-light-gray-white;
@@ -87,6 +87,6 @@
     @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white;
   }
   .btn-S-GreenInactive {
-    @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white;
+    @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-3 text-light-gray-white dark:bg-light-gray-5 ;
   }
 }
