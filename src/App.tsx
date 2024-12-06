@@ -21,7 +21,11 @@ const App: React.FC = () => {
   }, []);
 
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
- 
+
+  const app = window.Telegram.WebApp;
+  app.ready();
+  app.disableVerticalSwipes();
+  app.isClosingConfirmationEnabled = true;
 
    function getDeviceType() {
       const userAgent = navigator.userAgent.toLowerCase();
