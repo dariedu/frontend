@@ -117,7 +117,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
-                  updatePhotoReports={requestPhotoReports}
+                  // updatePhotoReports={requestPhotoReports}
                   photoReports={myPhotoReports}
                   routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}
