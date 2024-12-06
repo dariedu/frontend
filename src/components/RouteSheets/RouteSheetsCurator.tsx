@@ -40,7 +40,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
 
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
-
   interface IfilteredRouteSheet extends IRouteSheet{
     volunteerFullName?: string
     telegramNik?:string
@@ -48,7 +47,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   
   
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
-
   const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
   const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])

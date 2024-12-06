@@ -43,7 +43,7 @@ getDeviceType()
 }, [])
   
   if (deviceType == "desktop") {
-    return <div className='flex justify-center items-center h-screen'>Пожалуйста, откройте приложение на мобильном устройстве</div>
+    return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение на мобильном устройстве</div>
   } else {
     if (isLoading) {
       return <div className='h-screen items-center flex flex-col justify-center '>
@@ -61,7 +61,7 @@ getDeviceType()
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
     }
-      }
+     }
   
 };
 
