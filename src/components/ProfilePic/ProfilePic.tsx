@@ -15,14 +15,16 @@ import { patchUserPicture } from '../../api/userApi';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface IProfilePicProps {
-  user: IUser;
+  user: IUser
+
+ setUploadingPic:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
+const ProfilePic: React.FC<IProfilePicProps> = ({ user, setUploadingPic }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [uploadedFileLink, setUploadedFileLink] = useState<string>();
-  const [uploadFileModalOpen, setUploadFileModalOpen] = useState(false)
+  const [uploadFileModalOpen, setUploadFileModalOpen] = useState(false);
   // const [updatePicSuccess, setUpdatePicSuccess] = useState(false);
   const [updatePicFail, setUpdatePicFail] = useState(false);
 
@@ -42,6 +44,7 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
 
 
   async function updateUserAvatar() {
+    setUploadingPic(true)
     if (token && currentUser?.id && uploadedFileLink) {
       let fileToSend = await fetch(uploadedFileLink)
       .then(res => res.blob())
@@ -53,7 +56,9 @@ const ProfilePic: React.FC<IProfilePicProps> = ({ user }) => {
         try {
           await patchUserPicture(currentUser.id, formData, token)
           user.photo = uploadedFileLink
+          setUploadingPic(false)
         } catch (err) {
+        setUploadingPic (false)
         setUpdatePicFail(true)
         console.log(err, "updateUserAvatar() error")
     }

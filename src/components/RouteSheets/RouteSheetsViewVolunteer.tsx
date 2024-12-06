@@ -16,10 +16,13 @@ import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 
 interface IRouteSheetsViewProps {
-  routes: TAddress[];
-  deliveryId: number;
-  routeSheetId: number;
-  photoReports: TServerResponsePhotoReport[];
+  routes: TAddress[]
+  deliveryId: number
+  routeSheetId: number
+  photoReports: TServerResponsePhotoReport[]
+  updatePhotoReports: () => {}
+  sendPhotoReportSuccess: boolean
+  setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
@@ -27,6 +30,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   deliveryId,
   routeSheetId,
   photoReports,
+  updatePhotoReports,
+  sendPhotoReportSuccess,
+  setSendPhotoReportSuccess
 }) => {
   const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(
     Array(routes.length).fill(''),
@@ -40,7 +46,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   );
   const [comment, addComment] = useState(Array(routes.length).fill(''));
   const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
-  const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
+  // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
   const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
   const [sendMessage, setSendMessage] = useState<string>('');
   const [uploadPictureModal, setUploadPictureModal] = useState<boolean[]>(
@@ -93,7 +99,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 
   useEffect(() => {
     checkoForUploadedReports();
-  }, []);
+  }, [sendPhotoReportSuccess]);
 
   function handleAddComment(index: number, comment: string) {
     localStorage.removeItem('comment');
@@ -126,14 +132,12 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           setBlob(blob1);
           return blob1;
         });
+      
       if (blobPhoto && currentUser) {
         const formData = new FormData();
         for (let key in obj) {
           if (key == 'photo') {
-            formData.set(
-              'photo',
-              blobPhoto,
-              `photo_report_delId_${deliveryId}_routeS_id_${routeSheetId}.jpeg`,
+            formData.set('photo', blobPhoto, `photo_report_delId_${deliveryId}_routeS_id_${routeSheetId}.jpeg`,
             );
           } else if (key == 'is_absent') {
             formData.set(

@@ -35,7 +35,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
   const { token } = useContext(TokenContext);
   const { currentUser } = useContext(UserContext);
-  
+  const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState<boolean>(false);
 
   ///запрашиваем все репорты и отбираем только отчеты этого пользователя
   async function requestPhotoReports() {
@@ -55,7 +55,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   
   useEffect(() => {
     requestPhotoReports()
-  }, [])
+  }, [sendPhotoReportSuccess])
 
   return ( 
     <div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
@@ -117,10 +117,13 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
+                  updatePhotoReports={requestPhotoReports}
                   photoReports={myPhotoReports}
                   routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}
-                  deliveryId = {deliveryId}
+                  deliveryId={deliveryId}
+                  sendPhotoReportSuccess={sendPhotoReportSuccess}
+                  setSendPhotoReportSuccess={setSendPhotoReportSuccess}
                 />
               )}
             </div>

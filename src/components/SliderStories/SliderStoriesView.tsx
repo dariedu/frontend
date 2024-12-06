@@ -111,9 +111,9 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
       onTouchEnd={onTouchEndHandler}
       onMouseDown={onMouseDownHandler}
     >
-      <div className="relative h-full w-full max-w-[500px]  dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white">
+      <div className="relative h-full max-w-[500px] dark:bg-light-gray-black rounded-2xl overflow-hidden bg-light-gray-white w-[90%]">
         {/* Прогресс-бар и кнопка закрытия */}
-        <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20">
+        <div className="absolute top-[60px] left-0 w-full px-4 flex items-center justify-between z-20 ]">
           {/* Прогресс-бар */}
           <div className="w-full h-2 bg-light-gray-3 rounded-full overflow-hidden mr-4">
             <div
@@ -130,31 +130,28 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             className="w-8 h-8 flex justify-center items-center rounded-full"
           >
             <CloseIcon className='fill-light-gray-4 w-8 h-8'/>
-            {/* <img src={closeIcon} alt="Close" className="w-8 h-8" /> */}
           </button>
         </div>
-        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl ">
-          <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-full h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>{
-           stories[currentIndex].cover && (
+        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl relative ">
+          <Avatar.Root className='inline-flex items-center justify-center align-middle  overflow-hidden w-full h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>
             <Avatar.Image src={stories[currentIndex].cover} decoding='async'  loading='lazy' className='w-full h-[734px] rounded-2xl object-cover' />
-        )}
             <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-full h-[734px] rounded-2xl'>
           </Avatar.Fallback>
         </Avatar.Root>
           {/* Текст поверх картинки */}
-          <div className="text-light-gray-white font-gerbera-h2 bottom-44 absolute pl-[15px]">
-            <div className="flex bg-light-brand-green font-gerbera-h3 w-[112px] h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
+          <div className="text-light-gray-white font-gerbera-h2 absolute bottom-10 w-[89%]">
+            <div className="flex bg-light-brand-green font-gerbera-h3 w-fit p-3 h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
               {new Date(stories[currentIndex].date).toLocaleDateString()}
             </div>
-            <p className="font-gerbera-st text-left mb-3">
+            <p className="font-gerbera-st text-left mb-3 w-fit">
               {stories[currentIndex].title}
             </p>
-            <p className="font-gerbera-h2 text-left pr-4">{stories[currentIndex].text}</p>
+            <p className="font-gerbera-h2 text-left">{stories[currentIndex].text}</p>
           </div>
         </div>
 
         {/* Навигационные стрелки */}
-        <button
+        {/* <button
           onClick={handlePrev}
           className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
         >
@@ -172,8 +169,8 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-        </button>
-
+        </button> */}
+{/* 
         <button
           onClick={handleNext}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-50 rounded-full p-2"
@@ -192,7 +189,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
               d="M9 5l7 7-7 7"
             /> 
          </svg>
-        </button>
+        </button> */}
       </div>
     </div>
   );
