@@ -4,7 +4,7 @@ import {
   getBallCorrectEndingName,
   getMetroCorrectName,
 } from '../../../helperFunctions/helperFunctions';
-import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
+import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDelivery';
 import { Modal } from '../../Modal/Modal';
 import Metro_station from './../../../../assets/icons/metro_station.svg?react'
 

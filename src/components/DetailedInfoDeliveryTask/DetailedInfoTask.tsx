@@ -36,14 +36,14 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
 
 
  ///// работаем с датой //////////////
- const taskStartDate = new Date(Date.parse(task.start_date) + 180);
+ const taskStartDate = new Date(Date.parse(task.start_date) + 180*60000);
  const startDay = taskStartDate.getUTCDate();
  const startMonth = taskStartDate.toLocaleDateString("RU", {month:"short"});
  
  const hours = taskStartDate ? String(taskStartDate.getUTCHours()).padStart(2, '0') : '--';
  const minutes = taskStartDate ? String(taskStartDate.getUTCMinutes()).padStart(2, '0') : '--';
  
- const taskEndDate = new Date(Date.parse(task.end_date) + 180);
+ const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
  const endDay = taskEndDate.getUTCDate();
  const endMonth = taskEndDate.toLocaleDateString("RU", {month:"short"})
 
