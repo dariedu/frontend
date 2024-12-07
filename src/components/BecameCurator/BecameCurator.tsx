@@ -75,23 +75,23 @@ const BecameCurator = () => {
 
   return (
     <>
-      <div className="z-[51] w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="z-[51] w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo px-4 pb-8"
       onClick={(e)=>e.stopPropagation()}>
-          <div className=" flex items-center self-start mt-[25px] mx-4">
-          <Big_pencil className=" w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+          <div className="flex items-center self-start mt-[25px]">
+          <Big_pencil className="w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
             Расскажите, в свободной форме
           </p>
         </div>
 
         <Form.Root
-           className=" flex flex-col items-center justify-center"
+           className="flex flex-col items-center justify-center"
           onSubmit={e => {
             e.preventDefault();
             handleRequestSubmit()
           }}
          >
-          <div  className='flex flex-col px-4'>
+          <div  className='flex flex-col'>
             <Form.Field name="about_location" className="mt-4">
               <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
               На какой локации вы бы хотели стать куратором и почему?
@@ -99,7 +99,7 @@ const BecameCurator = () => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="min-w-[328px] w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('about_location') ?? ''}
@@ -121,7 +121,7 @@ const BecameCurator = () => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="min-w-[328px] w-full bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('about_presence') ?? ''}
@@ -145,7 +145,7 @@ const BecameCurator = () => {
               <Form.Control asChild>
                 <TextareaAutosize
                   maxRows={5}
-                  className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className="min-w-[328px] w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('about_worktime') ?? ''}

@@ -21,6 +21,8 @@ import { Modal } from '../ui/Modal/Modal';
 import FilterPromotions from '../FilterPromotions/FilterPromotions';
 import { TPromotionCategory } from '../../api/apiPromotions';
 import { TokenContext } from '../../core/TokenContext';
+import { getCuratorDeliveries, ICuratorDeliveries, TCuratorDelivery, getDeliveryById } from '../../api/apiDeliveries';
+
 
 interface IHistoryProps {
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,6 +51,9 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   const [mistakeTask, setMistakeTask] = useState(false);
   const [mistakePromotion, setMistakePromotion] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
+  const [curatorCompletedDeliveries, setCuratorCompletedDeliveries] = useState<number[]>([]);
+  const [curatorPastDeliveries, setCuratorPastDeliveries] = useState<IDelivery[]>([]);
+
   const filterCategoryOptions: TPromotionCategory[] = [
     {
       id: 1,
@@ -67,6 +72,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     TPromotionCategory[]
   >([]); /// устанавливаем категории для фильтра
 
+
+
   //// функция вызывается при нажатии на фильтр
   function handleCategoryChoiceFunc(obj: TPromotionCategory) {
     let copy = Object.assign([], filterCategories);
@@ -83,6 +90,52 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
       setFilterCategories([...filterCategories, obj]);
     }
   }
+
+   ///////доставки куратора
+  async function getMyCuratorDeliveries() {
+    const myCompletedDeliveries: number[] = [];
+    if (token  && !isVolunteer) {
+      try {
+       let result: ICuratorDeliveries = await getCuratorDeliveries(token);
+      if (result) { 
+        result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i.id_delivery) })
+        setCuratorCompletedDeliveries(myCompletedDeliveries)
+      }
+  }catch (err) {
+    console.log(err, "getMyCuratorDeliveries CuratorPage fail")
+  }
+      }
+  }
+
+  useEffect(() => {
+    getMyCuratorDeliveries()
+  }, [])
+
+  async function requestMyDelivery() { 
+
+    const delArr: IDelivery[] = [];
+
+    if (token && !isVolunteer) {
+
+      Promise.allSettled(curatorCompletedDeliveries.map(id => getDeliveryById(token, id)))
+      .then(responses => responses.forEach((result, num) => {
+        if (result.status == "fulfilled") {
+          delArr.push(result.value)
+        }
+        if (result.status == "rejected") {
+          console.log(`${num} delivery was not fetched`)
+        }
+      })).finally(() => {setCuratorPastDeliveries(delArr)}
+      )
+     }
+  }
+  
+  useEffect(() => {
+    requestMyDelivery()
+  }, [curatorCompletedDeliveries]);
+
+
+  ///////доставки куратора
 
   async function getMyPastDeliveries() {
     let myPastDeliveries: IDelivery[] = [];
@@ -107,7 +160,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
       if (token) {
         let result: ITask[] = await getMyTasks(token, false, true);
         if (result) {
-          setMyPastTasks(result);
+          let filtered = result.filter(task => task.is_completed)/// доп проверка данных, если с сервера прийдет ошибочно все активные таски
+          setMyPastTasks(filtered);
         }
       }
     } catch (err) {
@@ -150,14 +204,45 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
           : '--';
 
         let delivery: IAllMyPast = {
-          id: past.id+past.date,
+          id: past.id + past.date,
           category: {
             id: 1,
             name: 'доставка',
           },
           startDateString: past.date,
           dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getFullYear()}`,
-          name: isVolunteer ? 'Доставка' : 'Курирование доставки',
+          name: 'Доставка',
+          points: past.price,
+          date: `${day} ${month} ${hours}:${minutes}`,
+          subway: past.location.subway,
+          plus: true,
+        };
+        all.push(delivery);
+      });
+    }
+    if (curatorPastDeliveries.length > 0) {
+      curatorPastDeliveries.forEach(past => {
+        const deliverytDate = new Date(past.date);
+        const day = deliverytDate.getDate();
+        const month = deliverytDate.toLocaleDateString('RU', {
+          month: 'short',
+        });
+        const hours = deliverytDate
+          ? String(deliverytDate.getHours()).padStart(2, '0')
+          : '--';
+        const minutes = deliverytDate
+          ? String(deliverytDate.getMinutes()).padStart(2, '0')
+          : '--';
+
+        let delivery: IAllMyPast = {
+          id: past.id + past.date,
+          category: {
+            id: 1,
+            name: 'доставка',
+          },
+          startDateString: past.date,
+          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getFullYear()}`,
+          name: 'Курирование доставки',
           points: past.price,
           date: `${day} ${month} ${hours}:${minutes}`,
           subway: past.location.subway,
@@ -172,7 +257,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
         const taskStartDate = new Date(past.start_date);
         const startDay = taskStartDate.getDate();
         let task: IAllMyPast = {
-          id: past.id+past.start_date,
+          id: past.id + past.start_date,
           category: {
             id: 2,
             name: 'доброе дело',
@@ -193,7 +278,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
         const promotionStartDate = new Date(past.start_date);
         const startDay = promotionStartDate.getDate();
         let task: IAllMyPast = {
-          id: past.id+past.start_date,
+          id: past.id + past.start_date,
           category: {
             id: 3,
             name: 'поощрение',
@@ -241,8 +326,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] px-4">
-          <button onClick={() => onClose(false)} >
-          <RightArrowIcon className='rotate-180 w-9 h-9 stroke-[#D7D7D7] dark:stroke-[#575757]' />
+          <button onClick={() => onClose(false)}>
+            <RightArrowIcon className="rotate-180 w-9 h-9 stroke-[#D7D7D7] dark:stroke-[#575757]" />
           </button>
           <div className="flex justify-between w-full items-center">
             <h2 className="text-light-gray-black dark:text-light-gray-1 ml-2">
@@ -256,7 +341,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full ">
+        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full px-4">
           {allMyPastCombined.length > 0 ? (
             filterCategories && filterCategories.length > 0 ? (
               allMyPastCombined
@@ -266,10 +351,13 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                 })
                 .map((past, index) => {
                   return (
-                    <div key={index+1000} className='flex flex-col items-center w-full max-w-[400px]'>
+                    <div
+                      key={index + 1000}
+                      className="flex flex-col items-center w-full max-w-[500px]"
+                    >
                       {index == 0 ? (
                         <div
-                          key={index+past.dayMonthYearString}
+                          key={index + past.dayMonthYearString}
                           className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6"
                         >
                           {past.dayMonthYearString}
@@ -279,7 +367,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                         ''
                       ) : (
                         <div
-                          key={index+past.dayMonthYearString}
+                          key={index + past.dayMonthYearString}
                           className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6"
                         >
                           {past.dayMonthYearString}
@@ -287,7 +375,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                       )}
 
                       <div
-                        className="text-light-gray-6 h-fit w-full min-w-[328px] max-w-[370px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
+                        className="text-light-gray-6 h-fit w-full min-w-[328px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
                         key={past.id}
                       >
                         <div className="flex justify-between mb-[6px]">
@@ -327,11 +415,14 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             ) : (
               allMyPastCombined.map((past, index) => {
                 return (
-                  <div key={index+1000} className='flex flex-col items-center w-full max-w-[400px]'>
+                  <div
+                    key={index + 1000}
+                    className="flex flex-col items-center w-full max-w-[500px]"
+                  >
                     {index == 0 ? (
                       <div
-                        key={index+past.dayMonthYearString}
-                        className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6"
+                        key={index + past.dayMonthYearString}
+                        className="w-fit  flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6"
                       >
                         {past.dayMonthYearString}
                       </div>
@@ -340,7 +431,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                       ''
                     ) : (
                       <div
-                        key={index+past.dayMonthYearString}
+                        key={index + past.dayMonthYearString}
                         className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6"
                       >
                         {past.dayMonthYearString}
@@ -348,7 +439,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
                     )}
 
                     <div
-                      className="text-light-gray-6 h-fit w-full min-w-[328px] max-w-[370px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
+                      className="text-light-gray-6 h-fit w-full min-w-[328px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
                       key={past.id}
                     >
                       <div className="flex justify-between mb-[6px]">
@@ -386,7 +477,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
               })
             )
           ) : (
-              <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center h-screen">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7 text-center">
                 Пока нет завершенных

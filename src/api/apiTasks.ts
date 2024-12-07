@@ -194,9 +194,9 @@ export const getTasksCategories = async (
 
 // Получить свои задания c фильтрами
 export const getMyTasks = async (
-  access: string | null,
-  is_active: boolean = false,
-  is_completed: boolean = false,
+  access: string,
+  is_active: boolean,
+  is_completed: boolean,
 ): Promise<ITask[]> => {
   try {
     const response: AxiosResponse<ITask[]> = await axios.get(
