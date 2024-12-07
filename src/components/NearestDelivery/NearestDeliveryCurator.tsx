@@ -199,7 +199,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         {currentStatus == 'nearest' ? (
           <>
             <div className="flex justify-between items-center mt-[20px] space-x-2">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full min-w-[165px] h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>

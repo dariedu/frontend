@@ -81,7 +81,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
 
             {/* /////////////////////// */}
             <div className="flex justify-center items-center mt-[14px] space-x-2">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
                   Время начала
                 </p>
@@ -91,7 +91,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
               ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-40 h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
                   Начисление баллов
                 </p>

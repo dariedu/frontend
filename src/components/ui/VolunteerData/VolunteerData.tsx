@@ -160,7 +160,6 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     if (window.Telegram?.WebApp?.initDataUnsafe) {
       const initData = window.Telegram.WebApp.initDataUnsafe;
       const tgNik = initData.user?.username
-     // console.log("tgNik", initData.user?.username)
       if (tgNik) {
         if (tgNik.toLowerCase() == currentUser?.tg_username.toLowerCase()) {
           setNoNeedToUpdateNik(true)
@@ -174,10 +173,6 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   };
 
   function updatePhone() {
-  //  window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number')
-   // console.log( window.Telegram.WebApp.sendData('/update_phone_number','/update_phone_number'), "window.Telegram.WebApp.sendData('/update_phone_number')")
-    // window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')
-    // console.log( window.Telegram.WebApp.answerWebAppQuery('/update_phone_number'), "window.Telegram.WebApp.answerWebAppQuery('/update_phone_number')")
     setUpdatePhoneModal(true)
   };
 
@@ -311,7 +306,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onCancel={() => setConfirmUpdate(false)}
        title={
          <p>
-           Ваш новый телеграм ник: {nik}.
+           Ваш новый Telegram ник: {nik}.
            <br /> Обновить?
          </p>
        }
@@ -342,7 +337,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
        onConfirm={() => { setNoNeedToUpdateNik(false); setConfirmUpdate(false) }}
        title={
          <p>
-          Ваш телеграм ник <br />в приложении "Дари Еду"<br />
+          Ваш Telegram ник <br />в приложении "Дари Еду"<br />
           совпадает с ником в Telegram.
          </p>
        }
@@ -358,7 +353,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         title={
           <p>
             Обновить номер телефона можно 
-            <br />только через телеграм бот.
+            <br />только через Telegram бот.
           </p>
         }
         description=""

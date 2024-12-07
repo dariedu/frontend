@@ -86,9 +86,6 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
           let list: TVolunteerForDeliveryAssignments[] = [];
           listOfVolunteers.forEach(i => list.push(i));
           if (currentUser && currentUser.tg_username && currentUser.last_name && currentUser.name && currentUser.photo) {
-            // if (!currentUser.photo.includes('https')) {
-            //   currentUser.photo = currentUser.photo.replace('http', 'https')
-            // }
             list.push({
               id: currentUser.id,
               tg_username: currentUser.tg_username,
@@ -96,13 +93,6 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
               name: currentUser.name,
               photo: currentUser.photo
             })
-            // console.log({
-            //   id: currentUser.id,
-            //   tg_username: currentUser.tg_username,
-            //   last_name: currentUser.last_name,
-            //   name: currentUser.name,
-            //   photo: currentUser.photo
-            //   })
           }
           changeListOfVolunteers(list)
         }
@@ -127,7 +117,6 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         try {
           let result: IDelivery = await getDeliveryById(token, deliveryId);
           if (result) {
-        // console.log(result, "result")
          getDelivery(result)
       }
         } catch (err) {

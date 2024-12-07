@@ -151,9 +151,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 </div>
               </div>
 
-              <div className="flex w-full items-center justify-between ">
+              <div className="flex w-full items-center justify-between">
                 <div
-                  className="flex w-full items-center cursor-pointer "
+                  className="flex w-full items-center cursor-pointer"
                   onClick={() =>
                     setOpenVolunteerLists(prev =>
                       prev.map((isOpen, idx) =>
@@ -163,10 +163,13 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                   }
                 >
                   <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 " >
-                    {/* <div className='flex justify-between items-center'> */}
                       <div className='flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white'>
-                        {routeS.volunteerFullName && routeS.volunteerFullName.length ? (
+                        {routeS.volunteerFullName ? (
                         <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
+                         <Avatar.Image
+                         className="w-[40px] h-[40px] object-cover"
+                          src={listOfVolunteers.find(i => i.tg_username == routeS.telegramNik)?.photo}
+                              />
                           <Avatar.Fallback
                             className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
                             delayMs={600}
@@ -181,7 +184,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                         {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? (
                           <p className='ml-3 w-full'>{routeS.volunteerFullName}</p>
                         ) : (
-                            <p className='ml-3'>Не выбран</p>
+                            <p className='ml-3 w-full'>Не выбран</p>
                     )}
                     {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
                     <a href={'https://t.me/' + (routeS.telegramNik.includes('@')? routeS.telegramNik.slice(1): routeS.telegramNik)} target="_blank" onClick={(e=>e.stopPropagation())}>
@@ -222,10 +225,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
                 </Modal>
               )}
               {openRouteSheets[index] && (
-                <RouteSheetsView
+                  <RouteSheetsView
                   deliveryId={ deliveryId}
                   routes={routeS.address.map(addr => (addr))}
-                />
+                />                
               )}
             </div>
           );

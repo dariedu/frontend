@@ -43,8 +43,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
                 {getMetroCorrectName(delivery.location.subway)}
               </p>
-          <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p>
-
+          <p className='text-light-gray-black text-start font-gerbera-sub1 max-h-[31px] overflow-hidden dark:text-light-gray-3'>{delivery.location.address}</p>
           </div>
              </div>
             </div>    

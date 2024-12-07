@@ -98,7 +98,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         {/* /////////////////////// */}
         { taskFilter == 'completed' ? ( '' ) : (
             <div className="flex justify-bcenter items-center mt-[14px] space-x-2">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit  h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>
@@ -108,7 +108,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start   min-w-fit w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                   Начисление баллов
                 </p>
