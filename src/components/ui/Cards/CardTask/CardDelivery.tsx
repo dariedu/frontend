@@ -23,15 +23,15 @@ type TCardDeliveryProps = {
 const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab,  getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
  const [isOpen, setIsOpen] = useState(false);
 
-   const deliveryDate = new Date(delivery.date);
+   const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
    const hours =
-    deliveryDate.getHours() < 10
-      ? '0' + deliveryDate.getHours()
-      : deliveryDate.getHours();
+    deliveryDate.getUTCHours() < 10
+      ? '0' + deliveryDate.getUTCHours()
+      : deliveryDate.getUTCHours();
     const minutes =
-    deliveryDate.getMinutes() < 10
-      ? '0' + deliveryDate.getMinutes()
-      : deliveryDate.getMinutes();
+    deliveryDate.getUTCMinutes() < 10
+      ? '0' + deliveryDate.getUTCMinutes()
+      : deliveryDate.getUTCMinutes();
 
      return (
      <>

@@ -24,7 +24,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   cancelPromotion
 }) => {
 
-  const eventDate: Date = new Date(promotion.start_date);
+  const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180);
   const currentDate = new Date()
   const promotionDate = new Date(promotion.start_date)
   const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
@@ -81,9 +81,9 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           <p className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">
             {promotion.is_permanent
               ? 'В любое время'
-                : `${eventDate.getDate()}
+                : `${eventDate.getUTCDate()}
             ${getMonthCorrectEndingName(eventDate)} в
-            ${eventDate.getHours() < 10 ? '0' + eventDate.getHours() : eventDate.getHours()}:${eventDate.getMinutes() < 10 ? '0' + eventDate.getMinutes() : eventDate.getMinutes()}`
+            ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`
           }  
             
           </p>

@@ -21,8 +21,8 @@ interface IPromotionProps {
 const CardPromotion: React.FC<IPromotionProps> = ({ promotion, optional, reserved, makeReservationFunc, cancelPromotion}) => {
   const [openFullView, setOpenFullView] = useState(false);
 
-  const eventDate: Date = new Date(promotion.start_date);
-  let day: number = eventDate.getDate();
+  const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180);
+  let day: number = eventDate.getUTCDate();
   let month: string = getMonthCorrectEndingName(eventDate);
 
   return (

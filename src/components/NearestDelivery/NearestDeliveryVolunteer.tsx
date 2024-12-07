@@ -38,7 +38,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   feedbackSubmited,
 }) => {
 
-  const deliveryDate = new Date(delivery.date);
+  const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
   //const currentDate = new Date();
 // console.log(delivery, "delivery")
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
@@ -176,17 +176,17 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
         {currentStatus == 'completed' ? ('') : (
           <div className="flex justify-center items-center mt-[14px] space-x-2">
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
               <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                 Время начала
               </p>
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                {`${deliveryDate.getDate()}
+                {`${deliveryDate.getUTCDate()}
               ${getMonthCorrectEndingName(deliveryDate)} в
-              ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
+              ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
               </p>
             </div>
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
               <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                 Начисление баллов
               </p>

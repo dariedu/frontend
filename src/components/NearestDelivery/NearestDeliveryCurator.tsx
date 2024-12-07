@@ -70,7 +70,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           } else {
              setDelivery(result)
           }
-           setDeliveryDate(new Date(result.date))
+           setDeliveryDate(new Date(Date.parse(result.date) + 180 * 60000))
            curatorDelivery.volunteers.map(vol => {
              if (vol.photo && !vol.photo.includes('https')) {
                vol.photo = vol.photo.replace('http', 'https')
@@ -204,9 +204,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
                   Время начала
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                  {`${deliveryDate.getDate()}
+                  {`${deliveryDate.getUTCDate()}
                   ${getMonthCorrectEndingName(deliveryDate)} в
-                  ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
+                  ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
                 </p>
               </div>
               <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-full min-w-[165px] h-[62px] p-[12px]">

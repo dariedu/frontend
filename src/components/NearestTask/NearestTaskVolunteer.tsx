@@ -26,7 +26,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   taskFilter,
   feedbackSubmited
 }) => {
-  const deliveryDate = new Date(task.start_date);
+  const taskDate = new Date(Date.parse(task.start_date) + 180 * 60000);
 
   const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited)
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
@@ -103,9 +103,9 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
                   Время начала
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                  {`${deliveryDate.getDate()}
-              ${getMonthCorrectEndingName(deliveryDate)} в
-              ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
+                  {`${taskDate.getUTCDate()}
+              ${getMonthCorrectEndingName(taskDate)} в
+              ${taskDate.getUTCHours() < 10 ? '0' + taskDate.getUTCHours() : taskDate.getUTCHours()}:${taskDate.getUTCMinutes() < 10 ? '0' + taskDate.getUTCMinutes() : taskDate.getUTCMinutes()}`}
                 </p>
               </div>
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start   min-w-fit w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
