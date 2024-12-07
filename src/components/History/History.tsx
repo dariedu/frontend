@@ -191,16 +191,16 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
 
     if (myPastDeliveries.length > 0) {
       myPastDeliveries.forEach(past => {
-        const deliverytDate = new Date(past.date);
-        const day = deliverytDate.getDate();
+        const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
+        const day = deliverytDate.getUTCDate();
         const month = deliverytDate.toLocaleDateString('RU', {
           month: 'short',
         });
         const hours = deliverytDate
-          ? String(deliverytDate.getHours()).padStart(2, '0')
+          ? String(deliverytDate.getUTCHours()).padStart(2, '0')
           : '--';
         const minutes = deliverytDate
-          ? String(deliverytDate.getMinutes()).padStart(2, '0')
+          ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
           : '--';
 
         let delivery: IAllMyPast = {
@@ -210,7 +210,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             name: 'доставка',
           },
           startDateString: past.date,
-          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getFullYear()}`,
+          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
           name: 'Доставка',
           points: past.price,
           date: `${day} ${month} ${hours}:${minutes}`,
@@ -222,16 +222,16 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     }
     if (curatorPastDeliveries.length > 0) {
       curatorPastDeliveries.forEach(past => {
-        const deliverytDate = new Date(past.date);
-        const day = deliverytDate.getDate();
+        const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
+        const day = deliverytDate.getUTCDate();
         const month = deliverytDate.toLocaleDateString('RU', {
           month: 'short',
         });
         const hours = deliverytDate
-          ? String(deliverytDate.getHours()).padStart(2, '0')
+          ? String(deliverytDate.getUTCHours()).padStart(2, '0')
           : '--';
         const minutes = deliverytDate
-          ? String(deliverytDate.getMinutes()).padStart(2, '0')
+          ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
           : '--';
 
         let delivery: IAllMyPast = {
@@ -241,7 +241,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             name: 'доставка',
           },
           startDateString: past.date,
-          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getFullYear()}`,
+          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
           name: 'Курирование доставки',
           points: past.price,
           date: `${day} ${month} ${hours}:${minutes}`,
@@ -254,8 +254,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
 
     if (myPastTasks.length > 0) {
       myPastTasks.forEach(past => {
-        const taskStartDate = new Date(past.start_date);
-        const startDay = taskStartDate.getDate();
+        const taskStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
+        const startDay = taskStartDate.getUTCDate();
         let task: IAllMyPast = {
           id: past.id + past.start_date,
           category: {
@@ -263,7 +263,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             name: 'доброе дело',
           },
           startDateString: past.start_date,
-          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(taskStartDate)} ${taskStartDate.getFullYear()}`,
+          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(taskStartDate)} ${taskStartDate.getUTCFullYear()}`,
           name:
             past.category.name.slice(0, 1).toUpperCase() +
             past.category.name.slice(1),
@@ -275,8 +275,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     }
     if (myPastPromotions.length > 0) {
       myPastPromotions.forEach(past => {
-        const promotionStartDate = new Date(past.start_date);
-        const startDay = promotionStartDate.getDate();
+        const promotionStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
+        const startDay = promotionStartDate.getUTCDate();
         let task: IAllMyPast = {
           id: past.id + past.start_date,
           category: {
@@ -284,7 +284,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
             name: 'поощрение',
           },
           startDateString: past.start_date,
-          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(promotionStartDate)} ${promotionStartDate.getFullYear()}`,
+          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(promotionStartDate)} ${promotionStartDate.getUTCFullYear()}`,
           name: past.name.slice(0, 1).toUpperCase() + past.name.slice(1),
           points: past.price,
           plus: false,
@@ -294,8 +294,8 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     }
 
     function compare(a: IAllMyPast, b: IAllMyPast) {
-      var dateA = new Date(a.startDateString);
-      var dateB = new Date(b.startDateString);
+      var dateA = new Date(Date.parse(a.startDateString) + 180 * 60000)
+      var dateB = new Date(Date.parse(b.startDateString) + 180 * 60000)
       return +dateB - +dateA;
     }
 

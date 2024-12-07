@@ -126,20 +126,25 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
     filterDeliveries();
   }, [deliveries, takeDeliverySuccess]);
 
+  // const deliveryDate = new Date(Date.parse(delivery.date) + 180 *60000);
+  //   console.log(deliveryDate.getDate(), deliveryDate.getHours())
+
   ////функция чтобы волонтер взял доставку
   async function getDeliveryFromServer(delivery: IDelivery) {
     const id: number = delivery.id;
-    const deliveryDate = new Date(delivery.date);
-    const date = deliveryDate.getDate();
+  
+    const deliveryDate = new Date(Date.parse(delivery.date) + 180 *60000);
+    console.log(deliveryDate.getDate(), deliveryDate.getHours())
+    const date = deliveryDate.getUTCDate();
     const month = getMonthCorrectEndingName(deliveryDate);
     const hours =
-      deliveryDate.getHours() < 10
-        ? '0' + deliveryDate.getHours()
-        : deliveryDate.getHours();
+      deliveryDate.getUTCHours() < 10
+        ? '0' + (deliveryDate.getUTCHours())
+        : deliveryDate.getUTCHours();
     const minutes =
-      deliveryDate.getMinutes() < 10
-        ? '0' + deliveryDate.getMinutes()
-        : deliveryDate.getMinutes();
+      deliveryDate.getUTCMinutes() < 10
+        ? '0' + deliveryDate.getUTCMinutes()
+        : deliveryDate.getUTCMinutes();
     const subway = getMetroCorrectName(delivery.location.subway);
     const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
     
@@ -175,17 +180,17 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
 
   function getDelivery(delivery: IDelivery) {
-    const deliveryDate = new Date(delivery.date);
-    const date = deliveryDate.getDate();
+    const deliveryDate = new Date(Date.parse(delivery.date) + 180* 60000);
+    const date = deliveryDate.getUTCDate();
     const month = getMonthCorrectEndingName(deliveryDate);
     const hours =
-      deliveryDate.getHours() < 10
-        ? '0' + deliveryDate.getHours()
-        : deliveryDate.getHours();
+      deliveryDate.getUTCHours() < 10
+        ? '0' + deliveryDate.getUTCHours()
+        : deliveryDate.getUTCHours();
     const minutes =
-      deliveryDate.getMinutes() < 10
-        ? '0' + deliveryDate.getMinutes()
-        : deliveryDate.getMinutes();
+      deliveryDate.getUTCMinutes() < 10
+        ? '0' + deliveryDate.getUTCMinutes()
+        : deliveryDate.getUTCMinutes();
     const subway = getMetroCorrectName(delivery.location.subway);
     const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
     setTakeDeliverySuccessDateName(finalString)
@@ -196,17 +201,17 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   ////функция чтобы волонтер взял оброе дело
   async function getTaskFromServer(task: ITask) {
     const id: number = task.id;
-    const taskDate = new Date(task.start_date);
-    const date = taskDate.getDate();
+    const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
+    const date = taskDate.getUTCDate();
     const month = getMonthCorrectEndingName(taskDate);
     const hours =
-      taskDate.getHours() < 10
-        ? '0' + taskDate.getHours()
-        : taskDate.getHours();
+      taskDate.getUTCHours() < 10
+        ? '0' + taskDate.getUTCHours()
+        : taskDate.getUTCHours();
     const minutes =
-      taskDate.getMinutes() < 10
-        ? '0' + taskDate.getMinutes()
-        : taskDate.getMinutes();
+      taskDate.getUTCMinutes() < 10
+        ? '0' + taskDate.getUTCMinutes()
+        : taskDate.getUTCMinutes();
     const finalString = `\"${task.name.slice(0, 1).toUpperCase() + task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
     try {
       if (token) {
@@ -235,17 +240,17 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   }
 
   function getTask(task: ITask) {
-    const taskDate = new Date(task.start_date);
-    const date = taskDate.getDate();
+    const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
+    const date = taskDate.getUTCDate();
     const month = getMonthCorrectEndingName(taskDate);
     const hours =
-      taskDate.getHours() < 10
-        ? '0' + taskDate.getHours()
-        : taskDate.getHours();
+      taskDate.getUTCHours() < 10
+        ? '0' + taskDate.getUTCHours()
+        : taskDate.getUTCHours();
     const minutes =
-      taskDate.getMinutes() < 10
-        ? '0' + taskDate.getMinutes()
-        : taskDate.getMinutes();
+      taskDate.getUTCMinutes() < 10
+        ? '0' + taskDate.getUTCMinutes()
+        : taskDate.getUTCMinutes();
     const finalString = `\"${task.name.slice(0, 1).toUpperCase() + task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
     setTakeTaskSuccessDateName(finalString);
     setTaskForReservation(task);

@@ -26,7 +26,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   taskFilter,
   feedbackSubmited
 }) => {
-  const deliveryDate = new Date(task.start_date);
+  // const taskDate = new Date(Date.parse(task.start_date) + 180 * 60000);
 
   const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited)
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
@@ -48,7 +48,32 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
     : task.curator.tg_username;
 }
   
-  
+   ///// работаем с датой //////////////
+ const taskStartDate = new Date(Date.parse(task.start_date) + 180*60000);
+ const startDay = taskStartDate.getUTCDate();
+ const startMonth = taskStartDate.toLocaleDateString("RU", {month:"short"});
+ 
+ const hours = taskStartDate ? String(taskStartDate.getUTCHours()).padStart(2, '0') : '--';
+ const minutes = taskStartDate ? String(taskStartDate.getUTCMinutes()).padStart(2, '0') : '--';
+ 
+ const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
+ const endDay = taskEndDate.getUTCDate();
+ const endMonth = taskEndDate.toLocaleDateString("RU", {month:"short"})
+
+  let dateString: string;
+  let period: boolean;
+  if (startDay == endDay && startMonth == endMonth) {
+    period = false;
+   dateString = `${startDay} ${getMonthCorrectEndingName(taskStartDate)} в ${hours}:${minutes}`
+  } else {
+    period = true
+    if (startMonth == endMonth) {
+       dateString = `${startDay} - ${endDay} ${endMonth}`
+    } else {
+       dateString = `${startDay} ${startMonth} - ${endDay} ${endMonth}`
+    }
+ }
+ ///// работаем с датой //////////////
 
   return (
     <>
@@ -98,17 +123,15 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         {/* /////////////////////// */}
         { taskFilter == 'completed' ? ( '' ) : (
             <div className="flex justify-bcenter items-center mt-[14px] space-x-2">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
-                  Время начала
-                </p>
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit  h-[62px] p-[12px] dark:bg-light-gray-6">
+              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
+                {period ? "Даты" : "Время начала" } 
+              </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-                  {`${deliveryDate.getDate()}
-              ${getMonthCorrectEndingName(deliveryDate)} в
-              ${deliveryDate.getHours() < 10 ? '0' + deliveryDate.getHours() : deliveryDate.getHours()}:${deliveryDate.getMinutes() < 10 ? '0' + deliveryDate.getMinutes() : deliveryDate.getMinutes()}`}
+                 {dateString}
                 </p>
               </div>
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start   min-w-fit w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
                 <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                   Начисление баллов
                 </p>

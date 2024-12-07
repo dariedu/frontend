@@ -4,7 +4,7 @@ import {
   getBallCorrectEndingName,
   getMetroCorrectName,
 } from '../../../helperFunctions/helperFunctions';
-import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDeliveryTask';
+import { DetailedInfoDelivery } from '../../../DetailedInfoDeliveryTask/DetailedInfoDelivery';
 import { Modal } from '../../Modal/Modal';
 import Metro_station from './../../../../assets/icons/metro_station.svg?react'
 
@@ -23,15 +23,15 @@ type TCardDeliveryProps = {
 const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab,  getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
  const [isOpen, setIsOpen] = useState(false);
 
-   const deliveryDate = new Date(delivery.date);
+   const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
    const hours =
-    deliveryDate.getHours() < 10
-      ? '0' + deliveryDate.getHours()
-      : deliveryDate.getHours();
+    deliveryDate.getUTCHours() < 10
+      ? '0' + deliveryDate.getUTCHours()
+      : deliveryDate.getUTCHours();
     const minutes =
-    deliveryDate.getMinutes() < 10
-      ? '0' + deliveryDate.getMinutes()
-      : deliveryDate.getMinutes();
+    deliveryDate.getUTCMinutes() < 10
+      ? '0' + deliveryDate.getUTCMinutes()
+      : deliveryDate.getUTCMinutes();
 
      return (
      <>
@@ -43,8 +43,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
                 {getMetroCorrectName(delivery.location.subway)}
               </p>
-          <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p>
-
+          <p className='text-light-gray-black text-start font-gerbera-sub1 max-h-[31px] overflow-hidden dark:text-light-gray-3'>{delivery.location.address}</p>
           </div>
              </div>
             </div>    

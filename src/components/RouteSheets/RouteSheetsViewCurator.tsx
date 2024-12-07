@@ -87,9 +87,8 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black space-y-1">
       {routes.map((route, index) => (
-        <div className='flex flex-col w-full h-fit bg-light-gray-white dark:bg-light-gray-7-logo p-4 space-y-[14px] rounded-2xl mt-1'>
+        <div key={index} className='flex flex-col w-full h-fit bg-light-gray-white dark:bg-light-gray-7-logo p-4 space-y-[14px] rounded-2xl mt-1'>
           <div
-            key={index}
             className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center "
           >
             <div className="flex w-full items-center justify-between">

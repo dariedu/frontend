@@ -129,9 +129,6 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
 
         <div  key={index} className="flex items-center justify-start p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] shadow h-[66px]" onClick={action.onClick ? action.onClick : ()=>{}}>
           <div className="flex items-center space-x-4">
-            {/* {typeof action.icon === 'string' && action.icon.endsWith('.svg') ? (
-              <span>{action.icon}</span>
-            ) : ( */}
               <span>{action.icon}</span>
             {/* )} */}
             <span className="text-left font-gerbera-h3 text-light-gray-black m-0 dark:text-light-gray-1">
