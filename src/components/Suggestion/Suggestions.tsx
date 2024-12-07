@@ -60,14 +60,14 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
     
 
   return (
-    <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[400px]  h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+    <div className="bg-light-gray-white pb-8 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px]  h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
           Поделитесь Вашими вопросами и предложениями
           </p>
         </div>
-      <div className="z-[51] w-full max-w-[400px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="z-[51] w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
         <Form.Root
            className=" flex flex-col items-center justify-center"
@@ -81,8 +81,8 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3 ml-3">Расскажите в свободной форме</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
-                  maxRows={15}
-                  className="w-full min-w-[328px] max-w-[370px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  maxRows={8}
+                  className="w-full min-w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('suggestion') ??  ""}

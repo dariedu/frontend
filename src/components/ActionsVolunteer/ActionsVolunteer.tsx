@@ -147,13 +147,13 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       ))}
       </div>
       <ConfirmModal
-      isOpen={notEnoughtPointsOpenModal}
-      onOpenChange={setNotEnoughtPointsOpenModal}
-      onConfirm={() => setNotEnoughtPointsOpenModal(false)}
+        isOpen={notEnoughtPointsOpenModal}
+        onOpenChange={setNotEnoughtPointsOpenModal}
+        onConfirm={() => { setNotEnoughtPointsOpenModal(false)}}
       title={
         <p>
-          Подать заявку можно после участия<br />
-          не менее, чем в трёх доставках<br />
+          Подать заявку можно после участия
+          не менее, чем в трёх доставках<br/>
           в качестве волонтёра
         </p>
       }
