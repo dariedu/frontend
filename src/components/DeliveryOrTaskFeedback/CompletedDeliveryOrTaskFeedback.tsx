@@ -96,7 +96,7 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
   return (
     <>
       {volunteer ? (
-      <div className="w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="fixed bottom-0 pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
           <div className="flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
@@ -114,7 +114,7 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
          >
           <div  className='flex flex-col px-4'>
             <Form.Field name="fb1" className="mt-4">
-              <Form.Label className="font-gerbera-sub2 text-light-gray-4">
+              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
                 На сколько приятным было общение с куратором?
               </Form.Label>
               <Form.Control asChild>
@@ -180,7 +180,7 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
             <div className="flex items-center self-start mt-[25px] mx-4">
               <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
               {delivery ? (
-            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray ">
+            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
             Поделитесь Вашими впечатлениями от курирования доставки
             </p>
               ) : (

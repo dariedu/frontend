@@ -39,7 +39,7 @@ const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
   }
 
   return (
-    <div className="bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full fixed max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={((e)=>e.stopPropagation())}>
+    <div className="bg-light-gray-1 fixed bottom-0 pb-10 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={((e)=>e.stopPropagation())}>
       <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-fit py-4">
         <button onClick={()=>{}} className="mr-2">
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer' />
@@ -84,7 +84,6 @@ const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
           <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4 mb-4 `}
             onClick={(e) => {
               if (buttonActive) {
-
               } else e.preventDefault();
           }}
           >Сохранить</button>
