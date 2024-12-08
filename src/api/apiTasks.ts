@@ -152,7 +152,7 @@ export const getTasksCurator = async (
 
 
 export const getTasksCategories = async (
-  access: string | null,
+  access: string,
 ): Promise<TTaskCategory[]> => {
   try {
     const response: AxiosResponse<TTaskCategory[]> = await axios.get(
@@ -171,27 +171,6 @@ export const getTasksCategories = async (
   }
 };
 
-// Получить категории заданий
-// export const getTasksCategories = async (
-//   access: string,
-// ): Promise<TTaskCategory[]> => {
-//   try {
-//     const response: AxiosResponse<TTaskCategory[]> = await axios({
-//         url: `${tasksUrl}get_categories/`,
-//         method: "GET",
-//         headers: {
-//           Authorization: `Bearer ${access}`,
-//           accept: 'application/json',
-//         },
-//       },
-//     );
-//     return response.data;
-//   } catch (err: any) {
-//     console.error('Get request getTasksCategories has failed', err);
-//     throw new Error('Get request getTasksCategories has failed');
-//   }
-// };
-
 // Получить свои задания c фильтрами
 export const getMyTasks = async (
   access: string,
@@ -200,8 +179,8 @@ export const getMyTasks = async (
 ): Promise<ITask[]> => {
   try {
     const response: AxiosResponse<ITask[]> = await axios.get(
-      `${tasksUrl}my/?is_active=${is_active ? 1 : 0}&is_completed=${
-        is_completed ? 1 : 0
+      `${tasksUrl}my/?is_active=${is_active ? true : false}&is_completed=${
+        is_completed ? true : false
       }`,
       {
         headers: {
@@ -219,7 +198,7 @@ export const getMyTasks = async (
 
 // Получить свои задания без фильтров
 export const getMyTasksNoFilter = async (
-  access: string | null,
+  access: string,
 ): Promise<ITask[]> => {
   try {
     const response: AxiosResponse<ITask[]> = await axios.get(

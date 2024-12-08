@@ -101,7 +101,7 @@ async function getMyCuratorDeliveries() {
   
  
   return (
-    <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-screen pb-20 overflow-y-auto w-full max-w-[500px]">
+    <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-fit pb-20 overflow-y-auto w-full max-w-[500px]">
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
         curatorInProcessDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
             return(<div key={index}>

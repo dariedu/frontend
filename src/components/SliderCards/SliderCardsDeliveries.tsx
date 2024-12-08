@@ -26,7 +26,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
         className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-full max-w-[500px] pl-4 space-x-2"
       >
     
-        {deliveries.map((delivery: IDelivery) => {
+        {deliveries.sort((a,b)=>{return +new Date(a.date)- +new Date(b.date)}).map((delivery: IDelivery) => {
           if (!arrOfMyDeliveriesId.includes(delivery.id)) {
             return <div key={delivery.id} className="">
             <CardDelivery delivery={delivery} canBook={true} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />

@@ -128,13 +128,13 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
 
 
   return (
-    <div className={"space-y-4 w-full max-w-[500px] pt-10 pb-5 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
+    <div className={"space-y-4 w-full max-w-[500px] px-4 pt-10 pb-10 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
 }>
         {/* Список волонтёров */}
       {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
-          className={showActions? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-[328px]": "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-[310px]" } 
+          className={showActions? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full": "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" } 
           onClick={(e) => {
             e.stopPropagation();
             setVolunteerId(volunteer.id)

@@ -23,7 +23,9 @@ type TCardDeliveryProps = {
 const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab,  getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
  const [isOpen, setIsOpen] = useState(false);
 
-   const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
+  const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
+  const day = deliveryDate.getUTCDate();
+  const month = deliveryDate.toLocaleDateString("RU", {month:"short"});
    const hours =
     deliveryDate.getUTCHours() < 10
       ? '0' + deliveryDate.getUTCHours()
@@ -49,7 +51,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
             </div>    
         <div className="flex justify-between items-center w-fit space-x-2">
         <div className="flex justify-center text-center bg-light-gray-white w-fit h-fit py-[6px] px-3 rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub2">
-          {`${hours}:${minutes}`}
+          {`${day} ${month} ${hours}:${minutes}`}
             </div>
           <div className="flex items-center justify-center bg-light-brand-green w-fit h-fit py-[6px] px-3 rounded-2xl">
             <span className="text-light-gray-white font-gerbera-sub2">

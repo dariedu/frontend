@@ -1,5 +1,5 @@
 import {useState, useContext, useEffect} from 'react'
-import Calendar from "../../../components/Calendar/Calendar";
+// import Calendar from "../../../components/Calendar/Calendar";
 import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
 import { getVolunteerDeliveries, postDeliveryCancel, type IDelivery, type IVolunteerDeliveries } from '../../../api/apiDeliveries';
 import { TokenContext } from '../../../core/TokenContext';
@@ -15,7 +15,7 @@ import { UserContext } from '../../../core/UserContext';
 
 
 const CalendarTabVolunteer = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());/// дата для календаря
+  // const [selectedDate, setSelectedDate] = useState(new Date());/// дата для календаря
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]) ////доставки записанные на меня
   const [myPast, setMyPast] = useState<IDelivery[]>([]) //// мои прошедшие доставки
 
@@ -188,7 +188,7 @@ try {
   return (
     <>
       <div className="mt-1 mb-4 flex flex-col h-fit items-center overflow-x-hidden " >
-        <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        {/* <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} /> */}
         <div className='flex flex-col h-full mb-20 overflow-auto w-full max-w-[500px]'>
           {myCurrent.length > 0 ?
               (myCurrent.sort((a, b) =>{return +new Date(a.date) - +new Date(b.date)}).map((i) => {

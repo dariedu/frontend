@@ -98,7 +98,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         </div>
       </div>
       {promotion.description != undefined && promotion.description.length > 0 ? (
-      <div className="w-full min-w-[328px]  h-fit max-h-[125px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
+      <div className="w-full min-w-[328px] h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
         <p className="font-gerbera-sub1 text-light-gray-4 h-fit text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
           {promotion.description}
@@ -115,7 +115,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         />
       )}
       {!reserved ? (
-        <div className="w-full min-w-[328px] flex justify-between items-center mt-[14px] self-center">
+        <div className="w-full min-w-[328px] flex justify-center space-x-2 items-center mt-[14px] self-center">
         <button
           onClick={() => {
             setConfirmMakeReservationModal(true)
@@ -124,7 +124,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         >
           Забронировать
         </button>
-        <button
+        {/* <button
           onClick={(e) => {
               e.preventDefault();
               onOpenChange(false)
@@ -132,7 +132,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           className="btn-M-WhiteDefault "
         >
           Закрыть
-        </button>
+        </button> */}
       </div>
       ) : (
        <div className="w-full flex justify-center items-center mt-[14px] self-center">

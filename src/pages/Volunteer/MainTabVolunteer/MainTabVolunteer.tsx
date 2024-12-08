@@ -1,5 +1,5 @@
 import SliderStories from '../../../components/SliderStories/SliderStories';
-import Calendar from '../../../components/Calendar/Calendar';
+// import Calendar from '../../../components/Calendar/Calendar';
 import SliderCardsDeliveries from '../../../components/SliderCards/SliderCardsDeliveries';
 import { useState, useContext, useEffect } from 'react';
 import { DeliveryContext } from '../../../core/DeliveryContext';
@@ -29,7 +29,7 @@ type TMainTabVolunteerProps = {
 };
 
 const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  // const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [takeDeliverySuccess, setTakeDeliverySuccess] =
     useState<boolean>(false); //// подтверждение бронирования доставки
@@ -259,7 +259,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col min-h-full mb-20 overflow-x-hidden w-full max-w-[500px] ">
+      <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px] ">
         <div>
           <SliderStories />
           {myCurrent.length > 0
@@ -275,15 +275,15 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
             : ''}
           <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Расписание доставок
+              Доставки
             </div>
-            <Calendar
+            {/* <Calendar
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
               showHeader={false}
               showFilterButton={false}
               showDatePickerButton={false}
-            />
+            /> */}
             {filteredDeliveries.length > 0 ? (
               <SliderCardsDeliveries
                 deliveries={filteredDeliveries}
