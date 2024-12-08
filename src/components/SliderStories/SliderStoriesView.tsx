@@ -132,21 +132,21 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             <CloseIcon className='fill-light-gray-4 w-8 h-8'/>
           </button>
         </div>
-        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl relative ">
+        <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl relative">
           <Avatar.Root className='inline-flex items-center justify-center align-middle  overflow-hidden w-full h-[734px] rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>
             <Avatar.Image src={stories[currentIndex].cover} decoding='async'  loading='lazy' className='w-full h-[734px] rounded-2xl object-cover' />
             <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-full h-[734px] rounded-2xl'>
           </Avatar.Fallback>
         </Avatar.Root>
           {/* Текст поверх картинки */}
-          <div className="text-light-gray-white font-gerbera-h2 absolute bottom-10 w-[89%]">
+          <div className="text-light-gray-white font-gerbera-h2 absolute bottom-14 w-[89%]">
             <div className="flex bg-light-brand-green font-gerbera-h3 w-fit p-3 h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
               {new Date(stories[currentIndex].date).toLocaleDateString()}
             </div>
             <p className="font-gerbera-st text-left mb-3 w-fit">
               {stories[currentIndex].title}
             </p>
-            <p className="font-gerbera-h2 text-left">{stories[currentIndex].text}</p>
+            <p className="font-gerbera-h2 text-left h-fit">{stories[currentIndex].text}</p>
           </div>
         </div>
 

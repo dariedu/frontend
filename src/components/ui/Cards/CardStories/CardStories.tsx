@@ -19,7 +19,6 @@ const CardStories: React.FC<CardStoriesProps> = ({
       onClick={onClick}
     >
       {/* Изображение */}
-      {/* <img src={imageSrc} alt={title} className="w-full h-full object-cover" /> */}
       <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-full h-full rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>
         {
           imageSrc && (
@@ -29,7 +28,7 @@ const CardStories: React.FC<CardStoriesProps> = ({
           </Avatar.Fallback>
         </Avatar.Root>
       {/* Текст поверх картинки */}
-      <div className="absolute bottom-4 left-4 font-gerbera-sub2 text-light-gray-white w-[92px] h-[32px] break-words whitespace-normal text-left">
+      <div className="absolute bottom-[12px] px-[12px] font-gerbera-sub2 text-light-gray-white w-full h-fit  whitespace-normal text-left">
         {title}
       </div>
     </div>
