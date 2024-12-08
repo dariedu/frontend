@@ -83,7 +83,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           }
      }
   }
-  
+  ////завершение доставки куратором
   async function requestDeliveryComplete(deliveryId:number) {
     if (token && delivery) {
       try {
@@ -99,18 +99,18 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   }
   
 
-   //// 4. запрашиваем все маршрутные листы по отдельности
+   //// 4. запрашиваем все маршрутные листы по отдельности только у активной или доставки в процессе
  function requestEachMyRouteSheet() {
    let routesArr: IRouteSheet[] = [];
-     if (token) {
-       
-       Promise.allSettled(curatorDelivery.id_route_sheet.map(routeS => getRouteSheetById(token, routeS)))
+   if (token &&(deliveryFilter == 'active' || deliveryFilter == "nearest")) {
+     Promise.allSettled(curatorDelivery.id_route_sheet.map(routeS => { return getRouteSheetById(token, routeS) }))
          .then(responses => responses.forEach((result, num) => {
            if (result.status == "fulfilled") {
              routesArr.push(result.value)
            }
            if (result.status == "rejected") {
-             console.log(`${num} delivery was not fetched`)
+             console.log(`${num} routeSheet was not fetched`)
+
            }
          })).finally(() => {setRouteSheets(routesArr)}
          )

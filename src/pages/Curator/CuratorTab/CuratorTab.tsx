@@ -77,7 +77,7 @@ async function getMyCuratorDeliveries() {
         let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
         let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
 
-        result.filter(i=>i.user ==currentUser?.id).forEach(i => {
+        result.filter(i=>i.user == currentUser?.id).forEach(i => {
           if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
             allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
           } else if (typeof i.task == 'number' && i.type == 'completed_task') {
@@ -116,15 +116,8 @@ async function getMyCuratorDeliveries() {
           </div>)
         })
       )}
-      {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
-       curatorCompletedDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
-          return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}/>
-          </div>)
-        })
-      )}
          {curtorTasks && curtorTasks.length > 0 &&
-        curtorTasks.map((task, index) => {
+        curtorTasks.filter(i =>!i.is_completed).map((task, index) => {
           const submited = completedTaskFeedbacks.includes(task.id) ? true : false;
           return (  <div key={index}>
             <NearestTaskCurator
@@ -136,7 +129,28 @@ async function getMyCuratorDeliveries() {
           )
         }
         )
-       }
+      }
+      {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
+       curatorCompletedDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
+          return (<div key={index}>
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}/>
+          </div>)
+        })
+      )}  
+      {curtorTasks && curtorTasks.length > 0 &&
+        curtorTasks.filter(i=>i.is_completed).map((task, index) => {
+          const submited = completedTaskFeedbacks.includes(task.id) ? true : false;
+          return (  <div key={index}>
+            <NearestTaskCurator
+             task={task}
+             taskFilter={task.is_completed ? "completed" : (+new Date() - +new Date(task.start_date) <= 0) ? 'nearest' : 'active'}
+             feedbackSubmited={submited}
+       />
+          </div>
+          )
+        }
+        )
+      }
       {curatorCompletedDeliveries.length == 0 && curatorActiveDeliveries.length == 0 && curatorInProcessDeliveries.length == 0 && curtorTasks.length == 0 && (
         <div className='flex flex-col w-[350px] items-center mt-10 h-[400px] justify-center ml-4'>
         <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
