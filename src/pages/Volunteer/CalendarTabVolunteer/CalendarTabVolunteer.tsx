@@ -201,32 +201,18 @@ try {
             ) : ""
           }
           {allMyTasks && allMyTasks.length > 0 ? (
-            allMyTasks.sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => {
-              let taskFilter:'nearest' | 'active' | 'completed';
-              if (!task.is_completed) {
+            allMyTasks.filter(i=>!i.is_completed).sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => {
+               let taskFilter:'nearest' | 'active';
                 let date = new Date();
                 let taskDate = new Date(task.start_date)
-                taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
+               taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
                 return (<div key={task.id}>
                   <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} feedbackSubmited={true} />
                 </div>
                 )
-              } else {
-                return (
-                  completedTaskFeedbacks.includes(task.id) ? (
-                <div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={true}/>
-                </div>
-                ): (
-              <div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={false}/>
-                </div>
-                )
-                )
- 
-              }
             })
           ) : ""}
+          
                 {myPast.length > 0 ? (
             myPast.map((i: IDelivery) => (
               completedDeliveryFeedbacks.length > 0 ? (
@@ -244,6 +230,19 @@ try {
             </div>)
             ))) : ""
           }
+          {allMyTasks && allMyTasks.length > 0 ? (
+            allMyTasks.filter(i => i.is_completed).sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => (
+                  completedTaskFeedbacks.includes(task.id) ? (
+                <div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={true}/>
+                </div>
+                ): (
+              <div key={task.id}>
+                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={false}/>
+                </div>
+                )
+              )
+          )) : ""}
           {myCurrent.length == 0 && allMyTasks.length == 0 ? (
           <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
             <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>

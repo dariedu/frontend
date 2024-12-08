@@ -117,12 +117,12 @@ async function getMyCuratorDeliveries() {
         })
       )}
          {curtorTasks && curtorTasks.length > 0 &&
-        curtorTasks.filter(i =>!i.is_completed).map((task, index) => {
+        curtorTasks.filter(i =>!i.is_completed).sort((a, b) => { return +(new Date(a.start_date)) - +(new Date(b.start_date)) }).map((task, index) => {
           const submited = completedTaskFeedbacks.includes(task.id) ? true : false;
           return (  <div key={index}>
             <NearestTaskCurator
              task={task}
-             taskFilter={task.is_completed ? "completed" : (+new Date() - +new Date(task.start_date) <= 0) ? 'nearest' : 'active'}
+             taskFilter={+new Date() - +new Date(task.start_date) <= 0 ? 'nearest' : 'active'}
              feedbackSubmited={submited}
        />
           </div>
@@ -143,7 +143,7 @@ async function getMyCuratorDeliveries() {
           return (  <div key={index}>
             <NearestTaskCurator
              task={task}
-             taskFilter={task.is_completed ? "completed" : (+new Date() - +new Date(task.start_date) <= 0) ? 'nearest' : 'active'}
+             taskFilter={"completed"}
              feedbackSubmited={submited}
        />
           </div>
