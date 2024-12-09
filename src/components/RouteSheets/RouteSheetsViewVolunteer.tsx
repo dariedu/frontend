@@ -20,7 +20,6 @@ interface IRouteSheetsViewProps {
   deliveryId: number
   routeSheetId: number
   photoReports: TServerResponsePhotoReport[]
-  // updatePhotoReports: () => {}
   sendPhotoReportSuccess: boolean
   setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -30,7 +29,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   deliveryId,
   routeSheetId,
   photoReports,
-  // updatePhotoReports,
   sendPhotoReportSuccess,
   setSendPhotoReportSuccess
 }) => {
@@ -232,7 +230,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             </p>
           )}
           <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
-            {unactive[index] == 'Отправить' && (
+            {unactive[index] == 'Отправить'  && (
               <button
                 className="btn-B-WhiteDefault"
                 onClick={() =>
@@ -243,7 +241,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   )
                 }
               >
-                Добавить комментарий
+                {comment[index].length == 0 ? 'Добавить комментарий' : "Редактировать комментарий" }
               </button>
             )}
             <button

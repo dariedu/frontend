@@ -25,7 +25,6 @@ export const TokenProvider: React.FC<{ children: React.ReactNode }> = ({
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const tgId = query.get('tg_id');
-
   let tgIdFromTgParams: number;
   useEffect(() => {
    if (window.Telegram?.WebApp?.initDataUnsafe) {

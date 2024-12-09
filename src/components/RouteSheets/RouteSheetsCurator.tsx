@@ -16,6 +16,7 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
+  currentStatus: 'nearest' | 'active' | 'completed'
   routeSheetsData: IRouteSheet[]
   onClose: () => void
   changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
@@ -28,6 +29,7 @@ interface RouteSheetsProps {
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   status,
+  currentStatus,
   routeSheetsData,
   onClose,
   changeListOfVolunteers,
@@ -235,8 +237,14 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         })}
       </div>
       {status == 'Активная' &&
-        <button className='btn-B-GreenDefault mt-10 self-center' onClick={()=>setAskCuratorCompleteDelivery(true)}>
-         Завершить доставку
+        <button className={currentStatus == 'completed'? "btn-B-GreenInactive mt-10 self-center" : 'btn-B-GreenDefault mt-10 self-center'} onClick={() => {
+          if (currentStatus == 'completed') { 
+            ()=>{}
+          } else {
+            setAskCuratorCompleteDelivery(true)
+          }
+        }}>
+        {currentStatus == 'completed' ? "Завершена" : "Завершить доставку"} 
        </button>}
       <ConfirmModal
         isOpen={askCuratorCompleteDelivery}

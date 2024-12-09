@@ -93,6 +93,13 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
     }
   }
 
+  
+     ////поднимаем текстэриа в фокус пользователя для айфона
+function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  
+
   return (
     <>
       {volunteer ? (
@@ -118,7 +125,8 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
                 На сколько приятным было общение с куратором?
               </Form.Label>
               <Form.Control asChild>
-                <TextareaAutosize
+                  <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -146,7 +154,8 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
                  }
               
               <Form.Control asChild>
-                <TextareaAutosize
+                  <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-full bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -175,7 +184,7 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
         </Form.Root>
       </div>
       ) : (
-        <div className=" flex flex-col rounded-t-2xl bg-light-gray-white "
+        <div className=" flex flex-col rounded-t-2xl bg-light-gray-white w-full max-w-[500px] "
         onClick={(e)=>e.stopPropagation()}>
             <div className="flex items-center self-start mt-[25px] mx-4">
               <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
@@ -209,7 +218,8 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
                 </Form.Label>
                 )}
                 <Form.Control asChild>
-                  <TextareaAutosize
+                    <TextareaAutosize
+                    onFocus={(e)=>handleFocus(e)}
                     maxRows={10}
                     className="w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                   placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -227,19 +237,11 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
                 >
                   Сообщение слишком короткое, минимальное количество символов 10
                   </Form.Message>
-                  {/* <Form.Message
-                  match="valueMissing"
-                  className="font-gerbera-sub2 text-light-error-red line-clamp-3"
-                >
-                  Для отправки отзыва введите ваше сообщение
-                </Form.Message> */}
               </Form.Field>
-             
             </div>
             <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive"} mt-4 mb-4  `}
               onClick={(e) => {
                 if (buttonActive) {
-                 
                 }else e.preventDefault()
             }}
             >Отправить</button>

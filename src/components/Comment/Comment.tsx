@@ -38,15 +38,20 @@ const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
     } else setButtonActive(false)
   }
 
+   ////поднимаем текстэриа в фокус пользователя для айфона
+function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
   return (
-    <div className="bg-light-gray-1 fixed bottom-0 pb-10 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={((e)=>e.stopPropagation())}>
-      <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-fit py-4">
-        <button onClick={()=>{}} className="mr-2">
+    <div className="bg-light-gray-1 fixed bottom-0 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start" onClick={((e)=>e.stopPropagation())}>
+      <div className="flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-fit p-4">
+        <button onClick={()=>{}} >
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer' />
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Комментарий о доставке по адресу {name}</h2>
       </div>
-      <div className="z-[51] min-w-[360px] w-full flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="z-[51] min-w-[360px] pb-10 w-full flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
         
       onClick={(e)=>e.stopPropagation()}>
         <Form.Root
@@ -61,6 +66,7 @@ const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
               <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о доставке</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={8}
                   className=" min-w-[96%]   bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
