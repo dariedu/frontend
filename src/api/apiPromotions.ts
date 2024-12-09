@@ -11,27 +11,28 @@ type TPromotionCategory = {
 };
 
 interface IPromotion {
-  id: number;
-  volunteers_count: number;
-  category: TPromotionCategory;
+  id: number
+  volunteers_count: number
+  category: TPromotionCategory
   city: {
-    id: number;
-    city: string;
+    id: number
+    city: string
   };
-  address: string | null;
-  name: string;
-  price: number;
-  description?: string;
-  start_date: string;
-  quantity: number;
-  available_quantity: number;
-  for_curators_only: boolean;
-  is_active: boolean;
-  ticket_file: string | null;
-  about_tickets: string | null;
-  is_permanent: boolean;
-  end_date?: string | null;
-  picture: null | string;
+  contact_person: number
+  address: string | null
+  name: string
+  price: number
+  description?: string
+  start_date: string
+  quantity: number
+  available_quantity: number
+  for_curators_only: boolean
+  is_active: boolean
+  ticket_file: string | null
+  about_tickets: string | null
+  is_permanent: boolean
+  end_date?: string | null
+  picture: null | string
 }
 
 //////запросить все доступные поощрения

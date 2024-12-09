@@ -1,9 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext} from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
-//import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import { UserContext } from '../../core/UserContext';
-//import { createRequestMessage, type TRequestMessageRequest } from '../../api/requestMessageApi';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IUser } from '../../core/types';
 import { metier, patchUser } from '../../api/userApi';
@@ -15,7 +13,10 @@ type TAboutMeProps = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
+
+
+const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
+  
   type TReasons = keyof typeof requestBody;
    ////// используем контекст
   const userValue = useContext(UserContext);
@@ -26,7 +27,6 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
   const aboutMe = userValue.currentUser?.interests;
   ////// используем контекст
 
-//console.log(aboutMe)
     const [requestBody, setRequestBody] = useState({
     about_me: localStorage.getItem('about_me') ?? aboutMe ?? "",
   });
@@ -78,11 +78,18 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
       }
     }
 
+ 
   function handleInfoInput() {
     if (requestBody.about_me.length > 5) {
       setButtonActive(true)
     } else setButtonActive(false)
   }
+
+ ////поднимаем текстэриа в фокус пользователя для айфона
+function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
 
   return (
     <div className="bg-light-gray-1 fixed bottom-0 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
@@ -120,6 +127,7 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -139,14 +147,11 @@ const AboutMe:React.FC<TAboutMeProps> = ({onClose}) => {
                 Сообщение слишком короткое, минимальное количество символов 10
               </Form.Message>
             </Form.Field>
-
           </div>
           <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4`}
             onClick={(e) => {
               if (buttonActive) {
-
               } else e.preventDefault();
-
           }}
           >Сохранить</button>
         </Form.Root>

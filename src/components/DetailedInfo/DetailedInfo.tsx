@@ -1,8 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { type IPromotion } from './../../api/apiPromotions.ts';
 import { getBallCorrectEndingName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal.tsx';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
+import * as Avatar from '@radix-ui/react-avatar';
+import { TokenContext } from '../../core/TokenContext.tsx';
+import { getUserById, IUser } from '../..//api/userApi.ts';
+import Small_sms from "./../../assets/icons/small_sms.svg?react"
+
 
 interface IDefaultInfoProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -30,27 +35,56 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [confirmMakeReservationModal, setConfirmMakeReservationModal] = useState(false);
+ const [contactPerson, setContactPerson] = useState<IUser>()
+
+  const { token } = useContext(TokenContext);
+
+  async function getContactName() {
+    if (token) {
+      try {
+     const user:IUser = await getUserById(promotion.contact_person, token);
+        if (user) {
+          if (!user.photo?.includes('https')) {
+           user.photo = user.photo?.replace('http', 'https')
+          }
+          setContactPerson(user)
+}
+      } catch(err) {
+       console.log(err, "getContactName() promotions bankTab volunteer") 
+    }
+  }
+}
+
+  
+  useEffect(()=>{getContactName()}, [])
 
 
+  /////////////////////////////
+  let curatorTelegramNik = contactPerson?.tg_username;
+  if (contactPerson?.tg_username && contactPerson?.tg_username.length > 0) {
+    curatorTelegramNik = contactPerson?.tg_username.includes('@', 0)
+    ? contactPerson?.tg_username.slice(1)
+    : contactPerson?.tg_username;
+  }
+  ///////////////////////////////////
 
 
   return (
-    <div className=" w-full max-w-[500px] flex flex-col h-fit max-h-screen overflow-y-scroll rounded-t-2xl px-4 pt-[20px] pb-8 bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
-    
-      <div className="flex align-middle justify-between">
-        <div className="flex">
-          <div className="flex flex-col ml-[14px] justify-center items-start">
-            <h1 className="w-[200px] h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
+    <div className=" w-full max-w-[500px] flex flex-col h-fit max-h-screen overflow-y-scroll rounded-t-2xl px-4 pt-2 pb-8 bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
+     <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onOpenChange(false)} />
+      <div className="flex items-start justify-between">
+        <div className="flex w-[90%]">
+          <div className="flex flex-col justify-center items-start">
+            <h1 className="w-full h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
-            <p className="w-[162px] font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
+            <p className="w-full font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
               {promotion.address}
             </p>
           </div>
         </div>
         <div className='flex justify-center items-center'>
-           <p className="font-gerbera-sub2 text-light-gray-3 mr-2 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
-        <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />
+           <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
         </div>
        
       </div>
@@ -97,6 +131,34 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           </p>
         </div>
       </div>
+      { contactPerson && contactPerson.name && contactPerson.tg_id &&
+        <div className="w-full min-w-[330px] h-[67px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+              <div className="flex">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
+              {contactPerson.photo &&
+              <Avatar.Image
+                src={contactPerson.photo}
+                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+              />}
+              <Avatar.Fallback
+                className="text-black dark:text-white"
+              >
+                {contactPerson.name ? contactPerson.name[0] : 'A'}
+              </Avatar.Fallback>
+            </Avatar.Root>
+                  <div className="felx flex-col justify-center items-start ml-4">
+                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
+                      {contactPerson.name.slice(0, 1).toUpperCase()+contactPerson.name.slice(1)}
+                    </h1>
+                    <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
+                      Контактное лицо
+                    </p>
+                  </div>
+                </div>
+              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+              <Small_sms className="w-[36px] h-[35px]"/>
+                </a>
+              </div>}
       {promotion.description != undefined && promotion.description.length > 0 ? (
       <div className="w-full min-w-[328px] h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
@@ -108,7 +170,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       
       {promotion.picture && (
         <img
-          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2xl mt-[14px] self-center"
+          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2xl mt-[14px] self-center object-cover"
           src={promotion.picture}
           decoding='async'
           loading='lazy'
@@ -124,15 +186,6 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         >
           Забронировать
         </button>
-        {/* <button
-          onClick={(e) => {
-              e.preventDefault();
-              onOpenChange(false)
-          }}
-          className="btn-M-WhiteDefault "
-        >
-          Закрыть
-        </button> */}
       </div>
       ) : (
        <div className="w-full flex justify-center items-center mt-[14px] self-center">

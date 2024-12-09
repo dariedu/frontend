@@ -28,8 +28,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   curatorTelegramNik,
   curatorImg
 }) => {
-  // console.log(routeSheetsData, "routesheetdata")
-  // console.log(curatorImg, 'curator img')
+
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
@@ -117,7 +116,6 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
-                  // updatePhotoReports={requestPhotoReports}
                   photoReports={myPhotoReports}
                   routeSheetId={routeSheetsData[index].id}
                   routes={routeS.address.map(addr => (addr))}

@@ -79,9 +79,15 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
  
   }
 
+
+     ////поднимаем текстэриа в фокус пользователя для айфона
+function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  
   return (
     <>
-      <div className="fixed bottom-0 pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className="bottom-0 h-fit pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl  bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className="w-[32px] h-[32px] min-w-[32px] min-h-[32px]  fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
@@ -93,7 +99,6 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
           Поделитесь, пожалуйста, почему вы отказались от участия в добром деле?
           </p>)}
         </div>
-
         <Form.Root
            className=" flex flex-col items-center justify-center"
           onSubmit={e => {
@@ -104,11 +109,9 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
           <div  className='flex flex-col px-4 w-full' >
             <Form.Field name="fb1" className="mt-4">
             <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Расскажите в свободной форме</Form.Label>
-              {/* <Form.Label className="font-gerbera-sub2 text-light-gray-4">
-              Поделитесь, пожалуйста, почему вы отказались от участия в доставке
-              </Form.Label> */}
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-full min-w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -116,22 +119,14 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
                   defaultValue={localStorage.getItem('fb1Cancel') ?? ''}
                   onChange={e => {
                     handleFormFieldChange('fb1Cancel', e.target.value);
-                    //handleInfoInput()
                   }}
                 />
               </Form.Control>
-              {/* <Form.Message
-                match={(value) => value.length < 10}
-                className="font-gerbera-sub2 text-light-error-red line-clamp-3"
-              >
-                Сообщение слишком короткое, минимальное количество символов 10
-              </Form.Message> */}
             </Form.Field>
           </div>
           <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4 mb-4 `}
             onClick={(e) => {
               if (buttonActive) {
-               
               }else e.preventDefault()
           }}
           >Отправить</button>

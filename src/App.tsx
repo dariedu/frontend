@@ -60,7 +60,7 @@ getDeviceType()
     } else {
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
-    }
+     }
  }
   
 };

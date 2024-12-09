@@ -19,7 +19,10 @@ const CancelReason = () => {
     });
     localStorage.setItem(fieldName, value);
   }
-
+ ////поднимаем текстэриа в фокус пользователя для айфона
+ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+}
   return (
     <>
       <div className=" fixed bottom-0 pb-10 w-full max-w-[500px] h-fit flex flex-col rounded-t-2xl mt-2">
@@ -36,6 +39,7 @@ const CancelReason = () => {
               <Form.Label></Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
   placeholder:text-light-gray-3"
@@ -58,6 +62,7 @@ const CancelReason = () => {
               <Form.Label></Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0
   placeholder:text-light-gray-3 mb-2 "
@@ -73,6 +78,7 @@ const CancelReason = () => {
               <Form.Label></Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="w-[328px] bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2
   placeholder:text-light-gray-3 mb-2 "

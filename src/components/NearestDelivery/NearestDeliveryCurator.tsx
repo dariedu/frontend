@@ -47,15 +47,12 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
   const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
 
-
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
-
    
   ///// используем контекст токена
    const {token} = useContext(TokenContext);
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
-
 
 
   async function requestMyDelivery() { 
@@ -97,7 +94,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
      }
    } 
   }
-  
 
    //// 4. запрашиваем все маршрутные листы по отдельности только у активной или доставки в процессе
  function requestEachMyRouteSheet() {
@@ -110,7 +106,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
            }
            if (result.status == "rejected") {
              console.log(`${num} routeSheet was not fetched`)
-
            }
          })).finally(() => {setRouteSheets(routesArr)}
          )
@@ -267,7 +262,8 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       { routeSheets && routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
        <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
-        status={deliveryFilter== 'nearest' ? 'Ближайшая' : deliveryFilter ==  'active' ? 'Активная' : 'Завершенная'}
+        status={deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная'}
+        currentStatus={currentStatus}
         onClose={() => setFullViewActive(false)}
         routeSheetsData={routeSheets}
         listOfVolunteers={listOfVolunteers}

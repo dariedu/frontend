@@ -58,9 +58,13 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
     } else setButtonActive(false)
     }
     
+   ////поднимаем текстэриа в фокус пользователя для айфона
+function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+}
 
   return (
-    <div className="bg-light-gray-white fixed bottom-0 pb-10 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px]  h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+    <div className="bg-light-gray-white -webkit-sticky pb-10 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] overflow-y-auto flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
@@ -81,6 +85,7 @@ const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3 ml-3">Расскажите в свободной форме</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={8}
                   className="w-full min-w-[328px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"

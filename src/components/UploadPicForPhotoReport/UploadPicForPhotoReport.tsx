@@ -26,9 +26,6 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   fileUploaded
 }) => {
 
-//// нужны для внутренней логики отображения компонентов
-  //const [fileUploaded, setFileUploaded] = useState(false);
- 
 
   const handleCheckChange = (): void => {
     setBeneficiarIsAbsent(prev =>
@@ -49,20 +46,6 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
     }
     }
 
-//   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     let imgLink: string;
-//     if (event.target.files) {
-//     imgLink = URL.createObjectURL(event.target.files[0]);
-//     setFileUploaded(true);
-//     s//etUploadedFileLink(imgLink);
-//     }
-//   };
-
-//   const handleConfirmPicture = () => {
-//     setPictureConfirmed(true) /// при нажатии на кнопку подтверждаем что выбрали корректное фото
-//     onOpenChange(false) //// закрываем модалку
-//     ///// позже добавим логику отправки и сохранения фото на сервере
-//  }
 
   return (
         <div
@@ -74,7 +57,6 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
         <img
             src={uploadedFileLink[index]}
             className={'h-[142px] w-[140px] size-fit rounded-full object-cover '}
-            // : 'h-[72px] w-[72px] cursor-pointer'
     />
         ): (
         <Photo  className="h-[72px] w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white dark:bg-light-gray-5 dark:fill-light-gray-3"
