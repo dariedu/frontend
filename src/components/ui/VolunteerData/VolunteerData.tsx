@@ -273,7 +273,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                 {iconsLinks[index]}
                 {isEditing[field] ? (
                   <input
-                    className="px-4 rounded-2xl outline-none py-[18px] w-[240px] h-[54px] text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
+                    className="px-4 rounded-2xl outline-none py-[18px] w-[240px] h-[54px] bg-light-gray-1 text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
                     value={userEmail}
                     onChange={e => handleInputChange(e)}
                   />
