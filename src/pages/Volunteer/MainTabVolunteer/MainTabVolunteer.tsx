@@ -294,7 +294,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
             : ''}
           <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Доставки
+              Рассписание доставок
             </div>
             {/* <Calendar
               selectedDate={selectedDate}
@@ -314,7 +314,12 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
                 setTakeDeliverySuccess={setTakeDeliverySuccess}
               />
             ) : (
-              ''
+              <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
+              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
+              <p className="dark:text-light-gray-1">
+                Скоро тут появятся доставки
+              </p>
+            </div>
             )}
           </div>
         </div>
@@ -333,7 +338,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
               setTakeTaskSuccess={setTakeTaskSuccess}
             />
           ) : (
-            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between ml-4 mb-5">
+            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="dark:text-light-gray-1">
                 Скоро тут появятся добрые дела
