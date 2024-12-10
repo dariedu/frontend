@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import {
   getBallCorrectEndingName,
-  getMonthCorrectEndingName
+  // getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
@@ -62,7 +62,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   let period: boolean;
   if (startDay == endDay && startMonth == endMonth) {
     period = false;
-   dateString = `${startDay} ${getMonthCorrectEndingName(taskStartDate)} в ${hours}:${minutes}`
+   dateString = `${startDay} ${taskEndDate.toLocaleDateString("RU", {month:"short"})} в ${hours}:${minutes}`
   } else {
     period = true
     if (startMonth == endMonth) {
@@ -171,7 +171,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
           </div>
         </div>
         {fullViewCurator&& (filter == 'nearest' || filter == 'active') && task.description &&  task.description.length != 0 &&
-              <div className="w-full min-w-[330px] min-h-[67px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+              <div className="w-full box-border min-h-[67px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 text-start">
                   Подробности
                 </p>
@@ -182,7 +182,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         {/* /////////////////////// */}
         {(filter == 'nearest' || filter == 'active') && (
           <div className="flex justify-center items-center mt-[20px] space-x-2">
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
               <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                 {period ? "Период выполнения" : "Время начала" } 
               </p>
@@ -190,12 +190,12 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
               {dateString}
               </p>
             </div>
-            <div className="bg-light-gray-1  dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px]">
+            <div className="bg-light-gray-1  dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between box-border items-start w-[50%] min-w-[161px] h-[62px] p-3">
               <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">Записались</p>
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                 {task.volunteers_taken == 0
                   ? '0 из ' + `${task.volunteers_needed}`
-                  : `${task.volunteers_taken + ' из ' + `${task.volunteers_needed}` + ' волонтёров'}`}
+                  : `${task.volunteers_taken + ' из ' + `${task.volunteers_needed}`}`}
               </p>
             </div>
           </div>
@@ -210,7 +210,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
         }
        {filter == 'active' && fullViewCurator && (
           <button
-            className="btn-B-GreenDefault  mt-[20px] self-center"
+            className="btn-B-GreenDefault mt-[20px] self-center"
             onClick={e => {
               e.preventDefault();
               setTaskConfirmCompleteTask(true)

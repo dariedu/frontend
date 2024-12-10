@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext} from 'react';
 import {
   getBallCorrectEndingName,
-  getMonthCorrectEndingName
+  // getMonthCorrectEndingName
 } from '../helperFunctions/helperFunctions';
 import RouteSheetsM from '../RouteSheets/RouteSheetsCurator';
 import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
@@ -193,24 +193,24 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         {currentStatus == 'nearest' ? (
           <>
             <div className="flex justify-between items-center mt-[20px] space-x-2">
-              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Время начала
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {`${deliveryDate.getUTCDate()}
-                  ${getMonthCorrectEndingName(deliveryDate)} в
+                  ${deliveryDate.toLocaleDateString("RU", {month:"short"})} в
                   ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
                 </p>
               </div>
-              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between items-start w-full min-w-[165px] h-[62px] p-[12px]">
+              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between box-border items-start w-full min-w-[161px] h-[62px] p-3">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
                   Записались
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {delivery.volunteers_taken == 0
                     ? `0 из ${delivery.volunteers_needed}`
-                    : `${delivery.volunteers_taken} из ${delivery.volunteers_needed} ${delivery.volunteers_needed == 1 ? "": "волонтёров"}`}
+                    : `${delivery.volunteers_taken} из ${delivery.volunteers_needed}`}
                 </p>
               </div>
             </div>

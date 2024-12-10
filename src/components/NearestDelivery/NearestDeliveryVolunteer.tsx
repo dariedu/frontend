@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext} from 'react';
-import {  getBallCorrectEndingName,  getMonthCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
+import {  getBallCorrectEndingName, getMetroCorrectName} from '../helperFunctions/helperFunctions';
 import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { ModalTop } from '../ui/Modal/ModalTop';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
@@ -176,17 +176,17 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         {/* /////////////////////// */}
         {currentStatus == 'completed' ? ('') : (
           <div className="flex justify-center items-center mt-[14px] space-x-2">
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
               <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                 Время начала
               </p>
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                 {`${deliveryDate.getUTCDate()}
-              ${getMonthCorrectEndingName(deliveryDate)} в
+              ${deliveryDate.toLocaleDateString("RU", {month:"short"})} в
               ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
               </p>
             </div>
-            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-fit h-[62px] p-[12px] dark:bg-light-gray-6">
+            <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
               <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
                 Начисление баллов
               </p>
@@ -200,7 +200,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
             fullView && (
-              <div className="w-full min-w-[330px] h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+              <div className="w-full h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] box-border flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
               <Avatar.Image
@@ -227,7 +227,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
                 </a>
               </div>
             ) ) : (
-          <div className="w-full min-w-[330px]  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+          <div className="w-full box-border  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
           <div className="flex">
           <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
               <Avatar.Image
