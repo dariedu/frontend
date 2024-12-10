@@ -63,12 +63,12 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                     {getMetroCorrectName(delivery.location.subway)}
                   </h1>
-                  <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit  max-w-[230px] dark:text-light-gray-3">
+                  <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[230px] dark:text-light-gray-3">
                     {delivery.location.address}
                   </p>
                 </div>
               </div>
-              <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 w-[20%]">
+              <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 w-[20%] p-0 text-right">
                 Доставка
               </p>
             </div>
@@ -136,7 +136,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             {delivery.location.description &&
             delivery.location.description.length != 0 ? (
-              <div className="w-full min-w-[330px] max-w-[370px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+              <div className="w-full bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
                 <p className="font-gerbera-h3 text-light-gray-8-text text-start">
                   Подробности
                 </p>
@@ -149,9 +149,10 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             )}
 
             {/* ///////!delivery.is_free || ///////// */}
+            <div className='w-full flex justify-center'>
             {!canBook ? (
               <button
-                className="btn-B-WhiteDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green self-center"
+                className="btn-B-WhiteDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-brand-green self-center"
                 onClick={e => {
                   e.preventDefault();
                   onOpenChange(false);
@@ -180,6 +181,8 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 Записаться
               </button>
             )}
+            </div>
+            
           </div>
         </>
       </Modal>
