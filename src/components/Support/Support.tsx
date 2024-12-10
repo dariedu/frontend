@@ -5,6 +5,7 @@ import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
 import { submitFeedbackSuggestion} from '../../api/feedbackApi';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 type TSupport = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -64,9 +65,10 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 }
 
   return (
-    <div className="bg-light-gray-white -webkit-sticky fixed bottom-0 pb-10 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
-      <div className=" flex items-center self-start mt-[25px] mx-4">
-          <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+    <div className="bg-light-gray-white h-screen pb-10 fixed bottom-0 pt-4 px-4 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+       <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onClose(false)} />
+      <div className=" flex items-center self-start">
+          <Big_pencil className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
           Постарайтесь подробно описать проблему
           </p>
@@ -80,7 +82,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
             handleRequestSubmit()
           }}
          >
-          <div className='flex flex-col px-4 w-full  max-w-[500]'>
+          <div className='flex flex-col w-full  max-w-[500]'>
               <Form.Field name="about_presence" className="mt-4">           
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray-3 ml-3">Расскажите в свободной форме</Form.Label>
               <Form.Control asChild>

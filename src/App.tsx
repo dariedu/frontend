@@ -1,5 +1,5 @@
 import { useEffect, useContext} from 'react';
-import { useState } from 'react';
+// import { useState } from 'react';
 import RegistrationPage from './pages/Registration/RegistrationPage.tsx';
 import VolunteerPage from './pages/Volunteer/VolunteerPage.tsx';
 import CuratorPage from './pages/Curator/CuratorPage.tsx';
@@ -20,31 +20,31 @@ const App: React.FC = () => {
     tg.ready();
   }, []);
 
-  const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
+//   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
 
-  const app = window.Telegram.WebApp;
-  app.ready();
-  app.disableVerticalSwipes();
-  app.isClosingConfirmationEnabled = true;
+//   const app = window.Telegram.WebApp;
+//   app.ready();
+//   app.disableVerticalSwipes();
+//   app.isClosingConfirmationEnabled = true;
 
-   function getDeviceType() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobile = /mobile|iphone|ipad|ipod|webos|android|iemobile|opera mini|windows phone|blackberry|bb|playbook|mini|windows\sce|palm/i.test(userAgent);
+//    function getDeviceType() {
+//       const userAgent = navigator.userAgent.toLowerCase();
+//       const isMobile = /mobile|iphone|ipad|ipod|webos|android|iemobile|opera mini|windows phone|blackberry|bb|playbook|mini|windows\sce|palm/i.test(userAgent);
 
-     if (isMobile) {
-        setDeviceType("mobile");
-      } else {
-        setDeviceType("desktop");
-      }
-  }
+//      if (isMobile) {
+//         setDeviceType("mobile");
+//       } else {
+//         setDeviceType("desktop");
+//       }
+//   }
   
-useEffect(() => {
-getDeviceType()
-}, [])
+// useEffect(() => {
+// getDeviceType()
+// }, [])
   
-  if (deviceType == "desktop") {
-    return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение на мобильном устройстве</div>
-  } else {
+//   if (deviceType == "desktop") {
+//     return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение на мобильном устройстве</div>
+//   } else {
     if (isLoading) {
       return <div className='h-screen items-center flex flex-col justify-center '>
         <div className='loader'></div>
@@ -61,7 +61,7 @@ getDeviceType()
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
      }
- }
+//  }
   
 };
 

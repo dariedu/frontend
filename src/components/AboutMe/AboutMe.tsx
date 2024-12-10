@@ -1,4 +1,5 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
+import {useRef} from "react";
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { UserContext } from '../../core/UserContext';
@@ -8,6 +9,7 @@ import { metier, patchUser } from '../../api/userApi';
 import InputOptions, { type T } from '../../pages/Registration/InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
+import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
 
 type TAboutMeProps = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -85,12 +87,16 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
     } else setButtonActive(false)
   }
 
- ////поднимаем текстэриа в фокус пользователя для айфона
-function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
-  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+ ////поднимаем текстэриа в фокус пользователя для айфона  
+ const telegramRef = useRef<HTMLTextAreaElement>(null);
+  // useTelegramViewportHack(telegramRef);
+
+  function handleFocus() {
+    useTelegramViewportHack(telegramRef);
+  // e.target.scrollIntoView({ block: "center", behavior: "smooth" });
 }
-
-
+ 
+  
   return (
     <div className="bg-light-gray-1 fixed bottom-0 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
       <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px]">
@@ -127,7 +133,8 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
-                  onFocus={(e)=>handleFocus(e)}
+                  ref={telegramRef}
+                  onFocus={()=>handleFocus()}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
