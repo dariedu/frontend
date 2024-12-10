@@ -212,7 +212,7 @@ const BankTab:React.FC = () => {
             )}
           
           </div>
-            {promotionsAll.length == 0 ? (<div className='flex flex-col w-full items-center mt-10 h-[120px] justify-between ml-4'>
+            {promotionsAll.length == 0 ? (<div className='flex flex-col w-full items-center mt-10 h-[120px] justify-between'>
               <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='dark:text-light-gray-1'>Скоро тут появятся доступные поощрения</p>
           </div>) : (
@@ -223,7 +223,7 @@ const BankTab:React.FC = () => {
           <div className='flex justify-between  mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
             </div>{promotionsMy.length == 0 ? 
-              (<div className='flex flex-col w-full items-center mt-10 h-[100px] justify-between ml-4'>
+              (<div className='flex flex-col w-full items-center mt-10 h-[100px] justify-between'>
                 <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
               <p className='dark:text-light-gray-1'>Скоро тут появятся ваши планы</p>
             </div>)
