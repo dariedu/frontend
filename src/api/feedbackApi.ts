@@ -7,10 +7,12 @@ const feedbackUrl = `${API_URL}/feedbacks/`;
 //////основные типы для отзывов, они не должны меняться, поэтому сохранила их вручную.
 const FedbackTypesFromServer = {
   'completed_delivery': 'Завершенная доставка',
+  'completed_delivery_curator': 'Завершенная доставка куратор',
   'canceled_delivery': 'Отмененная доставка',
   'completed_promotion': 'Завершенное поощрение',
   'canceled_promotion': 'Отмененное поощрение',
   'completed_task': 'Завершенное доброе дело',
+  'completed_task_curator': 'Завершенное доброе дело куратор',
   'canceled_task': 'Отмененное доброе дело',
   'suggestion': 'Вопросы и предложения',
   'support': 'Техническая поддержка'

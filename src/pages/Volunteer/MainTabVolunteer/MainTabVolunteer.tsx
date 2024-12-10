@@ -19,10 +19,12 @@ import NearestDeliveryVolunteer from '../../../components/NearestDelivery/Neares
 import {
   getAllAvaliableTasks,
   postTaskAccept,
+  getMyTasksNoFilter,
   type ITask,
 } from '../../../api/apiTasks';
 import SliderCardsTaskVolunteer from '../../../components/SliderCards/SliderCardsTasksVolunteer';
 import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react';
+
 
 type TMainTabVolunteerProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -53,7 +55,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [deliveryForReservation, setDeliveryForReservation] = useState<IDelivery>();/// запоминаем доставку которую пользователь хочет взять
   const [takeTaskModal, setTakeTaskModal] = useState(false)///просим подтвердить пользователя чтобы взять доброе дело
   const [taskForReservation, setTaskForReservation] = useState<ITask>();/// запоминаем таск который пользователь хочет взять
-
+  const [allMyTasksId, setAllMyTasksId] = useState<number[]>([]);
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);
     ///// используем контекст токена
@@ -257,6 +259,23 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
     setTakeTaskModal(true)
   }
 
+  async function getAllMyTasks() {
+    let idArr: number[] = [];
+    try {
+      if (token) {
+        let result: ITask[] = await getMyTasksNoFilter(token);
+        if (result) {
+          result.filter(i => !i.is_completed).forEach(i => idArr.push(i.id));
+          setAllMyTasksId(idArr)
+        }
+      }
+    } catch (err) {
+      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+    }
+  }
+
+  useEffect(() => { getAllMyTasks() }, [takeTaskSuccess]);
+
   return (
     <>
       <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px] ">
@@ -305,6 +324,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
           </div>
           {allAvaliableTasks.length > 0 ? (
             <SliderCardsTaskVolunteer
+              myTasks={allMyTasksId}
               tasks={allAvaliableTasks}
               switchTab={switchTab}
               getTask={getTask}

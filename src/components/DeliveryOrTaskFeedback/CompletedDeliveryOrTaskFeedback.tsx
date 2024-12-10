@@ -65,10 +65,10 @@ console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId
         }
     } else {
       if (delivery) {
-        type = "completed_delivery";
+        type = "completed_delivery_curator";
         fedbackText = `Поделитесь вашими впечатлениями от курирования доставки? Как прошла доставка? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb1}`
       } else {
-        type = "completed_task";
+        type = "completed_task_curator";
         fedbackText = `Поделитесь вашими впечатлениями от курирования доброго дела? Как прошло доброе дело? Что понравилось? А что хотели бы изменить и как? Ответ: ${feedbacks.fb1}`
       }
     }
@@ -108,7 +108,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
           <div className="flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
-            Расскажите, в свободной форме
+            Расскажите в свободной форме
           </p>
         </div>
 

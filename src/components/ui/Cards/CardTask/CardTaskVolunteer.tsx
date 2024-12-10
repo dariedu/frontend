@@ -15,6 +15,7 @@ import Kind from './../../../../assets/icons/tasksIcons/kind.svg?react'
 
 type TCardDeliveryProps = {
   task: ITask
+  myTasks:number[]
    switchTab: React.Dispatch<React.SetStateAction<string>>;
    getTask: (delivery: ITask) =>void
    stringForModal: string
@@ -22,7 +23,7 @@ type TCardDeliveryProps = {
    setTakeTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getTask, stringForModal, takeTaskSuccess, setTakeTaskSuccess}) => {
+const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switchTab, getTask, stringForModal, takeTaskSuccess, setTakeTaskSuccess}) => {
  const [isOpen, setIsOpen] = useState(false);
 
   ///// работаем с датой //////////////
@@ -103,8 +104,6 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getT
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
                {task.category.name.slice(0, 1).toUpperCase()+task.category.name.slice(1)}
               </p>
-          {/* <p className='text-light-gray-black font-gerbera-sub1 dark:text-light-gray-3'>{delivery.location.address}</p> */}
-
           </div>
              </div>
             </div>    
@@ -119,7 +118,7 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, switchTab, getT
           </div>
         </div>
            </div>
-         <DetailedInfoTask tasksCateg={tasksCateg} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+         <DetailedInfoTask tasksCateg={tasksCateg} canBook={myTasks.includes(task.id)? false : true} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
          </>
          )
 

@@ -78,9 +78,9 @@ async function getMyCuratorDeliveries() {
         let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
 
         result.filter(i=>i.user == currentUser?.id).forEach(i => {
-          if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
+          if (typeof i.delivery == 'number' && i.type == 'completed_delivery_curator') {
             allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
-          } else if (typeof i.task == 'number' && i.type == 'completed_task') {
+          } else if (typeof i.task == 'number' && i.type == 'completed_task_curator') {
             allMySubmitedFeedbacksForCompletedTasks.push(i.task)
           }
         })

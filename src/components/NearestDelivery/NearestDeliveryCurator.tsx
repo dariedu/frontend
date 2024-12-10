@@ -136,7 +136,6 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
 
 
-
   return (
     <>
       {(delivery !== undefined && deliveryDate!=undefined) && (

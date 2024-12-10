@@ -11,7 +11,8 @@ import Kind from './../../assets/icons/tasksIcons/kind.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
 
 type TDetailedInfoTaskProps = {
-  tasksCateg:{icon:any, id:number, name:string}[]
+  tasksCateg: { icon: any, id: number, name: string }[]
+  canBook:boolean
   task: ITask;
   isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -24,6 +25,7 @@ type TDetailedInfoTaskProps = {
 
 const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
   tasksCateg,
+  canBook,
   task,
   isOpen,
   onOpenChange,
@@ -158,13 +160,18 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             ''
           )}
           <button
-              className="btn-B-GreenDefault  mt-[20px] self-center"
-              onClick={e => {
-                e.preventDefault();
+            className={canBook? "btn-B-GreenDefault mt-[20px] self-center" : "btn-B-WhiteDefault mt-[20px] self-center" }
+            onClick={e => {
+              if (canBook) {
+                   e.preventDefault();
                 getTask(task)
+              } else {
+                ()=>{}
+                }
+               
               }}
             >
-              Записаться
+            { canBook ? "Записаться" : "Вы уже записались"  }
             </button>
         </div>
       </Modal>
