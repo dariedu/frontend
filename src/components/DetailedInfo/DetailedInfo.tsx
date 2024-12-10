@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { type IPromotion } from './../../api/apiPromotions.ts';
-import { getBallCorrectEndingName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
+import { getBallCorrectEndingName } from '../helperFunctions/helperFunctions';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal.tsx';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 import * as Avatar from '@radix-ui/react-avatar';
@@ -108,7 +108,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       )}
     
       <div className="w-full min-w-[328px] flex justify-center items-center mt-[14px] self-center space-x-2">
-        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
           <p className="font-gerbera-sub3 text-light-gray-8-text dark:text-light-gray-1 ">
             Время начала
           </p>
@@ -116,13 +116,13 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             {promotion.is_permanent
               ? 'В любое время'
                 : `${eventDate.getUTCDate()}
-            ${getMonthCorrectEndingName(eventDate)} в
+            ${eventDate.toLocaleDateString("RU", {month:"short"})} в
             ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`
           }  
             
           </p>
         </div>
-        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] h-[62px] p-[12px] dark:bg-light-gray-6">
+        <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
           <p className="font-gerbera-sub3 text-light-gray-8-text dark:text-light-gray-1 ">
             Списание баллов
           </p>
@@ -132,7 +132,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         </div>
       </div>
       { contactPerson && contactPerson.name && contactPerson.tg_id &&
-        <div className="w-full min-w-[330px] h-[67px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+        <div className="w-full h-[67px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
               {contactPerson.photo &&
@@ -160,7 +160,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
                 </a>
               </div>}
       {promotion.description != undefined && promotion.description.length > 0 ? (
-      <div className="w-full min-w-[328px] h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
+      <div className="w-full h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
         <p className="font-gerbera-sub1 text-light-gray-4 h-fit text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
           {promotion.description}

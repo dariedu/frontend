@@ -14,8 +14,8 @@ import Text from './../../../../assets/icons/big_pencil.svg?react'
 import Kind from './../../../../assets/icons/tasksIcons/kind.svg?react'
 
 type TCardDeliveryProps = {
-  task: ITask
-  myTasks:number[]
+   task: ITask
+   myTasks?:number[]
    switchTab: React.Dispatch<React.SetStateAction<string>>;
    getTask: (delivery: ITask) =>void
    stringForModal: string
@@ -118,7 +118,7 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
           </div>
         </div>
            </div>
-         <DetailedInfoTask tasksCateg={tasksCateg} canBook={myTasks.includes(task.id)? false : true} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+         <DetailedInfoTask tasksCateg={tasksCateg} canBook={myTasks?.includes(task.id)? false : true} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
          </>
          )
 
