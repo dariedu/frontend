@@ -35,7 +35,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
 
   return (
     <>
-      <div className="relative w-full max-w-[500px] p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex items-center justify-between overflow-x-hidden">
+      <div className="relative w-full max-w-[500px] p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-b-2xl flex items-center justify-between overflow-x-hidden">
         <div className="flex items-center space-x-2">
           {variant === 'volunteerForm' ? (
             <>

@@ -4,7 +4,8 @@ import { type ITask } from '../../api/apiTasks';
 
 
 interface SliderCardsProps {
-  tasks:ITask[]
+  tasks: ITask[]
+  myTasks:number[]
   switchTab: React.Dispatch<React.SetStateAction<string>>
   getTask: (delivery: ITask) =>void
   stringForModal: string
@@ -14,6 +15,7 @@ interface SliderCardsProps {
 
 const SliderCardsTaskVolunteer: React.FC<SliderCardsProps> = ({
   tasks,
+  myTasks,
   switchTab,
   getTask,
   stringForModal,
@@ -30,7 +32,7 @@ const SliderCardsTaskVolunteer: React.FC<SliderCardsProps> = ({
         {tasks.map((task) => {
           return (
             <div key={task.id} >
-              <CardTaskVolunteer task={task} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+              <CardTaskVolunteer task={task} myTasks={myTasks} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
           </div>
           )
          }) 

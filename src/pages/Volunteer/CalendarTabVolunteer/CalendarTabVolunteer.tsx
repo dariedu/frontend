@@ -187,7 +187,7 @@ try {
   
   return (
     <>
-      <div className="mt-1 mb-4 flex flex-col h-fit items-center overflow-x-hidden " >
+      <div className="mb-4 flex flex-col h-fit items-center overflow-x-hidden " >
         {/* <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} /> */}
         <div className='flex flex-col h-full mb-20 overflow-auto w-full max-w-[500px]'>
           {myCurrent.length > 0 ?
