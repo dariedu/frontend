@@ -11,7 +11,7 @@ import Kind from './../../assets/icons/tasksIcons/kind.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
 
 type TDetailedInfoTaskProps = {
-  tasksCateg: { icon: any, id: number, name: string }[]
+  tasksCateg: { icon: JSX.Element, id: number, name: string, icon_full_view: JSX.Element }[]
   canBook:boolean
   task: ITask;
   isOpen: boolean;
@@ -79,7 +79,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
               className={'flex items-center'}
             >
                  {tasksCateg.find(i => i.id == task.category.id) ? (
-               tasksCateg.find(i => i.id == task.category.id)?.icon
+               tasksCateg.find(i => i.id == task.category.id)?.icon_full_view
                ): (
                  <Kind className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
