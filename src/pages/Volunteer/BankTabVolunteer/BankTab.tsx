@@ -79,12 +79,13 @@ const BankTab:React.FC = () => {
       if (token) {
         myPromotinsArr = await getMyPromotions(token);
         if (myPromotinsArr) {
-          myPromotinsArr.map(i => {
+          let filtered = myPromotinsArr.filter(prom => { if(prom.is_active) return prom})
+            filtered.map(i => {
             if (i.picture && !(i.picture?.includes('https'))) {
              return i.picture = i.picture.replace('http', 'https')
             }
           })
-      setPromotionsMy(myPromotinsArr)
+      setPromotionsMy(filtered)
         }
      }
    } catch (err) {

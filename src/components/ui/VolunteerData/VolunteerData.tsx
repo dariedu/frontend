@@ -209,7 +209,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                   </p>
               </div>
               <Big_pencilIcon
-                className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
+                className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
                 onClick={() => {index == 2 ? updatePhone() : updateTelegram()}}
               />
             </div>
@@ -231,13 +231,13 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         } else if (index == 0) {
           return (
             <div
-          className="w-full min-w-[346px] h-[66px] flex items-center justify-between px-4"
+          className="w-full min-w-[346px] relative h-[66px] flex items-center justify-between px-4"
           key={index}
         >
-          <div className="inline-flex items-center justify-start">
+          <div className="inline-flex items-center justify-start ">
             {iconsLinks[index]}
             {isEditing[field] ? (
-             <div>
+             <div className='w-[240px]'>
              <InputOptions
                options={cityOptions}
                clicked={clickedCity}
@@ -254,7 +254,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
             )}
           </div>
           <Big_pencilIcon
-            className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
+            className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
                 onClick={() => {
                   toggleEdit(field); if (isEditing.geo) {
                     if (geoIndex != cityIndex) {
@@ -284,7 +284,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                 )}
               </div>
               <Big_pencilIcon
-                className="w-[42px] h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
+                className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
                 onClick={() => {
                   toggleEdit(field); 
                   if (isEditing.email) {
@@ -352,8 +352,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onConfirm={() => {setUpdatePhoneModal(false) }}
         title={
           <p>
-            Обновить номер телефона можно 
-            <br />только через Telegram бот.
+            Обновить номер телефона <br/> можно 
+           только через <br/>Telegram бот.
           </p>
         }
         description=""
