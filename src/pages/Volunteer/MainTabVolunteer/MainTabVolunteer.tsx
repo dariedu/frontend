@@ -45,7 +45,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [takeTaskSuccessDateName, setTakeTaskSuccessDateName] =
     useState<string>(''); ///строка для вывова названия и времени доброго дела в алерт
   const [takeTaskFail, setTakeTaskFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доброго дела
-  const [takeTaskFailString, setTakeTaskFailString] = useState<string>(''); //переменная для записи названия ошибки при взятии доброго дела
+  const [takeTaskFailString, setTakeTaskFailString] = useState<string|JSX.Element>(''); //переменная для записи названия ошибки при взятии доброго дела
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
@@ -168,7 +168,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         } else if ((err = ' Error: User does not confirmed')) {
           setTakeTaskFail(true);
           setTakeTaskFailString(
-            `Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`,
+            <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
           );
          }  else {
           setTakeDeliveryFail(true);
@@ -232,7 +232,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       } else if ((err = ' Error: User does not confirmed')) {
         setTakeTaskFail(true);
         setTakeTaskFailString(
-          `Ошибка, Ваш профиль пока не был авторизован, попробуйте позже.`,
+          <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
         );
       } else {
         setTakeTaskFail(true);
@@ -294,7 +294,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
             : ''}
           <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Рассписание доставок
+              Расписание доставок
             </div>
             {/* <Calendar
               selectedDate={selectedDate}

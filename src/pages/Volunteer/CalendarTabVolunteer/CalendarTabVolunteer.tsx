@@ -187,7 +187,7 @@ try {
   
   return (
     <>
-      <div className="mb-4 flex flex-col h-fit items-center overflow-x-hidden " >
+      <div className="mb-4 flex flex-col h-full items-center overflow-x-hidden " >
         {/* <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} /> */}
         <div className='flex flex-col h-full mb-20 overflow-auto w-full max-w-[500px]'>
           {myCurrent.length > 0 ?
@@ -244,7 +244,7 @@ try {
               )
           )) : ""}
           {myCurrent.length == 0 && allMyTasks.length == 0 ? (
-          <div className='flex flex-col h-[350px] items-center justify-center overflow-y-hidden'>
+          <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
             <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className='font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7'>Пока нет запланированных<br/>добрых дел</p>
         </div>

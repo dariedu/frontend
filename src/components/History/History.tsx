@@ -477,7 +477,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
               })
             )
           ) : (
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center h-full mt-[50%]">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7 text-center">
                 Пока нет завершенных
