@@ -5,6 +5,8 @@ import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
 import { submitFeedbackSuggestion} from '../../api/feedbackApi';
+import { UserContext } from '../../core/UserContext';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react";
 
 type TSuggestions = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -12,7 +14,8 @@ type TSuggestions = {
 
 const Suggestions:React.FC<TSuggestions> = ({onClose}) => {
 
-  const {token}= useContext(TokenContext);
+  const { token } = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
   const [requestBody, setRequestBody] = useState({
     suggestion: localStorage.getItem('suggestion') ?? "",
   });
@@ -64,15 +67,17 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 }
 
   return (
-    <div className="bg-light-gray-white -webkit-sticky pb-10 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] overflow-y-auto flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
+    <div className={`bg-light-gray-white pb-10 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] overflow-y-auto flex flex-col items-center justify-start overflow-x-hidden 
+      ${isIphone ? "fixed top-0 h-full " : "" }` } onClick={(e)=>e.stopPropagation()}>
       <div className=" flex items-center self-start mt-[25px] mx-4">
           <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
           Поделитесь Вашими вопросами и предложениями
-          </p>
+        </p>
+        {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onClose(false)} />}
         </div>
       <div className="z-[51] w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
-      onClick={(e)=>e.stopPropagation()}>
+      >
         <Form.Root
            className=" flex flex-col items-center justify-center"
           onSubmit={e => {

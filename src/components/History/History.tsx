@@ -325,7 +325,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
         className="bg-light-gray-1 dark:bg-light-gray-black rounded-b-2xl w-full max-w-[500px] h-full flex flex-col items-center justify-start overflow-x-hidden"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] px-4">
+        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] min-h-[60px] px-4">
           <button onClick={() => onClose(false)}>
             <RightArrowIcon className="rotate-180 w-9 h-9 stroke-[#D7D7D7] dark:stroke-[#575757]" />
           </button>
@@ -477,7 +477,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
               })
             )
           ) : (
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center h-full mt-[50%]">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7 text-center">
                 Пока нет завершенных

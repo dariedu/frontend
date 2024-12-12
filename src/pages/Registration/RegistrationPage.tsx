@@ -22,6 +22,7 @@ import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
 import { useLocation } from 'react-router-dom';
 
 
+
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
   const [pictureConfirmed, setPictureConfirmed] = useState(false); // подтвердил ли юзер загруженное фото
@@ -36,18 +37,19 @@ function RegistrationPage() {
   const [birthDate, setBirthDate] = useState<string>('');
   const [requestSent, setRequestSent] = useState(false);
 
-  const [registrationhasFailed, setRegistrationhasFailed] =
-    useState<boolean>(false); /// если регистрация не прошла, выводим ошибку пользователю
+  const [registrationhasFailed, setRegistrationhasFailed] = useState<boolean>(false); /// если регистрация не прошла, выводим ошибку пользователю
+  const [registrationHasFailedString, setRegistrationHasFailedString] = useState<JSX.Element|string>('');
 
   const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
   const [openCalendar, setOpenCalendar] = useState(false); ////открывает модалку с календарем
-  const calendarRef: React.MutableRefObject<HTMLInputElement | null> =
-    useRef(null);
+  const calendarRef: React.MutableRefObject<HTMLInputElement | null> = useRef(null);
+  // const formRef: React.MutableRefObject<HTMLFormElement | null> =  useRef(null);
   const [concentOpenModal, setConcentOpenModal] = useState(false); /// открываем окно с условиями обработки персональных данных
   const [registrationComplete, setRegistrationComplete] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<boolean>(false); ///дополнительное поле для обозначения загруженного файла (а не сфотографированной с камеры)
-
+  const [dateString, setDateString] = useState<string>('');
+  const [dateIsMissing, setDateisMissing] = useState(false);
   ///// данные для инпута для выбора города
   const [clickedCity, setClickedCity] = useState(false);
   const [cityOptions, setCityOptions] = useState<[number, string][]>([
@@ -113,6 +115,8 @@ function RegistrationPage() {
     setIsAdult(adult);
     if (calendarRef.current != undefined && calendarRef.current != null) {
       calendarRef.current.value = dateString;
+      setDateString(dateString)
+     setDateisMissing(false)
     }
   };
 
@@ -168,15 +172,24 @@ function RegistrationPage() {
         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
         setRegistrationCompleteModal(true);
         setIsSending(false)
-          localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
+         localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
         setRegistrationCompleteModal(true);
         setIsSending(false);
       }
     } catch (e) {
-      console.log(e, 'fetchRegistration, registration page');
+      if (e == "Error: {'email': [ErrorDetail(string='пользователь с таким email уже существует.', code='unique')]}") {
+        console.log(e, 'fetchRegistration, registration page');
+        setRegistrationHasFailedString(<p>Ошибка!<br/>Пользователь с таким email<br/> уже существует.</p>)
         setRequestSent(false);
-        setRegistrationhasFailed(true);
         setIsSending(false);
+        setRegistrationhasFailed(true);
+      } else {
+        console.log(e, 'fetchRegistration, registration page');
+      setRegistrationHasFailedString(<p>Упс, что-то пошло не так.<br/>Попробуйте позже.</p>)
+      setRequestSent(false);
+      setRegistrationhasFailed(true);
+      setIsSending(false);
+      }
     }
   }
 
@@ -335,7 +348,7 @@ function RegistrationPage() {
         </div>
       ) : (
         <>
-          <Form.Root
+            <Form.Root
             action=""
             onSubmit={e => {
               e.preventDefault();
@@ -449,24 +462,28 @@ function RegistrationPage() {
                         onClick={e => {
                           e.preventDefault();
                           setOpenCalendar(true);
-                        }}
-                        //defaultValue={localStorage.getItem('birthday') ?? ''}
-                        value={localStorage.getItem('birthday') ?? ''}
-                        onChange={() => {
+                          }}
+                          value={localStorage.getItem('birthday') ?? ''}
+                          onChange={() => {
                           localStorage.removeItem('birthday');
                           localStorage.removeItem('isAdult');
                           setIsAdult(null);
+                          setDateString('')
+                          setDateisMissing(true)
                         }}
                         required
-                      />
+                        />
+                        
                     </Form.Control>
-                    <CalendarIcon className="absolute ml-[70%] mt-3 fill-[#BFBFBF]" />
-                    <Form.Message
-                      match={value => value.length < 10}
+                      <CalendarIcon className="absolute ml-[70%] mt-3 fill-[#BFBFBF]" />
+                      {(dateString.length < 10 && dateIsMissing) ? (
+                      <p 
                       className="error"
-                    >
+                     >
                       Пожалуйста, введите дату рождения
-                    </Form.Message>
+                    </p>
+                      ): ""}
+                      
                   </Form.Field>
                   <Form.Field
                     name="email"
@@ -600,6 +617,9 @@ function RegistrationPage() {
                           e.preventDefault();
                         } else {
                           setTryToSubmitWithoutPic(true);
+                          if (dateString.length < 10) {
+                            setDateisMissing(true)//// добавляю ручную проверку наличия даты рождения
+                          }
                         }
                       }
                       if (requestSent) {
@@ -662,10 +682,7 @@ function RegistrationPage() {
             onOpenChange={setRegistrationhasFailed}
             onConfirm={() => setRegistrationhasFailed(false)}
             title={
-              <p>
-                Упс, что-то пошло не так
-                <br /> Попробуйте позже.
-              </p>
+             registrationHasFailedString
             }
             description=""
             confirmText="Закрыть"

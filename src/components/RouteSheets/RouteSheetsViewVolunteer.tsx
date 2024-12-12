@@ -232,7 +232,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
             {unactive[index] == 'Отправить'  && (
               <button
-                className="btn-B-WhiteDefault"
+                className="btn-B-WhiteDefault text-light-gray-8-text"
                 onClick={() =>
                   setOpenComment(prev =>
                     prev.map((isOpen, idx) =>
@@ -247,8 +247,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             <button
               className={
                 unactive[index] == 'Отправить' || unactive[index] == 'Отправка'
-                  ? 'btn-B-WhiteDefault'
-                  : 'btn-B-GreenInactive cursor-default'
+                  ? 'btn-B-WhiteDefault dark:text-light-brand-green'
+                  : 'btn-B-GreenInactive  cursor-default'
               }
               onClick={() => {
                 if (uploadedFileLink[index] == '') {

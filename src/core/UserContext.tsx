@@ -10,12 +10,14 @@ interface IUserContext {
   currentUser: IUser | null
   isLoading: boolean
   error: string | null
+  isIphone:boolean
 }
 
 const defaultUserContext: IUserContext = {
   currentUser: null,
   isLoading: true,
-  error: null
+  error: null,
+  isIphone:false
 };
 
 // Создаем сам контекст
@@ -28,6 +30,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isIphone, setIsIphone] = useState<boolean>(false);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -41,7 +44,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     tgIdFromTgParams = initData.user?.id;
     console.log("init data unsafe tgId", initData.user?.id)
   }
-}, [])
+  }, [])
+  
+   function getDeviceType() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const iphone = /iphone|ipad|ipod/i.test(userAgent);
+
+   if (iphone) {
+    setIsIphone(true);
+    } else {
+    setIsIphone(false);
+    }
+  }
+  useEffect(() => {
+    getDeviceType()
+  }, []);
+
 
   // Функция для получения токена и пользователя
   ///// делаем две проверки, либо берем тг айди из объекта location или из тг объекта initDataUnsafe
@@ -128,7 +146,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   
   return (
-    <UserContext.Provider value={{ currentUser, isLoading, error}}>
+    <UserContext.Provider value={{ currentUser, isLoading, error, isIphone}}>
       {children}
     </UserContext.Provider>
   );

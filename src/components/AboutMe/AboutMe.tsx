@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {useRef} from "react";
+// import {useRef} from "react";
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { UserContext } from '../../core/UserContext';
@@ -9,7 +9,7 @@ import { metier, patchUser } from '../../api/userApi';
 import InputOptions, { type T } from '../../pages/Registration/InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
-import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
+// import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
 
 type TAboutMeProps = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -23,6 +23,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
    ////// используем контекст
   const userValue = useContext(UserContext);
   const tokenContext = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
   const token = tokenContext.token;
   const userId = userValue.currentUser?.id
   const userMetier = userValue.currentUser?.metier
@@ -87,25 +88,23 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
     } else setButtonActive(false)
   }
 
- ////поднимаем текстэриа в фокус пользователя для айфона  
- const telegramRef = useRef<HTMLTextAreaElement>(null);
-  // useTelegramViewportHack(telegramRef);
 
-  function handleFocus() {
-    useTelegramViewportHack(telegramRef);
-  // e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+  function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+   e.target.scrollIntoView({ block: "center", behavior: "smooth" });
 }
  
   
   return (
-    <div className="bg-light-gray-1 fixed bottom-0 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start overflow-x-hidden">
-      <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px]">
+    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden ${isIphone ? " fixed top-0 h-full " : " fixed bottom-0 h-fit "}`}
+    onClick={(e)=>e.stopPropagation()}
+    >
+      <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px] min-h-[60px]">
         <button onClick={()=>onClose(false)} className="mr-2">
         <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Обо мне</h2>
       </div>
-      <div className="z-[51] w-full max-w-[500px] pb-10 flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className={`z-[51] w-full max-w-[500px] pb-10 flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone? "h-full" : ""}`}
       onClick={(e)=>e.stopPropagation()}>
         <Form.Root
            className=" flex flex-col items-center justify-center"
@@ -133,8 +132,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
-                  ref={telegramRef}
-                  onFocus={()=>handleFocus()}
+                  onFocus={(e)=>handleFocus(e)}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"

@@ -61,8 +61,7 @@ getDeviceType()
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
      }
-   }
-  
+     }
 };
 
 export default App;

@@ -5,7 +5,7 @@
 }
 
 .formField[data-invalid]{
-  @apply bg-light-error-back mb-0 
+  @apply bg-light-error-back mb-0  dark:text-light-gray-5 placeholder:text-light-gray-5
 }
 .error{
   @apply font-gerbera-sub2 text-light-error-red w-full pb-1
@@ -16,9 +16,9 @@
   placeholder:text-light-gray-8-text dark:placeholder:text-light-gray-3
 }
 
-.formFieldBirthday[data-invalid]{
-  @apply bg-light-error-back
-}
+/* .formFieldBirthday[data-invalid]{
+  @apply bg-light-error-back dark:text-light-gray-8-text  placeholder:text-light-gray-5
+} */
 
 /* .bgImage{
 background-image: url( "../../src/assets/icons/tap_calendar.svg");

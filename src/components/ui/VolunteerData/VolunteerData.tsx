@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+// import * as Form from '@radix-ui/react-form';
 import GeoIcon from '../../../assets/icons/geo.svg?react';
 import EmailIcon from '../../../assets/icons/email.svg?react';
 import BirthdayIcon from '../../../assets/icons/birthday.svg?react';
@@ -39,7 +40,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
   const [askUpdateCity, setAskUpdateCity] = useState(false);
   const [userEmail, setUserEmail] = useState(email)
   const [askUpdateEmail, setAskUpdateEmail] = useState(false);
-  
+  const [emailValueFalse, setEmailValueFalse] = useState(false)
 
   if (!currentUser) {
     return <div>Пользователь не найден</div>;
@@ -119,18 +120,20 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
 
   async function handleSave(field: "email" | "geo", value: string) {
     if (currentUser && token) {
-      // const formData = new FormData(); // создаем объект FormData для передачи файла
-      // formData.set(field, value);
       try {
-        // Отправляем обновленные данные на бэкенд
-        const updatedUser = await patchUser(currentUser.id, {[field]: value}, token,);
+      // Отправляем обновленные данные на бэкенд
+        const updatedUser = await patchUser(currentUser.id, {[field]: value.toLocaleLowerCase()}, token,);
         if (updatedUser) {
-          //console.log(updatedUser)
           setUpdateDataSuccess(true)
-        }
+     }
       } catch (err) {
+        if (err == 'Error: Введите правильный адрес электронной почты.') {
+          setEmailValueFalse(true) 
+        } else {
         setUpdateDataFail(true)
         console.log(err, "handleSave")
+        }
+       
       }
     }
   };
@@ -184,11 +187,11 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
     formData.birthday,
   ];
   const iconsLinks = [
-    <GeoIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <EmailIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <PhoneIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <TelegramIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
-    <BirthdayIcon className="w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <GeoIcon className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <EmailIcon className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <PhoneIcon className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <TelegramIcon className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
+    <BirthdayIcon className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black" />,
   ];
 
 
@@ -276,7 +279,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                     className="px-4 rounded-2xl outline-none py-[18px] w-[240px] h-[54px] bg-light-gray-1 text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
                     value={userEmail}
                     onChange={e => handleInputChange(e)}
-                  />
+                    type='email'
+                  /> 
                 ) : (
                   <p className="ml-3.5 dark:text-light-gray-1 ">
                     {userEmail}
@@ -287,10 +291,15 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                 className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] cursor-pointer fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"
                 onClick={() => {
                   toggleEdit(field); 
-                  if (isEditing.email) {
+                  if (isEditing.email) { 
                     if (email !== userEmail) {
-                    setAskUpdateEmail(true)
-                  }
+                      let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+                      if (reg.test(userEmail) == true) {
+                         setAskUpdateEmail(true)
+                      } else {
+                        setEmailValueFalse(true)  
+                   }
+                    } 
                 } 
                 }}
               />
@@ -379,7 +388,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         isSingleButton={false}
         zIndex={true}
         />}
-              <ConfirmModal
+      <ConfirmModal
        isOpen={askUpdateEmail}
        onOpenChange={setAskUpdateEmail}
        onConfirm={() => { setAskUpdateEmail(false); handleSave('email', userEmail) }}
@@ -400,7 +409,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
        isOpen={updateDataSuccess}
        onOpenChange={setUpdateDataSuccess}
         onConfirm={() => {setUpdateDataSuccess(false) }}
-        title={<p>Отлчино!<br /> Данные обновлены!</p>}
+        title={<p>Отлично!<br /> Данные обновлены!</p>}
        description=""
        confirmText="Закрыть"
         isSingleButton={true}
@@ -421,7 +430,21 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         isSingleButton={true}
         zIndex={true}
      />
-       
+       <ConfirmModal
+       isOpen={emailValueFalse}
+       onOpenChange={setEmailValueFalse}
+        onConfirm={() => {setEmailValueFalse(false)}}
+       title={
+         <p>
+           Упс, введен неверный имейл
+           <br /> Пожалуйста, исправьте.
+         </p>
+       }
+       description=""
+       confirmText="Закрыть"
+        isSingleButton={true}
+        zIndex={true}
+     />
     </div>
   );
 };

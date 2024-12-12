@@ -2,10 +2,11 @@ import { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/feedbackApi';
-
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import { TokenContext } from '../../core/TokenContext';
+import { UserContext } from '../../core/UserContext';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react";
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
@@ -26,8 +27,8 @@ const CancelledDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
  const [fedbackSendFail, setFedbackSendFail] = useState(false)
 
   ////// используем контекст
-  const tokenContext = useContext(TokenContext);
-  const token = tokenContext.token;
+  const {token} = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
   ////// используем контекст
 
 
@@ -87,21 +88,25 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
   
   return (
     <>
-      <div className="bottom-0 h-fit pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl  bg-light-gray-white dark:bg-light-gray-7-logo"
+      <div className={` pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl  bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "h-full top-0 fixed" : "bottom-0 h-fit"}` }
       onClick={(e)=>e.stopPropagation()}>
-        <div className="flex items-center self-start mt-[25px] mx-4">
-          <Big_pencil className="w-[32px] h-[32px] min-w-[32px] min-h-[32px]  fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
+        <div className="flex items-center self-start mt-[25px] mx-4 justify-between">
+          <div className='flex items-center'>
+            <Big_pencil className="w-[32px] h-[32px] min-w-[32px] min-h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
           {delivery ? (
          <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
          Поделитесь, пожалуйста, почему вы отказались от участия в доставке?
-         </p>
+            </p>
          ) : (<p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
           Поделитесь, пожалуйста, почему вы отказались от участия в добром деле?
           </p>)}
+          </div>
+          
+          {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 ' onClick={()=>onOpenChange(false)} />}
         </div>
         <Form.Root
            className=" flex flex-col items-center justify-center"
-          onSubmit={e => {
+            onSubmit={e => {
             e.preventDefault();
             handleDeliveryOrTaskCancelledFeedbackSubmit(deliveryOrTaskId)
           }}
