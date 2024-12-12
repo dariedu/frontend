@@ -160,7 +160,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
         zIndex={true}
       />
       <Modal isOpen={becameCuratorOpen} onOpenChange={setBecameCuratorOpen} zIndex={true}>
-        <BecameCurator />
+        <BecameCurator onOpenChange={setBecameCuratorOpen}/>
       </Modal>
        <Modal isOpen={openHistoryPage} onOpenChange={setOpenHistoryPage} zIndex={true}>
         <History onClose={setOpenHistoryPage} isVolunteer={isVolunteer} />

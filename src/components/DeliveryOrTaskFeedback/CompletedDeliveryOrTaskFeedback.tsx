@@ -5,6 +5,8 @@ import { submitFeedbackDeliveryoOrTask, type TFeedbackTypes } from '../../api/fe
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import { TokenContext } from '../../core/TokenContext';
+import { UserContext } from '../../core/UserContext';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react";
 
 interface IDeliveryFeedbackProps{
   onOpenChange: (open: boolean) => void
@@ -27,7 +29,8 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
  const [fedbackSendFail, setFedbackSendFail] = useState(false)
 
   ////// используем контекст
-  const {token} = useContext(TokenContext);
+  const { token } = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
   ////// используем контекст
 
 
@@ -103,13 +106,16 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
   return (
     <>
       {volunteer ? (
-      <div className="fixed bottom-0 pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
+        <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "fixed top-0 h-full": "fixed bottom-0"}` }
       onClick={(e)=>e.stopPropagation()}>
-          <div className="flex items-center self-start mt-[25px] mx-4">
+          <div className="flex items-center self-start mt-[25px] w-full justify-between">
+            <div className='flex items-center'>
           <Big_pencil className=" w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
             Расскажите в свободной форме
-          </p>
+            </p>
+            </div>
+            {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 ' onClick={()=>onOpenChange(false)} />}
         </div>
 
         <Form.Root
@@ -119,7 +125,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
             handleDeliveryOrTaskFeedbackSubmit(deliveryOrTaskId, true)
           }}
          >
-          <div  className='flex flex-col px-4'>
+          <div  className='flex flex-col'>
             <Form.Field name="fb1" className="mt-4">
               <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
                 На сколько приятным было общение с куратором?
@@ -184,10 +190,11 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
         </Form.Root>
       </div>
       ) : (
-        <div className=" flex flex-col rounded-t-2xl bg-light-gray-white w-full max-w-[500px] "
+          <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "fixed top-0 h-full" : "fixed bottom-0"}`}
         onClick={(e)=>e.stopPropagation()}>
-            <div className="flex items-center self-start mt-[25px] mx-4">
-              <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
+            <div className="flex items-center self-start mt-[25px] w-full justify-between">
+              <div className='flex items-center'>
+                <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
               {delivery ? (
             <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
             Поделитесь Вашими впечатлениями от курирования доставки
@@ -196,7 +203,9 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                 <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
                 Поделитесь Вашими впечатлениями от курирования доброго дела
                 </p>
-            )}
+              )}
+              </div>
+               {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />}
           </div>
   
           <Form.Root
@@ -206,7 +215,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
               handleDeliveryOrTaskFeedbackSubmit(deliveryOrTaskId, false)
             }}
            >
-            <div  className='flex flex-col px-4'>
+            <div  className='flex flex-col'>
               <Form.Field name="fb1" className="mt-4">
                   {delivery ? (
                   <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">
@@ -220,7 +229,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                 <Form.Control asChild>
                     <TextareaAutosize
                     onFocus={(e)=>handleFocus(e)}
-                    maxRows={10}
+                    maxRows={8}
                     className="w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                   placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                     required

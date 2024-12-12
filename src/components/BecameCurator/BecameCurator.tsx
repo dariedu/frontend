@@ -5,8 +5,14 @@ import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import { TokenContext } from '../../core/TokenContext';
 import { createRequestMessage, type TRequestMessageRequest } from '../../api/requestMessageApi';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import { UserContext } from '../../core/UserContext';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react";
 
-const BecameCurator = () => {
+type TBecameCuratorProps = {
+  onOpenChange:React.Dispatch<React.SetStateAction<boolean>> 
+}
+
+const BecameCurator:React.FC<TBecameCuratorProps> = ({ onOpenChange}) => {
 
   const [requestBody, setRequestBody] = useState({
     about_location: localStorage.getItem('about_location') ?? '',
@@ -23,8 +29,8 @@ const BecameCurator = () => {
   //const [requestSent, setRequestSent] = useState(false);
 
     ////// используем контекст
-    const tokenContext = useContext(TokenContext);
-    const token = tokenContext.token;;
+  const { token } = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
   ////// используем контекст
   
 
@@ -80,23 +86,28 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 
   return (
     <>
-      <div className="z-[51] fixed top-0 pb-10 w-full max-w-[500px] flex flex-col rounded-2xl bg-light-gray-white dark:bg-light-gray-7-logo px-4 "
-      onClick={(e)=>e.stopPropagation()}>
-          <div className="flex items-center self-start mt-[25px]">
-          <Big_pencil className="w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+      <div className={`z-[51] fixed bottom-0 h-fit w-full pb-10 max-w-[500px] flex flex-col rounded-2xl bg-light-gray-white dark:bg-light-gray-7-logo px-4 ${isIphone ? "top-0 h-full overflow-y-auto": "bottom-0 h-fit"} ` }
+    onClick={(e)=>e.stopPropagation()}
+      >
+        <div className="flex items-center self-start mt-[25px] w-full justify-between"      >
+          <div className='flex items-center'>
+            <Big_pencil className="w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
             Расскажите, в свободной форме
           </p>
+          </div>
+          {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />}
         </div>
 
         <Form.Root
-           className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center"
+          
           onSubmit={e => {
             e.preventDefault();
             handleRequestSubmit()
           }}
          >
-          <div  className='flex flex-col'>
+          <div  className='flex flex-col w-full'>
             <Form.Field name="about_location" className="mt-4">
               <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3">
               На какой локации вы бы хотели стать куратором и почему?

@@ -6,6 +6,7 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
 import { submitFeedbackSuggestion} from '../../api/feedbackApi';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
+import { UserContext } from '../../core/UserContext';
 
 type TSupport = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,7 +14,9 @@ type TSupport = {
 
 const Support:React.FC<TSupport> = ({onClose}) => {
 
-  const {token}= useContext(TokenContext);
+  const { token } = useContext(TokenContext);
+  const { isIphone } = useContext(UserContext);
+
   const [requestBody, setRequestBody] = useState({
     support: localStorage.getItem('support') ?? "",
   });
@@ -65,13 +68,17 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 }
 
   return (
-    <div className="bg-light-gray-white h-screen pb-10 fixed bottom-0 pt-4 px-4 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden" onClick={(e)=>e.stopPropagation()}>
-       <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onClose(false)} />
-      <div className=" flex items-center self-start">
-          <Big_pencil className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+    <div className={ `bg-light-gray-white pb-10 pt-4 px-4 dark:bg-light-gray-7-logo rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden ${isIphone ? "fixed top-0 h-full " : "fixed bottom-0" }`} onClick={(e)=>e.stopPropagation()}>
+       {/* <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onClose(false)} /> */}
+      <div className=" flex items-center self-start w-full justify-between">
+        <div className='flex items-center'>
+           <Big_pencil className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
           Постарайтесь подробно описать проблему
-          </p>
+        </p>
+        </div>
+         
+        {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onClose(false)} />}
         </div>
       <div className="z-[51] w-full max-w-[500px] flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo"
       onClick={(e)=>e.stopPropagation()}>
