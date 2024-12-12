@@ -139,7 +139,11 @@ export const patchUser = async (
     return response.data;
   } catch (error: any) {
     console.error('Error patching user:', error);
-    throw new Error('Failed to patch user');
+    if (error.response.data.email) {
+      throw new Error(error.response.data.email)
+    } else {
+      throw new Error(error) 
+    }
   }
 };
 
