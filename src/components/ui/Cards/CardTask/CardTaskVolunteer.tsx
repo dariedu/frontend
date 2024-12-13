@@ -12,6 +12,7 @@ import List from './../../../../assets/icons/tasksIcons/list.svg?react'
 import Old from './../../../../assets/icons/tasksIcons/old.svg?react'
 import Text from './../../../../assets/icons/big_pencil.svg?react'
 import Kind from './../../../../assets/icons/tasksIcons/kind.svg?react'
+import { Modal } from '../../Modal/Modal';
 
 type TCardDeliveryProps = {
    task: ITask
@@ -53,8 +54,8 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
     {
       "id": 1,
       "name": "Организация мероприятия",
-      "icon": <Event className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
-      "icon_full_view": <Event className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+      "icon": <Event className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon_full_view": <Event className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     },
     {
       "id": 2,
@@ -65,14 +66,14 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
     {
       "id": 3,
       "name": "Раздача листовок",
-      "icon": <List className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
-      "icon_full_view": <List className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+      "icon": <List className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon_full_view": <List className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
     },
     {
       "id": 4,
       "name": "Проверка",
-      "icon": <Check className="w-[32px] h-[32px] bg-light-gray-white dark:bg-light-gray-5 fill-black  dark:fill-white  rounded-full stroke-black  dark:stroke-white " />,
-      "icon_full_view": <Check className="w-[32px] h-[32px] bg-light-gray-1 dark:bg-light-gray-5 fill-black  dark:fill-white  rounded-full stroke-black  dark:stroke-white "/>
+      "icon": <Check className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] bg-light-gray-white dark:bg-light-gray-5 fill-black  dark:fill-white  rounded-full stroke-black  dark:stroke-white " />,
+      "icon_full_view": <Check className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] bg-light-gray-1 dark:bg-light-gray-5 fill-black  dark:fill-white  rounded-full stroke-black  dark:stroke-white "/>
     },
     {
       "id": 5,
@@ -84,21 +85,20 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
     {
       "id": 6,
       "name": "Автодоставка",
-       "icon": <Auto className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
-      "icon_full_view": <Auto className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+       "icon": <Auto className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon_full_view": <Auto className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     },
     {
       "id": 7,
       "name": "Сопровождение подопечного",
-      "icon": <Old className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
-      "icon_full_view": <Old className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+      "icon": <Old className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon_full_view": <Old className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     }
   ]
 
   
      return (
        <>
-
      <div className="p-4 bg-light-gray-1 rounded-2xl w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
            <div className="flex items-center">
           
@@ -125,8 +125,11 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
             </span>
           </div>
         </div>
-           </div>
-         <DetailedInfoTask tasksCateg={tasksCateg} canBook={myTasks?.includes(task.id)? false : true} task={task} isOpen={isOpen} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+         </div>
+         <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+            <DetailedInfoTask tasksCateg={tasksCateg} canBook={myTasks?.includes(task.id)? false : true} task={task} onOpenChange={setIsOpen} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
+         </Modal>
+
          </>
          )
 

@@ -88,7 +88,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
   
   return (
     <>
-      <div className={` pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl  bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "h-full top-0 fixed" : "bottom-0 h-fit"}` }
+      <div className={` pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl  bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? " h-full top-0 fixed " : " bottom-0 h-fit "}` }
       onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center self-start mt-[25px] mx-4 justify-between">
           <div className='flex items-center'>
@@ -129,7 +129,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
               </Form.Control>
             </Form.Field>
           </div>
-          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} mt-4 mb-4 `}
+          <button className={`${buttonActive ? "btn-B-GreenDefault" : "btn-B-GreenInactive dark:bg-light-gray-5 dark:text-light-gray-4"} my-4 `}
             onClick={(e) => {
               if (buttonActive) {
               }else e.preventDefault()

@@ -3,7 +3,7 @@ import {
   // getMonthCorrectEndingName,
   getBallCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
-import { Modal } from '../ui/Modal/Modal';
+// import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { ITask } from '../../api/apiTasks';
 import Small_sms from './../../assets/icons/small_sms.svg?react'
@@ -14,7 +14,7 @@ type TDetailedInfoTaskProps = {
   tasksCateg: { icon: JSX.Element, id: number, name: string, icon_full_view: JSX.Element }[]
   canBook:boolean
   task: ITask;
-  isOpen: boolean;
+  // isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   getTask: (delivery: ITask) =>void
@@ -27,7 +27,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
   tasksCateg,
   canBook,
   task,
-  isOpen,
+  // isOpen,
   onOpenChange,
   switchTab,
   getTask,
@@ -66,8 +66,8 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
 
 
   return (
-    <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+
+
         <div
           className="w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col items-center  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
           onClick={e => {
@@ -81,7 +81,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
                  {tasksCateg.find(i => i.id == task.category.id) ? (
                tasksCateg.find(i => i.id == task.category.id)?.icon_full_view
                ): (
-                 <Kind className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+                 <Kind className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
               <div className="flex flex-col justify-center items-start pl-2 ">
                 <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
@@ -113,11 +113,11 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
           {task.curator.name && task.curator.name.length > 0 ? (
           <div className="w-full h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] box-border flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
-              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-1 dark:bg-dark-gray-1 rounded-full">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] min-h-[32px] min-w-[32px] bg-light-gray-1 dark:bg-dark-gray-1 rounded-full">
               <Avatar.Image
                 src={task.curator.photo || ''}
                 alt="Avatar"
-                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+                className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] object-cover rounded-full cursor-pointer"
               />
               <Avatar.Fallback
                 className="text-black dark:text-white"
@@ -140,7 +140,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             href={'https://t.me/' + task.curator?.tg_username}
             target="_blank"
                 >
-               <Small_sms className="w-[36px] h-[35px]"/>
+               <Small_sms className="w-[36px] h-[35px] min-h-[35px] min-w-[36px]"/>
           </a>
           ): ""}
          
@@ -163,7 +163,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             className={canBook? "btn-B-GreenDefault mt-[20px] self-center" : "btn-B-WhiteDefault mt-[20px] self-center" }
             onClick={e => {
               if (canBook) {
-                   e.preventDefault();
+                e.preventDefault();
                 getTask(task)
               } else {
                 ()=>{}
@@ -172,27 +172,27 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
               }}
             >
             { canBook ? "Записаться" : "Вы уже записались"  }
-            </button>
-        </div>
-      </Modal>
+      </button>
       <ConfirmModal
-        isOpen={takeTaskSuccess}
-        onOpenChange={setTakeTaskSuccess}
-        onConfirm={() => {
-          onOpenChange(false)
-          setTakeTaskSuccess(false);
-        }}
-        onCancel={() => {
-          switchTab('tab2');
-          setTakeTaskSuccess(false);
-        }}
-        title={`Доброе дело ${stringForModal} в календаре`}
-        description=""
-        confirmText="Ок"
-        cancelText="В календарь"
-        isSingleButton={false}
-      />
-    </>
+                isOpen={takeTaskSuccess}
+                onOpenChange={setTakeTaskSuccess}
+                onConfirm={() => {
+                  onOpenChange(false);
+                 setTakeTaskSuccess(false);
+                }}
+                onCancel={() => {
+                  onOpenChange(false);
+                  switchTab('tab2');
+                  setTakeTaskSuccess(false);
+                }}
+                title={`Доброе дело ${stringForModal} в календаре`}
+                description=""
+                confirmText="Ок"
+                cancelText="В календарь"
+                isSingleButton={false}
+              />
+        </div>
+        
   );
 };
 

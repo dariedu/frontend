@@ -503,7 +503,7 @@ function RegistrationPage() {
                       />
                     </Form.Control>
                     <Form.Message match="valueMissing" className="error">
-                      Пожалуйста, введите ваш имейл
+                      Пожалуйста, введите ваш email
                     </Form.Message>
                       <Form.Message match='typeMismatch' className="error">
                       Неверный имейл

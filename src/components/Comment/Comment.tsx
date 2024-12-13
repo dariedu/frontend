@@ -3,7 +3,7 @@ import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 //import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
-
+import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 
 type TComment = {
   name:string
@@ -62,13 +62,17 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
           }}
          >
           <div  className='flex flex-col px-4 min-w-[328px] w-full max-w-[500px] '>
-              <Form.Field name="comment" className="mt-4">           
-              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о доставке</Form.Label>
+            <Form.Field name="comment" className="mt-4"> 
+              <div className='flex items-center'>
+              <Big_pencil className="w-[32px] h-[32px] min-w-[32px] min-h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/> 
+              <Form.Label className="font-gerbera-sub2 pl-4 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о доставке</Form.Label>
+              </div>
+           
               <Form.Control asChild>
                 <TextareaAutosize
                   onFocus={(e)=>handleFocus(e)}
                   maxRows={8}
-                  className=" min-w-[96%]   bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
+                  className=" min-w-[96%] w-full  bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
                   defaultValue={localStorage.getItem('comment') ?? savedComment ?? ""}

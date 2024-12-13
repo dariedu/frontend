@@ -147,7 +147,6 @@ try {
        const minutes = deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes();    
        const subway = getMetroCorrectName(delivery.location.subway)
        const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
-       setCancelDeliveryReasonOpenModal(true)/// открываем модалку для отзыва о причине отмены
        setCancelDeliverySuccessString(finalString);  
        setCancelId(id)
        setCancelDeliverySuccess(true)
@@ -172,7 +171,6 @@ try {
        const hours = taskDate.getUTCHours() < 10 ? '0' + taskDate.getUTCHours() : taskDate.getUTCHours();
        const minutes = taskDate.getUTCMinutes() < 10 ? '0' + taskDate.getUTCMinutes() : taskDate.getUTCMinutes();    
        const finalString = `\"${task.name.slice(0, 1).toLocaleUpperCase()+task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
-       setCancelTaskReasonOpenModal(true)/// открываем модалку для отзыва о причине отмены
        setCancelTaskSuccessString(finalString);  
        setCancelTaskId(id)
        setCancelTaskSuccess(true)
@@ -254,7 +252,7 @@ try {
       <ConfirmModal
         isOpen={cancelDeliverySuccess}
         onOpenChange={setCancelDeliverySuccess}
-        onConfirm={() => setCancelDeliverySuccess(false)}
+        onConfirm={() => { setCancelDeliverySuccess(false);  setCancelDeliveryReasonOpenModal(true) }}
         title={`Участие в доставке ${cancelDeliverySuccessString} отменено`}
         description=""
         confirmText="Ок"
@@ -269,10 +267,10 @@ try {
         confirmText="Ок"
         isSingleButton={true}
       />
-       <ConfirmModal
+      <ConfirmModal
         isOpen={cancelTaskSuccess}
         onOpenChange={setCancelTaskSuccess}
-        onConfirm={() => setCancelTaskSuccess(false)}
+        onConfirm={() => { setCancelTaskSuccess(false);  setCancelTaskReasonOpenModal(true)}}
         title={`Участие в добром деле ${cancelTaskSuccessString} успешно отменено`}
         description=""
         confirmText="Ок"

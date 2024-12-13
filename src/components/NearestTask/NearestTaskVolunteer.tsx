@@ -153,7 +153,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
                 className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
               />
               <Avatar.Fallback
-                className="text-black dark:text-white"
+                className="text-black dark:text-white dark:bg-light-gray-6"
               >
                 {task.curator.name ? task.curator.name[0] : 'A'}
               </Avatar.Fallback>
