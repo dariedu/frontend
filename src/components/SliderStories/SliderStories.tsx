@@ -134,7 +134,7 @@ const SliderStories: React.FC = () => {
         {stories.map((story, index) => {
           if (story.cover && story.title && story.text) {
             return (
-        <div key={story.id} className="inline-block bg-light-gray-2 rounded-xl dark:bg-light-gray-6">
+        <div key={story.id}>
               <CardStories
                 imageSrc={story.cover}
                 title={story.title}

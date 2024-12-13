@@ -131,7 +131,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           </p>
         </div>
       </div>
-      { contactPerson && contactPerson.name && contactPerson.tg_id &&
+      {contactPerson && contactPerson.name && contactPerson.tg_id &&
         <div className="w-full h-[67px] min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
@@ -169,12 +169,17 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       ): ""}
       
       {promotion.picture && (
-        <img
-          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2xl mt-[14px] self-center object-cover"
+        <Avatar.Root className="mt-[14px] self-center inline-flex items-center justify-center h-fit w-fit bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl">
+        {promotion.picture &&
+        <Avatar.Image
           src={promotion.picture}
-          decoding='async'
-          loading='lazy'
-        />
+          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2x self-center object-cover"
+        />}
+        <Avatar.Fallback
+          className="w-0 h-0 "
+        >
+        </Avatar.Fallback>
+      </Avatar.Root>
       )}
       {!reserved ? (
         <div className="w-full min-w-[328px] flex justify-center space-x-2 items-center mt-[14px] self-center">
