@@ -91,7 +91,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           {uploadedFileLink[index].length > 0 ? 'Фото успешно загружено' : 'Загрузите фотографию благополучателя' }
           <br />
          </p>
-      <div className='ml-20'>
+      <div>
         {!beneficiarIsAbsent ?
           (<CheckboxElement onCheckedChange={handleCheckChange} checked={false}>
           <p className="font-gerbera-sub2 dark:text-light-gray-3">Благополучателя нет на месте</p>

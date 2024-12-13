@@ -69,7 +69,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
               }
           requestBody.about_me = "";
           localStorage.removeItem("about_me");
-          
+          setButtonActive(false)
           setRequestAboutMeSuccess(true)
             }
         }else{
@@ -100,7 +100,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
     >
       <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px] min-h-[60px]">
         <button onClick={()=>onClose(false)} className="mr-2">
-        <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
+        <RightArrowIcon className='rotate-180 w-9 h-9 min-w-9 min-h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757]' />
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Обо мне</h2>
       </div>

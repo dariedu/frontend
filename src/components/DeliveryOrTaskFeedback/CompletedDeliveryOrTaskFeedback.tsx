@@ -106,11 +106,11 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
   return (
     <>
       {volunteer ? (
-        <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "fixed top-0 h-full": "fixed bottom-0"}` }
+        <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo  ${isIphone ? " fixed top-0 h-full ": " fixed bottom-0 "}` }
       onClick={(e)=>e.stopPropagation()}>
           <div className="flex items-center self-start mt-[25px] w-full justify-between">
             <div className='flex items-center'>
-          <Big_pencil className=" w-[32px] h-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
+          <Big_pencil className=" w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6"/>
           <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-1">
             Расскажите в свободной форме
             </p>
@@ -190,17 +190,17 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
         </Form.Root>
       </div>
       ) : (
-          <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone ? "fixed top-0 h-full" : "fixed bottom-0"}`}
+          <div className={`pb-10 w-full max-w-[500px] flex flex-col rounded-t-2xl px-4 bg-light-gray-white dark:bg-light-gray-7-logo  ${isIphone ? " fixed top-0 h-full " : " fixed bottom-0 "}`}
         onClick={(e)=>e.stopPropagation()}>
-            <div className="flex items-center self-start mt-[25px] w-full justify-between">
+            <div className="flex items-center self-start mt-[25px] w-full justify-between ">
               <div className='flex items-center'>
-                <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6"  />
+                <Big_pencil className="h-[32px] w-[32px] min-h-[32px] min-w-[32px] fill-light-gray-black rounded-full bg-light-gray-1 dark:fill-light-gray-white dark:bg-light-gray-6 "  />
               {delivery ? (
-            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
+            <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-2">
             Поделитесь Вашими впечатлениями от курирования доставки
             </p>
               ) : (
-                <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray">
+                <p className="ml-[14px] font-gerbera-h3 dark:text-light-gray-2">
                 Поделитесь Вашими впечатлениями от курирования доброго дела
                 </p>
               )}
