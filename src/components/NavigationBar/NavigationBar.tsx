@@ -53,7 +53,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
 
         {variant === 'mainScreen' && currentUser && (
           <div className="flex items-center space-x-4">
-            <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-light-gray-1 dark:bg-dark-gray-1 rounded-full" onClick={handleAvatarClick}>
+            <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-light-gray-1  dark:bg-light-gray-5 rounded-full" onClick={handleAvatarClick}>
               <Avatar.Image
                 src={currentUser.photo || ''}
                 alt="Avatar"

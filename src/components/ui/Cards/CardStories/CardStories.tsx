@@ -15,20 +15,16 @@ const CardStories: React.FC<CardStoriesProps> = ({
 }) => {
   return (
     <div
-      className="relative w-[116px] h-[160px] cursor-pointer overflow-hidden bg-light-gray-white rounded-2xl"
-      onClick={onClick}
-    >
+      className="relative w-[116px] h-[160px] cursor-pointer overflow-hidden"
+      onClick={onClick}>
       {/* Изображение */}
-      <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-full h-full rounded-2xl bg-light-gray-2 dark:bg-light-gray-5'>
-        {
-          imageSrc && (
-            <Avatar.Image src={imageSrc} decoding='async'  loading='lazy' className='w-full h-full rounded-2xl object-cover' />
-        )}
-            <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-full h-full rounded-2xl'>
+      <Avatar.Root className='inline-flex items-center justify-center align-middle overflow-hidden w-fit h-fit rounded-2xl'>
+            <Avatar.Image src={imageSrc} decoding='async'  loading='lazy' className='w-[116px] h-[160px] rounded-2xl object-cover' />
+            <Avatar.Fallback delayMs={1000} className='bg-light-gray-2 dark:bg-light-gray-5 w-[116px] h-[160px] rounded-2xl'>
           </Avatar.Fallback>
         </Avatar.Root>
       {/* Текст поверх картинки */}
-      <div className="absolute bottom-[12px] px-[12px] font-gerbera-sub2 text-light-gray-white w-full h-fit  whitespace-normal text-left">
+      <div className="absolute bottom-[12px] px-[12px] font-gerbera-sub2 text-light-gray-white w-full h-fit whitespace-normal text-left">
         {title}
       </div>
     </div>
