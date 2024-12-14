@@ -99,7 +99,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {delivery.curator.name && delivery.curator.name.length > 0 ? (
               <div className="w-full h-[67px] bg-light-gray-1 box-border rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
                 <div className="flex">
-                  <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] min-h-[32px] min-w-[32px] bg-light-gray-white dark:bg-dark-gray-1 rounded-full">
+                  <Avatar.Root className=" h-[32px] w-[32px] min-h-[32px] min-w-[32px] inline-flex items-center justify-center  bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
                     <Avatar.Image
                       src={delivery.curator.photo || ''}
                       alt="Avatar"
