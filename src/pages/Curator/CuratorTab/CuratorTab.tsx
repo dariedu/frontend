@@ -152,9 +152,9 @@ async function getMyCuratorDeliveries() {
         )
       }
       {curatorCompletedDeliveries.length == 0 && curatorActiveDeliveries.length == 0 && curatorInProcessDeliveries.length == 0 && curtorTasks.length == 0 && (
-        <div className='flex flex-col w-[350px] items-center mt-10 h-[400px] justify-center ml-4'>
-        <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-      <p className='dark:text-light-gray-1'>Скоро тут появятся ваши доставки<br/>и добрые дела</p>
+        <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
+        <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px] '/>
+      <p className='text-light-gray-black dark:text-light-gray-1'>Скоро тут появятся ваши доставки<br/>и добрые дела</p>
     </div>
       )
       }
