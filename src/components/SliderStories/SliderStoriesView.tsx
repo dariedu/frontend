@@ -103,6 +103,9 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  // const storieText:string[] = [];
+  // storieText.push(stories[currentIndex].text.split('<br/>'))
+
   return (
     <div
       className="fixed -inset-7 bg-light-gray-white dark:bg-light-gray-black bg-opacity-80 flex justify-center items-center z-50 rounded-2xl "
@@ -140,13 +143,20 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
         </Avatar.Root>
           {/* Текст поверх картинки */}
           <div className="text-light-gray-white font-gerbera-h2 absolute bottom-14 w-[89%]">
-            <div className="flex bg-light-brand-green font-gerbera-h3 w-fit p-3 h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
+            {stories[currentIndex].date && <div className="flex bg-light-brand-green font-gerbera-h3 w-fit p-3 h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
               {new Date(stories[currentIndex].date).toLocaleDateString()}
+            </div>}
+            {stories[currentIndex].subtitle && <p className="font-gerbera-st text-left mb-3 w-fit">
+              {stories[currentIndex].subtitle}
+            </p>}
+            <div className="font-gerbera-h2 text-left h-fit max-h-[400px] overflow-y-auto">
+              {stories[currentIndex].text.split('<br/>')
+                  .map((text, index) => {
+                    return <p key={index}>{ 
+                      text
+                    }<br/><br/></p>
+                  })}
             </div>
-            <p className="font-gerbera-st text-left mb-3 w-fit">
-              {stories[currentIndex].title}
-            </p>
-            <p className="font-gerbera-h2 text-left h-fit">{stories[currentIndex].text}</p>
           </div>
         </div>
 
