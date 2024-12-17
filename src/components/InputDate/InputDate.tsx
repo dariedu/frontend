@@ -29,7 +29,20 @@ interface IInputDateProps {
   categories: TTaskCategory[]; // Категории для фильтрации
   filterCategories: number[]; // Текущий выбранный фильтр
   setFilterCategories: React.Dispatch<React.SetStateAction<number[]>>; // Функция для установки фильтра
+  maxYear?: number;
 }
+
+
+const InputDate: React.FC<IInputDateProps> = ({
+  onClose,
+  selectionMode = 'single',
+  setCurrentDate,
+  categories,
+  filterCategories,
+  setFilterCategories,
+  maxYear
+}) => {
+
 
 const months = [
   'Январь',
@@ -46,22 +59,20 @@ const months = [
   'Декабрь',
 ];
 
-const years = Array.from({ length: 61 }, (_, i) => 2030 - i);
+  
+  const years = Array.from({ length: 61 }, (_, i) => maxYear ? maxYear - i : 2030 - i);
+  
+  const today = new Date();
+  const todayDay = today.getDate();
+  const todayMonth = today.getMonth();
 
-const InputDate: React.FC<IInputDateProps> = ({
-  onClose,
-  selectionMode = 'single',
-  setCurrentDate,
-  categories,
-  filterCategories,
-  setFilterCategories,
-}) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(
-    startOfDay(new Date()),
+    startOfDay( maxYear? new Date(maxYear, todayMonth, todayDay) : new Date()),
   );
   const [selectedDates, setSelectedDates] = useState<Date[]>([
-    startOfDay(new Date()),
+    startOfDay(maxYear? new Date(maxYear, todayMonth, todayDay) : new Date()),
   ]);
+
   const [range, setRange] = useState<{ start: Date | null; end: Date | null }>({
     start: null,
     end: null,

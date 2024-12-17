@@ -660,8 +660,9 @@ function RegistrationPage() {
               ></ConfirmModal>
             </div>
           </Form.Root>
-          <Modal isOpen={openCalendar} onOpenChange={setOpenCalendar}>
-            <InputDate
+            <Modal isOpen={openCalendar} onOpenChange={setOpenCalendar}>
+              <div className='mb-20'>
+              <InputDate
               onClose={() => {
                 setOpenCalendar(false);
               }}
@@ -669,10 +670,12 @@ function RegistrationPage() {
               setCurrentDate={calcBirthday}
               categories={[]}
               filterCategories={[]}
+              maxYear={new Date().getFullYear()-13}
               setFilterCategories={function (): void {
                 throw new Error('Function not implemented.');
               }}
             />
+              </div>
           </Modal>
           <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
             <ConcentToPersonalData />

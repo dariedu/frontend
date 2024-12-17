@@ -113,7 +113,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
             handleRequestSubmit()
           }}
          >
-          <div  className='flex flex-col px-4 '>
+          <div  className='flex flex-col px-4'>
             <Form.Field name="about_location" className="mt-4">
               <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 mb-1">
               Выберите ваш род деятельности
@@ -121,13 +121,15 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
               <Form.Control asChild>
               </Form.Control>
             </Form.Field>
-            <InputOptions
-                      options={metier}
-                      clicked={clickedMetier}
-                      setClicked={setClickedMetier}
-                      choiceMade={metierName}
-                      setChoiceMade={setMetierName}
-                    />
+            <div className='w-full relative'>
+             <InputOptions
+              options={metier}
+              clicked={clickedMetier}
+              setClicked={setClickedMetier}
+              choiceMade={metierName}
+              setChoiceMade={setMetierName}
+                    /> 
+            </div>
               <Form.Field name="about_presence" className="mt-4">           
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>

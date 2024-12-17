@@ -205,7 +205,28 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
               >
                 Отказаться
               </button>
-        ) : taskFilter == 'completed' &&  feedbackSubmited ? (
+        ) : taskFilter == 'completed' && (
+            <>
+               <div className="flex justify-bcenter items-center mt-[14px] space-x-2">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
+              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
+                {period ? "Даты" : "Время начала" } 
+              </p>
+                <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+                 {dateString}
+                </p>
+              </div>
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start box-border min-w-[161px] w-[50%] h-[62px] p-3 dark:bg-light-gray-6">
+                <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
+                  Начисление баллов
+                </p>
+                <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+                  {'+'}
+                  {task.volunteer_price} {getBallCorrectEndingName(task.volunteer_price)}
+                </p>
+              </div>
+            </div>
+              { feedbackSubmited ? (
           <button
               className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
               onClick={e => {
@@ -232,7 +253,9 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
             >
               Поделиться впечатлениями
             </button>
-          ) 
+          ) }
+            </>
+        )  
         ): ""}
 
         {/* /////////////////////// */}

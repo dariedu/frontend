@@ -190,7 +190,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           </div>
         </div>
         {/* /////////////////////// */}
-        {currentStatus == 'nearest' ? (
+            {currentStatus == 'nearest' || currentStatus == 'active'   ? (
           <>
             <div className="flex justify-between items-center mt-[20px] space-x-2">
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
@@ -205,7 +205,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               </div>
               <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between box-border items-start w-full min-w-[161px] h-[62px] p-3">
                 <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
-                  Записались
+               {currentStatus == 'active' ?  'Волонтёры' : "Записались"}
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
                   {delivery.volunteers_taken == 0
@@ -219,7 +219,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               className="btn-B-WhiteDefault mt-[20px] self-center"
               onClick={() => setFullViewNearest(true)}
             >
-              Список записавшихся волонтёров
+           { currentStatus == 'active'  ? "Список волонтёров" : "Список записавшихся волонтёров"} 
             </button>
             )}
           </>
@@ -228,7 +228,29 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             )}
           
             {currentStatus == 'completed' && fullViewCompleted && (
-              feedbackSubmited ? (
+              <>
+                <div className="flex justify-between items-center mt-[20px] space-x-2">
+              <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-full box-border min-w-[161px] h-[62px] p-3 dark:bg-light-gray-6">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
+                  Время начала
+                </p>
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
+                  {`${deliveryDate.getUTCDate()}
+                  ${deliveryDate.toLocaleDateString("RU", {month:"short"})} в
+                  ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
+                </p>
+              </div>
+              <div className="bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl flex flex-col justify-between box-border items-start w-full min-w-[161px] h-[62px] p-3">
+                <p className="font-gerbera-sub2 text-light-gray-5 dark:text-light-gray-3">
+               Баллы
+                </p>
+                <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
+                      + {delivery.price} {getBallCorrectEndingName(delivery.price)}
+                </p>
+              </div>
+                </div>
+                {
+                  feedbackSubmited ? (
                 <button
                 className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
                 onClick={e => {
@@ -255,6 +277,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               >
                 Поделиться впечатлениями
               </button>)
+                }
+              
+              </>
         )}
         {/* /////////////////////// */}
       </div>
@@ -302,14 +327,15 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         isSingleButton={true}
       />
       {/* ///// раскрываем полные детали активной доставки для куратора///// */}
-      {currentStatus == 'nearest' ? (
-          <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
+      {currentStatus == 'nearest' || currentStatus == "active" ? (
+        <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
             listOfVolunteers={listOfVolunteers}
             changeListOfVolunteers={setListOfVolunteers}
             onOpenChange={setFullViewNearest}
             deliveryId={delivery.id}
             showActions={false}
+            preview={true}
           />
         </Modal>
       ) : (

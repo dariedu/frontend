@@ -24,7 +24,8 @@ interface ListOfVolunteersProps {
   assignVolunteerSuccess?: boolean
   setAssignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
   setAssignVolunteerFail?: React.Dispatch<React.SetStateAction<boolean>>
-  assignedVolunteerName?:string
+  assignedVolunteerName?: string
+  preview?:boolean
 }
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
@@ -40,7 +41,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   assignVolunteerSuccess,
   setAssignVolunteerFail,
   setAssignVolunteerSuccess,
-  assignedVolunteerName
+  assignedVolunteerName,
+  preview
 }) => {
   const [volunteerClicked, setVolunteerClicked] = useState(false);
   const [volunteerId, setVolunteerId] = useState<number>();
@@ -172,7 +174,15 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                ) : ""} 
         </div>
        ))}  
-        {/* Действия кнопок */}
+      {/* Действия кнопок */}
+      {preview && (
+         <button
+         className={'btn-B-GreenDefault'}
+         onClick={()=>onOpenChange(false)}
+       >
+         Закрыть
+       </button>
+      )}
       {showActions && (
         <div className="flex justify-between mt-4 w-[328px]">
             <button

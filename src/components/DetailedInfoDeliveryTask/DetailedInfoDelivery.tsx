@@ -4,7 +4,7 @@ import {
   getBallCorrectEndingName,
   getMetroCorrectName,
 } from '../helperFunctions/helperFunctions';
-import { Modal } from '../ui/Modal/Modal';
+// import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IDelivery } from '../../api/apiDeliveries';
 import Metro_station from './../../assets/icons/metro_station.svg?react';
@@ -14,7 +14,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 type TDetailedInfoDelivery = {
   delivery: IDelivery;
   canBook: boolean;
-  isOpen: boolean;
+  // isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   getDelivery: (delivery: IDelivery) => void;
@@ -26,7 +26,7 @@ type TDetailedInfoDelivery = {
 const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   delivery,
   canBook,
-  isOpen,
+  // isOpen,
   onOpenChange,
   switchTab,
   getDelivery,
@@ -46,9 +46,16 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
       : delivery.curator.tg_username;
   }
 
+
+    if (delivery.curator.photo && !delivery.curator.photo.includes('https')) {
+      delivery.curator.photo = delivery.curator.photo.replace('http', 'https')
+    }
+  
+  
+
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange}> */}
         <>
           <div
             className="w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
@@ -185,7 +192,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             
           </div>
         </>
-      </Modal>
+      {/* </Modal> */}
       <ConfirmModal
         isOpen={takeDeliverySuccess}
         onOpenChange={setTakeDeliverySuccess}

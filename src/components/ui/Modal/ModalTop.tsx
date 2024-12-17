@@ -9,10 +9,7 @@ interface IModalProps{
 
 export const ModalTop: React.FC<IModalProps> = ({ isOpen, onOpenChange, children}) =>{
 
-
-
   return (
-    <>
       <Dialog.Root open={isOpen} onOpenChange={onOpenChange}  >
         <Dialog.Portal>
         <Dialog.Overlay className={ "fixed inset-0 bg-black opacity-30"} />
@@ -23,7 +20,5 @@ export const ModalTop: React.FC<IModalProps> = ({ isOpen, onOpenChange, children
     </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
-    </>
   )
-  
 }
