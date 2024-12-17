@@ -62,9 +62,8 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
            </div>
            
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-       <DetailedInfoDelivery delivery={delivery} canBook={canBook} switchTab={switchTab} isOpen={isOpen} onOpenChange={setIsOpen} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+       <DetailedInfoDelivery delivery={delivery} canBook={canBook} switchTab={switchTab} onOpenChange={setIsOpen} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
       </Modal>
-          
          </>
          )
 

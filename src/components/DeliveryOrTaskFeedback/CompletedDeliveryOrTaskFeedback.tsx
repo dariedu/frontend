@@ -55,7 +55,7 @@ const CompletedDeliveryOrTaskFeedback: React.FC<IDeliveryFeedbackProps> = ({onOp
   
   async function handleDeliveryOrTaskFeedbackSubmit(deliveryId: number, volunteer: boolean) {
       
-console.log(onOpenChange, onSubmitFidback, volunteer, delivery, deliveryOrTaskId)
+
     let type: TFeedbackTypes;
     let fedbackText: string;
     if (volunteer) {

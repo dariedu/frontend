@@ -66,8 +66,6 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
 
 
   return (
-
-
         <div
           className="w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col items-center  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
           onClick={e => {
@@ -84,7 +82,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
                  <Kind className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
               <div className="flex flex-col justify-center items-start pl-2 ">
-                <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
+                <h1 className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1 text-left">
                 {task.name.slice(0, 1).toLocaleUpperCase()+task.name.slice(1)}
                 </h1>
               </div>
@@ -93,18 +91,18 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
           {/* /////////////////////// */}
           <div className="flex justify-center items-center mt-[14px] space-x-2 w-full">
             <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items- box-border w-[50%] min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
+              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 text-left">
                 {period ? "Даты" : "Время начала" } 
               </p>
-              <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+              <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 text-left">
               {dateString}
               </p>
             </div>
             <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start box-border w-[50%] min-w-[161px]  h-[62px] p-[12px] dark:bg-light-gray-6">
-              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3">
+              <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 text-left">
                 Начисление баллов
               </p>
-              <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+              <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 text-left">
                 {'+ '}
                 {task.volunteer_price} {getBallCorrectEndingName(task.volunteer_price)}
               </p>
