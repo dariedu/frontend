@@ -145,7 +145,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
       const updatedUser = await patchUser(
         currentUser.id,
         {
-          [telegram]: data.toLowerCase(),
+          tg_username: data.toLowerCase(),
         },
         token,
       );
@@ -311,8 +311,8 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
        <ConfirmModal
        isOpen={confirmUpdate}
        onOpenChange={setConfirmUpdate}
-        onConfirm={() => { handleSaveTelegramNik(nik); setConfirmUpdate(false) }}
-        onCancel={() => setConfirmUpdate(false)}
+       onConfirm={() => { handleSaveTelegramNik(nik); setConfirmUpdate(false) }}
+       onCancel={() => setConfirmUpdate(false)}
        title={
          <p>
            Ваш новый Telegram ник: {nik}.
