@@ -175,6 +175,8 @@ function RegistrationPage() {
          localStorage.clear(); /// если запрос прошел то отчищаем локал сторэдж
         setRegistrationCompleteModal(true);
         setIsSending(false);
+      } else {
+        throw new Error()
       }
     } catch (e) {
       if (e == "Error: {'email': [ErrorDetail(string='пользователь с таким email уже существует.', code='unique')]}") {
@@ -183,8 +185,18 @@ function RegistrationPage() {
         setRequestSent(false);
         setIsSending(false);
         setRegistrationhasFailed(true);
+      } else if (e == "Error: validation with phone") {
+        setRegistrationHasFailedString(<p>Ошибка валидации<br/>номера телефона.</p>)
+        setRequestSent(false);
+        setRegistrationhasFailed(true);
+        setIsSending(false);
+      } else if (e == "Error: {'email': [ErrorDetail(string='Введите правильный адрес электронной почты.', code='invalid')]}") { 
+        setRegistrationHasFailedString(<p>Ошибка!<br/>Неверный email.</p>)
+        setRequestSent(false);
+        setRegistrationhasFailed(true);
+        setIsSending(false);
       } else {
-        console.log(e, 'fetchRegistration, registration page');
+        console.log(e);
       setRegistrationHasFailedString(<p>Упс, что-то пошло не так.<br/>Попробуйте позже.</p>)
       setRequestSent(false);
       setRegistrationhasFailed(true);

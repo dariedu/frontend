@@ -175,7 +175,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 text-start">
                   Подробности
                 </p>
-                <p className="font-gerbera-sub1 text-light-gray-5 dark:text-light-gray-3 mt-[6px] text-start">
+                <p className="font-gerbera-sub2 text-light-gray-4 dark:text-light-gray-3 mt-[6px] text-start">
                   {task.description}
                 </p>
               </div>}
