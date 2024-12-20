@@ -690,7 +690,7 @@ function RegistrationPage() {
               </div>
           </Modal>
           <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
-            <ConcentToPersonalData />
+            <ConcentToPersonalData onOpenChange={setConcentOpenModal} />
           </Modal>
           <ConfirmModal
             isOpen={registrationhasFailed}

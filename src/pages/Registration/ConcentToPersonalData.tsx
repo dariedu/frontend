@@ -1,9 +1,10 @@
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 
-
-const ConcentToPersonalData = () => {
+const ConcentToPersonalData = ({onOpenChange}:{onOpenChange:React.Dispatch<React.SetStateAction<boolean>>}) => {
   return (
-    <div className="concentTopersonalData bg-light-gray-white rounded-t-2xl w-full max-w-[500px] h-[613px] flex flex-col p-6 items-center dark:bg-light-gray-7-logo ">
+    <div className="concentTopersonalData bg-light-gray-white rounded-t-2xl w-full max-w-[500px] h-[613px] flex flex-col p-6 items-center dark:bg-light-gray-7-logo " onClick={e=>e.stopPropagation()}>
+      <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onOpenChange(false)} />
       <h1 className="font-gerbera-h1 text-light-gray-black mb-8 text-center dark:text-light-gray-1">Договор-оферта о безвозмездной добровольческой деятельности</h1>
       <div className="font-gerbera-h3 text-light-gray-7-logo overflow-y-scroll scroll-m-0 text-justify px-2 dark:text-light-gray-3" >
   г. Москва <br /><br/>
