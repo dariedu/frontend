@@ -206,7 +206,7 @@ const months = [
   return (
     <>
       <div
-        className="w-[360px] flex flex-col items-center justify-center bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl h-[570px] "
+        className=" w-[360px] flex flex-col items-center justify-center bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl h-[570px] "
         onClick={e => e.stopPropagation()}
       >
         {/* Поле ввода с иконкой календаря */}
@@ -291,9 +291,10 @@ const months = [
                   isOpen={isMonthOpen}
                   onOpenChange={setIsMonthOpen}
                   noColor={true}
+                  zIndex={true}
                 >
-                  <div className="fixed w-[360px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl mb-[20px]">
-                    <div className="mx-4 pt-[12px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[386px] overflow-y-auto">
+                  <div className="fixed pl-1 w-[360px] mb-[160px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl">
+                    <div className="mx-4 pt-[12px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[330px] overflow-y-auto">
                       {months.map(month => (
                         <div
                           key={month}
@@ -361,9 +362,10 @@ const months = [
                   isOpen={isYearOpen}
                   onOpenChange={setIsYearOpen}
                   noColor={true}
+                  zIndex={true}
                 >
-                  <div className="fixed w-[360px]  bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl mb-[20px]">
-                    <div className="mx-4 pt-[12px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[386px] overflow-y-auto">
+                  <div className="absolute w-[360px] mb-[140px]  bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-t-2xl ">
+                    <div className="mr-12 ml-[233px] bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 h-[330px] overflow-y-auto">
                       {years.map(year => (
                         <div
                           key={year}
