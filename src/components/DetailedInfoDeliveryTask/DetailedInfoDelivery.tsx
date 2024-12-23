@@ -83,7 +83,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             <div className="flex justify-center items-center mt-[14px] space-x-2">
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
+                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-3">
                   Время начала
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
@@ -93,7 +93,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 </p>
               </div>
               <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] box-border min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
-                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-5">
+                <p className="font-gerbera-sub3 text-light-gray-black dark:text-light-gray-3">
                   Начисление баллов
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
@@ -143,11 +143,11 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
             {/* /////////////////////// */}
             {delivery.location.description &&
             delivery.location.description.length != 0 ? (
-              <div className="w-full bg-light-gray-1 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
-                <p className="font-gerbera-h3 text-light-gray-8-text text-start">
+              <div className="w-full bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl mt-[20px] flex flex-col h-fit items-start justify-start p-4">
+                <p className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
                   Подробности
                 </p>
-                <p className="font-gerbera-sub1 text-light-gray-5 mt-[6px] text-start">
+                <p className="font-gerbera-sub1 text-light-gray-4 dark:text-light-gray-3 mt-[6px] text-start">
                   {delivery.location.description}
                 </p>
               </div>
