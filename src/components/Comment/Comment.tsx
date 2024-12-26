@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
-//import Big_pencil from './../../assets/icons/big_pencil.svg?react'
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
-import Big_pencil from './../../assets/icons/big_pencil.svg?react'
+import Big_pencil from './../../assets/icons/big_pencil.svg?react';
+import { UserContext } from '../../core/UserContext';
+
 
 type TComment = {
   name:string
   onSave: (index: number, comment:string) => void
   index: number
-  savedComment:string
+  savedComment: string
+  onOpenChange: () => void
+  id:number
 }
 
-const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
+const Comment: React.FC<TComment> = ({onSave , name, index, savedComment, onOpenChange, id }) => {
+console.log(id, 'id')
+ 
+  const { isIphone } = useContext(UserContext);
 
-  type TComment= keyof typeof requestBody;
-
-
-
-  const [requestBody, setRequestBody] = useState({comment: localStorage.getItem('comment') ??  savedComment ?? "",});
+  const localeStorageName = `comment${id}`;
+  type TComment = typeof localeStorageName;
+  
+  const [requestBody, setRequestBody] = useState({[`${localeStorageName}`]: localStorage.getItem(localeStorageName) ??  savedComment ?? "",});
   const [buttonActive, setButtonActive] = useState(false)
 
 
@@ -33,7 +38,7 @@ const Comment: React.FC<TComment> = ({ onSave, name, index, savedComment }) => {
 
 
   function handleInfoInput() {
-    if (requestBody.comment.length > 5) {
+    if (requestBody[`${localeStorageName}`].length > 5) {
       setButtonActive(true)
     } else setButtonActive(false)
   }
@@ -44,9 +49,9 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 }
 
   return (
-    <div className="bg-light-gray-1 fixed bottom-0 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start" onClick={((e)=>e.stopPropagation())}>
+    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start ${isIphone ? " fixed top-0 h-full " : " fixed bottom-0 h-fit "}`} onClick={((e)=>e.stopPropagation())}>
       <div className="flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-fit p-4">
-        <button onClick={()=>{}} >
+        <button onClick={onOpenChange} >
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer' />
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Комментарий о доставке по адресу {name}</h2>
@@ -58,7 +63,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
            className=" flex flex-col items-center justify-center"
           onSubmit={e => {
             e.preventDefault();
-            onSave(index, requestBody.comment)
+            onSave(index, requestBody[`${localeStorageName}`])
           }}
          >
           <div  className='flex flex-col px-4 min-w-[328px] w-full max-w-[500px] '>
@@ -75,9 +80,9 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                   className=" min-w-[96%] w-full  bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
                   required
-                  defaultValue={localStorage.getItem('comment') ?? savedComment ?? ""}
+                  defaultValue={localStorage.getItem(localeStorageName) ?? savedComment ?? ""}
                   onChange={e => {
-                   handleFormFieldChange('comment', e.target.value);
+                   handleFormFieldChange(localeStorageName, e.target.value);
                    handleInfoInput()
                   }}
                 />

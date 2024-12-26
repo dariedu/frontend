@@ -9,14 +9,14 @@ const routeSheetsEndpoint = `${API_URL}/route_sheets/`;
 
 
 type TCurator = {
-  id: number,
-  tg_id: number,
-  tg_username: string,
-  last_name: string,
-  name: string,
-  surname: string,
-  phone: string,
-  photo: string,
+  id: number
+  tg_id: number
+  tg_username: string
+  last_name: string
+  name: string
+  surname: string
+  phone: string
+  photo: string
   photo_view: string
 }
 // Интерфейс для данных локации (Location)
@@ -65,6 +65,7 @@ interface IRouteSheet {
   address: TAddress[] // Список адресов
   name: string // Название маршрутного листа
   map?: string // Карта (если есть)
+  diners: number
 }
 
 

@@ -146,54 +146,56 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               </div>
             </div>
             {fullView[index] && (
-              <div className="flex justify-center items-center w-full mt-[14px]">
-                <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                  <div className="bg-light-gray-1  dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Благополучатель
-                    <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                      {route.beneficiar[0].full_name}
-                    </p>
-                  </div>
-
-                  {route.beneficiar[0].category &&
-                    route.beneficiar[0].category.length > 0 && (
-                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                        Категория
-                        <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].category}
-                        </p>
-                      </div>
-                    )}
-                  {route.beneficiar[0].phone &&
-                    route.beneficiar[0].phone.length > 0 && (
-                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                        Основной телефон
-                        <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].phone}
-                        </p>
-                      </div>
-                    )}
-                  {route.beneficiar[0].second_phone &&
-                    route.beneficiar[0].second_phone.length > 0 && (
-                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                        Запасной телефон
-                        <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].second_phone}
-                        </p>
-                      </div>
-                    )}
-                  {route.beneficiar[0].comment &&
-                    route.beneficiar[0].comment.length > 0 && (
-                      <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                        Информация
-                        <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                          {route.beneficiar[0].comment}
-                        </p>
-                      </div>
-                    )}
+            <div className="flex justify-center items-center w-full">
+              <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
+                <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                  {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'}
+                  {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                  {ben.full_name}
+                  </p>)}
                 </div>
+
+                {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    Категория
+                    {route.beneficiar.map(ben =>  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.category}
+                      </p> )}
+                     
+                    </div>
+                  )}
+                {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    Основной телефон
+                    {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.phone}
+                      </p>)}
+                     
+                    </div>
+                  )}
+                {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    Запасной телефон
+                    {route.beneficiar.map(ben =><p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.second_phone}
+                      </p>)}
+                      
+                    </div>
+                  )}
+                {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    Информация
+                    {route.beneficiar.map( ben=>
+                    <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {ben.comment}
+                  </p>
+                    )}
+                      
+                    </div>
+                  )}
               </div>
-            )}
+            </div>
+          )}
           </div>
         </div>
       ))}

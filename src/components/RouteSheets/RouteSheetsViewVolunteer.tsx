@@ -165,6 +165,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       }
     }
   }
+  // routes.forEach(route => console.log(route.beneficiar))
 
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
@@ -177,7 +178,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1 max-w-[80%]">
               {route.address}
             </p>
-            {array.indexOf(route.beneficiar[0].address) != -1 &&
+            { route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 &&(
             object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? (
               <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
                 <a href={object[array.indexOf(route.beneficiar[0].address)][1]}>
@@ -193,7 +194,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                       ind == index ? !isOpen : isOpen,
                     ),
                   )
-                }
+              }
               >
                 <img
                   src={uploadedFileLink[index]}
@@ -213,7 +214,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               >
                 <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full absolute fill-light-gray-3 " />
               </div>
-            )}
+            ))}
           </div>
           {comment[index].length > 0 && (
             <div className="self-start w-full mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
@@ -284,46 +285,48 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             <div className="flex justify-center items-center w-full">
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
                 <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                  Благополучатель
-                  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                    {route.beneficiar[0].full_name}
-                  </p>
+                  {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'}
+                  {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                  {ben.full_name}
+                  </p>)}
                 </div>
 
-                {route.beneficiar[0].category &&
-                  route.beneficiar[0].category.length > 0 && (
+                {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                      Категория
-                      <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {route.beneficiar[0].category}
-                      </p>
+                    Категория
+                    {route.beneficiar.map(ben =>  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.category}
+                      </p> )}
+                     
                     </div>
                   )}
-                {route.beneficiar[0].phone &&
-                  route.beneficiar[0].phone.length > 0 && (
+                {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                      Основной телефон
-                      <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {route.beneficiar[0].phone}
-                      </p>
+                    Основной телефон
+                    {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.phone}
+                      </p>)}
+                     
                     </div>
                   )}
-                {route.beneficiar[0].second_phone &&
-                  route.beneficiar[0].second_phone.length > 0 && (
+                {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                      Запасной телефон
-                      <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {route.beneficiar[0].second_phone}
-                      </p>
+                    Запасной телефон
+                    {route.beneficiar.map(ben =><p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.second_phone}
+                      </p>)}
+                      
                     </div>
                   )}
-                {route.beneficiar[0].comment &&
-                  route.beneficiar[0].comment.length > 0 && (
+                {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                      Информация
-                      <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {route.beneficiar[0].comment}
-                      </p>
+                    Информация
+                    {route.beneficiar.map( ben=>
+                    <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {ben.comment}
+                  </p>
+                    )}
+                      
                     </div>
                   )}
               </div>
@@ -336,18 +339,34 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
               )
             }
+            onOpenChangeComment={() =>
+              setOpenComment(prev =>
+                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+              )
+            }
             isOpen={openComment[index]}
           >
             <Comment
+              onOpenChange={() =>
+                setOpenComment(prev =>
+                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                )
+              }
               name={route.address}
               onSave={handleAddComment}
               index={index}
+              id={route.beneficiar[0].id}
               savedComment={comment[index]}
             />
           </Modal>
           <Modal
             isOpen={uploadPictureModal[index]}
             onOpenChange={() =>
+              setUploadPictureModal(prev =>
+                prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+              )
+            }
+            onOpenChangeComment={() =>
               setUploadPictureModal(prev =>
                 prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
               )
