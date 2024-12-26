@@ -136,7 +136,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
             <div key={routeS.id} className="mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[124px] flex flex-col justify-around ">
               <div className="flex items-center justify-between w-full mb-2 p-4">
                 <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
-                  {`Маршрутный лист: ${routeS.name}`}
+                  {`Маршрут: ${routeS.name}`}<br />
+                  {`Обедов к доставке: ${routeS.diners}`} 
                 </span>
                 <div
                   className="w-6 h-6 cursor-pointer"

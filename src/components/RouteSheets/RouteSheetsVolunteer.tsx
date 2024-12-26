@@ -56,6 +56,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
     requestPhotoReports()
   }, [sendPhotoReportSuccess])
 
+ 
   return ( 
     <div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black rounded-xl flex flex-col overflow-y-auto h-screen pb-[74px]" onClick={(e)=>e.stopPropagation()}>
       <div className="flex items-center px-4 pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
@@ -95,7 +96,8 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
             <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
               <div className="flex items-center justify-between w-[96%] mb-2">
                 <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-4 p-4">
-                  {`Маршрутный лист: ${routeS.name}`}
+                  {`Маршрут: ${routeS.name}`} <br/>
+                  {`Обедов к доставке: ${routeS.diners}`} 
                 </span>
                 <div
                   className="w-6 h-6 cursor-pointer"
