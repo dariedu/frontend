@@ -5,6 +5,7 @@ import Photo from './../../assets/icons/photo.svg?react';
 
 interface IUploadPicProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  // onOpenChangeComment?: ()=>void
   index:number
   setUploadedFileLink:React.Dispatch<React.SetStateAction<string[]>>
   beneficiarIsAbsent: boolean
@@ -17,6 +18,7 @@ interface IUploadPicProps {
 ////// в компоненте уже есть модалка, если нажать на пустую модальную область она закроется
 export const UploadPic: React.FC<IUploadPicProps> = ({
   onOpenChange,
+  // onOpenChangeComment,
   index,
   uploadedFileLink,
   beneficiarIsAbsent,
