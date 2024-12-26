@@ -107,9 +107,10 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
            if (result.status == "rejected") {
              console.log(`${num} routeSheet was not fetched`)
            }
-         })).finally(() => {setRouteSheets(routesArr)}
+         })).finally(() => { setRouteSheets(routesArr);  console.log(routesArr, "routesArr")}
          )
-    }
+   }
+  
   }
     ////запрашиваем все записанные на волонтеров маршрутные листы
     async function requestRouteSheetsAssignments() {
