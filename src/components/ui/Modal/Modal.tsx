@@ -4,19 +4,20 @@ import React from 'react';
 interface IModalProps{
   isOpen: boolean
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  onOpenChangeComment?: ()=>void
   children: React.ReactNode
   noColor?: boolean
   zIndex?: boolean
   //setCancelDeliverySuccess?:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Modal: React.FC<IModalProps> = ({ isOpen, onOpenChange, children, noColor=false, zIndex=false}) =>{
+export const Modal: React.FC<IModalProps> = ({ isOpen, onOpenChange, onOpenChangeComment, children, noColor=false, zIndex=false}) =>{
 
 
 
   return (
 isOpen &&
-      <div onClick={()=>onOpenChange(false)} >
+    <div onClick={() => { onOpenChange(false);  onOpenChangeComment ? onOpenChangeComment(): ()=>{}}} >
         <div>
           {zIndex ? (
           <>

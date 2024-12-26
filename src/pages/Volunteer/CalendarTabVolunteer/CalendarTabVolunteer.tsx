@@ -111,8 +111,13 @@ const CalendarTabVolunteer = () => {
             if (task.curator.photo && !task.curator.photo.includes('https')) {
              task.curator.photo = task.curator.photo.replace('http', 'https')
            }
-         })
-          setAllMyTasks(result)
+          })
+           let filtered = result.filter(task => {
+            let timeDiff = Math.abs(+new Date() - +new Date(task.end_date));
+            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            if(diffDays <= 5) return task
+          })
+          setAllMyTasks(filtered)
         }
       }
     } catch (err) {

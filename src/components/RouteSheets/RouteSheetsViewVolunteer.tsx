@@ -336,18 +336,34 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
               )
             }
+            onOpenChangeComment={() =>
+              setOpenComment(prev =>
+                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+              )
+            }
             isOpen={openComment[index]}
           >
             <Comment
+              onOpenChange={() =>
+                setOpenComment(prev =>
+                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                )
+              }
               name={route.address}
               onSave={handleAddComment}
               index={index}
+              id={route.beneficiar[0].id}
               savedComment={comment[index]}
             />
           </Modal>
           <Modal
             isOpen={uploadPictureModal[index]}
             onOpenChange={() =>
+              setUploadPictureModal(prev =>
+                prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+              )
+            }
+            onOpenChangeComment={() =>
               setUploadPictureModal(prev =>
                 prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
               )
