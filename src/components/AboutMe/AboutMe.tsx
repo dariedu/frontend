@@ -6,7 +6,7 @@ import { UserContext } from '../../core/UserContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { IUser } from '../../core/types';
 import { metier, patchUser } from '../../api/userApi';
-import InputOptions, { type T } from '../../pages/Registration/InputOptions';
+import InputOptions, { type T } from './InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
 // import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
@@ -23,7 +23,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
    ////// используем контекст
   const userValue = useContext(UserContext);
   const tokenContext = useContext(TokenContext);
-  const { isIphone } = useContext(UserContext);
+  // const { isIphone } = useContext(UserContext);
   const token = tokenContext.token;
   const userId = userValue.currentUser?.id
   const userMetier = userValue.currentUser?.metier
@@ -85,7 +85,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
   function handleInfoInput() {
     if (requestBody.about_me.length > 5) {
       setButtonActive(true)
-    } else setButtonActive(false)
+    } else setButtonActive(true)
   }
 
 
@@ -95,7 +95,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
  
   
   return (
-    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden ${isIphone ? " fixed top-0 h-full " : " fixed bottom-0 h-fit "}`}
+    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden fixed top-0 h-full`}
     onClick={(e)=>e.stopPropagation()}
     >
       <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px] min-h-[60px]">
@@ -104,30 +104,31 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
         </button>
         <h2 className='text-light-gray-black dark:text-light-gray-1'>Обо мне</h2>
       </div>
-      <div className={`z-[51] w-full max-w-[500px] pb-10 flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo ${isIphone? "h-full" : ""}`}
+      <div className={` w-full max-w-[500px] pb-10 flex flex-col rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo h-full`}
       onClick={(e)=>e.stopPropagation()}>
         <Form.Root
            className=" flex flex-col items-center justify-center"
-          onSubmit={e => {
+           onSubmit={e => {
             e.preventDefault();
             handleRequestSubmit()
           }}
          >
           <div  className='flex flex-col px-4'>
             <Form.Field name="about_location" className="mt-4">
-              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 mb-1">
+              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 mb-2">
               Выберите ваш род деятельности
               </Form.Label>
               <Form.Control asChild>
               </Form.Control>
             </Form.Field>
-            <div className='w-full relative'>
+            <div className='w-full relative h-full'>
              <InputOptions
               options={metier}
               clicked={clickedMetier}
               setClicked={setClickedMetier}
               choiceMade={metierName}
               setChoiceMade={setMetierName}
+              setButtonActive={setButtonActive}
                     /> 
             </div>
               <Form.Field name="about_presence" className="mt-4">           
@@ -138,11 +139,10 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
-                  required
                   defaultValue={localStorage.getItem('about_me') ?? aboutMe ?? ""}
                   onChange={e => {
                    handleFormFieldChange('about_me', e.target.value);
-                   handleInfoInput()
+                  handleInfoInput()
                   }}
                   placeholder={"Кто вы по профессии и/или образованию? Какие у вас увлечения и хобби? Почему решили стать волонтёром и помогаете ли где‑то ещё? Какие у вас любимые фильмы и музыкальные исполнители? Откуда вы родом?  Какая у вас любимая еда?"}
                 />
