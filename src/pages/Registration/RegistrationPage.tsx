@@ -190,14 +190,14 @@ function RegistrationPage() {
         setRequestSent(false);
         setRegistrationhasFailed(true);
         setIsSending(false);
-      } else if (e == "Error: {'email': [ErrorDetail(string='Введите правильный адрес электронной почты.', code='invalid')]}") { 
-        setRegistrationHasFailedString(<p>Ошибка!<br/>Неверный email.</p>)
+    } else if (e == "Error: {'email': [ErrorDetail(string='Введите правильный адрес электронной почты.', code='invalid')]}") {
+        setRegistrationHasFailedString(<p>Ошибка!<br />Неверный email.</p>)
         setRequestSent(false);
         setRegistrationhasFailed(true);
         setIsSending(false);
       } else {
-        console.log(e);
-      setRegistrationHasFailedString(<p>Упс, что-то пошло не так.<br/>Попробуйте позже.</p>)
+        //console.log(e);
+        setRegistrationHasFailedString(`${e}`)
       setRequestSent(false);
       setRegistrationhasFailed(true);
       setIsSending(false);
