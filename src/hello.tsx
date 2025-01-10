@@ -1,10 +1,16 @@
-// import React from "react";
+import {useState} from 'react';
 
+export default function CheckboxWithLabel({labelOn, labelOff}:{labelOn:"On", labelOff:"Off"}) {
+  const [isChecked, setIsChecked] = useState(false);
 
-export default function Hello({name}:{name:string}) {
-  if (name) {
-    return <h1>Hello, {name}!</h1>;
-  } else {
-    return <span>Hey, stranger</span>;
-  }
+  const onChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  return (
+    <label>
+      <input type="checkbox" checked={isChecked} onChange={onChange} />
+      {isChecked ? labelOn : labelOff}
+    </label>
+  );
 }
