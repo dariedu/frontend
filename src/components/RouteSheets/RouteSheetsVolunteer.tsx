@@ -117,7 +117,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
 
               <div className="flex items-center justify-between">
               </div>
-              {openRouteSheets[index] && myPhotoReports.length > 0 &&(
+              {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
                   photoReports={myPhotoReports}
                   routeSheetId={routeSheetsData[index].id}
