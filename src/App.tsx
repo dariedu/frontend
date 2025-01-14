@@ -15,10 +15,10 @@ declare global {
 const App: React.FC = () => {
   const { currentUser, isLoading } = useContext(UserContext);
 
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-  }, []);
+  // useEffect(() => {
+  //   const tg = window.Telegram.WebApp;
+  //   tg.ready();
+  // }, []);
 
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
 
