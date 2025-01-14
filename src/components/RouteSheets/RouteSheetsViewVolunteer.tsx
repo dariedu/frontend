@@ -69,15 +69,20 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
 
+
+
   function checkoForUploadedReports() {
     const arr: number[] = [];
     const obj: [number, string][] = [];
 
-    if (photoReports.length > 0 && routes.length > 0) {
-      routes.forEach(route => {
-        obj.push([route.beneficiar[0].address, '']);
-        arr.push(route.beneficiar[0].address);
-      });
+    if (routes.length > 0) {
+     routes.forEach(route => {
+      obj.push([route.beneficiar[0].address, '']);
+      arr.push(route.beneficiar[0].address);
+      console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
+        });
+      
+       if (photoReports.length > 0) {
       photoReports.forEach(report => {
         if (arr.indexOf(report.address) != -1) {
           obj[arr.indexOf(report.address)][1] = report.photo_view;
@@ -90,9 +95,10 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           );
         }
       });
+      }
+      setArr(arr); 
       setObj(obj);
-      setArr(arr);
-    }
+      }
   }
 
   useEffect(() => {
@@ -165,8 +171,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       }
     }
   }
-  // routes.forEach(route => console.log(route.beneficiar))
-
+ 
+routes.map((route) => (console.log(route.beneficiar[0].address, array )))
+console.log(photoReports, "photo report")
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
       {routes.map((route, index) => (

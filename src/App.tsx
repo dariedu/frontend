@@ -1,5 +1,5 @@
-import { useEffect, useContext} from 'react';
-import { useState } from 'react';
+import { useContext} from 'react';
+import { useState, useEffect } from 'react';
 import RegistrationPage from './pages/Registration/RegistrationPage.tsx';
 import VolunteerPage from './pages/Volunteer/VolunteerPage.tsx';
 import CuratorPage from './pages/Curator/CuratorPage.tsx';
@@ -15,10 +15,6 @@ declare global {
 const App: React.FC = () => {
   const { currentUser, isLoading } = useContext(UserContext);
 
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-  }, []);
 
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
 
@@ -61,7 +57,7 @@ getDeviceType()
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
      }
-       }
+     }
 };
 
 export default App;
