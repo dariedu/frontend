@@ -15,10 +15,10 @@ declare global {
 const App: React.FC = () => {
   const { currentUser, isLoading } = useContext(UserContext);
 
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-  }, []);
+  // useEffect(() => {
+  //   const tg = window.Telegram.WebApp;
+  //   tg.ready();
+  // }, []);
 
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">('mobile')
 
@@ -47,19 +47,19 @@ getDeviceType()
   } else {
     if (isLoading) {
       return <div className='h-screen items-center flex flex-col justify-center '>
-        <div className='loader'></div>
+        <div className='loader' data-testid="loader"></div>
       </div>;
     }
   
     if (!currentUser) {
       // Пользователь не зарегистрирован
-      return <RegistrationPage />;
+      // return <RegistrationPage />;
     } else if (currentUser.is_staff) {
       // Пользователь зарегистрирован и является сотрудником
-      return <CuratorPage />;
+      // return <CuratorPage />;
     } else {
       // Пользователь зарегистрирован, но не является сотрудником
-      return <VolunteerPage />;
+      // return <VolunteerPage />;
      }
        }
 };
