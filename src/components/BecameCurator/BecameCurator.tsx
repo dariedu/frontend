@@ -86,7 +86,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 
   return (
     <>
-      <div className={`z-[51] fixed bottom-0 h-fit w-full pb-10 max-w-[500px] flex flex-col rounded-2xl bg-light-gray-white dark:bg-light-gray-7-logo px-4 ${isIphone ? "top-0 h-full overflow-y-auto": "bottom-0 h-fit"} ` }
+      <div className={`z-[51] fixed h-fit bottom-0 max-h-dvh overflow-y-scroll w-full pb-10 max-w-[500px] flex flex-col rounded-2xl bg-light-gray-white dark:bg-light-gray-7-logo px-4 ${isIphone ? "top-0 h-full overflow-y-auto": "bottom-0 h-fit"} ` }
     onClick={(e)=>e.stopPropagation()}
       >
         <div className="flex items-center self-start mt-[25px] w-full justify-between"      >
@@ -96,7 +96,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
             Расскажите, в свободной форме
           </p>
           </div>
-          {isIphone && <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />}
+          { <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8' onClick={()=>onOpenChange(false)} />}
         </div>
 
         <Form.Root

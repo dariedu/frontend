@@ -274,7 +274,13 @@ console.log(photoReports, "photo report")
             </button>
           </div>
           <div className="flex items-center justify-between w-full mb-2 mt-4">
-            <p className="font-gerbera-h3 text-light-gray-5">Дополнительно</p>
+            <p className="font-gerbera-h3 text-light-gray-5"
+            onClick={() =>
+              setFullView(prev =>
+                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+              )
+            }
+            >Дополнительно</p>
             <div
               className="w-6 h-6 cursor-pointer"
               onClick={() =>

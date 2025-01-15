@@ -21,7 +21,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   const mouseStartX = useRef<number | null>(null);
   const mouseEndX = useRef<number | null>(null);
 
-  const minSwipeDistance = 50; // Минимальное расстояние свайпа в пикселях
+  const minSwipeDistance = 100; // Минимальное расстояние свайпа в пикселях
 
   //  Функции для перехода между сторис
   const handleNext = () => {
