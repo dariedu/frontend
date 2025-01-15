@@ -60,8 +60,8 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
     {
       "id": 2,
       "name": "Написание текста",
-      "icon": <Text className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />,
-      "icon_full_view": <Text className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />
+      "icon": <Text className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon_full_view": <Text className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#0A0A0A] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     },
     {
       "id": 3,
@@ -78,20 +78,20 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
     {
       "id": 5,
       "name": "Подписание документов с новыми подопечными",
-      "icon": <Doc className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
-      "icon_full_view": <Doc className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
+      "icon": <Doc className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5 " />,
+      "icon_full_view": <Doc className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     },
 
     {
       "id": 6,
       "name": "Автодоставка",
-       "icon": <Auto className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+       "icon": <Auto className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />,
       "icon_full_view": <Auto className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     },
     {
       "id": 7,
       "name": "Сопровождение подопечного",
-      "icon": <Old className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />,
+      "icon": <Old className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-6" />,
       "icon_full_view": <Old className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] fill-[#000000] bg-light-gray-1 rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5" />
     }
   ]
@@ -106,7 +106,7 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
                {tasksCateg.find(i => i.id == task.category.id) ? (
                tasksCateg.find(i => i.id == task.category.id)?.icon
                ): (
-                 <Kind className="w-[32px] h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
+                 <Kind className="w-[32px] h-[32px] min-w-[32px] min-h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
           <div className='flex flex-col items-start ml-2'>
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>

@@ -240,7 +240,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
           <div className="inline-flex items-center justify-start ">
             {iconsLinks[index]}
             {isEditing[field] ? (
-             <div className='w-[240px]'>
+             <div className='w-[226px] ml-[14px]'>
              <InputOptions
                options={cityOptions}
                clicked={clickedCity}
@@ -276,7 +276,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
                 {iconsLinks[index]}
                 {isEditing[field] ? (
                   <input
-                    className="px-4 rounded-2xl outline-none py-[18px] w-[240px] h-[54px] bg-light-gray-1 text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
+                    className="ml-[14px] px-4 rounded-2xl outline-none py-[18px] w-[226px] h-[54px] bg-light-gray-1 text-light-gray-8-text dark:text-light-gray-white dark:bg-light-gray-6 font-gerbera-h3 text-left"
                     value={userEmail}
                     onChange={e => handleInputChange(e)}
                     type='email'

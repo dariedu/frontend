@@ -39,7 +39,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         <div className="flex items-center space-x-2">
           {variant === 'volunteerForm' ? (
             <>
-              <ChevronLeftIcon className="w-6 h-6 text-black dark:text-light-gray-white " />
+              <ChevronLeftIcon className="w-6 h-6 min-w-6 min-h-6 text-black dark:text-light-gray-white " />
               <h1 className="text-lg font-gerbera-h2 text-light-gray-8-text dark:text-light-gray-1">
                 {title}
               </h1>
@@ -53,11 +53,11 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
 
         {variant === 'mainScreen' && currentUser && (
           <div className="flex items-center space-x-4">
-            <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 bg-light-gray-1  dark:bg-light-gray-5 rounded-full" onClick={handleAvatarClick}>
+            <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 min-w-10 min-h-10 bg-light-gray-1 dark:bg-light-gray-5 rounded-full" onClick={handleAvatarClick}>
               <Avatar.Image
                 src={currentUser.photo || ''}
                 alt="Avatar"
-                className="w-10 h-10 object-cover rounded-full cursor-pointer"
+                className="w-10 h-10 min-w-10 min-h-10 object-cover rounded-full cursor-pointer"
                 onClick={handleAvatarClick}
               />
               <Avatar.Fallback

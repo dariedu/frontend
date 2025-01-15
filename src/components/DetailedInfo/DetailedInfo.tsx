@@ -173,7 +173,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         {promotion.picture &&
         <Avatar.Image
           src={promotion.picture}
-          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2x self-center object-cover"
+          className="w-full min-w-[328px] aspect-[2/1] rounded-2xl self-center object-cover"
         />}
         <Avatar.Fallback
           className="w-0 h-0 "

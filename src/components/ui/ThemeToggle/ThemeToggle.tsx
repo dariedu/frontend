@@ -46,17 +46,17 @@ const ThemeToggle = () => {
         >
           {theme === 'light' ? 'Светлая тема' : 'Тёмная тема'}
         </label>
-        <button onClick={() => { localStorage.removeItem('dariEduColorTheme'); setSystemTheme()}} className='h-6 px-1 rounded-full bg-light-brand-green w-fit font-gerbera-sub1 absolute ml-[55%] text-light-gray-white'>
+        <button onClick={() => { localStorage.removeItem('dariEduColorTheme'); setSystemTheme()}} className='h-6 px-3 rounded-full bg-light-brand-green w-fit font-gerbera-sub1 absolute ml-[50%] text-light-gray-white'>
           Системная
         </button>
       </div>
       <Switch.Root
         id="theme-switch"
-        className="w-10 h-6 bg-light-brand-green rounded-full relative shadow-inner"
+        className="w-10 h-6 min-w-10 min-h-6 bg-light-brand-green rounded-full relative shadow-inner"
         checked={theme === 'dark'}
         onCheckedChange={toggleTheme}
       >
-        <Switch.Thumb className="block w-4 h-4 bg-white dark:bg-light-gray-7-logo rounded-full shadow transition-transform transform translate-x-1 dark:translate-x-5" />
+        <Switch.Thumb className="block w-4 h-4 min-w-4 min-h-4 bg-white dark:bg-light-gray-7-logo rounded-full shadow transition-transform transform translate-x-1 dark:translate-x-5" />
       </Switch.Root>
     </div>
   );

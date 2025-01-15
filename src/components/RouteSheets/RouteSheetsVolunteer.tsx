@@ -94,14 +94,15 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
         {routeSheetsData.map((routeS, index) => {
           return (
-            <div key={routeS.id} className="mt-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
-              <div className="flex items-center justify-between w-[96%] mb-2">
+            <>
+              <div key={routeS.id} className="mt-1 rounded-2xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[60px] flex flex-col justify-around">
+              <div className="flex items-center justify-between w-[96%] mb-2 ">
                 <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-4 p-4">
                   {`Маршрут: ${routeS.name}`} <br/>
                   {`Обедов к доставке: ${routeS.diners}`} 
                 </span>
                 <div
-                  className="w-6 h-6 cursor-pointer"
+                  className="w-6 h-6 cursor-pointer "
                   onClick={() =>
                     setOpenRouteSheets(prev =>
                       prev.map((isOpen, idx) =>
@@ -116,7 +117,8 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-              </div>
+                </div>
+                 </div>
               {openRouteSheets[index] && (
                 <RouteSheetsViewVolunteer
                   photoReports={myPhotoReports}
@@ -127,7 +129,9 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                   setSendPhotoReportSuccess={setSendPhotoReportSuccess}
                 />
               )}
-            </div>
+           
+            </>
+            
           );
         })}
       </div>

@@ -37,8 +37,8 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
     <div
       className={
         clicked
-          ? 'bg-light-gray-1 dark:bg-light-gray-6 rounded-t-2xl z-100 w-[240px]'
-          : 'bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl w-[240px]'
+          ? 'bg-light-gray-1 dark:bg-light-gray-6 rounded-t-2xl z-100 w-[226px]'
+          : 'bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl w-[226px]'
       }
       onClick={e => {
         e.stopPropagation();
@@ -55,7 +55,7 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
       <div
         className={
           clicked
-            ? 'bg-light-gray-1 dark:bg-light-gray-6 flex w-[240px] flex-col h-[108px] rounded-b-2xl overflow-y-scroll text-left z-200 absolute'
+            ? 'bg-light-gray-1 dark:bg-light-gray-6 flex w-[226px] flex-col h-[108px] rounded-b-2xl overflow-y-scroll text-left z-200 absolute'
             : ' hidden'
         }
       >
