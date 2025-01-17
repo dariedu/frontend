@@ -172,8 +172,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     }
   }
  
-routes.map((route) => (console.log(route.beneficiar[0].address, array )))
-console.log(photoReports, "photo report")
+// routes.map((route) => (console.log(route.beneficiar[0].address, array )))
+// console.log(photoReports, "photo report")
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
       {routes.map((route, index) => (

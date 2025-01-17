@@ -19,6 +19,7 @@ const FilterPromotions: React.FC<IFilterPromotions> = ({
   filtered,
   handleCategoryChoice,
 }) => {
+  // console.log(categories)
   return (
     <div
       className="w-full max-w-[500px] h-fit bg-light-gray-white rounded-t-2xl px-4 pt-6 pb-8 dark:bg-light-gray-7-logo"
