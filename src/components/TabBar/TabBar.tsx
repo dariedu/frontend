@@ -62,7 +62,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <Tabs.Trigger
             value="tab1"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-[50%] ',
               {
                 'text-light-brand-green': activeTab === 'tab1',
                 'text-light-gray-4': activeTab !== 'tab1',
@@ -86,7 +86,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <Tabs.Trigger
             value="tab2"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-[50%] ',
               {
                 'text-light-brand-green': activeTab === 'tab2',
                 'text-light-gray-4': activeTab !== 'tab2',
@@ -111,7 +111,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
             <Tabs.Trigger
               value="tab3"
               className={classNames(
-                'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
+                'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-[50%] ',
                 {
                   'text-light-brand-green': activeTab === 'tab3',
                   'text-light-gray-4': activeTab !== 'tab3',
@@ -136,7 +136,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
           <Tabs.Trigger
             value="tab4"
             className={classNames(
-              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px]',
+              'flex flex-col items-center p-2 rounded-t-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-[50%] ',
               {
                 'text-light-brand-green': activeTab === 'tab4',
                 'text-light-gray-4': activeTab !== 'tab4',
