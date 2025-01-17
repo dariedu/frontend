@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
 import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 interface IUploadPicProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -53,7 +54,8 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
         <div
         className="flex flex-col items-center justify-between p-6 h-[343px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl w-full max-w-[500px]"
         onClick={e => e.stopPropagation()}
-      >
+    >
+      <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onOpenChange(false)} />
         <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-4 relative">
         {uploadedFileLink[index].length > 0 ? (
         <img
