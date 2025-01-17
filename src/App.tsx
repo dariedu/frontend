@@ -23,24 +23,24 @@ const App: React.FC = () => {
   app.disableVerticalSwipes();
   app.isClosingConfirmationEnabled = true;
 
-//    function getDeviceType() {
-//       const userAgent = navigator.userAgent.toLowerCase();
-//       const isMobile = /mobile|iphone|ipad|ipod|webos|android|iemobile|opera mini|windows phone|blackberry|bb|playbook|mini|windows\sce|palm/i.test(userAgent);
+  //  function getDeviceType() {
+  //     const userAgent = navigator.userAgent.toLowerCase();
+  //     const isMobile = /mobile|iphone|ipad|ipod|webos|android|iemobile|opera mini|windows phone|blackberry|bb|playbook|mini|windows\sce|palm/i.test(userAgent);
 
-//      if (isMobile) {
-//         setDeviceType("mobile");
-//       } else {
-//         setDeviceType("desktop");
-//       }
-//   }
-  
+  //    if (isMobile) {
+  //       setDeviceType("mobile");
+  //     } else {
+  //       setDeviceType("desktop");
+  //     }
+  // }
+  // window.Telegram?.WebApp?.initDataUnsafe
 // useEffect(() => {
 // getDeviceType()
 // }, [])
-  
-//   if (deviceType == "desktop") {
-//     return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение на мобильном устройстве</div>
-//   } else {
+  // console.log(window.Telegram.WebApp.platform, "window.Telegram.WebApp.platform")
+  if (window.Telegram.WebApp.platform === 'unknown' || window.Telegram.WebApp.platform === undefined || window.Telegram.WebApp.platform === null) {
+    return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение через Telegram</div>
+  } else {
     if (isLoading) {
       return <div className='h-screen items-center flex flex-col justify-center '>
         <div className='loader'></div>
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
      }
-    //  }
+    }
 };
 
 export default App;
