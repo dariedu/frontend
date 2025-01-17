@@ -29,10 +29,10 @@
 
 @layer components {
   #root {
-    @apply p-0 bg-light-gray-1 dark:bg-light-gray-black;
+    @apply p-0 bg-light-gray-1 dark:bg-light-gray-black ;
   }
   body {
-    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen dark:bg-light-gray-black;
+    @apply m-0 p-0 bg-light-gray-1 w-screen h-screen dark:bg-light-gray-black overflow-x-hidden ;
   }
   
   html{

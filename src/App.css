@@ -2,8 +2,9 @@
   width: full;
   max-width: 500px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+  overflow-x: hidden;
 }
 
 .logo {

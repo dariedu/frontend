@@ -42,7 +42,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
    if (window.Telegram?.WebApp?.initDataUnsafe) {
     const initData = window.Telegram.WebApp.initDataUnsafe;
     tgIdFromTgParams = initData.user?.id;
-    console.log("init data unsafe tgId", initData.user?.id)
+    // console.log("init data unsafe tgId", initData.user?.id)
   }
   }, [])
   
