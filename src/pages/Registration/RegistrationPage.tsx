@@ -195,6 +195,16 @@ function RegistrationPage() {
         setRequestSent(false);
         setRegistrationhasFailed(true);
         setIsSending(false);
+      } else if(e == "Error: {'photo': [ErrorDetail(string='Отправленный файл пуст.', code='empty')]}"){
+        setRegistrationHasFailedString(<p>Ошибка!<br />Формат фотографии не поддерживается, попробуйте выбрать другое фото или сделать селфи. Подходящий формат фото: jpg, jpeg.</p>)
+        setRequestSent(false);
+        setRegistrationhasFailed(true);
+        setIsSending(false);
+      } else if(e == "Error: {'photo': [ErrorDetail(string='Загрузите правильное изображение. Файл, который вы загрузили, поврежден или не является изображением.', code='invalid_image')]}"){
+        setRegistrationHasFailedString(<p>Ошибка!<br />Формат фотографии не поддерживается, попробуйте выбрать другое фото или сделать селфи. Подходящий формат фото: jpg, jpeg.</p>)
+        setRequestSent(false);
+        setRegistrationhasFailed(true);
+        setIsSending(false);
       } else {
         //console.log(e);
         setRegistrationHasFailedString(`${e}`)
