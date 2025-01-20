@@ -40,7 +40,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
      <div className="p-4 bg-light-gray-1 rounded-2xl w-[240px] h-[116px] mb-4 flex flex-col justify-between dark:bg-light-gray-6" onClick={()=>setIsOpen(true)}>
       <div className="flex items-center">
              <div className="flex items-start justify-center">
-             <Metro_station  className='w-[32px] h-[32px] bg-[#FFFFFF] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
+             <Metro_station  className='w-[32px] h-[32px] min-w-[32px] min-h-[32px] bg-[#FFFFFF] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
           <div className='flex flex-col items-start ml-2'>
               <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
                 {getMetroCorrectName(delivery.location.subway)}

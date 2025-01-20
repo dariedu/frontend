@@ -278,7 +278,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px] ">
+      <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px]">
         <div>
           <SliderStories />
           {myCurrent.length > 0

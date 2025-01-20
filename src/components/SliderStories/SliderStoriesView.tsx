@@ -21,7 +21,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   const mouseStartX = useRef<number | null>(null);
   const mouseEndX = useRef<number | null>(null);
 
-  const minSwipeDistance = 50; // Минимальное расстояние свайпа в пикселях
+  const minSwipeDistance = 100; // Минимальное расстояние свайпа в пикселях
 
   //  Функции для перехода между сторис
   const handleNext = () => {
@@ -149,10 +149,12 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             {stories[currentIndex].subtitle && <p className="font-gerbera-st text-left mb-3 w-fit">
               {stories[currentIndex].subtitle}
             </p>}
-            <div className="font-gerbera-h2 text-left h-fit max-h-[400px] overflow-y-auto">
+            <div className="font-gerbera-h2 text-left h-fit max-h-[400px] overflow-y-auto" >
               {stories[currentIndex].text.split('<br/>')
                   .map((text, index) => {
-                    return <p key={index}>{ 
+                    return <p key={index}
+                      onTouchEnd={e=>e.stopPropagation()}
+                    >{ 
                       text
                     }<br/><br/></p>
                   })}

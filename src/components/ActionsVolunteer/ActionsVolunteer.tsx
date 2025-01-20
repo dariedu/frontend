@@ -104,7 +104,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
     { label: 'Знаю того, кому нужна помощь', icon: <BeneficiaryIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Сделать пожертвование', icon: <DonateIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' /> },
     { label: 'Вопросы и предложения', icon: <QuestionsIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black' />, onClick: openSuggestion },
-    { label: 'Техническая поддержка', icon: <SupportIcon className='w-[42px] h-[42px] dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSupport },
+    { label: 'Техническая поддержка', icon: <SupportIcon className='w-[42px] h-[42px] last:stroke-light-gray-white dark:last:stroke-light-gray-6 dark:fill-light-gray-1 rounded-full dark:bg-light-gray-6 bg-light-gray-1 fill-light-gray-black'/>, onClick:openSupport },
   ];
 
   // Фильтруем действия для отображения

@@ -34,6 +34,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   takeDeliverySuccess,
   setTakeDeliverySuccess,
 }) => {
+  
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
 
   let curatorTelegramNik = delivery.curator.tg_username;

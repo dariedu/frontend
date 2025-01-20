@@ -28,14 +28,13 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   makeReservationFunc,
   cancelPromotion
 }) => {
-
-  const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180);
+  const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
   const currentDate = new Date()
   const promotionDate = new Date(promotion.start_date)
   const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [confirmMakeReservationModal, setConfirmMakeReservationModal] = useState(false);
- const [contactPerson, setContactPerson] = useState<IUser>()
+  const [contactPerson, setContactPerson] = useState<IUser>()
 
   const { token } = useContext(TokenContext);
 
@@ -83,10 +82,11 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             </p>
           </div>
         </div>
+        {promotion.category!=undefined && promotion.category.name.length > 0 &&
         <div className='flex justify-center items-center'>
            <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
         </div>
-       
+      }
       </div>
       {optional ? "" : (
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px] dark:bg-light-gray-6">
@@ -173,7 +173,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         {promotion.picture &&
         <Avatar.Image
           src={promotion.picture}
-          className="w-full min-w-[328px] max-w-[360px] h-[205px] rounded-2x self-center object-cover"
+          className="w-full min-w-[328px] aspect-[2/1] rounded-2xl self-center object-cover"
         />}
         <Avatar.Fallback
           className="w-0 h-0 "

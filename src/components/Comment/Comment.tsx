@@ -49,8 +49,8 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
 }
 
   return (
-    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start ${isIphone ? " fixed top-0 h-full " : " fixed bottom-0 h-fit "}`} onClick={((e)=>e.stopPropagation())}>
-      <div className="flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-fit p-4">
+    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start ${isIphone ? " fixed top-0 h-full  " : " fixed bottom-0 h-fit "}`} onClick={((e)=>e.stopPropagation())}>
+      <div className={`flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px]  h-fit p-4 ${isIphone ? " rounded-b-2xl " : " rounded-2xl"}`}>
         <button onClick={onOpenChange} >
           <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer' />
         </button>

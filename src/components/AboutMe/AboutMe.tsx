@@ -115,7 +115,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
          >
           <div  className='flex flex-col px-4'>
             <Form.Field name="about_location" className="mt-4">
-              <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 mb-2">
+              <Form.Label className="font-gerbera-sub2 text-light-gray-4 dark:text-light-gray-3 line-clamp-3 mb-2">
               Выберите ваш род деятельности
               </Form.Label>
               <Form.Control asChild>
@@ -132,13 +132,13 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
                     /> 
             </div>
               <Form.Field name="about_presence" className="mt-4">           
-                <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
+                <Form.Label className="font-gerbera-sub2 text-light-gray-4 dark:text-light-gray-3 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
                   onFocus={(e)=>handleFocus(e)}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
-                 placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
+                 placeholder:text-light-gray-3 dark:placeholder:text-light-gray-4 mb-2 dark:bg-light-gray-6 dark:text-light-gray-white "
                   defaultValue={localStorage.getItem('about_me') ?? aboutMe ?? ""}
                   onChange={e => {
                    handleFormFieldChange('about_me', e.target.value);

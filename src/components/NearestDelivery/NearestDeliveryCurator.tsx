@@ -284,7 +284,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         )}
         {/* /////////////////////// */}
       </div>
-      { routeSheets && routeSheets.length > 0 && assignedRouteSheetsSuccess ? (
+      { routeSheets && assignedRouteSheetsSuccess ? (
        <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
         status={deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная'}

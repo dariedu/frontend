@@ -70,8 +70,11 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
       {/* Render each CardPromotion */}
       {filterCategory && filterCategory.length > 0 ? (
         promotions.filter((promo) => {
-         if( filterCategory.find(i => i.id==promo.category.id)) return promo
-        }).map((promo, index) => (
+          if (promo.category) {
+           if (filterCategory.find(i => i.id === promo.category.id)
+          ) return promo
+        }}
+          ).map((promo, index) => (
         <div key={index} className="flex-shrink-0">
           <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion}
           />
