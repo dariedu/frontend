@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import User from '../User';
+import User from './User';
 import { describe } from 'node:test';
 import userEvent from '@testing-library/user-event';
 

@@ -95,7 +95,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
  
   
   return (
-    <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden fixed top-0 h-full`}
+    <div data-testid="maindiv" className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] flex flex-col items-center justify-start overflow-x-hidden fixed top-0 h-full`}
     onClick={(e)=>e.stopPropagation()}
     >
       <div className="flex items-center mb-1 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] rounded-b-2xl h-[60px] min-h-[60px]">
@@ -135,6 +135,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 dark:text-light-gray-3 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  data-testid='textbox'
                   onFocus={(e)=>handleFocus(e)}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2

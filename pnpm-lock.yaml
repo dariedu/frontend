@@ -62,6 +62,9 @@ importers:
       axios:
         specifier: ^1.7.5
         version: 1.7.9(debug@4.4.0)
+      babel-preset-vite:
+        specifier: ^1.1.3
+        version: 1.1.3
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -74,6 +77,9 @@ importers:
       eruda:
         specifier: ^3.3.0
         version: 3.4.1
+      jest-transformer-svg:
+        specifier: ^2.0.2
+        version: 2.1.0(jest@29.7.0(@types/node@22.10.2)(ts-node@10.9.2(@types/node@22.10.2)(typescript@5.7.2)))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2237,6 +2243,15 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
+  babel-plugin-transform-vite-meta-env@1.0.3:
+    resolution: {integrity: sha512-eyfuDEXrMu667TQpmctHeTlJrZA6jXYHyEJFjcM0yEa60LS/LXlOg2PBbMb8DVS+V9CnTj/j9itdlDVMcY2zEg==}
+
+  babel-plugin-transform-vite-meta-glob@1.1.2:
+    resolution: {integrity: sha512-o984FUo++WYnfgUaC8ymzmNPng5Kda5A6j6PFC0uOqhFXlAsD6mNhEBhaNzbUGfq/aPcyeGo67fYXlg20rh9aA==}
+
+  babel-plugin-transform-vite-meta-hot@1.0.0:
+    resolution: {integrity: sha512-qF7T46bDG5UPPOfy4MFgQJyd3mZvm1sGOR2gZ4lIHy6DEcxAVTIt39/adAn89il44CvwestshuEybKPMR+L/Tg==}
+
   babel-preset-current-node-syntax@1.1.0:
     resolution: {integrity: sha512-ldYss8SbBlWva1bs28q78Ju5Zq1F+8BrqBZZ0VFhLBvhh6lCpC2o3gDJi/5DRLs9FgYZCnmPYIVFU4lRXCkyUw==}
     peerDependencies:
@@ -2247,6 +2262,9 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
       '@babel/core': ^7.0.0
+
+  babel-preset-vite@1.1.3:
+    resolution: {integrity: sha512-xSt/EiezzeMd4RI2hjMCNyn/FGzGeroKODPMAUTsgpeHC4dFf2qiCQfyNuiNzn1OwoF4n+NYSsORhUN5G/2KTA==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3232,6 +3250,12 @@ packages:
     resolution: {integrity: sha512-Rm0BMWtxBcioHr1/OX5YCP8Uov4riHvKPknOGs804Zg9JGZgmIBkbtlxJC/7Z4msKYVbIJtfU+tKb8xlYNfdkw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
+  jest-transformer-svg@2.1.0:
+    resolution: {integrity: sha512-UqROTC1szruaDJENDeU95NPQztTTjE02R5Gzxydh+ylahwli7DlkYPGifnH+fc8bNVy905m2HqhPNgwx+Q5TBg==}
+    peerDependencies:
+      jest: '>= 28.1.0'
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+
   jest-util@29.7.0:
     resolution: {integrity: sha512-z6EbKajIpqGKU56y5KBUgy1dt1ihhQJgWzUlZHArA/+X2ad7Cb5iF+AK1EWVL/Bo7Rz9uurpqw6SiBCefUbCGA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3685,11 +3709,6 @@ packages:
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
-
-  react-image-crop@11.0.7:
-    resolution: {integrity: sha512-ZciKWHDYzmm366JDL18CbrVyjnjH0ojufGDmScfS4ZUqLHg4nm6ATY+K62C75W4ZRNt4Ii+tX0bSjNk9LQ2xzQ==}
-    peerDependencies:
-      react: '>=16.13.1'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -6854,6 +6873,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  babel-plugin-transform-vite-meta-env@1.0.3:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@types/babel__core': 7.20.5
+
+  babel-plugin-transform-vite-meta-glob@1.1.2:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@types/babel__core': 7.20.5
+      glob: 10.4.5
+
+  babel-plugin-transform-vite-meta-hot@1.0.0:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@types/babel__core': 7.20.5
+
   babel-preset-current-node-syntax@1.1.0(@babel/core@7.26.0):
     dependencies:
       '@babel/core': 7.26.0
@@ -6878,6 +6913,14 @@ snapshots:
       '@babel/core': 7.26.0
       babel-plugin-jest-hoist: 29.6.3
       babel-preset-current-node-syntax: 1.1.0(@babel/core@7.26.0)
+
+  babel-preset-vite@1.1.3:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@types/babel__core': 7.20.5
+      babel-plugin-transform-vite-meta-env: 1.0.3
+      babel-plugin-transform-vite-meta-glob: 1.1.2
+      babel-plugin-transform-vite-meta-hot: 1.0.0
 
   balanced-match@1.0.2: {}
 
@@ -8129,6 +8172,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  jest-transformer-svg@2.1.0(jest@29.7.0(@types/node@22.10.2)(ts-node@10.9.2(@types/node@22.10.2)(typescript@5.7.2)))(react@18.3.1):
+    dependencies:
+      jest: 29.7.0(@types/node@22.10.2)(ts-node@10.9.2(@types/node@22.10.2)(typescript@5.7.2))
+      react: 18.3.1
+
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
@@ -8579,10 +8627,6 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
       - csstype
-
-  react-image-crop@11.0.7(react@18.3.1):
-    dependencies:
-      react: 18.3.1
 
   react-is@16.13.1: {}
 

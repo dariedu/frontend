@@ -34,6 +34,7 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
 
   return  (
     <div
+      data-testid="choice"
       className={
         clicked
           ? 'bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl '
@@ -57,10 +58,11 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
         }
       </p>
       <div
+        data-testid='hiddenDiv'
         className={
           clicked
             ? 'bg-light-gray-1 w-full dark:bg-light-gray-6 flex flex-col h-[230px] rounded-b-2xl overflow-y-scroll text-left mt-1 '
-            : 'hidden'
+            : 'hidden bg-none'
         }
       >
         {options

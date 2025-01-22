@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "./jest.setup.ts"]
+  "include": ["src", "./jest.setup.ts", "exampleJest/Axios.jsx", "exampleJest/hello.tsx", "exampleJest/Counter.tsx", "exampleJest/Search.tsx", "exampleJest/User.tsx"]
 }

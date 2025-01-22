@@ -53,13 +53,13 @@ const App: React.FC = () => {
   
     if (!currentUser) {
       // Пользователь не зарегистрирован
-      // return <RegistrationPage />;
+      return <RegistrationPage />;
     } else if (currentUser.is_staff) {
       // Пользователь зарегистрирован и является сотрудником
-      // return <CuratorPage />;
+     return <CuratorPage />;
     } else {
       // Пользователь зарегистрирован, но не является сотрудником
-      // return <VolunteerPage />;
+     return <VolunteerPage />;
      }
     }
 };
