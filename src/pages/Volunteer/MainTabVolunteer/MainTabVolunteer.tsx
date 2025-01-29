@@ -64,6 +64,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
    ////// используем контекст
 
   useEffect(() => {
+     console.log(deliveries)
     console.log(window.Telegram?.WebApp?.platform, "window.Telegram?.WebApp?.platform MainTabVolunteer")
 },[])
   
