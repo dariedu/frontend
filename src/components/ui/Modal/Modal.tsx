@@ -18,7 +18,7 @@ export const Modal: React.FC<IModalProps> = ({ isOpen, onOpenChange, onOpenChang
   return (
 isOpen &&
     <div onClick={() => { onOpenChange(false);  onOpenChangeComment ? onOpenChangeComment(): ()=>{}}} >
-        <div>
+        <div onClick={() => { onOpenChange(false);  onOpenChangeComment ? onOpenChangeComment(): ()=>{}}}>
           {zIndex ? (
           <>
     <div className={ noColor ? " text-left z-[51] fixed inset-0" : "z-[51] fixed inset-0 bg-black opacity-30"  } />
