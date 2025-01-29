@@ -130,10 +130,11 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
 
 
   return (
-    <div className={"space-y-4 w-full max-w-[500px] px-4 py-10 rounded-[16px] flex flex-col items-center mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
+    <div className={"items-center space-y-4 w-full max-w-[500px] px-4 py-10 rounded-[16px] flex flex-col mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
 }>
-        {/* Список волонтёров */}
-      {listOfVolunteers.map((volunteer, index) => (
+      {/* Список волонтёров */}
+      <div className='overflow-y-scroll max-h-[450px] items-start justify-start space-y-4 w-full'>
+        {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
           className={showActions? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full": "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" } 
@@ -174,6 +175,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                ) : ""} 
         </div>
        ))}  
+      </div>
+      
       {/* Действия кнопок */}
       {preview && (
          <button
