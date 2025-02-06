@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../core/UserContext';
 import ProfilePic from '../ProfilePic/ProfilePic';
-import { VolunteerData } from '../ui/VolunteerData/VolunteerData';
+import { VolunteerData } from '../VolunteerData/VolunteerData';
 import ActionsVolunteer from '../ActionsVolunteer/ActionsVolunteer';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { Modal} from '../ui/Modal/Modal';

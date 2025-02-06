@@ -152,7 +152,7 @@ const TabBar: React.FC<ITabBarProps> = ({ userRole }) => {
                 'text-light-gray-4': activeTab !== 'tab4',
               })}
             >
-              Моя копилка
+              Копилка
             </span>
           </Tabs.Trigger>
         </Tabs.List>

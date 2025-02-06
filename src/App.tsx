@@ -20,6 +20,7 @@ const App: React.FC = () => {
 
   const app = window.Telegram.WebApp;
   app.ready();
+  app.expand();
   app.disableVerticalSwipes();
   app.isClosingConfirmationEnabled = true;
 

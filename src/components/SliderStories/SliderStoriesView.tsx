@@ -132,7 +132,7 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             onClick={onClose}
             className="w-8 h-8 flex justify-center items-center rounded-full"
           >
-            <CloseIcon className='fill-light-gray-4 w-8 h-8'/>
+            <CloseIcon className='fill-light-gray-white w-8 h-8'/>
           </button>
         </div>
         <div className="flex flex-col items-center mt-[40px] bg-light-gray-2 rounded-2xl relative">
