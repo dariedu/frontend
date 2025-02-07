@@ -77,7 +77,7 @@ export async function postPhotoReport(
     
   } catch (err:any) {
     console.error('Post request postPhotoReport has failed', err);
-    throw new Error('Post request postPhotoReport has failed');
+    throw new Error(err);
   }
 }
 

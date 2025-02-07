@@ -176,7 +176,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                   onOpenChange(false);
                 }}
               >
-                Нет мест
+                Волонтёры найдены
               </button>
             ) : (
               <button

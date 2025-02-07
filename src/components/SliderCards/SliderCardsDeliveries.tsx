@@ -23,7 +23,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
   return (
     <div className="pt-3 w-full max-w-[500px]">
       <div
-        className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-full max-w-[500px] pl-4 space-x-2"
+        className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-full max-w-[500px] pl-4 space-x-2 pr-4"
       >
     
         {deliveries.sort((a,b)=>{return +new Date(a.date)- +new Date(b.date)}).map((delivery: IDelivery) => {
@@ -32,7 +32,7 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
             <CardDelivery delivery={delivery} canBook={true} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
           </div>
           } else {
-            return <div key={delivery.id} className="">
+            return <div key={delivery.id} className="" >
             <CardDelivery delivery={delivery} canBook={false} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
           </div>
           }

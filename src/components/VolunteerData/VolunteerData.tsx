@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
 // import * as Form from '@radix-ui/react-form';
-import GeoIcon from '../../../assets/icons/geo.svg?react';
-import EmailIcon from '../../../assets/icons/email.svg?react';
-import BirthdayIcon from '../../../assets/icons/birthday.svg?react';
-import PhoneIcon from '../../../assets/icons/phone.svg?react';
-import TelegramIcon from '../../../assets/icons/telegram.svg?react';
-import Big_pencilIcon from '../../../assets/icons/big_pencil.svg?react';
-import { UserContext } from '../../../core/UserContext';
-import { patchUser} from '../../../api/userApi';
-import { TokenContext } from '../../../core/TokenContext';
-import ConfirmModal from '../ConfirmModal/ConfirmModal';
-import { fetchCities, type TCity } from '../../../api/cityApi';
-import InputOptions, {type T} from '../../../pages/Registration/InputOptions';
+import GeoIcon from '../../assets/icons/geo.svg?react';
+import EmailIcon from '../../assets/icons/email.svg?react';
+import BirthdayIcon from '../../assets/icons/birthday.svg?react';
+import PhoneIcon from '../../assets/icons/phone.svg?react';
+import TelegramIcon from '../../assets/icons/telegram.svg?react';
+import Big_pencilIcon from '../../assets/icons/big_pencil.svg?react';
+import { UserContext } from '../../core/UserContext';
+import { patchUser} from '../../api/userApi';
+import { TokenContext } from '../../core/TokenContext';
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import { fetchCities, type TCity } from '../../api/cityApi';
+import InputOptions, {type T} from '../../pages/Registration/InputOptions';
 
 interface IVolunteerDataProps {
   geo: string
@@ -395,7 +395,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onCancel={() => { setAskUpdateEmail(false); setUserEmail(email) }}
        title={
          <p>
-           Ваш новый имейл: {userEmail}.
+           Ваш новый email: {userEmail}.
            <br /> Обновить?
          </p>
        }
