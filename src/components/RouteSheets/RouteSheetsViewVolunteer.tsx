@@ -60,7 +60,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const [fullView, setFullView] = useState<boolean[]>(
     Array(routes.length).fill(false),
   ); // раскрываем детали о благополучателе
-
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
@@ -79,7 +79,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
      routes.forEach(route => {
       obj.push([route.beneficiar[0].address, '']);
       arr.push(route.beneficiar[0].address);
-      console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
+      // console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
         });
       
        if (photoReports.length > 0) {
@@ -162,6 +162,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
           );
         } catch (err) {
+          if (err == 'Error: AxiosError: Network Error') {
+            setErrorMessage('возникла проблема с интернет соединением')
+          }
           setSendPhotoReportFail(true);
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправить' : string)),
@@ -405,12 +408,17 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       <ConfirmModal
         isOpen={sendPhotoReportFail}
         onOpenChange={setSendPhotoReportFail}
-        onConfirm={() => setSendPhotoReportFail(false)}
-        title={
+        onConfirm={() => { setSendPhotoReportFail(false); setErrorMessage('') }}
+        title={errorMessage.length > 0 ? (
           <p>
+          Упс, {errorMessage}.
+          <br /> Попробуйте позже.
+        </p>
+        ) : (<p>
             Упс, что-то пошло не так
             <br /> Попробуйте позже.
-          </p>
+          </p>)
+          
         }
         description=""
         confirmText="Закрыть"
