@@ -24,6 +24,7 @@ const App: React.FC = () => {
 
   const app = window.Telegram.WebApp;
   app.ready();
+  app.expand();
   app.disableVerticalSwipes();
   app.isClosingConfirmationEnabled = true;
 
@@ -61,7 +62,7 @@ const App: React.FC = () => {
       // Пользователь зарегистрирован, но не является сотрудником
      return <VolunteerPage />;
      }
-    }
+     }
 };
 
 export default App;

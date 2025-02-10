@@ -204,9 +204,9 @@ const BankTab:React.FC = () => {
         {/* <ActionsVolunteer visibleActions={["Пригласить друга"]} showThemeToggle={false}/> */}
         </div>
         <div className='flex flex-col h-fit mb-16 '>
-          <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo ' >
+          <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1  dark:bg-light-gray-7-logo ' >
           <div className='flex justify-between mr-[14px] pt-[20px]'>
-            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Обменять баллы</h1>
+            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white px-4">Обменять баллы</h1>
               {promotionsAll.length == 0 || promotionCategory.length == 0 ? " " : (
                 <Filter onClick={()=>{setOpenFilter(true)}} className='cursor-pointer rounded-full bg-light-gray-1 fill-[#0A0A0A] dark:bg-light-gray-6 dark:fill-[#F8F8F8]'/>
             )}
@@ -219,9 +219,9 @@ const BankTab:React.FC = () => {
              <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
           )}
         </div>
-        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1 px-4 dark:bg-light-gray-7-logo' >
+        <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1  dark:bg-light-gray-7-logo' >
           <div className='flex justify-between  mr-[14px] pt-[20px]'>
-            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">Мои планы</h1>
+            <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white px-4">Мои планы</h1>
             </div>{promotionsMy.length == 0 ? 
               (<div className='flex flex-col w-full items-center mt-10 h-[100px] justify-between'>
                 <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>

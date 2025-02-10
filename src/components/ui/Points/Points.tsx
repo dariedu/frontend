@@ -12,7 +12,7 @@ const Points: React.FC<IPointsProps> = ({ points }) => {
       <span className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white">В вашей копилке</span>
 
       {/* Индикатор баллов */}
-      <div className="flex items-center justify-center w-fit px-3 h-6 bg-light-brand-green text-light-gray-white font-gerbera-h3 rounded-2xl">
+      <div className="flex items-center justify-center w-fit px-3 h-6 bg-light-brand-green text-light-gray-white font-gerbera-h3 rounded-2xl pt-[1px]">
         {points}{" "}{getBallCorrectEndingName(points)}
       </div>
     </div>

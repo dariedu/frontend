@@ -205,9 +205,14 @@ function RegistrationPage() {
         setRequestSent(false);
         setRegistrationhasFailed(true);
         setIsSending(false);
+      } else if (e == "Error" || e =="TypeError: Cannot read properties of undefined (reading 'data')") {
+        setRegistrationHasFailedString(<p>Упс, возникла проблема  с интернет соединением.<br /> Попробуйте позже.</p>)
+        setRequestSent(false);
+        setRegistrationhasFailed(true);
+        setIsSending(false);
       } else {
         //console.log(e);
-        setRegistrationHasFailedString(`${e}`)
+      setRegistrationHasFailedString(`${e}`)
       setRequestSent(false);
       setRegistrationhasFailed(true);
       setIsSending(false);
@@ -232,7 +237,7 @@ function RegistrationPage() {
   const tgId = query.get('tg_id');
   const phone_number = query.get('phone_number');
   const tg_nickname = query.get('tg_nickname');
-
+console.log(tg_nickname, "tg_nickname")
   //////функция для сабмита формы
   async function onFormSubmit() {
     setIsSending(true);
@@ -298,7 +303,15 @@ function RegistrationPage() {
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
-    fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
+    if (formData.get('tg_username') == '') {
+      setRegistrationHasFailedString(<p>Упс, у вашего аккаунта в Telegram  не задано имя пользователя. <br /> Пожалуйста, создайте имя пользователя и попробуйте снова пройти регистрацию.</p>)
+      setRequestSent(false);
+      setRegistrationhasFailed(true);
+      setIsSending(false);
+    } else {
+      fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
+    }
+    
   }
 
 

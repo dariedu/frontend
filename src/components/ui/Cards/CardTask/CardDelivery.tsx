@@ -51,7 +51,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
             </div>    
         <div className="flex justify-between items-center w-fit space-x-2">
         <div className="flex justify-center text-center bg-light-gray-white w-fit h-fit py-[6px] px-3 rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub2">
-          {`${day} ${month} ${hours}:${minutes}`}
+          {`${day} ${day > 9 && month.length >= 5 ? month.slice(0,3)+"." : month} ${hours}:${minutes}`}
             </div>
           <div className="flex items-center justify-center bg-light-brand-green w-fit h-fit py-[6px] px-3 rounded-2xl">
             <span className="text-light-gray-white font-gerbera-sub2">
