@@ -3,6 +3,7 @@ import { Modal } from '../ui/Modal/Modal';
 import Webcam from 'react-webcam';
 import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react'
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 interface ISelfieProps {
   text: string
@@ -12,7 +13,7 @@ interface ISelfieProps {
   setUploadedFileLink: Dispatch<React.SetStateAction<string>>
   setTryToSubmitWithoutPic: Dispatch<React.SetStateAction<boolean>>
   localeStorageName: string
-  setBlob: Dispatch<React.SetStateAction<Blob>>
+  setFile: Dispatch<React.SetStateAction<Blob>>
   uploadedFile: boolean
   setUploadedFile: Dispatch<React.SetStateAction<boolean>>
 }
@@ -27,14 +28,16 @@ export const Selfie: React.FC<ISelfieProps> = ({
   uploadedFileLink,
   setUploadedFileLink,
   setTryToSubmitWithoutPic,
-  setBlob,
+  setFile,
   uploadedFile,
   setUploadedFile
 }) => {
   const [fileUploadedOrPictureTaken, setFileUploadedOrPictureTaken] = useState(false);
   const webcamRef: React.MutableRefObject<null | Webcam> = useRef(null);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [url, setUrl] = useState('');
+  const [takenPicture, setTakenPicture] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string|JSX.Element>('');
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
   const imageRef: React.MutableRefObject<HTMLImageElement | null> =
     useRef(null);
   
@@ -43,42 +46,64 @@ export const Selfie: React.FC<ISelfieProps> = ({
     if (webcamRef.current && webcamRef.current != null) {
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
-        setUrl(imageSrc);
+        setTakenPicture(imageSrc)
+        // setUploadedFileLink();
       }
-    }
-  }, [webcamRef]);
+      }
+    }, [webcamRef]);
 
   const deletePhoto = () => {
-    setUrl('');
+    setTakenPicture('');
   };
 
   function savePicture() {
-    // if (uploadedFile) {
-    //   setUploadedFileLink(url);
-    //   localStorage.setItem(localeStorageName, uploadedFileLink);
-    //   setIsEnabled(false);
-    // } else {
+    if (uploadedFile) {
+      setIsEnabled(false);
+    } else {
       setFileUploadedOrPictureTaken(true);
-    setUploadedFileLink(url);
-    localStorage.setItem(localeStorageName, uploadedFileLink);
-    setIsEnabled(false);
+      // setFile(file)
+      // setUploadedFileLink(URL.createObjectURL(file));
+      setUploadedFileLink(takenPicture);
+      
+      // setFileUploadedOrPictureTaken(true);
+      // setUploadedFileLink(uploadedFileLink);
+      // localStorage.setItem(localeStorageName, uploadedFileLink);
+      setIsEnabled(false);
+  
+      // fetch(uploadedFileLink)
+      //   .then(res => res.blob())
+      //   .then(blob => {
+      //     setFile(blob);
+      //   });
 
-    fetch(url)
-      .then(res => res.blob())
-      .then(blob => {
-        setBlob(blob);
-      });
-    // }
+    }
    
+    
+    localStorage.setItem(localeStorageName, uploadedFileLink);
+
   }
+    // Допустимые форматы файлов
+    const allowedTypes = ["image/jpeg", "image/jpg"];
+    // Максимальный размер файла (5 МБ)
+    const maxFileSize = 5 * 1024 * 1024; // 5 МБ в байтах
+  
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>): void {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setUploadedFile(true)
+      if (!allowedTypes.includes(file.type)) {
+        setErrorMessage("Упс, неподходящий формат файла. Разрешены только JPEG, JPG.");
+        setIsErrorOpen(true)
+      } else {
+        if (file.size > maxFileSize) {
+          setErrorMessage(<p>Упс, файл слишком большой. Рекомендованный размер до 5 МБ. Если при отправке формы регистрации возникнут сложности выберите другое фото или сделайте селфи.</p>);
+          setIsErrorOpen(true)
+        }
+      setFile(file)
       setUploadedFileLink(URL.createObjectURL(file));
+      setUploadedFile(true)
       setFileUploadedOrPictureTaken(true);
-      setUrl(URL.createObjectURL(file))
+      }
     }
   }
 
@@ -149,6 +174,17 @@ export const Selfie: React.FC<ISelfieProps> = ({
             Далее
           </button>
         )}
+         {isErrorOpen && 
+          <ConfirmModal
+          isOpen={isErrorOpen}
+          onOpenChange={setIsErrorOpen}
+          onConfirm={() => { setIsErrorOpen(false); setErrorMessage('') }}
+          title={errorMessage}
+          description=""
+          confirmText="Закрыть"
+          isSingleButton={true}
+            />
+          }
       </div>
       <Modal isOpen={isEnabled} onOpenChange={setIsEnabled}>
         <div
@@ -166,11 +202,11 @@ export const Selfie: React.FC<ISelfieProps> = ({
             forceScreenshotSourceSize={true}
             className="relative"
           />
-          {url && (
-            <img ref={imageRef} src={url} alt="pic" className="absolute" />
+          {takenPicture && (
+            <img ref={imageRef} src={takenPicture} alt="pic" className="absolute" />
           )}
           <div className="flex justify-between w-[240px] h-[40px] mt-4">
-            {url.length !== 0 ? (
+            {takenPicture.length !== 0 ? (
               <button
               className="btn-S-GreenDefault outline-none"
               onClick={savePicture}
@@ -185,7 +221,7 @@ export const Selfie: React.FC<ISelfieProps> = ({
                 Сделать фото
               </button>
             )}
-            {url.length !== 0 ? (
+            {uploadedFileLink.length !== 0 ? (
               <button
               className="btn-S-GreenInactive outline-none"
               onClick={deletePhoto}
@@ -203,8 +239,10 @@ export const Selfie: React.FC<ISelfieProps> = ({
               </button>
             )}
           </div>
+         
         </div>
       </Modal>
+    
     </>
   );
 };
