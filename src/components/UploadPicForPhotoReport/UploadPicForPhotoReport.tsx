@@ -60,7 +60,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
       } else {
 
         if (file.size > maxFileSize) {
-          setErrorMessage("Файл слишком большой. Рекомендованый размер до 5 МБ. Возможны сложности с отправкой фотоотчета");
+          setErrorMessage("Файл слишком большой. Рекомендованный размер до 5 МБ. Возможны сложности с отправкой фотоотчета");
           setIsErrorOpen(true)
         }
 
