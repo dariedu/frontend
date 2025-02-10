@@ -40,7 +40,7 @@ function RegistrationPage() {
   const [registrationhasFailed, setRegistrationhasFailed] = useState<boolean>(false); /// если регистрация не прошла, выводим ошибку пользователю
   const [registrationHasFailedString, setRegistrationHasFailedString] = useState<JSX.Element|string>('');
 
-  const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
+  const [file, setFile] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
   const [openCalendar, setOpenCalendar] = useState(false); ////открывает модалку с календарем
   const calendarRef: React.MutableRefObject<HTMLInputElement | null> = useRef(null);
   // const formRef: React.MutableRefObject<HTMLFormElement | null> =  useRef(null);
@@ -237,7 +237,7 @@ function RegistrationPage() {
   const tgId = query.get('tg_id');
   const phone_number = query.get('phone_number');
   const tg_nickname = query.get('tg_nickname');
-console.log(tg_nickname, "tg_nickname")
+// console.log(tg_nickname, "tg_nickname")
   //////функция для сабмита формы
   async function onFormSubmit() {
     setIsSending(true);
@@ -284,7 +284,7 @@ console.log(tg_nickname, "tg_nickname")
     ///// перебираем юзера переносим все поля `в форм дата
     for (let key in user) {
       if (key == 'photo') {
-        formData.set('photo', blob, `selfie-${user.tg_id}.jpeg`);
+        formData.append('photo', file, `selfie-${user.tg_id}.jpeg`);
         //setUrl(window.URL.createObjectURL(blob)) //// для тестирования скачивая фото из блоб на компьютер
       } else if (key == 'consent_to_personal_data') {
         if (isAdult) {
@@ -296,6 +296,9 @@ console.log(tg_nickname, "tg_nickname")
         } else {
           formData.set('consent_to_personal_data', 'false');
         }
+      } else if (key == 'tg_username') {
+        //если ник не задан используем телефон для связи с пользователем
+        formData.set('tg_username', user.phone)
       } else {
         const typedKey = key as
           | keyof TUserUnchangableValues
@@ -303,15 +306,15 @@ console.log(tg_nickname, "tg_nickname")
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
-    if (formData.get('tg_username') == '') {
-      setRegistrationHasFailedString(<p>Упс, у вашего аккаунта в Telegram  не задано имя пользователя. <br /> Пожалуйста, создайте имя пользователя и попробуйте снова пройти регистрацию.</p>)
-      setRequestSent(false);
-      setRegistrationhasFailed(true);
-      setIsSending(false);
-    } else {
-      fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
-    }
-    
+    // if (formData.get('tg_username') == '') {
+    //   setRegistrationHasFailedString(<p>Упс, у вашего аккаунта в Telegram  не задано имя пользователя. <br /> Пожалуйста, создайте имя пользователя и попробуйте снова пройти регистрацию.</p>)
+    //   setRequestSent(false);
+    //   setRegistrationhasFailed(true);
+    //   setIsSending(false);
+    // } else {
+      
+    // }
+    fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
   }
 
 
@@ -675,7 +678,7 @@ console.log(tg_nickname, "tg_nickname")
                   uploadedFileLink={uploadedPictureLink}
                   setUploadedFileLink={setUploadedPictureLink}
                   localeStorageName="avatarPic"
-                  setBlob={setBlob}
+                  setFile={setFile}
                   uploadedFile={uploadedFile}
                   setUploadedFile={setUploadedFile}
                   
