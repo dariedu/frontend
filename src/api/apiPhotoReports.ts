@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const photoReportsUrl = `${API_URL}/photo_reports/`;
 
 type TPhotoReport = {
-  photo: Blob | null
+  photo: Blob | null 
   route_sheet_id: number
   comment: string
   delivery_id: number

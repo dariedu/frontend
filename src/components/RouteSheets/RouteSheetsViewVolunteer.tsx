@@ -43,7 +43,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     Array(routes.length).fill(false),
   );
   const [comment, addComment] = useState(Array(routes.length).fill(''));
-  const [blob, setBlob] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
+  const [files, setFiles] = useState<Blob[]>(Array(routes.length).fill(new Blob())); ////форматит фото в блоб файл
   // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
   const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
   const [sendMessage, setSendMessage] = useState<string>('');
@@ -122,7 +122,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     setSendMessage('');
     if (currentUser && token) {
       const obj: TPhotoReport = {
-        photo: blob,
+        photo: files[index],
         comment: comment[index],
         route_sheet_id: routeSheetId,
         delivery_id: deliveryId,
@@ -130,19 +130,18 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         is_absent: beneficiarIsAbsent[index],
       };
 
-      let blobPhoto = await fetch(uploadedFileLink[index])
-        .then(res => res.blob())
-        .then(blob1 => {
-          setBlob(blob1);
-          return blob1;
-        });
+      // let blobPhoto = await fetch(uploadedFileLink[index])
+      //   .then(res => res.blob())
+      //   .then(blob1 => {
+      //     setBlob(blob1);
+      //     return blob1;
+      //   });
       
-      if (blobPhoto && currentUser) {
+      if (files[index] && currentUser) {
         const formData = new FormData();
         for (let key in obj) {
           if (key == 'photo') {
-            formData.set('photo', blobPhoto, `photo_report_delId_${deliveryId}_routeS_id_${routeSheetId}.jpeg`,
-            );
+            formData.append('photo', files[index]);
           } else if (key == 'is_absent') {
             formData.set(
               'is_absent',
@@ -298,11 +297,11 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             </div>
           </div>
           {fullView[index] && (
-            <div className="flex justify-center items-center w-full">
+            <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
                 <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                   {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'}
-                  {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                  {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                   {ben.full_name}
                   </p>)}
                 </div>
@@ -310,7 +309,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Категория
-                    {route.beneficiar.map(ben =>  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map(ben => <p key={ben.category} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.category}
                       </p> )}
                      
@@ -319,7 +318,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Основной телефон
-                    {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.phone}
                       </p>)}
                      
@@ -328,7 +327,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Запасной телефон
-                    {route.beneficiar.map(ben =><p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map(ben =><p key={ben.second_phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.second_phone}
                       </p>)}
                       
@@ -338,7 +337,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Информация
                     {route.beneficiar.map( ben=>
-                    <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    <p key={ben.comment} className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                     {ben.comment}
                   </p>
                     )}
@@ -401,6 +400,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               uploadedFileLink={uploadedFileLink}
               beneficiarIsAbsent={beneficiarIsAbsent[index]}
               setBeneficiarIsAbsent={setBeneficiarIsAbsent}
+              setFiles={setFiles}
+              files={files}
             />
           </Modal>
         </div>
@@ -430,8 +431,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         onConfirm={() => setSendPhotoReportSuccess(false)}
         title={
           <p>
-            Фотоотчет по адресу: {sendMessage}
-            <br /> успешно отправлен.
+            Фотоотчет по адресу: <br /> {sendMessage} { }
+            успешно отправлен.
           </p>
         }
         description=""
