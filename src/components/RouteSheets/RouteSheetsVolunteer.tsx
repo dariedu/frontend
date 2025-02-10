@@ -43,7 +43,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
         let result = await getPhotoReports(token);
         let filtered = result.filter(report => report.delivery_id == deliveryId).filter(report => {
           if (report.user.id == currentUser.id)
-            console.log(report, 'requested photo report volunteer RouteSheetVolunteer component')
+            // console.log(report, 'requested photo report volunteer RouteSheetVolunteer component')
            return report
         })
         setMyPhotoReports(filtered)
@@ -129,9 +129,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
                   setSendPhotoReportSuccess={setSendPhotoReportSuccess}
                 />
               )}
-           
             </>
-            
           );
         })}
       </div>
