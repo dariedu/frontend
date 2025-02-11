@@ -382,7 +382,7 @@ function RegistrationPage() {
                   
                 </h1> */}
                 <br/>
-                  <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white" >Спасибо!</h1>
+                  {/* <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white" >Спасибо!</h1> */}
             </div>
           )}
         </div>
