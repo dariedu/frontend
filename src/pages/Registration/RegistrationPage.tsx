@@ -20,7 +20,7 @@ import InputOptions, { type T } from './InputOptions.tsx';
 import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
 import { useLocation } from 'react-router-dom';
-
+import DownloadPdfButton from './DownloadPDF.tsx';
 
 
 function RegistrationPage() {
@@ -357,30 +357,32 @@ function RegistrationPage() {
                 Спасибо! <br />
                 Получили вашу анкету.
                 <br />
-                <br />
-                Для завершения регистрации вашему законному опекуну необходимо
+                  <br />
+                  Для завершения регистрации просим одного из ваших родителей/официального опекуна заполнить и 
                   подписать {" "}
-                <b className="font-gerbera-h3 text-center text-light-brand-green font-normal">
-                  Согласие
-                </b>
-                * на участие несовершеннолетнего в благотворительном
-                мероприятии.
+                  <DownloadPdfButton />
+                  {/* <a href="https://cloud.mail.ru/public/c4Yr/MWBRTqPv5" target="_blank" download={"document.pdf"} className="font-gerbera-h3 text-center text-light-brand-green font-normal">Согласие</a> */}
+                * на ваше участие в благотворительных доставках и других добрых делах.
               </p>
               <br />
-              <p className="font-gerbera-sub1 text-center text-light-gray-5 dark:text-light-gray-2">
-                *Вышлем файл с документом в личном сообщении в ближайшее время.
+              <p className="font-gerbera-h3 text-center text-light-gray-5 dark:text-light-gray-2">
+                *Подписанный документ отправьте @volunteers_dari_edu
+
               </p>
               <br />
               <br />
-              <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white">
+              {/* <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white">
                 Теперь вы можете перейти на{' '}
                 <p
                   className="text-light-brand-green cursor-pointer"
                   onClick={() => location.reload()}
                 >
                   главную страницу
-                </p>
-              </h1>
+                  </p>
+                  
+                </h1> */}
+                <br/>
+                  <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white" >Спасибо!</h1>
             </div>
           )}
         </div>
