@@ -147,8 +147,8 @@ function RegistrationPage() {
         const age = getAgeFromBirthDate(parsedDate)
         if (age < 13) {
           setDateError('Для участия в доставках волонтёру должно быть не меньше 13 лет');
-         } else if ( age > 80 ) {
-          setDateError('Некорректная дата, максимальный возраст для участия в доставках 80 лет');
+         } else if ( age > 90 ) {
+          setDateError('Некорректная дата, максимальный возраст для участия в доставках 90 лет');
          } else {
           setDateError('');
           setDateisMissing(false)
