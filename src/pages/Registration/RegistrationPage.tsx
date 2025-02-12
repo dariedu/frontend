@@ -298,7 +298,7 @@ function RegistrationPage() {
         }
       } else if (key == 'tg_username') {
         //если ник не задан используем телефон для связи с пользователем
-        formData.set('tg_username', user.phone)
+        formData.set('tg_username', '+7' + user.phone.slice(1))
       } else {
         const typedKey = key as
           | keyof TUserUnchangableValues
