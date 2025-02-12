@@ -47,7 +47,8 @@ export const Selfie: React.FC<ISelfieProps> = ({
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
         setTakenPicture(imageSrc)
-        // setUploadedFileLink();
+
+       
       }
       }
     }, [webcamRef]);
@@ -70,11 +71,11 @@ export const Selfie: React.FC<ISelfieProps> = ({
       // localStorage.setItem(localeStorageName, uploadedFileLink);
       setIsEnabled(false);
   
-      // fetch(uploadedFileLink)
-      //   .then(res => res.blob())
-      //   .then(blob => {
-      //     setFile(blob);
-      //   });
+      fetch(takenPicture)
+        .then(res => res.blob())
+        .then(blob => {
+          setFile(blob);
+        });
 
     }
    
@@ -174,11 +175,11 @@ export const Selfie: React.FC<ISelfieProps> = ({
             Далее
           </button>
         )}
-         {isErrorOpen && 
+         {isErrorOpen === true && 
           <ConfirmModal
           isOpen={isErrorOpen}
           onOpenChange={setIsErrorOpen}
-          onConfirm={() => { setIsErrorOpen(false); setErrorMessage('') }}
+          onConfirm={() => { setIsErrorOpen(false); setErrorMessage(''); }}
           title={errorMessage}
           description=""
           confirmText="Закрыть"
@@ -205,26 +206,27 @@ export const Selfie: React.FC<ISelfieProps> = ({
           {takenPicture && (
             <img ref={imageRef} src={takenPicture} alt="pic" className="absolute" />
           )}
-          <div className="flex justify-between w-[240px] h-[40px] mt-4">
+          <div className="flex justify-between w-[240px] h-[40px] mt-4" onClick={(e)=> e.stopPropagation()}>
             {takenPicture.length !== 0 ? (
               <button
               className="btn-S-GreenDefault outline-none"
-              onClick={savePicture}
+                onClick={e => { savePicture(); e.preventDefault() }}
+                
             >
               Сохранить
             </button>
             ) : (
               <button
                 className="btn-S-GreenDefault outline-none"
-                onClick={makePhoto}
+                  onClick={e => { makePhoto(); e.preventDefault() }}
               >
                 Сделать фото
               </button>
             )}
-            {uploadedFileLink.length !== 0 ? (
+            {takenPicture ? (
               <button
               className="btn-S-GreenInactive outline-none"
-              onClick={deletePhoto}
+                onClick={(e) => { deletePhoto(); e.preventDefault() }}
             >
               Удалить
             </button>
