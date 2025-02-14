@@ -32,7 +32,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
         <Dialog.Overlay className={`${zIndex ? "z-[55] fixed inset-0 bg-black opacity-30" : " z-[5] fixed inset-0 bg-black opacity-30"}`} onClick={e=>e.stopPropagation()} />
         <Dialog.Content className={`${zIndex ? "z-[55] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]" : " z-[5] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]"}` }>
           <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl p-6 w-[300px] h-fit max-w-sm flex flex-col justify-center items-center text-center">
-            <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white">
+            <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white" data-testid="confirm-modal">
               {title}
             </Dialog.Title>
             <Dialog.Description className="font-gerbera-h3 text-light-gray-4 dark:text-light-gray-white-4 mt-2">
@@ -40,7 +40,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
             </Dialog.Description>
             <div className="flex justify-center mt-4 space-x-4">
               {/* Кнопка подтверждения */}
-              <button
+              <button 
                 onClick={onConfirm}
                 className="btn-S-GreenDefault"
               >

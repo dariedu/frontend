@@ -80,9 +80,9 @@ const BecameCurator:React.FC<TBecameCuratorProps> = ({ onOpenChange}) => {
   }
 
    ////поднимаем текстэриа в фокус пользователя для айфона
-function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
-  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
-}
+// function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+//   e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+// }
 
   return (
     <>
@@ -136,7 +136,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 line-clamp-3 dark:text-light-gray">Готовы ли вы присутствовать на локации во время доставок?</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
-                  onFocus={(e)=>handleFocus(e)}
+                  // onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="min-w-[328px] w-full bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
@@ -161,7 +161,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
               </Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
-                 onFocus={(e)=>handleFocus(e)}
+                //  onFocus={(e)=>handleFocus(e)}
                   maxRows={5}
                   className="min-w-[328px] w-full bg-light-gray-1 h-max min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                 placeholder:text-light-gray-3 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"

@@ -154,8 +154,8 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
           в качестве волонтёра
         </p>
       }
-      description=""
-      confirmText="Ок"
+       description=""
+       confirmText="Ок"
         isSingleButton={true}
         zIndex={true}
       />
