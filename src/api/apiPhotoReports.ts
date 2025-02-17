@@ -1,6 +1,7 @@
 
 import axios, { AxiosResponse } from 'axios';
 
+
 //тут будет ссылка на файл с юрлом!
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 const photoReportsUrl = `${API_URL}/photo_reports/`;
@@ -61,13 +62,15 @@ export async function getPhotoReports(
 
 export async function postPhotoReport(
   access: string,
-  object:FormData
+  object: FormData,
+  signal: AbortSignal
 ):Promise<TPhotoReport> {
   try {
     const response: AxiosResponse<TPhotoReport> = await axios({
       url: photoReportsUrl,
       method: 'POST',
       data: object,
+      signal: signal,
       headers: {
         Authorization: `Bearer ${access}`,
          accept: 'application/json',
@@ -77,7 +80,15 @@ export async function postPhotoReport(
     
   } catch (err:any) {
     console.error('Post request postPhotoReport has failed', err);
-    throw new Error(err);
+    if (err == 'Error: AxiosError: Network Error') {
+      throw new Error(err);
+    } else {
+      if (err.response && err.response.data && err.response.data.detail) {
+        throw new Error(err.response.data.detail)
+      } else {
+       throw new Error(err)
+      }
+    }  
   }
 }
 

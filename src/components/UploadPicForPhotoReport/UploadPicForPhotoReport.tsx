@@ -42,7 +42,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   }
   
   // Допустимые форматы файлов
-  const allowedTypes = ["image/jpeg", "image/jpg"];
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
   // Максимальный размер файла (5 МБ)
   const maxFileSize = 5 * 1024 * 1024; // 5 МБ в байтах
 

@@ -152,23 +152,33 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             formData.set(typedKey, String(obj[typedKey]));
           }
         }
-
+        // Создаем AbortController для установки таймаута
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // Таймаут 15 секунд
+        
         try {
-          await postPhotoReport(token, formData);
+          await postPhotoReport(token, formData, controller.signal);
+
           setSendMessage(routes[index].address);
           setSendPhotoReportSuccess(true);
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
           );
-        } catch (err) {
+        } catch (err: any) {
           if (err == 'Error: AxiosError: Network Error') {
-            setErrorMessage('возникла проблема с интернет соединением')
+            setErrorMessage('возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет')
+          } else if (err == 'Error: Данный токен недействителен для любого типа токена') {
+            setErrorMessage('возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет')
+          } else if (err == 'Error: CanceledError: canceled') {
+            console.log('загрузка прервана из-за слабого интернет соединения')
+            setErrorMessage('загрузка прервана из-за слабого интернет соединения');
           }
           setSendPhotoReportFail(true);
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправить' : string)),
-          );
-          console.log(err);
+          )
+        } finally {
+          clearTimeout(timeoutId)
         }
       }
     }
@@ -177,10 +187,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 // routes.map((route) => (console.log(route.beneficiar[0].address, array )))
 // console.log(photoReports, "photo report")
   return (
-    <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
+    <div key={routeSheetId+'routeSheetWievVolunteer'} className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
       {routes.map((route, index) => (
-        <div
-          key={index}
+        <div key={route.id + routeSheetId + 'routeSheetWievVolunteer'}
           className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 h-fit p-4"
         >
           <div className="flex w-full items-center justify-between">
@@ -413,7 +422,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         title={errorMessage.length > 0 ? (
           <p>
           Упс, {errorMessage}.
-          <br /> Попробуйте позже.
         </p>
         ) : (<p>
             Упс, что-то пошло не так
