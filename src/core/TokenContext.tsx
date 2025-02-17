@@ -19,7 +19,7 @@ export const TokenProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [refresh, setRefresh] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [count, setCount] = useState<number>(0)
+  // const [count, setCount] = useState<number>(0)
   
 
   const location = useLocation();
@@ -41,32 +41,61 @@ const fetchRefreshToken = async () => {
            if (mainToken) {
              setToken(mainToken.access);
              setRefresh(mainToken.refresh)
-           }
+             console.log('new token received', new Date())
+          }
          } else {
           if (tgId) {
             const mainToken = await postToken(Number(tgId))
                if (mainToken) {
                 setToken(mainToken.access);
-                setRefresh(mainToken.refresh)
-               }
+                 setRefresh(mainToken.refresh)
+                 console.log('new token received', new Date())
+            }
           } else {
             if (tgIdFromTgParams) {
               const mainToken = await postToken(tgIdFromTgParams)
                  if (mainToken) {
                   setToken(mainToken.access);
-                  setRefresh(mainToken.refresh)
+                   setRefresh(mainToken.refresh)
+                   console.log('new token received', new Date())
                  }
                }
              } 
          }
       } catch (err) {
-      console.log(err, "fetchRefreshToken has failed tokenContext")
+        console.log(err, "fetchRefreshToken has failed tokenContext")
+        setRefresh(null)
 }
   }
   
-useEffect(()=>{fetchRefreshToken()},[tgId, count])
-setInterval(()=>{setCount(count+1)}, 297000)
+  useEffect(() => { fetchRefreshToken() }, []);
+
   
+   // Обновляем токен каждые 5 минут
+   useEffect(() => {
+    const intervalId = setInterval(fetchRefreshToken, 5 * 60 * 999); // ~5 минут
+    // Очистка интервала при размонтировании
+    return () => clearInterval(intervalId);
+  }, []);
+
+  
+useEffect(() => {
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      // Вкладка снова видна, обновляем токен
+      setRefresh(null)
+      fetchRefreshToken();
+      console.log('document is visible again')
+    }
+  };
+
+  // Подписываемся на событие изменения видимости
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  // Очистка подписки при размонтировании компонента
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+}, []);
   
   return (
     <TokenContext.Provider value={{token}}>
