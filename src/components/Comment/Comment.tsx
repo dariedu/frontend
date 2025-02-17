@@ -44,9 +44,9 @@ console.log(id, 'id')
   }
 
    ////поднимаем текстэриа в фокус пользователя для айфона
-function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
-  e.target.scrollIntoView({ block: "center", behavior: "smooth" });
-}
+// function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
+//   e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+// }
 
   return (
     <div className={`bg-light-gray-1 dark:bg-light-gray-black rounded-2xl w-full max-w-[500px] h-fit flex flex-col items-center justify-start ${isIphone ? " fixed top-0 h-full  " : " fixed bottom-0 h-fit "}`} onClick={((e)=>e.stopPropagation())}>
@@ -75,7 +75,7 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
            
               <Form.Control asChild>
                 <TextareaAutosize
-                  onFocus={(e)=>handleFocus(e)}
+                  // onFocus={(e)=>handleFocus(e)}
                   maxRows={8}
                   className=" min-w-[96%] w-full  bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
                  placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"

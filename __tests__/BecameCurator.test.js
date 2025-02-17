@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import BecameCurator from '../src/components/BecameCurator/BecameCurator';
 // import { createRequestMessage } from '../src/api/requestMessageApi';
 import { TokenContext} from '../src/core/TokenContext';
@@ -47,7 +47,7 @@ describe('BecameCurator component', () => {
     expect(screen.getByText('На какой локации вы бы хотели стать куратором и почему?')).toBeInTheDocument();
     expect(screen.getByText('Готовы ли вы присутствовать на локации во время доставок?')).toBeInTheDocument();
     expect(screen.getByText('Какой у вас график работы/ учёбы?')).toBeInTheDocument();
-screen.debug()
+// screen.debug()
     // Проверяем, что кнопка отправки отображается
     expect(screen.getByText('Отправить')).toBeInTheDocument();
   });
