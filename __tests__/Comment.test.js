@@ -8,7 +8,7 @@ describe('Comment component', () => {
   const mockOnOpenChange = jest.fn();
   const name = 'Адрес доставки';
   const index = 1;
-  const savedComment = 'предыдущий комментарий';
+  const savedComment = '';
   const id = 123;
 
 
@@ -30,13 +30,10 @@ describe('Comment component', () => {
         id={id}
       />
     );
-
     // Проверяем, что заголовок отображается
     expect(screen.getByText(`Комментарий о доставке по адресу ${name}`)).toBeInTheDocument();
-
     // Проверяем, что текстовое поле отображается
     expect(screen.getByLabelText('В свободной форме поделитесь информацией о доставке')).toBeInTheDocument();
-
     // Проверяем, что кнопка сохранения отображается
     expect(screen.getByText('Сохранить')).toBeInTheDocument();
   });
@@ -54,21 +51,19 @@ describe('Comment component', () => {
     );
 
     const textarea = screen.getByLabelText('В свободной форме поделитесь информацией о доставке');
-
     // Вводим текст в текстовое поле
     fireEvent.change(textarea, { target: { value: 'Новый комментарий' } });
-
     // Проверяем, что состояние обновилось
     expect(textarea.value).toBe('Новый комментарий');
   });
 
-  it('should call onSave with correct arguments when form is submitted', () => {
+  it('should call onSave with correct arguments when form is submitted', async () => {
     render(
       <Comment
         name={name}
         onSave={mockOnSave}
         index={index}
-        savedComment={savedComment}
+        savedComment={''}
         onOpenChange={mockOnOpenChange}
         id={id}
       />
@@ -76,24 +71,21 @@ describe('Comment component', () => {
 
     const textarea = screen.getByLabelText('В свободной форме поделитесь информацией о доставке');
     const saveButton = screen.getByText('Сохранить');
-
     // Вводим текст в текстовое поле
-    fireEvent.change(textarea, { target: { value: 'Новый комментарий' } });
-
+    await userEvent.type(textarea, 'Новый комментарий');
     // Отправляем форму
-    fireEvent.click(saveButton);
-
+    await userEvent.click(saveButton);
     // Проверяем, что onSave был вызван с правильными аргументами
     expect(mockOnSave).toHaveBeenCalledWith(index, 'Новый комментарий');
   });
 
-  it('should enable save button when textarea has more than 5 characters', () => {
+  it('should enable save button when textarea has more than 5 characters', async () => {
     render(
       <Comment
         name={name}
         onSave={mockOnSave}
         index={index}
-        savedComment={savedComment}
+        savedComment={''}
         onOpenChange={mockOnOpenChange}
         id={id}
       />
@@ -103,8 +95,7 @@ describe('Comment component', () => {
     const saveButton = screen.getByText('Сохранить');
 
     // Вводим текст в текстовое поле
-    fireEvent.change(textarea, { target: { value: '123456' } });
-
+    await userEvent.type(textarea, '1234568');
     // Проверяем, что кнопка стала активной
     expect(saveButton).not.toHaveClass('btn-B-GreenInactive');
     expect(saveButton).toHaveClass('btn-B-GreenDefault');
@@ -112,32 +103,30 @@ describe('Comment component', () => {
 
 
 
-  // it('should show error message when textarea has less than 10 characters', async () => {
+  it('should show error message when textarea has less than 10 characters', async () => {
 
-  //   render(
-  //     <Comment
-  //       name={name}
-  //       onSave={mockOnSave}
-  //       index={index}
-  //       savedComment={''}
-  //       onOpenChange={mockOnOpenChange}
-  //       id={id}
-  //     />
-  //   );
-  //   expect(screen.queryByText('Сообщение слишком короткое, минимальное количество символов 10')).toBeNull();
+    render(
+      <Comment
+        name={name}
+        onSave={mockOnSave}
+        index={index}
+        savedComment={''}
+        onOpenChange={mockOnOpenChange}
+        id={id}
+      />
+    );
+    expect(screen.queryByText('Сообщение слишком короткое, минимальное количество символов 10')).toBeNull();
+    const textarea = screen.getByLabelText('В свободной форме поделитесь информацией о доставке');
+    const saveButton = screen.getByText('Сохранить');
+    // Вводим текст в текстовое поле
+    await userEvent.type(textarea, '1234568');
+    await userEvent.click(saveButton);
+    // screen.debug()
+    // Проверяем, что сообщение об ошибке отображается
+    expect(await screen.findByText('Сообщение слишком короткое, минимальное количество символов 10')).toBeInTheDocument();
+  });
 
-  //   const textarea = screen.getByLabelText('В свободной форме поделитесь информацией о доставке');
-  //   const saveButton = screen.getByText('Сохранить');
-  //   // Вводим текст в текстовое поле
-  //   await userEvent.type(textarea, '1234568');
-  //   fireEvent.click(saveButton);
-  //   fireEvent.click(saveButton);
-  //   screen.debug()
-  //   // Проверяем, что сообщение об ошибке отображается
-  //   expect(await screen.findByText('Сообщение слишком короткое, минимальное количество символов 10')).toBeInTheDocument();
-  // });
-
-    it('save button should be desabled when textarea has less than 5 characters', () => {
+    it('save button should be desabled when textarea has less than 5 characters', async () => {
     render(
       <Comment
         name={name}
@@ -153,7 +142,7 @@ describe('Comment component', () => {
     const saveButton = screen.getByText('Сохранить');
 
     // Вводим текст в текстовое поле
-    userEvent.type(textarea, '1234');
+    await userEvent.type(textarea, '1234');
     // Проверяем, что кнопка осталась неактивной
     expect(saveButton).toHaveClass('btn-B-GreenInactive');
     expect(saveButton).not.toHaveClass('btn-B-GreenDefault');

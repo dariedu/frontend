@@ -16,7 +16,7 @@ type TComment = {
 }
 
 const Comment: React.FC<TComment> = ({onSave , name, index, savedComment, onOpenChange, id }) => {
-console.log(id, 'id')
+// console.log(id, 'id')
  
   const { isIphone } = useContext(UserContext);
 
