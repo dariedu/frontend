@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import DetailedInfo from '../src/components/DetailedInfo/DetailedInfo';
 import { TokenContext } from '../src/core/TokenContext';
-import userEvent from '@testing-library/user-event';
+// import userEvent from '@testing-library/user-event';
 // import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 // Моки для контекста
@@ -16,6 +16,14 @@ jest.mock('../src/api/userApi', () => ({
 }));
 
 describe('DetailedInfo', () => {
+
+  beforeEach(() => {
+    // Очищаем все моки перед каждым тестом
+    jest.clearAllMocks();
+    // Очищаем localStorage
+    localStorage.clear();
+  });
+  
   const onOpenChangeMock = jest.fn();
   const makeReservationFuncMock = jest.fn();
   const cancelPromotionMock = jest.fn();

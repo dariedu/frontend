@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import CompletedDeliveryOrTaskFeedback from '../../src/components/DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
-
 import { TokenContext } from '../../src/core/TokenContext';
 import { UserContext } from '../../src/core/UserContext';
 import userEvent from '@testing-library/user-event'
@@ -88,7 +87,7 @@ describe('CompletedDeliveryOrTaskFeedback', () => {
     await userEvent.type(textarea, 'New feedback text' );
    
     const submitButton = screen.getByText('Отправить');
-   await userEvent.click(submitButton);
+    await userEvent.click(submitButton);
 
     expect(submitFeedbackDeliveryoOrTask).toHaveBeenCalledWith(
       'mock-token',
