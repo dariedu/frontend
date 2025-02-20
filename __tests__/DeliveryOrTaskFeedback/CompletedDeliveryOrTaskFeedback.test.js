@@ -79,6 +79,7 @@ describe('CompletedDeliveryOrTaskFeedback', () => {
   });
 
   it('submits the form successfully for volunteer delivery', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     const { submitFeedbackDeliveryoOrTask } = require('../../src/api/feedbackApi');
     submitFeedbackDeliveryoOrTask.mockResolvedValue(true);
 
@@ -103,6 +104,7 @@ describe('CompletedDeliveryOrTaskFeedback', () => {
   
 
   it('shows error modal on submission failure', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     const { submitFeedbackDeliveryoOrTask } = require('../../src/api/feedbackApi');
     submitFeedbackDeliveryoOrTask.mockRejectedValue(new Error('Failed to submit'));
 

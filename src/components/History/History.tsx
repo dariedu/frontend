@@ -1,19 +1,22 @@
 import React, { useEffect, useContext, useState } from 'react';
 import {
-  getVolunteerDeliveries,
-  type IVolunteerDeliveries,
+  // getVolunteerDeliveries,
+  // type IVolunteerDeliveries,
   type IDelivery,
 } from '../../api/apiDeliveries';
-import { getMyTasks, type ITask } from '../../api/apiTasks';
+import {
+  // getMyTasks,
+  type ITask
+} from '../../api/apiTasks';
 import {
   getBallCorrectEndingName,
   getMetroCorrectName,
-  getMonthCorrectEndingName,
+  // getMonthCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react';
 import {
-  getMyPastOrActivePromotions,
+  // getMyPastOrActivePromotions,
   type IPromotion,
 } from '../../api/apiPromotions';
 import Filter from './../../assets/icons/filter.svg?react';
@@ -21,7 +24,10 @@ import { Modal } from '../ui/Modal/Modal';
 import FilterPromotions from '../FilterPromotions/FilterPromotions';
 import { TPromotionCategory } from '../../api/apiPromotions';
 import { TokenContext } from '../../core/TokenContext';
-import { getCuratorDeliveries, ICuratorDeliveries, TCuratorDelivery, getDeliveryById } from '../../api/apiDeliveries';
+// import { getCuratorDeliveries, ICuratorDeliveries, TCuratorDelivery, getDeliveryById } from '../../api/apiDeliveries';
+// import {getDeliveryById } from '../../api/apiDeliveries';
+import { getMyCuratorDeliveries, requestMyDelivery, getMyPastDeliveries, getMyPastTasks, getMyPastPromotions, combineAllPast, type IAllMyPast, filterCategoryOptions } from './helperFunctions';
+// import { requestMyDelivery } from './helperFunctions';
 
 
 interface IHistoryProps {
@@ -30,17 +36,17 @@ interface IHistoryProps {
 }
 
 const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
-  type IAllMyPast = {
-    id: string;
-    category: TPromotionCategory;
-    startDateString: string;
-    dayMonthYearString: string;
-    name: string;
-    points: number;
-    plus: boolean;
-    date?: string;
-    subway?: string;
-  };
+  // type IAllMyPast = {
+  //   id: string;
+  //   category: TPromotionCategory;
+  //   startDateString: string;
+  //   dayMonthYearString: string;
+  //   name: string;
+  //   points: number;
+  //   plus: boolean;
+  //   date?: string;
+  //   subway?: string;
+  // };
 
   let { token } = useContext(TokenContext); //// берем токен из токен контекст
   const [myPastDeliveries, setMyPastDeliveries] = useState<IDelivery[]>([]);
@@ -54,20 +60,20 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   const [curatorCompletedDeliveries, setCuratorCompletedDeliveries] = useState<number[]>([]);
   const [curatorPastDeliveries, setCuratorPastDeliveries] = useState<IDelivery[]>([]);
 
-  const filterCategoryOptions: TPromotionCategory[] = [
-    {
-      id: 1,
-      name: 'доставка',
-    },
-    {
-      id: 2,
-      name: 'доброе дело',
-    },
-    {
-      id: 3,
-      name: 'поощрение',
-    },
-  ];
+  // const filterCategoryOptions: TPromotionCategory[] = [
+  //   {
+  //     id: 1,
+  //     name: 'доставка',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'доброе дело',
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'поощрение',
+  //   },
+  // ];
   const [filterCategories, setFilterCategories] = useState<
     TPromotionCategory[]
   >([]); /// устанавливаем категории для фильтра
@@ -91,233 +97,235 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
     }
   }
 
-   ///////доставки куратора
-  async function getMyCuratorDeliveries() {
-    const myCompletedDeliveries: number[] = [];
-    if (token  && !isVolunteer) {
-      try {
-       let result: ICuratorDeliveries = await getCuratorDeliveries(token);
-      if (result) { 
-        result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i.id_delivery) })
-        setCuratorCompletedDeliveries(myCompletedDeliveries)
-      }
-  }catch (err) {
-    console.log(err, "getMyCuratorDeliveries CuratorPage fail")
-  }
-      }
-  }
+  //  ///////доставки куратора
+  // async function getMyCuratorDeliveries() {
+  //   const myCompletedDeliveries: number[] = [];
+  //   if (token  && !isVolunteer) {
+  //     try {
+  //      let result: ICuratorDeliveries = await getCuratorDeliveries(token);
+  //     if (result) { 
+  //       result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i.id_delivery) })
+  //       setCuratorCompletedDeliveries(myCompletedDeliveries)
+  //     }
+  // }catch (err) {
+  //   console.log(err, "getMyCuratorDeliveries CuratorPage fail")
+  // }
+  //     }
+  // }
 
+  // token, isVolunteer, setCuratorCompletedDeliveries
   useEffect(() => {
-    getMyCuratorDeliveries()
+    getMyCuratorDeliveries(token, isVolunteer, setCuratorCompletedDeliveries)
   }, [])
 
-  async function requestMyDelivery() { 
+  // async function requestMyDelivery() { 
 
-    const delArr: IDelivery[] = [];
+  //   const delArr: IDelivery[] = [];
 
-    if (token && !isVolunteer) {
+  //   if (token && !isVolunteer) {
 
-      Promise.allSettled(curatorCompletedDeliveries.map(id => getDeliveryById(token, id)))
-      .then(responses => responses.forEach((result, num) => {
-        if (result.status == "fulfilled") {
-          delArr.push(result.value)
-        }
-        if (result.status == "rejected") {
-          console.log(`${num} delivery was not fetched`)
-        }
-      })).finally(() => {setCuratorPastDeliveries(delArr)}
-      )
-     }
-  }
+  //     Promise.allSettled(curatorCompletedDeliveries.map(id => getDeliveryById(token, id)))
+  //     .then(responses => responses.forEach((result, num) => {
+  //       if (result.status == "fulfilled") {
+  //         delArr.push(result.value)
+  //       }
+  //       if (result.status == "rejected") {
+  //         console.log(`${num} delivery was not fetched`)
+  //       }
+  //     })).finally(() => {setCuratorPastDeliveries(delArr)}
+  //     )
+  //    }
+  // }
   
   useEffect(() => {
-    requestMyDelivery()
+    requestMyDelivery(token, isVolunteer, curatorCompletedDeliveries, setCuratorPastDeliveries)
   }, [curatorCompletedDeliveries]);
 
 
-  ///////доставки куратора
+  // ///////доставки волонтера
 
-  async function getMyPastDeliveries() {
-    let myPastDeliveries: IDelivery[] = [];
-    try {
-      if (token) {
-        let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
-        if (result) {
-          result['мои завершенные доставки'].forEach((past: IDelivery) => {
-            myPastDeliveries.push(past);
-          });
-          setMyPastDeliveries(myPastDeliveries);
-        }
-      }
-    } catch (err) {
-      setMistakeDelivery(true);
-      console.log(err, 'HistoryVolunteer getMyPastDeliveries fail');
-    }
-  }
+  // async function getMyPastDeliveries() {
+  //   let myPastDeliveries: IDelivery[] = [];
+  //   try {
+  //     if (token) {
+  //       let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
+  //       if (result) {
+  //         result['мои завершенные доставки'].forEach((past: IDelivery) => {
+  //           myPastDeliveries.push(past);
+  //         });
+  //         setMyPastDeliveries(myPastDeliveries);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     setMistakeDelivery(true);
+  //     console.log(err, 'HistoryVolunteer getMyPastDeliveries fail');
+  //   }
+  // }
 
-  async function getMyPastTasks() {
-    try {
-      if (token) {
-        let result: ITask[] = await getMyTasks(token, false, true);
-        if (result) {
-          let filtered = result.filter(task => task.is_completed)/// доп проверка данных, если с сервера прийдет ошибочно все активные таски
-          setMyPastTasks(filtered);
-        }
-      }
-    } catch (err) {
-      setMistakeTask(true);
-      console.log(err, 'HistoryVolunteer getMyPastTasks fail');
-    }
-  }
-  async function getMyPastPromotions() {
-    try {
-      if (token) {
-        let result: IPromotion[] = await getMyPastOrActivePromotions(
-          token,
-          false,
-        );
-        if (result) {
-          setMyPastPromotions(result);
-        }
-      }
-    } catch (err) {
-      setMistakePromotion(true);
-      console.log(err, 'HistoryVolunteer getMyPastPromotions fail');
-    }
-  }
+  // async function getMyPastTasks() {
+  //   try {
+  //     if (token) {
+  //       let result: ITask[] = await getMyTasks(token, false, true);
+  //       if (result) {
+  //         let filtered = result.filter(task => task.is_completed)/// доп проверка данных, если с сервера прийдет ошибочно все активные таски
+  //         setMyPastTasks(filtered);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     setMistakeTask(true);
+  //     console.log(err, 'HistoryVolunteer getMyPastTasks fail');
+  //   }
+  // }
+  // async function getMyPastPromotions() {
+  //   try {
+  //     if (token) {
+  //       let result: IPromotion[] = await getMyPastOrActivePromotions(
+  //         token,
+  //         false,
+  //       );
+  //       if (result) {
+  //         setMyPastPromotions(result);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     setMistakePromotion(true);
+  //     console.log(err, 'HistoryVolunteer getMyPastPromotions fail');
+  //   }
+  // }
 
-  function combineAllPast() {
-    let all: IAllMyPast[] = [];
+  // function combineAllPast() {
+  //   let all: IAllMyPast[] = [];
 
-    if (myPastDeliveries.length > 0) {
-      myPastDeliveries.forEach(past => {
-        const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
-        const day = deliverytDate.getUTCDate();
-        const month = deliverytDate.toLocaleDateString('RU', {
-          month: 'short',
-        });
-        const hours = deliverytDate
-          ? String(deliverytDate.getUTCHours()).padStart(2, '0')
-          : '--';
-        const minutes = deliverytDate
-          ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
-          : '--';
+  //   if (myPastDeliveries.length > 0) {
+  //     myPastDeliveries.forEach(past => {
+  //       const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
+  //       const day = deliverytDate.getUTCDate();
+  //       const month = deliverytDate.toLocaleDateString('RU', {
+  //         month: 'short',
+  //       });
+  //       const hours = deliverytDate
+  //         ? String(deliverytDate.getUTCHours()).padStart(2, '0')
+  //         : '--';
+  //       const minutes = deliverytDate
+  //         ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
+  //         : '--';
 
-        let delivery: IAllMyPast = {
-          id: past.id + past.date,
-          category: {
-            id: 1,
-            name: 'доставка',
-          },
-          startDateString: past.date,
-          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
-          name: 'Доставка',
-          points: past.price,
-          date: `${day} ${month} ${hours}:${minutes}`,
-          subway: past.location.subway,
-          plus: true,
-        };
-        all.push(delivery);
-      });
-    }
-    if (curatorPastDeliveries.length > 0) {
-      curatorPastDeliveries.forEach(past => {
-        const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
-        const day = deliverytDate.getUTCDate();
-        const month = deliverytDate.toLocaleDateString('RU', {
-          month: 'short',
-        });
-        const hours = deliverytDate
-          ? String(deliverytDate.getUTCHours()).padStart(2, '0')
-          : '--';
-        const minutes = deliverytDate
-          ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
-          : '--';
+  //       let delivery: IAllMyPast = {
+  //         id: past.id + past.date,
+  //         category: {
+  //           id: 1,
+  //           name: 'доставка',
+  //         },
+  //         startDateString: past.date,
+  //         dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
+  //         name: 'Доставка',
+  //         points: past.price,
+  //         date: `${day} ${month} ${hours}:${minutes}`,
+  //         subway: past.location.subway,
+  //         plus: true,
+  //       };
+  //       all.push(delivery);
+  //     });
+  //   }
+  //   if (curatorPastDeliveries.length > 0) {
+  //     curatorPastDeliveries.forEach(past => {
+  //       const deliverytDate = new Date(Date.parse(past.date) + 180 * 60000);
+  //       const day = deliverytDate.getUTCDate();
+  //       const month = deliverytDate.toLocaleDateString('RU', {
+  //         month: 'short',
+  //       });
+  //       const hours = deliverytDate
+  //         ? String(deliverytDate.getUTCHours()).padStart(2, '0')
+  //         : '--';
+  //       const minutes = deliverytDate
+  //         ? String(deliverytDate.getUTCMinutes()).padStart(2, '0')
+  //         : '--';
 
-        let delivery: IAllMyPast = {
-          id: past.id + past.date,
-          category: {
-            id: 1,
-            name: 'доставка',
-          },
-          startDateString: past.date,
-          dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
-          name: 'Курирование доставки',
-          points: past.price,
-          date: `${day} ${month} ${hours}:${minutes}`,
-          subway: past.location.subway,
-          plus: true,
-        };
-        all.push(delivery);
-      });
-    }
+  //       let delivery: IAllMyPast = {
+  //         id: past.id + past.date,
+  //         category: {
+  //           id: 1,
+  //           name: 'доставка',
+  //         },
+  //         startDateString: past.date,
+  //         dayMonthYearString: `${day} ${getMonthCorrectEndingName(deliverytDate)} ${deliverytDate.getUTCFullYear()}`,
+  //         name: 'Курирование доставки',
+  //         points: past.price,
+  //         date: `${day} ${month} ${hours}:${minutes}`,
+  //         subway: past.location.subway,
+  //         plus: true,
+  //       };
+  //       all.push(delivery);
+  //     });
+  //   }
 
-    if (myPastTasks.length > 0) {
-      myPastTasks.forEach(past => {
-        const taskStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
-        const startDay = taskStartDate.getUTCDate();
-        let task: IAllMyPast = {
-          id: past.id + past.start_date,
-          category: {
-            id: 2,
-            name: 'доброе дело',
-          },
-          startDateString: past.start_date,
-          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(taskStartDate)} ${taskStartDate.getUTCFullYear()}`,
-          name:
-            past.category.name.slice(0, 1).toUpperCase() +
-            past.category.name.slice(1),
-          points: past.volunteer_price,
-          plus: true,
-        };
-        all.push(task);
-      });
-    }
-    if (myPastPromotions.length > 0) {
-      myPastPromotions.forEach(past => {
-        const promotionStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
-        const startDay = promotionStartDate.getUTCDate();
-        let task: IAllMyPast = {
-          id: past.id + past.start_date,
-          category: {
-            id: 3,
-            name: 'поощрение',
-          },
-          startDateString: past.start_date,
-          dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(promotionStartDate)} ${promotionStartDate.getUTCFullYear()}`,
-          name: past.name.slice(0, 1).toUpperCase() + past.name.slice(1),
-          points: past.price,
-          plus: false,
-        };
-        all.push(task);
-      });
-    }
+  //   if (myPastTasks.length > 0) {
+  //     myPastTasks.forEach(past => {
+  //       const taskStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
+  //       const startDay = taskStartDate.getUTCDate();
+  //       let task: IAllMyPast = {
+  //         id: past.id + past.start_date,
+  //         category: {
+  //           id: 2,
+  //           name: 'доброе дело',
+  //         },
+  //         startDateString: past.start_date,
+  //         dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(taskStartDate)} ${taskStartDate.getUTCFullYear()}`,
+  //         name:
+  //           past.category.name.slice(0, 1).toUpperCase() +
+  //           past.category.name.slice(1),
+  //         points: past.volunteer_price,
+  //         plus: true,
+  //       };
+  //       all.push(task);
+  //     });
+  //   }
+  //   if (myPastPromotions.length > 0) {
+  //     myPastPromotions.forEach(past => {
+  //       const promotionStartDate = new Date(Date.parse(past.start_date) + 180 * 60000);
+  //       const startDay = promotionStartDate.getUTCDate();
+  //       let task: IAllMyPast = {
+  //         id: past.id + past.start_date,
+  //         category: {
+  //           id: 3,
+  //           name: 'поощрение',
+  //         },
+  //         startDateString: past.start_date,
+  //         dayMonthYearString: `${startDay} ${getMonthCorrectEndingName(promotionStartDate)} ${promotionStartDate.getUTCFullYear()}`,
+  //         name: past.name.slice(0, 1).toUpperCase() + past.name.slice(1),
+  //         points: past.price,
+  //         plus: false,
+  //       };
+  //       all.push(task);
+  //     });
+  //   }
 
-    function compare(a: IAllMyPast, b: IAllMyPast) {
-      var dateA = new Date(Date.parse(a.startDateString) + 180 * 60000)
-      var dateB = new Date(Date.parse(b.startDateString) + 180 * 60000)
-      return +dateB - +dateA;
-    }
+  //   function compare(a: IAllMyPast, b: IAllMyPast) {
+  //     var dateA = new Date(Date.parse(a.startDateString) + 180 * 60000)
+  //     var dateB = new Date(Date.parse(b.startDateString) + 180 * 60000)
+  //     return +dateB - +dateA;
+  //   }
 
-    let sorted = all.sort(compare);
-    setAllMyPastCombined(sorted);
-  }
+  //   let sorted = all.sort(compare);
+  //   setAllMyPastCombined(sorted);
+  // }
 
   useEffect(() => {
-    getMyPastDeliveries();
+    getMyPastDeliveries(token, setMyPastDeliveries, setMistakeDelivery);
   }, [mistakeDelivery]);
 
   useEffect(() => {
-    getMyPastTasks();
+    getMyPastTasks(token, setMyPastTasks, setMistakeTask);
   }, [mistakeTask]);
 
   useEffect(() => {
-    getMyPastPromotions();
+    getMyPastPromotions(token, setMyPastPromotions, setMistakePromotion);
   }, [mistakePromotion]);
 
   useEffect(() => {
-    combineAllPast();
-  }, [myPastDeliveries, myPastTasks]);
+    combineAllPast(myPastPromotions, myPastDeliveries, curatorPastDeliveries, myPastTasks, setAllMyPastCombined);
+    console.log(allMyPastCombined, "[allMyPastCombined")
+  }, [myPastDeliveries, myPastTasks, curatorPastDeliveries]);
 
   return (
     <>
@@ -334,6 +342,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
               История
             </h2>
             <Filter
+              data-testid='filter'
               onClick={() => {
                 setOpenFilter(true);
               }}
@@ -477,10 +486,10 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
               })
             )
           ) : (
-            <div className="flex flex-col items-center justify-center h-full mt-[50%]">
+            <div data-testid="logo_no_tasks_yet" className="flex flex-col items-center justify-center h-full mt-[50%]">
               <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7 text-center">
-                Пока нет завершенных
+                Пока нет завершенных 
                 <br />
                 добрых дел
               </p>
