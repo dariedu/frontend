@@ -4,12 +4,17 @@ import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { UserContext } from '../../core/UserContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import { IUser } from '../../core/types';
-import { metier, patchUser } from '../../api/userApi';
+
+import {
+  metier,
+  // patchUser
+} from '../../api/userApi';
 import InputOptions, { type T } from './InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
 // import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
+import { handleRequestSubmit } from './helperFunctions';
+
 
 type TAboutMeProps = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>,
@@ -53,33 +58,33 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
     localStorage.setItem(fieldName, value);
   }
 
-  async function handleRequestSubmit() {
+//   async function handleRequestSubmit() {
 
-    const requestObject:Partial<IUser> = {
-      metier: metierName as string,
-      interests: requestBody.about_me,
- } 
-      try {
-          if (userId && token) {
-        const response = await patchUser(userId, requestObject, token)
-            if (response) {
-              if (userValue.currentUser) {
-                userValue.currentUser.metier = metierName as string;
-                userValue.currentUser.interests = requestBody.about_me
-              }
-          requestBody.about_me = "";
-          localStorage.removeItem("about_me");
-          setButtonActive(false)
-          setRequestAboutMeSuccess(true)
-            }
-        }else{
-      setRequestAboutMeFail(true)
-  }
-      } catch (err) {
-        setRequestAboutMeFail(true)
-        console.log(err, "handleRequestSubmit aboutMe")
-      }
-    }
+//     const requestObject:Partial<IUser> = {
+//       metier: metierName as string,
+//       interests: requestBody.about_me,
+//  } 
+//       try {
+//           if (userId && token) {
+//         const response = await patchUser(userId, requestObject, token)
+//             if (response) {
+//               if (userValue.currentUser) {
+//                 userValue.currentUser.metier = metierName as string;
+//                 userValue.currentUser.interests = requestBody.about_me
+//               }
+//           requestBody.about_me = "";
+//           localStorage.removeItem("about_me");
+//           setButtonActive(false)
+//           setRequestAboutMeSuccess(true)
+//             }
+//         }else{
+//       setRequestAboutMeFail(true)
+//   }
+//       } catch (err) {
+//         setRequestAboutMeFail(true)
+//         console.log(err, "handleRequestSubmit aboutMe")
+//       }
+//     }
 
  
   function handleInfoInput() {
@@ -110,7 +115,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
            className=" flex flex-col items-center justify-center"
            onSubmit={e => {
             e.preventDefault();
-            handleRequestSubmit()
+            handleRequestSubmit(metierName, requestBody, userId, token, userValue, setButtonActive, setRequestAboutMeSuccess, setRequestAboutMeFail)
           }}
          >
           <div  className='flex flex-col px-4'>
