@@ -1,5 +1,5 @@
 import SliderStories from '../../../components/SliderStories/SliderStories';
-// import Calendar from '../../../components/Calendar/Calendar';
+import Calendar from '../../../components/Calendar/Calendar';
 import SliderCardsDeliveries from '../../../components/SliderCards/SliderCardsDeliveries';
 import { useState, useContext, useEffect } from 'react';
 import { DeliveryContext } from '../../../core/DeliveryContext';
@@ -31,7 +31,7 @@ type TMainTabVolunteerProps = {
 };
 
 const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
-  // const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date|null>(null);
 
   const [takeDeliverySuccess, setTakeDeliverySuccess] =
     useState<boolean>(false); //// подтверждение бронирования доставки
@@ -48,6 +48,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [takeTaskFailString, setTakeTaskFailString] = useState<string|JSX.Element>(''); //переменная для записи названия ошибки при взятии доброго дела
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
+  const [filteredDeliveriesBeforeCalendarFilter, setFilteredDeliveriesBeforeCalendarFilter] = useState<IDelivery[]>([]);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
@@ -76,6 +77,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         i => i.is_completed == false && i.is_active == true,
       );
       setFilteredDeliveries(filtered);
+      setFilteredDeliveriesBeforeCalendarFilter(filtered)
     }
   }
 
@@ -297,13 +299,15 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
               Расписание доставок
             </div>
-            {/* <Calendar
+            <Calendar
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
-              showHeader={false}
-              showFilterButton={false}
-              showDatePickerButton={false}
-            /> */}
+              deliveries={filteredDeliveriesBeforeCalendarFilter}
+              setFilteredDeliveries={setFilteredDeliveries}
+              // showHeader={false}
+              // showFilterButton={false}
+              // showDatePickerButton={false}
+            />
             {filteredDeliveries.length > 0 ? (
               <SliderCardsDeliveries
                 deliveries={filteredDeliveries}
