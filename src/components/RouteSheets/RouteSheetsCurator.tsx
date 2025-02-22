@@ -12,7 +12,10 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import { TokenContext } from '../../core/TokenContext';
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-
+import {
+  getPhotoReports,
+  type TServerResponsePhotoReport,
+} from '../../api/apiPhotoReports';
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -54,7 +57,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
-
+  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
 
 
   ///// используем контекст токена
@@ -120,8 +123,23 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       }
     }
   }
-  
 
+   async function requestPhotoReports() {
+      if (token) {
+        try {
+          let result = await getPhotoReports(token);
+          let filtered = result
+            .filter(report => report.delivery_id == deliveryId)
+          setMyPhotoReports(filtered);
+        } catch (err) {
+          console.log(err, 'getPhotoReports has failed RouteSheetCurator');
+        }
+      }
+    }
+  
+ useEffect(() => {
+    requestPhotoReports();
+  }, []);
 
 
   return (routeSheetsData.length == 0 ? (
@@ -239,8 +257,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               )}
               {openRouteSheets[index] && (
                   <RouteSheetsView
-                  deliveryId={ deliveryId}
+                  // deliveryId={ deliveryId}
                   routes={routeS.address.map(addr => (addr))}
+                  thisDeliveryPhotoReports={myPhotoReports}
                 />                
               )}
             </div>

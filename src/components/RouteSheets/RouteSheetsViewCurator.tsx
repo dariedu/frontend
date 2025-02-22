@@ -1,25 +1,30 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  // useContext,
+  useState, useEffect
+} from 'react';
 // import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
-import { TokenContext } from '../../core/TokenContext';
+// import { TokenContext } from '../../core/TokenContext';
 import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 
 import {
-  getPhotoReports,
+  // getPhotoReports,
   type TServerResponsePhotoReport,
 } from '../../api/apiPhotoReports';
 
 interface IRouteSheetsViewProps {
-  routes: TAddress[];
-  deliveryId: number;
+  routes: TAddress[]
+  // deliveryId: number
+  thisDeliveryPhotoReports: TServerResponsePhotoReport[]
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes,
-  deliveryId,
+  // deliveryId,
+  thisDeliveryPhotoReports
 }) => {
-  const { token } = useContext(TokenContext);
+  // const { token } = useContext(TokenContext);
 
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
   const [fullView, setFullView] = useState<boolean[]>(Array(routes.length).fill(false)); // раскрываем детали о благополучателе
@@ -27,25 +32,18 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   
 
 
-  async function requestPhotoReports() {
-    if (token) {
-      try {
-        let result = await getPhotoReports(token);
-        let filtered = result
-          .filter(report => report.delivery_id == deliveryId)
+function filterPhotoReports() {
+   let filtered = thisDeliveryPhotoReports
           .filter(report => {
             if (report.route_sheet_id == routes[0].route_sheet) return report;
           });
-        setMyPhotoReports(filtered);
-      } catch (err) {
-        console.log(err, 'getPhotoReports has failed RouteSheetCurator');
-      }
-    }
+  setMyPhotoReports(filtered);
+   
   }
 
   useEffect(() => {
-    requestPhotoReports();
-  }, []);
+    filterPhotoReports();
+  }, [thisDeliveryPhotoReports]);
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
