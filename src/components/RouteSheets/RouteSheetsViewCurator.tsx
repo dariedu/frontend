@@ -1,50 +1,27 @@
 import React, {
-  // useContext,
   useState, useEffect
 } from 'react';
-// import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
-// import { TokenContext } from '../../core/TokenContext';
 import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 
 import {
-  // getPhotoReports,
   type TServerResponsePhotoReport,
 } from '../../api/apiPhotoReports';
 
 interface IRouteSheetsViewProps {
   routes: TAddress[]
-  // deliveryId: number
-  thisDeliveryPhotoReports: TServerResponsePhotoReport[]
+  myPhotoReports:TServerResponsePhotoReport[]
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes,
-  // deliveryId,
-  thisDeliveryPhotoReports
+  myPhotoReports
 }) => {
-  // const { token } = useContext(TokenContext);
 
-  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
   const [fullView, setFullView] = useState<boolean[]>(Array(routes.length).fill(false)); // раскрываем детали о благополучателе
 
   
-
-
-function filterPhotoReports() {
-   let filtered = thisDeliveryPhotoReports
-          .filter(report => {
-            if (report.route_sheet_id == routes[0].route_sheet) return report;
-          });
-  setMyPhotoReports(filtered);
-   
-  }
-
-  useEffect(() => {
-    filterPhotoReports();
-  }, [thisDeliveryPhotoReports]);
-
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
   const [comment, setComment] = useState<[number, string][]>([]);
@@ -82,10 +59,15 @@ function filterPhotoReports() {
     checkoForUploadedReports();
   }, [myPhotoReports]);
 
+
+
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black space-y-1">
-      {routes.map((route, index) => (
-        <div key={index} className='flex flex-col w-full h-fit bg-light-gray-white dark:bg-light-gray-7-logo p-4 space-y-[14px] rounded-2xl mt-1'>
+      {(!routes || routes.length == 0) ?
+        (<div className='w-full bg-light-gray-white dark:bg-light-gray-7-logo pb-4 dark:text-light-gray-white text-center font-gerbera-h3 rounded-b-2xl  flex flex-col justify-between items-center'
+        >Упс, этот маршрутный лист пуст!</div>)
+        : routes.map((route, index) => (
+          <div key={index} className='flex flex-col w-full h-fit bg-light-gray-white dark:bg-light-gray-7-logo p-4 space-y-[14px] rounded-2xl mt-1'>
           <div
             className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center "
           >

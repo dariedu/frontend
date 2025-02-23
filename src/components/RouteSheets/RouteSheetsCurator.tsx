@@ -1,21 +1,16 @@
 import React, {useState, useContext, useEffect} from 'react';
-import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
-import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import RouteSheetsView from './RouteSheetsViewCurator';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
-import Small_sms from "./../../assets/icons/small_sms.svg?react";
-import * as Avatar from '@radix-ui/react-avatar';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
-import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import { TokenContext } from '../../core/TokenContext';
-import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import {
-  getPhotoReports,
+  getPhotoReportsByDeliveryId,
   type TServerResponsePhotoReport,
 } from '../../api/apiPhotoReports';
+import RouteSheet from './CuratorRSCreator';
+
 
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
@@ -44,7 +39,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
 }) => {
 
 
-  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false),);
+  const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
   interface IfilteredRouteSheet extends IRouteSheet{
     volunteerFullName?: string
     telegramNik?:string
@@ -57,7 +52,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
-  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
+  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
 
 
   ///// используем контекст токена
@@ -127,10 +122,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
    async function requestPhotoReports() {
       if (token) {
         try {
-          let result = await getPhotoReports(token);
-          let filtered = result
-            .filter(report => report.delivery_id == deliveryId)
-          setMyPhotoReports(filtered);
+          let result = await getPhotoReportsByDeliveryId(token, deliveryId);
+          console.log(result, `photo report by deliveryid ${deliveryId}`)
+          setMyPhotoReports(result);
+          localStorage.setItem(`curator_del_${deliveryId}`, JSON.stringify(result))
         } catch (err) {
           console.log(err, 'getPhotoReports has failed RouteSheetCurator');
         }
@@ -159,110 +154,16 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
-        {filtered.map((routeS, index) => {
+        {filtered.length > 0 && filtered.map((routeS, index) => {
           return (
-            <div key={routeS.id} className="mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[124px] flex flex-col justify-around ">
-              <div className="flex items-center justify-between w-full mb-2 p-4">
-                <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
-                  {`Маршрут: ${routeS.name}`}<br />
-                  {`Обедов к доставке: ${routeS.diners}`} 
-                </span>
-                <div
-                  className="w-6 h-6 cursor-pointer"
-                  onClick={() =>
-                    setOpenRouteSheets(prev =>
-                      prev.map((isOpen, idx) =>
-                        idx === index ? !isOpen : isOpen,
-                      ),
-                    )
-                  }
-                >
-                  <Arrow_down  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${ openRouteSheets[index] ? 'transform rotate-180' : "" }`}
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center justify-between">
-                <div
-                  className="flex w-full items-center cursor-pointer"
-                  onClick={() =>
-                    setOpenVolunteerLists(prev =>
-                      prev.map((isOpen, idx) =>
-                        idx === index ? isOpen ? false: true : isOpen,
-                      ),
-                    )
-                  }
-                >
-                  <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 " >
-                      <div className='flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white'>
-                        {routeS.volunteerFullName ? (
-                        <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
-                         <Avatar.Image
-                         className="w-[40px] h-[40px] object-cover"
-                          src={listOfVolunteers.find(i => i.tg_username == routeS.telegramNik)?.photo}
-                              />
-                          <Avatar.Fallback
-                            className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
-                            delayMs={600}
-                           >
-                          {routeS.volunteerFullName?.charAt(0)}
-                          </Avatar.Fallback>
-                          </Avatar.Root>
-                        ) : (
-                            <AvatarIcon  />
-                        )}
-              
-                        {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? (
-                          <p className='ml-3 w-full'>{routeS.volunteerFullName}</p>
-                        ) : (
-                            <p className='ml-3 w-full'>Не выбран</p>
-                    )}
-                    {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
-                    <a href={'https://t.me/' + (routeS.telegramNik.includes('@')? routeS.telegramNik.slice(1): routeS.telegramNik)} target="_blank" onClick={(e=>e.stopPropagation())}>
-                    <Small_sms className="w-[36px] h-[35px]"/>
-                    </a>
-                    ):""}
-                  </div>
-                    
-                  </div>
-                </div>
-              </div>
-
-              {openVolunteerLists[index] && (
-                <Modal isOpen={openVolunteerLists[index]} onOpenChange={()=>{setOpenVolunteerLists(prev =>
-                  prev.map((isOpen, idx) =>
-                    idx === index ? isOpen ? false: true : isOpen,
-                  ),
-                )}}>
-                  <ListOfVolunteers
-                  listOfVolunteers={listOfVolunteers}
-                  changeListOfVolunteers={changeListOfVolunteers}
-                  onOpenChange={()=>{setOpenVolunteerLists(prev =>
-                    prev.map((isOpen, idx) =>
-                      idx === index ? isOpen ? false: true : isOpen,
-                    ),
-                  )}}
-                  showActions={true}
-                  onVolunteerAssign={onVolunteerAssign}
-                  deliveryId={deliveryId}
-                  routeSheetName={`Маршрутный лист: ${routeS.name}`}
-                  routeSheetId={routeS.id}
-                  setAssignVolunteerFail={setAssignVolunteerFail}
-                  setAssignVolunteerSuccess={setAssignVolunteerSuccess}
-                  assignVolunteerFail={assignVolunteerFail}
-                  assignVolunteerSuccess={assignVolunteerSuccess}
-                  assignedVolunteerName={routeS.volunteerFullName}
-                />
-                </Modal>
-              )}
-              {openRouteSheets[index] && (
-                  <RouteSheetsView
-                  // deliveryId={ deliveryId}
-                  routes={routeS.address.map(addr => (addr))}
-                  thisDeliveryPhotoReports={myPhotoReports}
-                />                
-              )}
-            </div>
+            <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
+              listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}
+              changeListOfVolunteers={changeListOfVolunteers}
+              onVolunteerAssign={onVolunteerAssign} deliveryId={deliveryId}
+              assignVolunteerFail={assignVolunteerFail} setAssignVolunteerFail={setAssignVolunteerFail}
+              assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+              openRouteSheets={openRouteSheets} setOpenRouteSheets={setOpenRouteSheets} myPhotoReports={myPhotoReports}
+            />
           );
         })}
       </div>

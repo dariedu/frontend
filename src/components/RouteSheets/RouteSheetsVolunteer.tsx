@@ -5,7 +5,7 @@ import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
-import { getPhotoReports, type TServerResponsePhotoReport} from '../../api/apiPhotoReports';
+import { getPhotoReportsByDeliveryId, type TServerResponsePhotoReport} from '../../api/apiPhotoReports';
 import { TokenContext } from '../../core/TokenContext';
 import { UserContext } from '../../core/UserContext';
 
@@ -31,7 +31,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
 
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
-  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>([])
+  const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`vol_del_${deliveryId}`) !== null && localStorage.getItem(`vol_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`vol_del_${deliveryId}`) as string) : [])
   const { token } = useContext(TokenContext);
   const { currentUser } = useContext(UserContext);
   const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState<boolean>(false);
@@ -40,13 +40,14 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   async function requestPhotoReports() {
     if (token && currentUser) {
       try {
-        let result = await getPhotoReports(token);
-        let filtered = result.filter(report => report.delivery_id == deliveryId).filter(report => {
+        let result = await getPhotoReportsByDeliveryId(token, deliveryId);
+        let filtered = result.filter(report => {
           if (report.user.id == currentUser.id)
-            // console.log(report, 'requested photo report volunteer RouteSheetVolunteer component')
            return report
         })
+        console.log(result, `photo report by deliveryid ${deliveryId}`)
         setMyPhotoReports(filtered)
+        localStorage.setItem(`vol_del_${deliveryId}`, JSON.stringify(filtered))
       } catch (err) {
         console.log(err, " getPhotoReports failed RouteSheetVolunteer")
     }

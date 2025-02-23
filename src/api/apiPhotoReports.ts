@@ -58,6 +58,27 @@ export async function getPhotoReports(
     throw new Error('Get request getPhotoReports has failed');
   }
 };
+//photo report by deliveryId
+export async function getPhotoReportsByDeliveryId(
+  access: string,
+  deliveryId:number
+): Promise<TServerResponsePhotoReport[]> {
+  try {
+    const response: AxiosResponse<TServerResponsePhotoReport[]> = await axios({
+      url: `${photoReportsUrl}?delivery_id=${deliveryId}`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+         accept: 'application/json',
+      },
+    });
+      return response.data
+    
+  } catch (err:any) {
+    console.error('Get request getPhotoReports has failed', err);
+    throw new Error('Get request getPhotoReports has failed');
+  }
+};
 
 
 export async function postPhotoReport(
