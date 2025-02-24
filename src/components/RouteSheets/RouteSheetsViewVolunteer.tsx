@@ -187,10 +187,15 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 // routes.map((route) => (console.log(route.beneficiar[0].address, array )))
 // console.log(photoReports, "photo report")
   return (
-    <div key={routeSheetId+'routeSheetWievVolunteer'} className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full">
-      {routes.map((route, index) => (
+    <div key={routeSheetId + 'routeSheetWievVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}>
+      {(!routes || routes.length == 0) ?
+        (<div className='w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center'
+        >Упс, этот маршрутный лист пуст!</div>)
+         : routes.map((route, index) => (
         <div key={route.id + routeSheetId + 'routeSheetWievVolunteer'}
-          className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 h-fit p-4"
+          className={`w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 h-fit p-4
+             ${route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? 'opacity-70 dark:opacity-65 ' : "" }
+            `}
         >
           <div className="flex w-full items-center justify-between">
             <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1 max-w-[80%]">
@@ -270,7 +275,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   : 'btn-B-GreenInactive  cursor-default'
               }
               onClick={() => {
-                if (uploadedFileLink[index] == '') {
+                if (uploadedFileLink[index] == '' && unactive[index] == 'Отправить') {
                   setNoPhoto(true);
                 } else {
                   unactive[index] == 'Отправлен'

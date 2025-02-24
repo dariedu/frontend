@@ -10,10 +10,10 @@ import { UserContext } from '../../../core/UserContext';
 
 const CuratorTab: React.FC = () => {
 
-   const [curatorActiveDeliveries, setCuratorActiveDeliveries] = useState<TCuratorDelivery[]>([])
-   const [curatorInProcessDeliveries, setCuratorInProcessDeliveries] = useState<TCuratorDelivery[]>([])
-   const [curatorCompletedDeliveries, setCuratorCompletedDeliveries] = useState<TCuratorDelivery[]>([])
-   const [curtorTasks, setCurtorTasks] = useState<ITask[]>([]);  
+   const [curatorActiveDeliveries, setCuratorActiveDeliveries] = useState<TCuratorDelivery[]>(localStorage.getItem(`curator_active_del_for_curator_tab`) !== null && localStorage.getItem(`curator_active_del_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_active_del_for_curator_tab`) as string) : [])
+   const [curatorInProcessDeliveries, setCuratorInProcessDeliveries] = useState<TCuratorDelivery[]>(localStorage.getItem(`curator_inProcess_del_for_curator_tab`) !== null && localStorage.getItem(`curator_inProcess_del_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_inProcess_del_for_curator_tab`) as string) : [])
+   const [curatorCompletedDeliveries, setCuratorCompletedDeliveries] = useState<TCuratorDelivery[]>(localStorage.getItem(`curator_completed_del_for_curator_tab`) !== null && localStorage.getItem(`curator_completed_del_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_completed_del_for_curator_tab`) as string) : [])
+   const [curtorTasks, setCurtorTasks] = useState<ITask[]>(localStorage.getItem(`curator_tasks_for_curator_tab`) !== null && localStorage.getItem(`curator_tasks_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_tasks_for_curator_tab`) as string) : []);  
    const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
    const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
 
@@ -33,12 +33,15 @@ async function getMyCuratorDeliveries() {
     if (result) { 
       result['активные доставки'].forEach((i: TCuratorDelivery) => { activeDeliveries.push(i) });
       setCuratorActiveDeliveries(activeDeliveries)/// запоминаем результат
+      localStorage.setItem(`curator_active_del_for_curator_tab`, JSON.stringify(activeDeliveries))
      ////////////////////////
       result['выполняются доставки'].forEach((i: TCuratorDelivery) => { inProcessDeliveries.push(i) });
       setCuratorInProcessDeliveries(inProcessDeliveries)/// запоминаем результат
+      localStorage.setItem(`curator_inProcess_del_for_curator_tab`, JSON.stringify(inProcessDeliveries))
       /////////////////////
       result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i) })
       setCuratorCompletedDeliveries(myCompletedDeliveries)
+      localStorage.setItem(`curator_completed_del_for_curator_tab`, JSON.stringify(myCompletedDeliveries))
     }
 }catch (err) {
   console.log(err, "getMyCuratorDeliveries CuratorPage fail")
@@ -60,7 +63,8 @@ async function getMyCuratorDeliveries() {
               return task
             }
          })
-        setCurtorTasks(filtered)
+          setCurtorTasks(filtered)
+          localStorage.setItem(`curator_tasks_for_curator_tab`, JSON.stringify(filtered))
         } 
       } catch (err) {
         console.log(err)
