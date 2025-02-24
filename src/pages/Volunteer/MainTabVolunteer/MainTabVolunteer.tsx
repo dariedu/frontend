@@ -47,7 +47,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [takeTaskFail, setTakeTaskFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доброго дела
   const [takeTaskFailString, setTakeTaskFailString] = useState<string|JSX.Element>(''); //переменная для записи названия ошибки при взятии доброго дела
 
-  const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>([]);
+  const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>(localStorage.getItem(`all_del_vol`) !== null && localStorage.getItem(`all_del_vol`) !== undefined ? JSON.parse(localStorage.getItem(`all_del_vol`) as string) : []);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
@@ -72,9 +72,11 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   ///// убираем все неактивные (завершенные заявки из списка)
   function filterDeliveries() {
     if (deliveries.length > 0) {
+      const today = new Date();
       const filtered: IDelivery[] = deliveries.filter(
-        i => i.is_completed == false && i.is_active == true,
+        i =>i.is_completed == false && i.is_active == true && (new Date(i.date) > new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() - 1, today.getMinutes()))
       );
+      localStorage.setItem(`all_del_vol`, JSON.stringify(filtered))
       setFilteredDeliveries(filtered);
     }
   }

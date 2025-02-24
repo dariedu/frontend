@@ -16,8 +16,8 @@ import { UserContext } from '../../../core/UserContext';
 
 const CalendarTabVolunteer = () => {
   // const [selectedDate, setSelectedDate] = useState(new Date());/// дата для календаря
-  const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]) ////доставки записанные на меня
-  const [myPast, setMyPast] = useState<IDelivery[]>([]) //// мои прошедшие доставки
+  const [myCurrent, setMyCurrent] = useState<IDelivery[]>(localStorage.getItem(`vol_current_for_calendar_tab`) !== null && localStorage.getItem(`vol_current_for_calendar_tab`) !== undefined ? JSON.parse(localStorage.getItem(`vol_current_for_calendar_tab`) as string) : []) ////доставки записанные на меня
+  const [myPast, setMyPast] = useState<IDelivery[]>(localStorage.getItem(`vol_past_for_calendar_tab`) !== null && localStorage.getItem(`vol_past_for_calendar_tab`) !== undefined ? JSON.parse(localStorage.getItem(`vol_past_for_calendar_tab`) as string) : []) //// мои прошедшие доставки
 
   const [cancelDeliverySuccess, setCancelDeliverySuccess] = useState<boolean>(false) //// доставка успешно отмемена
   const [cancelDeliveryFail, setCancelDeliveryFail] = useState<boolean>(false)////// доставку не удалось отменить, произошла ошибка
@@ -29,7 +29,7 @@ const CalendarTabVolunteer = () => {
   const [cancelDeliveryReasonOpenModal, setCancelDeliveryReasonOpenModal] = useState(false);  /// модальное окно для отправки отзыва
   const [isCancelledDeliveryFeedbackSubmited, setIsCancelledDeliveryFeedbackSubmited] = useState(false);
 
-  const [allMyTasks, setAllMyTasks] = useState<ITask[]>([])
+  const [allMyTasks, setAllMyTasks] = useState<ITask[]>(localStorage.getItem(`vol_tasks_for_calendar_tab`) !== null && localStorage.getItem(`vol_tasks_for_calendar_tab`) !== undefined ? JSON.parse(localStorage.getItem(`vol_tasks_for_calendar_tab`) as string) : [])
 
   const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
   const [cancelTaskSuccess, setCancelTaskSuccess] = useState(false)  //// таск успешно отмемен
@@ -71,7 +71,10 @@ const CalendarTabVolunteer = () => {
            })
         
            setMyCurrent(current);
-           setMyPast(past)}
+           setMyPast(past)
+         }
+         localStorage.setItem(`vol_current_for_calendar_tab`, JSON.stringify(current))
+         localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(current))
     }
     } catch (err) {
       console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
@@ -118,6 +121,7 @@ const CalendarTabVolunteer = () => {
             if(diffDays <= 5) return task
           })
           setAllMyTasks(filtered)
+          localStorage.setItem(`vol_tasks_for_calendar_tab`, JSON.stringify(filtered))
         }
       }
     } catch (err) {

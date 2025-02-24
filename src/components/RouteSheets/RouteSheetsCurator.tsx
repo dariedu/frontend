@@ -154,7 +154,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
       <div className="flex flex-col">
-        {filtered.length > 0 && filtered.map((routeS, index) => {
+        {filtered.length > 0 && filtered.sort((a,b) => a.name.localeCompare(b.name)).map((routeS, index) => {
           return (
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
               listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}

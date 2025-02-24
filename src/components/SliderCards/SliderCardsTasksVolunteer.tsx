@@ -29,7 +29,7 @@ const SliderCardsTaskVolunteer: React.FC<SliderCardsProps> = ({
       <div
         className="sliderPromotionsScrollbar flex overflow-x-auto justify-between w-full pl-4 space-x-2 pr-4"
       >
-        {tasks.map((task) => {
+        {tasks.sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map((task) => {
           return (
             <div key={task.id} >
               <CardTaskVolunteer task={task} myTasks={myTasks} switchTab={switchTab} getTask={getTask} stringForModal={stringForModal} takeTaskSuccess={takeTaskSuccess} setTakeTaskSuccess={setTakeTaskSuccess} />
