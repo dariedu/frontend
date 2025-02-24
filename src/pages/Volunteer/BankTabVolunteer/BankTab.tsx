@@ -65,7 +65,8 @@ const BankTab:React.FC = () => {
              return i.picture = i.picture.replace('http', 'https')
             }
           })
-        setPromotionsAll(allPromotinsArr);
+          const filtered = allPromotinsArr.filter(i => { return i.available_quantity !== 0 })
+        setPromotionsAll(filtered);
         }
       }
     } catch (err) {
