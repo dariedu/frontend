@@ -65,7 +65,8 @@ const BankTab:React.FC = () => {
              return i.picture = i.picture.replace('http', 'https')
             }
           })
-        setPromotionsAll(allPromotinsArr);
+          const filtered = allPromotinsArr.filter(i => { return i.available_quantity !== 0 }).sort((a, b) => {return +new Date(a.start_date) - +new Date(b.start_date)})
+        setPromotionsAll(filtered);
         }
       }
     } catch (err) {
@@ -79,7 +80,7 @@ const BankTab:React.FC = () => {
       if (token) {
         myPromotinsArr = await getMyPromotions(token);
         if (myPromotinsArr) {
-          let filtered = myPromotinsArr.filter(prom => { if (prom.is_active) return prom });
+          let filtered = myPromotinsArr.filter(prom => { if (prom.is_active) return prom }).sort((a, b) => { return +new Date(a.start_date) - +new Date(b.start_date) });
           filtered.map(i => {
             if (i.picture && !(i.picture?.includes('https'))) {
               return i.picture = i.picture.replace('http', 'https')
