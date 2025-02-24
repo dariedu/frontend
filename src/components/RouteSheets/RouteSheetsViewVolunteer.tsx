@@ -68,7 +68,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
-
+  // const [textCopied, setTextCopied] = useState(false)
 
 
   function checkoForUploadedReports() {
@@ -198,9 +198,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             `}
         >
           <div className="flex w-full items-center justify-between">
-            <p className="font-gerbera-h3 text-light-gray-8-text mb-[4px] dark:text-light-gray-1 max-w-[80%]">
-              {route.address}
-            </p>
+               <textarea value={route.address} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none " readOnly onClick={(e) => {
+                  const textArea = e.target as HTMLTextAreaElement; textArea.select()
+               }} />
             { route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 &&(
             object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? (
               <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
