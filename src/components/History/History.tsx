@@ -52,7 +52,7 @@ const History: React.FC<IHistoryProps> = ({ onClose, isVolunteer }) => {
   const [myPastDeliveries, setMyPastDeliveries] = useState<IDelivery[]>([]);
   const [myPastTasks, setMyPastTasks] = useState<ITask[]>([]);
   const [myPastPromotions, setMyPastPromotions] = useState<IPromotion[]>([]);
-  const [allMyPastCombined, setAllMyPastCombined] = useState<IAllMyPast[]>([]);
+  const [allMyPastCombined, setAllMyPastCombined] = useState<IAllMyPast[]>(localStorage.getItem(`history`) !== null && localStorage.getItem(`history`) !== undefined ? JSON.parse(localStorage.getItem(`history`) as string) : []);
   const [mistakeDelivery, setMistakeDelivery] = useState(false);
   const [mistakeTask, setMistakeTask] = useState(false);
   const [mistakePromotion, setMistakePromotion] = useState(false);
