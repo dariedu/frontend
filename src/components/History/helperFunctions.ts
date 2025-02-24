@@ -247,6 +247,7 @@ type IAllMyPast = {
     }
 
     let sorted = all.sort(compare);
-    setAllMyPastCombined(sorted);
+   setAllMyPastCombined(sorted);
+   localStorage.setItem(`history`, JSON.stringify(sorted))
   }
 export {getMyCuratorDeliveries, requestMyDelivery, getMyPastDeliveries, getMyPastTasks, getMyPastPromotions, combineAllPast, type IAllMyPast, filterCategoryOptions }
