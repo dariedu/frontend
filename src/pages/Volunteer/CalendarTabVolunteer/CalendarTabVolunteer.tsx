@@ -77,7 +77,7 @@ const CalendarTabVolunteer = () => {
          localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(current))
     }
     } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+      console.log(err, "CalendarTabVolunteer getMyDeliveries has failed")
     }
   }
   
@@ -100,7 +100,7 @@ const CalendarTabVolunteer = () => {
           setCompletedTaskFeedbacks(allMySubmitedFeedbacksForCompletedTasks)
         }
       } catch (err) {
-        console.log("getAllMyFeedbacks volunteer tab has failed")
+        console.log("CalendarTabVolunteer getAllMyFeedbacks has failed")
     }
   }
   }
@@ -125,7 +125,7 @@ const CalendarTabVolunteer = () => {
         }
       }
     } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+      console.log(err, "CalendarTabVolunteer getMyTasks fail")
     }
   }
 
@@ -187,7 +187,7 @@ try {
 }
 } catch (err) {
   setCancelDeliveryFail(true)
-  console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
+  console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
 }
   }
   
