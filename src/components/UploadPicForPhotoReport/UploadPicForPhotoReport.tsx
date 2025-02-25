@@ -16,7 +16,8 @@ interface IUploadPicProps {
   fileUploaded: boolean[]
   setFileUploaded: React.Dispatch<React.SetStateAction<boolean[]>>
   setFiles: React.Dispatch<React.SetStateAction<Blob[]>>
-  files:Blob[]
+  files: Blob[]
+  sendPhotoReportFunc: (index:number) => void
 }
 ////// в компоненте уже есть модалка, если нажать на пустую модальную область она закроется
 export const UploadPic: React.FC<IUploadPicProps> = ({
@@ -30,7 +31,8 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   setFileUploaded,
   fileUploaded,
   setFiles,
-  files
+  files,
+  sendPhotoReportFunc
 }) => {
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -139,16 +141,16 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
         </div>
        
         {uploadedFileLink[index].length>0 && (
-          <button className="btn-B-GreenDefault " onClick={()=>onOpenChange(false)}>
-            Сохранить фото
+        <button className="btn-B-GreenDefault " onClick={() => { onOpenChange(false);  sendPhotoReportFunc(index) }}>
+            Отправить фотоотчет
           </button>
         )}
       {errorMessage.length > 0 &&
       <ConfirmModal
       isOpen={isErrorOpen}
       onOpenChange={setIsErrorOpen}
-        onConfirm={() => { setIsErrorOpen(false); setErrorMessage('') }}
-        title={<p>Упс,<br/> { errorMessage }</p>}
+      onConfirm={() => { setIsErrorOpen(false); setErrorMessage('') }}
+      title={<p>Упс,<br/> { errorMessage }</p>}
       description=""
       confirmText="Закрыть"
       isSingleButton={true}

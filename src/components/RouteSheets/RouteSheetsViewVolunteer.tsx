@@ -12,7 +12,7 @@ import { TokenContext } from '../../core/TokenContext';
 import { postPhotoReport } from '../../api/apiPhotoReports';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
-import Camera from '../../assets/icons/photo.svg?react';
+// import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 
 interface IRouteSheetsViewProps {
@@ -201,45 +201,47 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                <textarea value={route.address} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none " readOnly onClick={(e) => {
                   const textArea = e.target as HTMLTextAreaElement; textArea.select()
                }} />
+              
             { route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 &&(
             object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? (
               <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
                 <a href={object[array.indexOf(route.beneficiar[0].address)][1]}>
                   Ссылка
                 </a>
-              </button>
-            ) : fileUploaded[index] ? (
-              <div
-                className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
-                onClick={() =>
-                  setUploadPictureModal(prev =>
-                    prev.map((isOpen, ind) =>
-                      ind == index ? !isOpen : isOpen,
-                    ),
-                  )
-              }
-              >
-                <img
-                  src={uploadedFileLink[index]}
-                  className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover absolute"
-                />
-              </div>
-            ) : (
-              <div
-                className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
-                onClick={() =>
-                  setUploadPictureModal(prev =>
-                    prev.map((isOpen, ind) =>
-                      ind == index ? !isOpen : isOpen,
-                    ),
-                  )
-                }
-              >
-                <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full absolute fill-light-gray-3 " />
-              </div>
+                   </button>
+                   
+            ) : fileUploaded[index] ? (""
+              // <div
+              //   className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
+              //   onClick={() =>
+              //     setUploadPictureModal(prev =>
+              //       prev.map((isOpen, ind) =>
+              //         ind == index ? !isOpen : isOpen,
+              //       ),
+              //     )
+              // }
+              // >
+              //   <img
+              //     src={uploadedFileLink[index]}
+              //     className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover absolute"
+              //   />
+              // </div>
+            ) : ( ""
+              // <div
+              //   className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
+              //   onClick={() =>
+              //     setUploadPictureModal(prev =>
+              //       prev.map((isOpen, ind) =>
+              //         ind == index ? !isOpen : isOpen,
+              //       ),
+              //     )
+              //   }
+              // >
+              //   <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full absolute fill-light-gray-3 " />
+              // </div>
             ))}
           </div>
-          {comment[index].length > 0 && (
+          {/* {comment[index].length > 0 && (
             <div className="self-start w-full mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
               Комментарий
               <br />
@@ -247,14 +249,38 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 {comment[index]}
               </p>
             </div>
-          )}
-          {beneficiarIsAbsent[index] && (
+          )} */}
+          {/* {beneficiarIsAbsent[index] && (
             <p className=" text-light-gray-5 dark:text-light-gray-1 font-gerbera-sub3 mt-2 self-start">
               Благополучателя нет на месте
             </p>
-          )}
+          )} */}
+              <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
+                  {/* {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'} */}
+                  {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
+                  {ben.full_name}
+                  </p>)}
+                  {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
+                    <div>
+                    {/* Основной телефон */}
+                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
+                        {ben.phone}
+                      </p>)}
+                     
+                    </div>
+                  )}
+                </div>
+                {/* {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
+                    <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                    Основной телефон
+                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {ben.phone}
+                      </p>)}
+                     
+                    </div>
+                  )} */}
           <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
-            {unactive[index] == 'Отправить'  && (
+            {/* {unactive[index] == 'Отправить'  && (
               <button
                 className="btn-B-WhiteDefault text-light-gray-8-text"
                 onClick={() =>
@@ -267,27 +293,38 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               >
                 {comment[index].length == 0 ? 'Добавить комментарий' : "Редактировать комментарий" }
               </button>
-            )}
-            <button
-              className={
-                unactive[index] == 'Отправить' || unactive[index] == 'Отправка'
-                  ? 'btn-B-WhiteDefault dark:text-light-brand-green'
-                  : 'btn-B-GreenInactive  cursor-default'
-              }
-              onClick={() => {
-                if (uploadedFileLink[index] == '' && unactive[index] == 'Отправить') {
-                  setNoPhoto(true);
-                } else {
-                  unactive[index] == 'Отправлен'
-                    ? () => {}
-                    : unactive[index] == 'Отправка'
-                      ? () => {}
-                      : submitPhotoReport(index);
-                }
-              }}
-            >
-              {unactive[index]}
-            </button>
+            )} */}
+               
+              <button
+                 className={
+                   unactive[index] == 'Отправить'
+                     ? 'btn-B-WhiteDefault dark:text-light-brand-green'
+                     : 'btn-B-GreenInactive  cursor-default'
+                 }
+                 onClick={() => {
+                   if (unactive[index] == 'Отправить') {
+                     setUploadPictureModal(prev =>
+                       prev.map((isOpen, ind) =>
+                         ind == index ? !isOpen : isOpen,
+                       ),
+                     )
+                   } else if (unactive[index] == 'Отправлен' || unactive[index] == 'Отправка') {
+                   }
+                 }}
+                 // onClick={() => {
+                // if (uploadedFileLink[index] == '' && unactive[index] == 'Отправить') {
+                //   setNoPhoto(true);
+                // } else {
+                //   unactive[index] == 'Отправлен'
+                //     ? () => {}
+                //     : unactive[index] == 'Отправка'
+                //       ? () => {}
+                //       : submitPhotoReport(index);
+                // }
+              // }}
+            > 
+                 {unactive[index] == 'Отправить' ? "Фотоотчет" : unactive[index] == 'Отправка' ? "Отправка" : "Фотоотчет отправлен"}
+            </button> 
           </div>
           <div className="flex items-center justify-between w-full mb-2 mt-4">
             <p className="font-gerbera-h3 text-light-gray-5"
@@ -313,12 +350,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           {fullView[index] && (
             <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                  {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'}
-                  {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                  {ben.full_name}
-                  </p>)}
-                </div>
+                
 
                 {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
@@ -329,15 +361,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                      
                     </div>
                   )}
-                {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
-                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Основной телефон
-                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {ben.phone}
-                      </p>)}
-                     
-                    </div>
-                  )}
+              
                 {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Запасной телефон
@@ -416,6 +440,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               setBeneficiarIsAbsent={setBeneficiarIsAbsent}
               setFiles={setFiles}
               files={files}
+              sendPhotoReportFunc={submitPhotoReport}
             />
           </Modal>
         </div>
