@@ -127,14 +127,14 @@ const Calendar: React.FC<ICalendarProps> = ({
     return days.map((day, index) => (
       <div
         key={index}
-        className="flex flex-col items-center w-[32px] h-[47px] select-none"
+        className="flex flex-col w-[32px] h-[46px] select-none justify-between "
       >
-        <span className="text-xs pb-2 text-gray-500 dark:text-light-gray-4 relative" >
+        <span className="text-light-gray-4 dark:text-light-gray-4 relative font-gerbera-sub2" >
           {format(day, 'EE', { locale: ru }).slice(0, 1).toUpperCase() + format(day, 'EE', { locale: ru }).slice(1, 2)}
         </span>
        
         <button
-          className={`font-gerbera-sub2 w-6 h-6 flex items-center justify-center rounded-full relative ${
+          className={`font-gerbera-sub2 p1-[2px] w-6 h-6 flex items-center justify-center rounded-full relative ${
             selectedDate && isSameDay(selectedDate, day)
               ? ' text-light-gray-black bg-light-brand-green '
               : 'text-light-gray-black dark:text-light-gray-white'
@@ -149,7 +149,7 @@ const Calendar: React.FC<ICalendarProps> = ({
           // draggable={false}
         >
           {format(day, 'd')}
-          {included[index] === true && <div className='bg-light-brand-green w-1 h-1 rounded-full mt-3 ml-6 absolute '></div>}
+          {included[index] === true && <div className='bg-light-brand-green w-1 h-1 rounded-full mt-[18px] ml-[26px] absolute '></div>}
         </button>
       </div>
     ));
@@ -208,8 +208,8 @@ const Calendar: React.FC<ICalendarProps> = ({
 
   return (
     <>
-      <div className="p-4 bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px] rounded-2xl relative select-none">
-       <div className="flex justify-between items-center mb-4">
+      <div className="px-4 bg-light-gray-white dark:bg-light-gray-7-logo w-full max-w-[500px] rounded-2xl relative select-none h-[88px] flex items-center">
+       {/* <div className=""> */}
           {/* {showHeader && (
             <h2 className="font-gerbera-h1 text-lg  dark:text-light-gray-white">{headerName}</h2>
           )}
@@ -231,20 +231,20 @@ const Calendar: React.FC<ICalendarProps> = ({
               )}
             </div>
           )} */}
-        </div>
+        {/* </div> */}
 
-        <div className="absolute left-4 flex items-center">
-          <span className="font-gerbera-sub1 text-light-gray-4 w-[20px] rotate-[-90deg] flex items-center justify-center">
+        <div className="absolute flex items-center h-[56px] w-[22px]">
+          <span className="font-gerbera-sub1 text-light-gray-4 w-[20px] rotate-[-90deg] flex justify-center">
             {
               selectedDate ? format(selectedDate, 'LLLL', { locale: ru }).slice(0, 1).toUpperCase() + format(selectedDate, 'LLLL', { locale: ru }).slice(1) :
               format(startOfWeekDate, 'LLLL', { locale: ru }).slice(0,1).toUpperCase()+format(startOfWeekDate, 'LLLL', { locale: ru }).slice(1)
           }
           </span>
-          <div className="border-r h-[48px] border-light-gray-2" />
+          <div className="h-[48px] w-[2px] bg-light-gray-2" />
         </div>
 
         <div
-          className='flex space-x-5 ml-7 cursor-grab overflow-x-auto'
+          className='flex space-x-[14px] ml-[26px] overflow-x-auto mt-2'
           style={{ width:'full', minWidth: '300px', maxWidth:'500px' }}
           ref={calendarRef}
           // onMouseDown={handleStart}

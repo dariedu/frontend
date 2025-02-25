@@ -31,7 +31,7 @@ type TMainTabVolunteerProps = {
 };
 
 const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
-  // const [selectedDate, setSelectedDate] = useState(new Date());
+// const [selectedDate, setSelectedDate] = useState<Date|null>(null);
 
   const [takeDeliverySuccess, setTakeDeliverySuccess] =
     useState<boolean>(false); //// подтверждение бронирования доставки
@@ -48,6 +48,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [takeTaskFailString, setTakeTaskFailString] = useState<string|JSX.Element>(''); //переменная для записи названия ошибки при взятии доброго дела
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>(localStorage.getItem(`all_del_vol`) !== null && localStorage.getItem(`all_del_vol`) !== undefined ? JSON.parse(localStorage.getItem(`all_del_vol`) as string) : []);
+  // const [filteredDeliveriesBeforeCalendarFilter, setFilteredDeliveriesBeforeCalendarFilter] = useState<IDelivery[]>(localStorage.getItem(`all_del_vol`) !== null && localStorage.getItem(`all_del_vol`) !== undefined ? JSON.parse(localStorage.getItem(`all_del_vol`) as string) : []);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
@@ -78,6 +79,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       );
       localStorage.setItem(`all_del_vol`, JSON.stringify(filtered))
       setFilteredDeliveries(filtered);
+      // setFilteredDeliveriesBeforeCalendarFilter(filtered)
     }
   }
 
@@ -302,9 +304,8 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
             {/* <Calendar
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
-              showHeader={false}
-              showFilterButton={false}
-              showDatePickerButton={false}
+              deliveries={filteredDeliveriesBeforeCalendarFilter}
+              setFilteredDeliveries={setFilteredDeliveries}
             /> */}
             {filteredDeliveries.length > 0 ? (
               <SliderCardsDeliveries
