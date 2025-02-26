@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
 import Small_pencile from './../../assets/icons/small_pencile.svg?react'
 import Photo from './../../assets/icons/photo.svg?react';
-import CloseIcon from "../../assets/icons/closeIcon.svg?react"
+// import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import Comment from '../Comment/Comment_for_inside_photo';
+import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
+import { UserContext } from '../../core/UserContext';
 
 interface IUploadPicProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -17,7 +20,11 @@ interface IUploadPicProps {
   setFileUploaded: React.Dispatch<React.SetStateAction<boolean[]>>
   setFiles: React.Dispatch<React.SetStateAction<Blob[]>>
   files: Blob[]
-  sendPhotoReportFunc: (index:number) => void
+  sendPhotoReportFunc: (index: number) => void
+  name: string
+  onSave: (index: number, comment:string) => void
+  idForComment:number
+  savedComment: string
 }
 ////// в компоненте уже есть модалка, если нажать на пустую модальную область она закроется
 export const UploadPic: React.FC<IUploadPicProps> = ({
@@ -32,7 +39,11 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   fileUploaded,
   setFiles,
   files,
-  sendPhotoReportFunc
+  sendPhotoReportFunc,
+  name,
+  onSave,
+  idForComment,
+  savedComment
 }) => {
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -48,7 +59,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
   // Максимальный размер файла (5 МБ)
   const maxFileSize = 5 * 1024 * 1024; // 5 МБ в байтах
 
-    
+ const { isIphone } = useContext(UserContext);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>, index:number): void {
     if (e.target.files && e.target.files[0]) {
@@ -86,18 +97,28 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
 
   return (
         <div
-        className="flex flex-col items-center justify-between p-6 h-[367px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl w-full max-w-[500px]"
+        className="flex flex-col items-center justify-between h-fit bg-light-gray-white dark:bg-light-gray-7-logo rounded-t-2xl w-full max-w-[500px]"
         onClick={e => e.stopPropagation()}
     >
-      <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end ' onClick={()=>onOpenChange(false)} />
-        <div className="h-[142px] w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-4 relative">
+       <div className={`flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px]  h-fit p-4 ${isIphone ? " rounded-b-2xl " : " rounded-2xl"}`}>
+        <button onClick={() => onOpenChange(false)}>
+          <RightArrowIcon className='rotate-180 w-9 h-9 mr-[8px] stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer' />
+        </button>
+        <h2 className='text-light-gray-black dark:text-light-gray-1'>Фотоотчет к доставке по адресу {name}</h2>
+      </div>
+      {/* <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end ' onClick={() => onOpenChange(false)} /> */}
+       {/* <div className={`flex items-center mb-1  bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full max-w-[500px] h-fit p-4 `}>
+        <h2 className='text-light-gray-black dark:text-light-gray-1'>Фотоотчет о доставке по адресу {name}</h2>
+      </div> */}
+      
+        <div className="h-[142px] w-[140px] min-h-[142px] min-w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-4 relative">
         {uploadedFileLink[index].length > 0 ? (
         <img
             src={uploadedFileLink[index]}
-            className={'h-[142px] w-[140px] size-fit rounded-full object-cover '}
+            className={'h-[142px] w-[140px] min-h-[142px] min-w-[140px] size-fit rounded-full object-cover '}
     />
         ): (
-        <Photo  className="h-[72px] w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white dark:bg-light-gray-5 dark:fill-light-gray-3"
+        <Photo  className="h-[72px] w-[72px] min-h-[72px] min-w-[72px] cursor-pointer rounded-full bg-light-gray-2 fill-light-gray-white dark:bg-light-gray-5 dark:fill-light-gray-3"
         />
          )}  
           {uploadedFileLink[index].length>0 ? (
@@ -138,8 +159,13 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           <p className="font-gerbera-sub2 dark:text-light-gray-3 my-3">Благополучателя нет на месте</p>
          </CheckboxElement>)}
          
-        </div>
-       
+      </div>
+      <Comment
+        onSave={onSave}
+        index={index}
+        savedComment={savedComment}
+        id={idForComment}
+      />
         {uploadedFileLink[index].length>0 && (
         <button className="btn-B-GreenDefault " onClick={() => { onOpenChange(false);  sendPhotoReportFunc(index) }}>
             Отправить фотоотчет

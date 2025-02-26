@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 //import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
 import { Modal } from '../ui/Modal/Modal';
-import Comment from '../Comment/Comment';
+// import Comment from '../Comment/Comment';
 import {
   TPhotoReport,
   type TServerResponsePhotoReport,
@@ -39,9 +39,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const [fileUploaded, setFileUploaded] = useState<boolean[]>(
     Array(routes.length).fill(false),
   );
-  const [openComment, setOpenComment] = useState<boolean[]>(
-    Array(routes.length).fill(false),
-  );
+  // const [openComment, setOpenComment] = useState<boolean[]>(
+  //   Array(routes.length).fill(false),
+  // );
   const [comment, addComment] = useState(Array(routes.length).fill(''));
   const [files, setFiles] = useState<Blob[]>(Array(routes.length).fill(new Blob())); ////форматит фото в блоб файл
   // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
@@ -64,7 +64,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-
+const [openMaps, setOpenMaps] = useState(false)
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
@@ -110,9 +110,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     addComment(prev =>
       prev.map((string, idx) => (idx === index ? comment : string)),
     );
-    setOpenComment(prev =>
-      prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-    );
+    // setOpenComment(prev =>
+    //   prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+    // );
   }
 
   async function submitPhotoReport(index: number) {
@@ -163,6 +163,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
           );
+          localStorage.removeItem(`comment${routes[index].beneficiar[0].id}`)
         } catch (err: any) {
           if (err == 'Error: AxiosError: Network Error') {
             setErrorMessage('возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет')
@@ -183,23 +184,45 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     }
   }
  
-// routes.map((route) => (console.log(route.beneficiar[0].address, array )))
-// console.log(photoReports, "photo report")
+  const openYandexMaps = (address:string) => {
+    const url = `https://yandex.ru/maps/?text=${encodeURIComponent(address)}`;
+    window.open(url, '_blank');
+  };
+
+  const openGoogleMaps = (address:string) => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    window.open(url, '_blank');
+  };
+
   return (
-    <div key={routeSheetId + 'routeSheetWievVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}>
+    <div key={routeSheetId + 'routeSheetViewVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}>
       {(!routes || routes.length == 0) ?
         (<div className='w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center'
         >Упс, этот маршрутный лист пуст!</div>)
          : routes.map((route, index) => (
-        <div key={route.id + routeSheetId + 'routeSheetWievVolunteer'}
+        <div key={route.id + routeSheetId + 'routeSheetViewVolunteer'}
           className={`w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 h-fit p-4
              ${route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? 'opacity-70 dark:opacity-65 ' : "" }
             `}
         >
-          <div className="flex w-full items-center justify-between">
-               <textarea value={route.address} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none " readOnly onClick={(e) => {
+          <div className="flex w-full items-left justify-between flex-col ">
+               {/* <textarea value={route.address} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none " readOnly onClick={(e) => {
                   const textArea = e.target as HTMLTextAreaElement; textArea.select()
-               }} />
+               }} /> */}
+                 <p className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none "
+                 onClick={() => { openMaps ? setOpenMaps(false) : setOpenMaps(true) }}
+               >{route.address}</p>
+               {openMaps && (
+                 <div className='flex'>
+                   <button className='btn-M-GreenDefault' onClick={() =>  openYandexMaps(route.address)} >
+                   открыть в яндекс
+                   </button>
+                   <button className='btn-M-GreenDefault' onClick={() =>  openGoogleMaps(route.address)}>
+                   открыть в гугл
+                 </button>
+                 </div> 
+               ) 
+               }
               
             { route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 &&(
             object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? (
@@ -208,7 +231,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   Ссылка
                 </a>
                    </button>
-                   
             ) : fileUploaded[index] ? (""
               // <div
               //   className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
@@ -257,14 +279,19 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
                   {/* {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'} */}
                   {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
-                  {ben.full_name}
+                  {ben.full_name}<br/>
                   </p>)}
                   {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
                     <div>
                     {/* Основной телефон */}
-                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
-                        {ben.phone}
-                      </p>)}
+                   {route.beneficiar.map(ben => <a href={`tel:${ben.phone}`} key={ben.phone} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
+                     <textarea value={ben.phone} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none "
+                       readOnly onClickCapture={(e) => {
+                  const textArea = e.target as HTMLTextAreaElement; textArea.select()
+               }} /> 
+                     
+                     
+                      </a>)}
                      
                     </div>
                   )}
@@ -324,28 +351,30 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             > 
                  {unactive[index] == 'Отправить' ? "Фотоотчет" : unactive[index] == 'Отправка' ? "Отправка" : "Фотоотчет отправлен"}
             </button> 
-          </div>
-          <div className="flex items-center justify-between w-full mb-2 mt-4">
-            <p className="font-gerbera-h3 text-light-gray-5"
-            onClick={() =>
-              setFullView(prev =>
-                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-              )
-            }
-            >Дополнительно</p>
-            <div
-              className="w-6 h-6 cursor-pointer"
+             </div>
+             {((route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length > 0)) || (route.beneficiar.find(ben => ben.comment && ben.comment.length > 0))) &&
+              <div className="flex items-center justify-between w-full mb-2 mt-4">
+              <p className="font-gerbera-h3 text-light-gray-5"
               onClick={() =>
                 setFullView(prev =>
                   prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
                 )
               }
-            >
-              <Arrow_down
-                className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
-              />
+              >Дополнительно</p>
+              <div
+                className="w-6 h-6 cursor-pointer"
+                onClick={() =>
+                  setFullView(prev =>
+                    prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                  )
+                }
+              >
+                <Arrow_down
+                  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
+                />
+              </div>
             </div>
-          </div>
+             }
           {fullView[index] && (
             <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
@@ -380,7 +409,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             </div>
           )}
 
-          <Modal
+          {/* <Modal
             onOpenChange={() =>
               setOpenComment(prev =>
                 prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
@@ -405,7 +434,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               id={route.beneficiar[0].id}
               savedComment={comment[index]}
             />
-          </Modal>
+          </Modal> */}
           <Modal
             isOpen={uploadPictureModal[index]}
             onOpenChange={() =>
@@ -435,6 +464,15 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
               setFiles={setFiles}
               files={files}
               sendPhotoReportFunc={submitPhotoReport}
+              // onOpenChangeForComment={() =>
+              //   setOpenComment(prev =>
+              //       prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+              //     )
+              //   }
+                name={route.address}
+                onSave={handleAddComment}
+                idForComment={route.beneficiar[0].id}
+                savedComment={comment[index]}
             />
           </Modal>
         </div>
