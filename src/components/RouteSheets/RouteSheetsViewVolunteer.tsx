@@ -158,7 +158,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         
         try {
           await postPhotoReport(token, formData, controller.signal);
-
           setSendMessage(routes[index].address);
           setSendPhotoReportSuccess(true);
           setUnactive(prev =>
@@ -350,9 +349,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           {fullView[index] && (
             <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                
-
-                {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
+                {/* {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Категория
                     {route.beneficiar.map(ben => <p key={ben.category} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
@@ -360,15 +357,13 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                       </p> )}
                      
                     </div>
-                  )}
-              
+                  )} */}
                 {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Запасной телефон
                     {route.beneficiar.map(ben =><p key={ben.second_phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.second_phone}
                       </p>)}
-                      
                     </div>
                   )}
                 {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) && (
@@ -379,7 +374,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                     {ben.comment}
                   </p>
                     )}
-                      
                     </div>
                   )}
               </div>
