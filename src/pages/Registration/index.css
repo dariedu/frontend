@@ -10,11 +10,11 @@
 .error{
   @apply dark:font-gerbera-sub2 dark:font-normal text-light-error-red w-full pb-1 text-left pl-4 font-gerbera-sub1 font-light
 }
-.formFieldBirthday{
+/* .formFieldBirthday{
   @apply outline-none shadow-none px-4 py-[18px] bg-light-gray-1 w-full h-[54px] dark:bg-light-gray-6
   rounded-2xl text-light-gray-8-text dark:text-light-gray-white 
   placeholder:text-light-gray-8-text dark:placeholder:text-light-gray-3 font-gerbera-h3
-}
+} */
 
 /* .formFieldBirthday[data-invalid]{
   @apply bg-light-error-back dark:text-light-gray-8-text  placeholder:text-light-gray-5
