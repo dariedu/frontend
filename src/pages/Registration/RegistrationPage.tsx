@@ -45,7 +45,8 @@ function RegistrationPage() {
   //// работаем с датой рождения
    const [date, setDate] = useState(localStorage.getItem('birthday') ?? '');
    const [dateError, setDateError] = useState('');
-   const [dateIsMissing, setDateisMissing] = useState(false);
+  //  const [dateIsMissing, setDateisMissing] = useState(false);
+  const [dateIsCorrect, setDateIsCorrect] = useState(false);
    const [isAdult, setIsAdult] = useState<boolean | null>(null); ///
 
   ///// данные для инпута для выбора города
@@ -117,7 +118,7 @@ function RegistrationPage() {
     const cleanedValue = inputValue.replace(/\D/g, '');
     // Ограничиваем длину ввода до 8 цифр (ДДММГГГГ)
     const truncatedValue = cleanedValue.slice(0, 8);
-     setDateisMissing(true)
+    //  setDateisMissing(true)
     // Форматируем значение в формат ДД.ММ.ГГГГ
     let formattedValue = '';
     if (truncatedValue.length > 0) {
@@ -143,21 +144,27 @@ function RegistrationPage() {
         parsedDate.getFullYear() !== parseInt(year, 10)
       ) {
         setDateError('Некорректная дата, правильный формат дд.мм.гггг');
+        setDateIsCorrect(false)
       } else { 
         const age = getAgeFromBirthDate(parsedDate)
         if (age < 13) {
           setDateError('Для участия в доставках волонтёру должно быть не меньше 13 лет');
+          setDateIsCorrect(false)
          } else if ( age > 90 ) {
           setDateError('Некорректная дата, максимальный возраст для участия в доставках 90 лет');
+          setDateIsCorrect(false)
          } else {
           setDateError('');
-          setDateisMissing(false)
+          setDateIsCorrect(true)
           calcIsAdult(age)
         }
       } 
     } else {
-      setDateError('');
-      setDateisMissing(false)
+      // if (formattedValue.length > 0 && formattedValue.length < 10) {
+      //   setDateError('Некорректная дата, правильный формат дд.мм.гггг');
+      //   setDateIsCorrect(false)
+      // }
+      setDateIsCorrect(false)     
     }
   };
 
@@ -265,9 +272,9 @@ function RegistrationPage() {
 // console.log(tg_nickname, "tg_nickname")
   //////функция для сабмита формы
   async function onFormSubmit() {
-    if (dateIsMissing) {
-      setDateError('Пожалуйста, введите дату рождения')
-    } else {
+    // if (dateIsMissing) {
+    //   setDateError('Пожалуйста, введите дату рождения')
+    // } else {
        setIsSending(true);
        setRequestSent(true);
 
@@ -336,16 +343,16 @@ function RegistrationPage() {
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
-    // if (formData.get('tg_username') == '') {
+    // if (formData.get('tg_username') == '' || formData.get('tg_username') == null || formData.get('tg_username') == '@'|| formData.get('tg_username') == 'none' || formData.get('tg_username') == 'None') {
     //   setRegistrationHasFailedString(<p>Упс, у вашего аккаунта в Telegram  не задано имя пользователя. <br /> Пожалуйста, создайте имя пользователя и попробуйте снова пройти регистрацию.</p>)
     //   setRequestSent(false);
     //   setRegistrationhasFailed(true);
     //   setIsSending(false);
     // } else {
-      
+      fetchRegistration(formData); ////отправляем запрос на сервер с даттыми формДата
     // }
-    fetchRegistration(formData); /////отправляем запрос на сервер с даттыми формДата
-    }
+    
+    
    
   }
 
@@ -522,7 +529,7 @@ function RegistrationPage() {
                   </Form.Field>
                   <Form.Field
                     name="birthday"
-                    className="flex flex-col items-center relative"
+                    className=" flex flex-col items-center relative"
                   >
                       <Form.Control asChild>
                         <input
@@ -535,14 +542,25 @@ function RegistrationPage() {
                            }}
                           placeholder="дд.мм.гггг"
                           maxLength={10} // Максимальная длина с учетом точек
-                          className="formFieldBirthday bgImage"
+                          className="formField bgImage"
                           defaultValue={localStorage.getItem('birthday') ?? ''}
                           required
                         />
                     </Form.Control>
                       <CalendarIcon className="absolute ml-[70%] mt-3 fill-[#BFBFBF]" />
-                      {dateError &&
-                        <p className="error">{dateError}</p>
+                      {dateError ?
+                        <p className="error">{dateError}</p> :
+                        <>
+                        <Form.Message match="valueMissing" className="error">
+                        Пожалуйста, введите дату рождения
+                        </Form.Message>
+                        <Form.Message
+                        match={value => value.length < 10}
+                        className="error"
+                      >
+                        Некорректная дата, правильный формат дд.мм.гггг
+                      </Form.Message>
+                        </>
                       }
                   </Form.Field>
                   <Form.Field
@@ -669,7 +687,8 @@ function RegistrationPage() {
                           : 'btn-B-GreenInactive my-8 self-center'
                     }
                     onClick={e => {
-                      if (isAdult && !checked) {
+
+                      if ((isAdult && !checked) || !dateIsCorrect) {
                         e.preventDefault();
                       } else {
                         if (!pictureConfirmed) {
