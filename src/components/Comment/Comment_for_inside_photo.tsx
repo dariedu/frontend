@@ -84,7 +84,6 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                   defaultValue={localStorage.getItem(localeStorageName) ?? savedComment ?? ""}
                   onChange={e => {
                    handleFormFieldChange(localeStorageName, e.target.value);
-                   
                   }}
                   onBlur={()=>onSave(index, requestBody[`${localeStorageName}`])}
                 />
@@ -96,7 +95,6 @@ function handleFocus(e:React.FocusEvent<HTMLTextAreaElement, Element>) {
                 Сообщение слишком короткое, минимальное количество символов 10
               </Form.Message>
             </Form.Field>
-
           </div>
         </Form.Root>
       </div>

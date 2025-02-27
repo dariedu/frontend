@@ -158,9 +158,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
-      <div className="flex flex-col">
+      
         {filtered.length > 0 && filtered.sort((a,b) => a.name.localeCompare(b.name)).map((routeS, index) => {
           return (
+            <div className="flex flex-col" key={routeS.id + index}>
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
               listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}
               changeListOfVolunteers={changeListOfVolunteers}
@@ -169,9 +170,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               openRouteSheets={openRouteSheets} setOpenRouteSheets={setOpenRouteSheets} myPhotoReports={myPhotoReports}
             />
+          </div>
           );
         })}
-      </div>
       {status == 'Активная' &&
         <button className={currentStatus == 'completed'? "btn-B-GreenInactive mt-10 self-center" : 'btn-B-GreenDefault mt-10 self-center'} onClick={() => {
           if (currentStatus == 'completed') { 
@@ -213,7 +214,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         description=""
         confirmText="Активировать"
         isSingleButton={false}
-
       />
       
     </div>)

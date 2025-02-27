@@ -14,6 +14,9 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
 // import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
+import './index.css'
+
+import copy from 'clipboard-copy'; // Импортируем библиотеку
 
 interface IRouteSheetsViewProps {
   routes: TAddress[]
@@ -64,12 +67,19 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-const [openMaps, setOpenMaps] = useState(false)
+// const [openMaps, setOpenMaps] = useState(false)
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
   // const [textCopied, setTextCopied] = useState(false)
 
+  
+  const [isTouchAddress, setIsTouchAddress] = useState(Array(routes.length).fill(false)); // Состояние нажатия на адрес
+  const [openMaps, setOpenMaps] = useState(false); // открываем модалку для открытия карт
+  const [adressForMaps, setAdressForMaps] = useState(''); // адрес для открытия в яндекс картах
+  const [isTouchPhone, setIsTouchPhone] = useState(Array(routes.length).fill(false)); // Состояние нажатия на телефон
+  const [openCall, setOpenCall] = useState(false); // открываем модалку для набора номера
+  const [phoneForCall, setPhoneForCall] = useState(''); // номер телефона для набора
 
   function checkoForUploadedReports() {
     const arr: number[] = [];
@@ -185,17 +195,13 @@ const [openMaps, setOpenMaps] = useState(false)
   }
  
   const openYandexMaps = (address:string) => {
-    const url = `https://yandex.ru/maps/?text=${encodeURIComponent(address)}`;
-    window.open(url, '_blank');
-  };
-
-  const openGoogleMaps = (address:string) => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    const url = `https://yandex.ru/maps/?text=${encodeURIComponent("Москва, " + address.slice(0, 20))}`;
     window.open(url, '_blank');
   };
 
   return (
-    <div key={routeSheetId + 'routeSheetViewVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}>
+    <div key={routeSheetId + 'routeSheetViewVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
+    >
       {(!routes || routes.length == 0) ?
         (<div className='w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center'
         >Упс, этот маршрутный лист пуст!</div>)
@@ -206,62 +212,35 @@ const [openMaps, setOpenMaps] = useState(false)
             `}
         >
           <div className="flex w-full items-left justify-between flex-col ">
-               {/* <textarea value={route.address} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none " readOnly onClick={(e) => {
-                  const textArea = e.target as HTMLTextAreaElement; textArea.select()
-               }} /> */}
-                 <p className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none "
-                 onClick={() => { openMaps ? setOpenMaps(false) : setOpenMaps(true) }}
+                <p  className="font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+                 onClick={() => { 
+                  setAdressForMaps(route.address)
+                  setOpenMaps(true)
+                 }}
+                 onContextMenu={e => {
+                   e.preventDefault(); copy(route.address);
+                   setIsTouchAddress(prev =>
+                  prev.map((isOpen, ind) =>
+                    ind == index ? !isOpen : isOpen,
+                     ));
+                   setTimeout(() => {
+                     setIsTouchAddress(prev =>
+                    prev.map((isOpen, ind) =>
+                      ind == index ? !isOpen : isOpen,
+                    ))}, 1000) }}
                >{route.address}</p>
-               {openMaps && (
-                 <div className='flex'>
-                   <button className='btn-M-GreenDefault' onClick={() =>  openYandexMaps(route.address)} >
-                   открыть в яндекс
-                   </button>
-                   <button className='btn-M-GreenDefault' onClick={() =>  openGoogleMaps(route.address)}>
-                   открыть в гугл
-                 </button>
-                 </div> 
-               ) 
-               }
+                {isTouchAddress[index] && (<p className='ToastViewport ToastRoot '>Адрес скопирован</p>)}
               
-            { route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 &&(
-            object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? (
-              <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
-                <a href={object[array.indexOf(route.beneficiar[0].address)][1]}>
-                  Ссылка
-                </a>
+               {route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && 
+                 object[array.indexOf(route.beneficiar[0].address)][1].length > 0 && (
+                   <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
+                     <a href={object[array.indexOf(route.beneficiar[0].address)][1]}>
+                       Ссылка
+                     </a>
                    </button>
-            ) : fileUploaded[index] ? (""
-              // <div
-              //   className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
-              //   onClick={() =>
-              //     setUploadPictureModal(prev =>
-              //       prev.map((isOpen, ind) =>
-              //         ind == index ? !isOpen : isOpen,
-              //       ),
-              //     )
-              // }
-              // >
-              //   <img
-              //     src={uploadedFileLink[index]}
-              //     className="w-[32px] h-[32px] min-h-[32px] min-w-[32px] rounded-full object-cover absolute"
-              //   />
-              // </div>
-            ) : ( ""
-              // <div
-              //   className="w-[37px] h-[37px] min-h-[37px] min-w-[37px] rounded-full flex items-center justify-center relative"
-              //   onClick={() =>
-              //     setUploadPictureModal(prev =>
-              //       prev.map((isOpen, ind) =>
-              //         ind == index ? !isOpen : isOpen,
-              //       ),
-              //     )
-              //   }
-              // >
-              //   <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full absolute fill-light-gray-3 " />
-              // </div>
-            ))}
-          </div>
+                 )     
+               }
+               </div>
           {/* {comment[index].length > 0 && (
             <div className="self-start w-full mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
               Комментарий
@@ -282,50 +261,35 @@ const [openMaps, setOpenMaps] = useState(false)
                   {ben.full_name}<br/>
                   </p>)}
                   {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
-                    <div>
+                    <div className='relative'>
                     {/* Основной телефон */}
-                   {route.beneficiar.map(ben => <a href={`tel:${ben.phone}`} key={ben.phone} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
-                     <textarea value={ben.phone} className="font-gerbera-h3 bg-transparent text-light-gray-8-text mb-[4px] dark:text-light-gray-1 cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-light-brand-green resize-none "
-                       readOnly onClickCapture={(e) => {
-                  const textArea = e.target as HTMLTextAreaElement; textArea.select()
-               }} /> 
-                     
-                     
-                      </a>)}
-                     
+                   {route.beneficiar.map((ben, index)=>
+                       <p key={ben.phone + index} className=" font-gerbera-h3 selection:bg-none text-light-brand-green mt-[6px]"
+                         onClick={() => { setPhoneForCall(ben.phone); setOpenCall(true) }}
+                         onContextMenu={e => {
+                           e.preventDefault(); copy(ben.phone);
+                           setIsTouchPhone(prev =>
+                          prev.map((isOpen, ind) =>
+                            ind == index ? !isOpen : isOpen,
+                             ));
+                           setTimeout(() => {
+                             setIsTouchPhone(prev =>
+                            prev.map((isOpen, ind) =>
+                              ind == index ? !isOpen : isOpen,
+                            )) }, 1000) }}
+                       >{ben.phone}
+                       </p>
+                   )}  
                     </div>
-                  )}
-                </div>
-                {/* {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
-                    <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Основной телефон
-                    {route.beneficiar.map(ben => <p key={ben.phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {ben.phone}
-                      </p>)}
-                     
-                    </div>
-                  )} */}
+               )}
+               {isTouchPhone[index] && (<p className='ToastViewport ToastRoot '>Телефон скопирован</p>)}
+             </div>
           <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
-            {/* {unactive[index] == 'Отправить'  && (
-              <button
-                className="btn-B-WhiteDefault text-light-gray-8-text"
-                onClick={() =>
-                  setOpenComment(prev =>
-                    prev.map((isOpen, idx) =>
-                      idx === index ? !isOpen : isOpen,
-                    ),
-                  )
-                }
-              >
-                {comment[index].length == 0 ? 'Добавить комментарий' : "Редактировать комментарий" }
-              </button>
-            )} */}
-               
               <button
                  className={
                    unactive[index] == 'Отправить'
-                     ? 'btn-B-WhiteDefault dark:text-light-brand-green'
-                     : 'btn-B-GreenInactive  cursor-default'
+                     ? 'btn-B-WhiteDefault dark:text-light-brand-green text-center'
+                     : 'btn-B-GreenInactive  cursor-default text-center'
                  }
                  onClick={() => {
                    if (unactive[index] == 'Отправить') {
@@ -337,17 +301,6 @@ const [openMaps, setOpenMaps] = useState(false)
                    } else if (unactive[index] == 'Отправлен' || unactive[index] == 'Отправка') {
                    }
                  }}
-                 // onClick={() => {
-                // if (uploadedFileLink[index] == '' && unactive[index] == 'Отправить') {
-                //   setNoPhoto(true);
-                // } else {
-                //   unactive[index] == 'Отправлен'
-                //     ? () => {}
-                //     : unactive[index] == 'Отправка'
-                //       ? () => {}
-                //       : submitPhotoReport(index);
-                // }
-              // }}
             > 
                  {unactive[index] == 'Отправить' ? "Фотоотчет" : unactive[index] == 'Отправка' ? "Отправка" : "Фотоотчет отправлен"}
             </button> 
@@ -378,28 +331,33 @@ const [openMaps, setOpenMaps] = useState(false)
           {fullView[index] && (
             <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                {/* {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
-                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Категория
-                    {route.beneficiar.map(ben => <p key={ben.category} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                        {ben.category}
-                      </p> )}
-                     
-                    </div>
-                  )} */}
                 {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Запасной телефон
-                    {route.beneficiar.map(ben =><p key={ben.second_phone} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                       {route.beneficiar.map((ben, index) =>
+                         <p key={ben.second_phone + index} className="font-gerbera-sub3 text-light-brand-green"
+                         onClick={() => { setPhoneForCall(ben.phone); setOpenCall(true) }}
+                         onContextMenu={e => {
+                           e.preventDefault(); copy(ben.phone);
+                           setIsTouchPhone(prev =>
+                          prev.map((isOpen, ind) =>
+                            ind == index ? !isOpen : isOpen,
+                             ));
+                           setTimeout(() => {
+                             setIsTouchPhone(prev =>
+                            prev.map((isOpen, ind) =>
+                              ind == index ? !isOpen : isOpen,
+                            )) }, 1000) }}>
                         {ben.second_phone}
-                      </p>)}
+                    </p>)}
+                    {isTouchPhone[index] && (<p className='ToastViewport ToastRoot '>Телефон скопирован</p>)}
                     </div>
                   )}
-                {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) && (
+                {route.beneficiar.find(ben=> ben.comment && ben.comment.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Информация
-                    {route.beneficiar.map( ben=>
-                    <p key={ben.comment} className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map( (ben, index)=>
+                    <p key={ben.comment+index} className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                     {ben.comment}
                   </p>
                     )}
@@ -408,33 +366,6 @@ const [openMaps, setOpenMaps] = useState(false)
               </div>
             </div>
           )}
-
-          {/* <Modal
-            onOpenChange={() =>
-              setOpenComment(prev =>
-                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-              )
-            }
-            onOpenChangeComment={() =>
-              setOpenComment(prev =>
-                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-              )
-            }
-            isOpen={openComment[index]}
-          >
-            <Comment
-              onOpenChange={() =>
-                setOpenComment(prev =>
-                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-                )
-              }
-              name={route.address}
-              onSave={handleAddComment}
-              index={index}
-              id={route.beneficiar[0].id}
-              savedComment={comment[index]}
-            />
-          </Modal> */}
           <Modal
             isOpen={uploadPictureModal[index]}
             onOpenChange={() =>
@@ -464,11 +395,6 @@ const [openMaps, setOpenMaps] = useState(false)
               setFiles={setFiles}
               files={files}
               sendPhotoReportFunc={submitPhotoReport}
-              // onOpenChangeForComment={() =>
-              //   setOpenComment(prev =>
-              //       prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-              //     )
-              //   }
                 name={route.address}
                 onSave={handleAddComment}
                 idForComment={route.beneficiar[0].id}
@@ -517,6 +443,28 @@ const [openMaps, setOpenMaps] = useState(false)
         description=""
         confirmText="Закрыть"
         isSingleButton={true}
+      />
+       <ConfirmModal
+        isOpen={openMaps}
+        onOpenChange={setOpenMaps}
+        onConfirm={() => openYandexMaps(adressForMaps)}
+        title={<p>Открыть в Яндекс картах?</p>}
+        description=""
+        onCancel={() => setOpenMaps(false)}
+        confirmText="Открыть"
+        cancelText='Отмена'
+        isSingleButton={false}
+      />
+       <ConfirmModal
+        isOpen={openCall}
+        onOpenChange={setOpenCall}
+        onConfirm={() => setOpenCall(false)}
+        title={<p>Позвонить {phoneForCall}?</p>}
+        description=""
+        onCancel={() => setOpenCall(false)}
+        confirmText={<a href={`tel:${phoneForCall}`}>Позвонить</a>}
+        cancelText='Отмена'
+        isSingleButton={false}
       />
     </div>
   );

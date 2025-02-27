@@ -88,7 +88,36 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               ) : (
                 <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full fill-light-gray-3 " />
               )}
-            </div>
+              </div>
+              <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
+                  {/* {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'} */}
+                  {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
+                  {ben.full_name}<br/>
+                  </p>)}
+                  {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
+                    <div className='relative'>
+                    {/* Основной телефон */}
+                   {route.beneficiar.map((ben, index)=>
+                       <p key={ben.phone + index} className=" font-gerbera-h3 selection:bg-none text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]"
+                        //  onClick={() => { setPhoneForCall(ben.phone); setOpenCall(true) }}
+                        //  onContextMenu={e => {
+                        //    e.preventDefault(); copy(ben.phone);
+                        //    setIsTouchPhone(prev =>
+                        //   prev.map((isOpen, ind) =>
+                        //     ind == index ? !isOpen : isOpen,
+                        //      ));
+                        //    setTimeout(() => {
+                        //      setIsTouchPhone(prev =>
+                        //     prev.map((isOpen, ind) =>
+                        //       ind == index ? !isOpen : isOpen,
+                        //     )) }, 1000) }}
+                       >{ben.phone}
+                       </p>
+                   )}  
+                    </div>
+               )}
+               {/* {isTouchPhone[index] && (<p className='ToastViewport ToastRoot '>Телефон скопирован</p>)} */}
+             </div>
            
             {array.indexOf(route.beneficiar[0].address) != -1 &&
               comment[array.indexOf(route.beneficiar[0].address)][1].length > 0 && (
@@ -107,8 +136,9 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
             </p>
           )}
           </div>
-          <div className="w-full">
-            <div className="flex items-center justify-between w-full ">
+            <div className="w-full">
+              
+            {/* <div className="flex items-center justify-between w-full ">
               <p className="font-gerbera-h3 text-light-gray-5"
                onClick={() =>
                 setFullView(prev =>
@@ -131,49 +161,70 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                   className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
                 />
               </div>
+            </div> */}
+              {((route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length > 0)) || (route.beneficiar.find(ben => ben.comment && ben.comment.length > 0))) &&
+              <div className="flex items-center justify-between w-full mb-2 mt-4">
+              <p className="font-gerbera-h3 text-light-gray-5"
+              onClick={() =>
+                setFullView(prev =>
+                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                )
+              }
+              >Дополнительно</p>
+              <div
+                className="w-6 h-6 cursor-pointer"
+                onClick={() =>
+                  setFullView(prev =>
+                    prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+                  )
+                }
+              >
+                <Arrow_down
+                  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
+                />
+              </div>
             </div>
+             }
             {fullView[index] && (
-            <div className="flex justify-center items-center w-full">
+            <div key={`fullView${index}`} className="flex justify-center items-center w-full">
               <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                {/* <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                   {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'}
-                  {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                      {route.beneficiar.map((ben, ind) =>
+                        <p key={ben.full_name+ind} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                   {ben.full_name}
                   </p>)}
-                </div>
-
-                {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
+                </div> */}
+                {/* {route.beneficiar.find(ben => ben.category && ben.category.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Категория
                     {route.beneficiar.map(ben =>  <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.category}
                       </p> )}
-                     
                     </div>
-                  )}
-                {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
+                  )} */}
+                {/* {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Основной телефон
-                    {route.beneficiar.map(ben => <p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map((ben, index) => <p key={ben.phone+index} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.phone}
                       </p>)}
-                     
                     </div>
-                  )}
+                  )} */}
                 {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Запасной телефон
-                    {route.beneficiar.map(ben =><p className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                        {route.beneficiar.map((ben, ind) =>
+                          <p key={ben.second_phone + ind} className="font-gerbera-sub3 text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                         {ben.second_phone}
                       </p>)}
-                      
                     </div>
                   )}
                 {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) && (
                     <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
                     Информация
-                    {route.beneficiar.map( ben=>
-                    <p className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
+                    {route.beneficiar.map( (ben, index)=>
+                    <p key={ben.comment.slice(0,5) + index} className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
                     {ben.comment}
                   </p>
                     )}
