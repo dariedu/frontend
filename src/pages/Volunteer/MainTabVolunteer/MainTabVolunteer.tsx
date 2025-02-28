@@ -241,7 +241,10 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
       } else if ((err = ' Error: User does not confirmed')) {
         setTakeTaskFail(true);
         setTakeTaskFailString(
-          <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
+          <p>Вы сможете записаться на доброе дело и доставки после завершения регистрации.<br/> 
+          📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+              @volunteers_dari_edu
+              </a></p>,
         );
       } else {
         setTakeTaskFail(true);

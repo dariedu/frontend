@@ -212,8 +212,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
              ${route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? 'opacity-70 dark:opacity-65 ' : "" }
             `}
         >
-          <div className="flex w-full items-left justify-between flex-col ">
-                <input value={route.address} readOnly className="font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+          <div className="flex w-full items-left justify-between  ">
+                <textarea value={route.address} readOnly className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
                  onClick={() => { 
                   setAdressForMaps(route.address)
                   setOpenMaps(true)
