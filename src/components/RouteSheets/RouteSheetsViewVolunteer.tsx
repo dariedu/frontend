@@ -67,11 +67,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-// const [openMaps, setOpenMaps] = useState(false)
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
-  // const [textCopied, setTextCopied] = useState(false)
 
   
   const [isTouchAddress, setIsTouchAddress] = useState(Array(routes.length).fill(false)); // Состояние нажатия на адрес
@@ -80,6 +78,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const [isTouchPhone, setIsTouchPhone] = useState(Array(routes.length).fill(false)); // Состояние нажатия на телефон
   const [openCall, setOpenCall] = useState(false); // открываем модалку для набора номера
   const [phoneForCall, setPhoneForCall] = useState(''); // номер телефона для набора
+  const [isSending, setIsSending] = useState(false);//// отслеживаем отправку фотоотчета
 
   function checkoForUploadedReports() {
     const arr: number[] = [];
@@ -126,11 +125,12 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   }
 
   async function submitPhotoReport(index: number) {
-    setUnactive(prev =>
+    if (currentUser && token) {
+       setUnactive(prev =>
       prev.map((string, idx) => (idx === index ? 'Отправка' : string)),
     );
     setSendMessage('');
-    if (currentUser && token) {
+    setIsSending(true);
       const obj: TPhotoReport = {
         photo: files[index],
         comment: comment[index],
@@ -189,6 +189,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           )
         } finally {
           clearTimeout(timeoutId)
+          setIsSending(false)
         }
       }
     }
@@ -212,7 +213,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             `}
         >
           <div className="flex w-full items-left justify-between flex-col ">
-                <p  className="font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+                <input value={route.address} readOnly className="font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
                  onClick={() => { 
                   setAdressForMaps(route.address)
                   setOpenMaps(true)
@@ -227,8 +228,21 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                      setIsTouchAddress(prev =>
                     prev.map((isOpen, ind) =>
                       ind == index ? !isOpen : isOpen,
-                    ))}, 1000) }}
-               >{route.address}</p>
+                       ))
+                   }, 1000)
+                 }}
+                 onSelect={e => {
+                  e.preventDefault(); copy(route.address);
+                  setIsTouchAddress(prev =>
+                 prev.map((isOpen, ind) =>
+                   ind == index ? !isOpen : isOpen,
+                    ));
+                  setTimeout(() => {
+                    setIsTouchAddress(prev =>
+                   prev.map((isOpen, ind) =>
+                     ind == index ? !isOpen : isOpen,
+                   ))}, 1000) }}
+               />
                 {isTouchAddress[index] && (<p className='ToastViewport ToastRoot '>Адрес скопирован</p>)}
               
                {route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && 
@@ -276,7 +290,23 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                              setIsTouchPhone(prev =>
                             prev.map((isOpen, ind) =>
                               ind == index ? !isOpen : isOpen,
-                            )) }, 1000) }}
+                               ))
+                           }, 1000)
+                       }}
+                       onSelect={e => {
+                        e.preventDefault(); copy(ben.phone);
+                        setIsTouchPhone(prev =>
+                       prev.map((isOpen, ind) =>
+                         ind == index ? !isOpen : isOpen,
+                          ));
+                        setTimeout(() => {
+                          setIsTouchPhone(prev =>
+                         prev.map((isOpen, ind) =>
+                           ind == index ? !isOpen : isOpen,
+                            ))
+                        }, 1000)
+                       }}
+                       
                        >{ben.phone}
                        </p>
                    )}  
@@ -466,6 +496,11 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         cancelText='Отмена'
         isSingleButton={false}
       />
+       <Modal onOpenChange={()=>{}} isOpen={isSending}>
+        <div className="h-screen items-center flex flex-col justify-center ">
+          <div className='loader'></div>
+        </div>
+      </Modal>
     </div>
   );
 };

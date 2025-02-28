@@ -436,7 +436,7 @@ export const VolunteerData: React.FC<IVolunteerDataProps> = ({
         onConfirm={() => {setEmailValueFalse(false)}}
        title={
          <p>
-           Упс, введен неверный имейл
+           Упс, введен неверный email
            <br /> Пожалуйста, исправьте.
          </p>
        }

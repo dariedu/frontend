@@ -12,7 +12,7 @@ module.exports = {
       colors: {
         light: {
           'gray-white': '#FFFFFF',
-          'gray-1': '#F6F6F6',
+          'gray-1': '#F2F2F2', //// новый цвет от 28.02.2025, предыдущий цвет #F6F6F6
           'gray-2': '#D7D7D7',
           'gray-3': '#BFBFBF',
           'gray-4': '#888888',

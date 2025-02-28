@@ -116,6 +116,7 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
              return i.curator.photo = i.curator.photo.replace('http', 'https')
             }
           })
+         console.log(result, "getAllTasks() main page vol" )
           setAllAvaliableTasks(result);
         }
       }
@@ -173,7 +174,10 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
         } else if ((err = ' Error: User does not confirmed')) {
           setTakeTaskFail(true);
           setTakeTaskFailString(
-            <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
+            <p>Вы сможете записаться на доставку и добрые дела после завершения регистрации.<br/> 
+            📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+                @volunteers_dari_edu
+                </a></p>,
           );
          }  else {
           setTakeDeliveryFail(true);
@@ -299,9 +303,10 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
             : ''}
           <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Расписание доставок
+              Благотворительная доставка
             </div>
             <Calendar
+              startOfWeekDate={new Date()}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
               deliveries={filteredDeliveriesBeforeCalendarFilter}

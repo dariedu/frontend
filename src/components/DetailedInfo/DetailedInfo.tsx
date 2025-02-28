@@ -91,7 +91,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       {optional ? "" : (
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start p-4 mt-[14px] dark:bg-light-gray-6">
         <h3 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-         Как получить билет?
+         Детали
         </h3>
         {promotion.is_permanent ?
           (<p className="w-full h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-4">

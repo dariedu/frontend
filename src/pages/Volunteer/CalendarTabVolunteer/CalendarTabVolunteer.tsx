@@ -10,8 +10,9 @@ import CancelledDeliveryOrTaskFeedback from '../../../components/DeliveryOrTaskF
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { getMyTasksNoFilter, postTaskRefuse, type ITask } from '../../../api/apiTasks';
 import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVolunteer';
-import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
+// import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 import { UserContext } from '../../../core/UserContext';
+import Bread from './../../../assets/icons/bread.svg?react'
 
 
 const CalendarTabVolunteer = () => {
@@ -252,7 +253,7 @@ try {
           )) : ""}
           {myCurrent.length == 0 && allMyTasks.length == 0 ? (
           <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
-            <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
+            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             <p className=' text-light-gray-black dark:text-light-gray-1 '>Пока нет запланированных<br/>добрых дел</p>
         </div>
         ): ""}

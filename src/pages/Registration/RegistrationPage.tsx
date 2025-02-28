@@ -729,7 +729,11 @@ function RegistrationPage() {
                   setRegistrationComplete(true);
                   setRegistrationCompleteModal(false);
                 }}
-                title="Ваша заявка принята! Мы рассмотрим её в течение 24 часов"
+                  title={<p>Ваша заявка принята и проходит проверку.<br />
+                  📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green '>
+                @volunteers_dari_edu
+                </a>
+                  </p>}
                 description=""
                 confirmText="Ок"
                 isSingleButton={true}
