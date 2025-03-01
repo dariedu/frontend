@@ -85,29 +85,29 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     const obj: [number, string][] = [];
 
     if (routes.length > 0) {
-     routes.forEach(route => {
-      obj.push([route.beneficiar[0].address, '']);
-      arr.push(route.beneficiar[0].address);
-      // console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
-        });
+      routes.forEach(route => {
+        obj.push([route.beneficiar[0].address, '']);
+        arr.push(route.beneficiar[0].address);
+        // console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
+      });
       
-       if (photoReports.length > 0) {
-      photoReports.forEach(report => {
-        if (arr.indexOf(report.address) != -1) {
-          obj[arr.indexOf(report.address)][1] = report.photo_view;
-        }
-      });
-      obj.forEach((i, index) => {
-        if (i[1].length > 0) {
-          setUnactive(prev =>
-            prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
-          );
-        }
-      });
+      if (photoReports.length > 0) {
+        photoReports.forEach(report => {
+          if (arr.indexOf(report.address) != -1) {
+            obj[arr.indexOf(report.address)][1] = report.photo_view;
+          }
+        });
+        obj.forEach((i, index) => {
+          if (i[1].length > 0) {
+            setUnactive(prev =>
+              prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
+            );
+          }
+        });
       }
-      setArr(arr); 
+      setArr(arr);
       setObj(obj);
-      }
+    }
   }
 
   useEffect(() => {
@@ -126,11 +126,11 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
 
   async function submitPhotoReport(index: number) {
     if (currentUser && token) {
-       setUnactive(prev =>
-      prev.map((string, idx) => (idx === index ? 'Отправка' : string)),
-    );
-    setSendMessage('');
-    setIsSending(true);
+      setUnactive(prev =>
+        prev.map((string, idx) => (idx === index ? 'Отправка' : string)),
+      );
+      setSendMessage('');
+      setIsSending(true);
       const obj: TPhotoReport = {
         photo: files[index],
         comment: comment[index],
@@ -195,11 +195,64 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     }
   }
  
-  const openYandexMaps = (address:string) => {
+  const openYandexMaps = (address: string) => {
     const url = `https://yandex.ru/maps/?text=${encodeURIComponent("Москва, " + address.slice(0, 20))}`;
     window.open(url, '_blank');
   };
+  const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
 
+  const handleSingleClick = (str: string, phoneOrAdress:"phone"|"address") => {
+    if (phoneOrAdress == "address") {
+      setAdressForMaps(str)
+      setOpenMaps(true)
+    } else {
+       setPhoneForCall(str); setOpenCall(true)
+}
+  };
+
+  const handleDoubleClick = (index: number, str: string, phoneOrAdress:"phone"|"address") => {
+    copy(str);
+    if (phoneOrAdress == "address") {
+      setIsTouchAddress(prev =>
+        prev.map((isOpen, ind) =>
+          ind == index ? !isOpen : isOpen,
+           ));
+         setTimeout(() => {
+           setIsTouchAddress(prev =>
+          prev.map((isOpen, ind) =>
+            ind == index ? !isOpen : isOpen,
+             ))
+         }, 1000)
+    } else {
+      setIsTouchPhone(prev =>
+        prev.map((isOpen, ind) =>
+          ind == index ? !isOpen : isOpen,
+           ));
+         setTimeout(() => {
+           setIsTouchPhone(prev =>
+          prev.map((isOpen, ind) =>
+            ind == index ? !isOpen : isOpen,
+             ))
+         }, 1000)
+    }
+  };
+
+
+
+  const handleClick = (index:number, str:string, phoneOrAdress:"phone"|"address") => {
+    if (clickTimeout) {
+      clearTimeout(clickTimeout); // Отменяем выполнение одинарного клика
+      setClickTimeout(null);
+      handleDoubleClick(index, str, phoneOrAdress); // Выполняем действие для двойного клика
+    } else {
+      // Устанавливаем задержку для одинарного клика
+      const timeout = setTimeout(() => {
+        handleSingleClick(str, phoneOrAdress);
+        setClickTimeout(null);
+      }, 300); // Задержка в 300 мс
+      setClickTimeout(timeout);
+    }
+  };
   return (
     <div key={routeSheetId + 'routeSheetViewVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
     >
@@ -214,12 +267,13 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         >
           <div className="flex w-full items-left justify-between  ">
                 <textarea value={route.address} readOnly className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
-                 onClick={() => { 
-                  setAdressForMaps(route.address)
-                  setOpenMaps(true)
+                 onClick={(e) => { 
+                   e.preventDefault();
+                   handleClick (index, route.address, 'address')
                  }}
                  onContextMenu={e => {
-                   e.preventDefault(); copy(route.address);
+                   e.preventDefault();
+                   copy(route.address);
                    setIsTouchAddress(prev =>
                   prev.map((isOpen, ind) =>
                     ind == index ? !isOpen : isOpen,
@@ -231,20 +285,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                        ))
                    }, 1000)
                  }}
-                 onSelect={e => {
-                  e.preventDefault(); copy(route.address);
-                  setIsTouchAddress(prev =>
-                 prev.map((isOpen, ind) =>
-                   ind == index ? !isOpen : isOpen,
-                    ));
-                  setTimeout(() => {
-                    setIsTouchAddress(prev =>
-                   prev.map((isOpen, ind) =>
-                     ind == index ? !isOpen : isOpen,
-                   ))}, 1000) }}
                />
                 {isTouchAddress[index] && (<p className='ToastViewport ToastRoot '>Адрес скопирован</p>)}
-              
                {route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && 
                  object[array.indexOf(route.beneficiar[0].address)][1].length > 0 && (
                    <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
@@ -279,8 +321,10 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                     {/* Основной телефон */}
                    {route.beneficiar.map((ben, index)=>
                        <p key={ben.phone + index} className=" font-gerbera-h3 selection:bg-none text-light-brand-green mt-[6px]"
-                         onClick={() => { setPhoneForCall(ben.phone); setOpenCall(true) }}
-                         onContextMenu={e => {
+                       onClick={() => {
+                         handleClick(index, ben.phone, 'phone')
+                       }}
+                       onContextMenu={e => {
                            e.preventDefault(); copy(ben.phone);
                            setIsTouchPhone(prev =>
                           prev.map((isOpen, ind) =>
@@ -293,20 +337,6 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                                ))
                            }, 1000)
                        }}
-                       onSelect={e => {
-                        e.preventDefault(); copy(ben.phone);
-                        setIsTouchPhone(prev =>
-                       prev.map((isOpen, ind) =>
-                         ind == index ? !isOpen : isOpen,
-                          ));
-                        setTimeout(() => {
-                          setIsTouchPhone(prev =>
-                         prev.map((isOpen, ind) =>
-                           ind == index ? !isOpen : isOpen,
-                            ))
-                        }, 1000)
-                       }}
-                       
                        >{ben.phone}
                        </p>
                    )}  
