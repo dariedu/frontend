@@ -166,7 +166,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                />
                {
                  isTouchAddress[index] &&
-                 (<p className=' bg-light-gray-white shadow-xl font-gerbera-h3  text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white ToastViewport ToastRoot'>Адрес скопирован</p>)}
+                 (<p className=' opacity-1 bg-light-gray-white shadow-xl font-gerbera-h3  text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white ToastViewport ToastRoot'>Адрес скопирован</p>)}
               {array.indexOf(route.beneficiar[0].address) != -1 &&
               object[array.indexOf(route.beneficiar[0].address)][1].length >
                 0 ? (
@@ -232,7 +232,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                      </div>
                    )
                )}
-               {isTouchPhone[index] && (<p className=' bg-light-gray-white shadow-xl font-gerbera-h3 text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white  ToastViewport ToastRoot '>Телефон скопирован</p>)}
+               {isTouchPhone[index] && (<p className=' opacity-1 bg-light-gray-white shadow-xl font-gerbera-h3 text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white  ToastViewport ToastRoot '>Телефон скопирован</p>)}
              </div>
            
             {array.indexOf(route.beneficiar[0].address) != -1 &&

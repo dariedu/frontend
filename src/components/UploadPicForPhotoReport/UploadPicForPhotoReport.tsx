@@ -96,7 +96,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
 
   return (
     <div
-      className="flex flex-col items-center justify-start dark:bg-light-gray-black rounded-t-2xl w-full h-screen max-w-[500px] bg-light-gray-1 overflow-y-auto"
+      className="flex flex-col items-center justify-start dark:bg-light-gray-black w-full h-screen max-w-[500px] bg-light-gray-1 overflow-y-auto"
       onClick={e => e.stopPropagation()}
     >
       <div
