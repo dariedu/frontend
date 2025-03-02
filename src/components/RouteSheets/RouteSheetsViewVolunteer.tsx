@@ -14,17 +14,17 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
 // import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
-import './index.css'
+import './index.css';
 
 import copy from 'clipboard-copy'; // Импортируем библиотеку
 
 interface IRouteSheetsViewProps {
-  routes: TAddress[]
-  deliveryId: number
-  routeSheetId: number
-  photoReports: TServerResponsePhotoReport[]
-  sendPhotoReportSuccess: boolean
-  setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
+  routes: TAddress[];
+  deliveryId: number;
+  routeSheetId: number;
+  photoReports: TServerResponsePhotoReport[];
+  sendPhotoReportSuccess: boolean;
+  setSendPhotoReportSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
@@ -33,7 +33,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   routeSheetId,
   photoReports,
   sendPhotoReportSuccess,
-  setSendPhotoReportSuccess
+  setSendPhotoReportSuccess,
 }) => {
   const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(
     Array(routes.length).fill(''),
@@ -46,7 +46,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   //   Array(routes.length).fill(false),
   // );
   const [comment, addComment] = useState(Array(routes.length).fill(''));
-  const [files, setFiles] = useState<Blob[]>(Array(routes.length).fill(new Blob())); ////форматит фото в блоб файл
+  const [files, setFiles] = useState<Blob[]>(
+    Array(routes.length).fill(new Blob()),
+  ); ////форматит фото в блоб файл
   // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
   const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
   const [sendMessage, setSendMessage] = useState<string>('');
@@ -67,18 +69,20 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const { currentUser } = useContext(UserContext);
   const { token } = useContext(TokenContext);
 
-
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
 
-  
-  const [isTouchAddress, setIsTouchAddress] = useState(Array(routes.length).fill(false)); // Состояние нажатия на адрес
+  const [isTouchAddress, setIsTouchAddress] = useState(
+    Array(routes.length).fill(false),
+  ); // Состояние нажатия на адрес
   const [openMaps, setOpenMaps] = useState(false); // открываем модалку для открытия карт
   const [adressForMaps, setAdressForMaps] = useState(''); // адрес для открытия в яндекс картах
-  const [isTouchPhone, setIsTouchPhone] = useState(Array(routes.length).fill(false)); // Состояние нажатия на телефон
+  const [isTouchPhone, setIsTouchPhone] = useState(
+    Array(routes.length).fill(false),
+  ); // Состояние нажатия на телефон
   const [openCall, setOpenCall] = useState(false); // открываем модалку для набора номера
   const [phoneForCall, setPhoneForCall] = useState(''); // номер телефона для набора
-  const [isSending, setIsSending] = useState(false);//// отслеживаем отправку фотоотчета
+  const [isSending, setIsSending] = useState(false); //// отслеживаем отправку фотоотчета
 
   function checkoForUploadedReports() {
     const arr: number[] = [];
@@ -90,7 +94,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         arr.push(route.beneficiar[0].address);
         // console.log(route.beneficiar[0].address, "route.beneficiar[0].address")
       });
-      
+
       if (photoReports.length > 0) {
         photoReports.forEach(report => {
           if (arr.indexOf(report.address) != -1) {
@@ -146,7 +150,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       //     setBlob(blob1);
       //     return blob1;
       //   });
-      
+
       if (files[index] && currentUser) {
         const formData = new FormData();
         for (let key in obj) {
@@ -165,7 +169,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         // Создаем AbortController для установки таймаута
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000); // Таймаут 15 секунд
-        
+
         try {
           await postPhotoReport(token, formData, controller.signal);
           setSendMessage(routes[index].address);
@@ -173,73 +177,87 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
           );
-          localStorage.removeItem(`comment${routes[index].beneficiar[0].id}`)
+          localStorage.removeItem(`comment${routes[index].beneficiar[0].id}`);
         } catch (err: any) {
           if (err == 'Error: AxiosError: Network Error') {
-            setErrorMessage('возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет')
-          } else if (err == 'Error: Данный токен недействителен для любого типа токена') {
-            setErrorMessage('возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет')
+            setErrorMessage(
+              'возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет',
+            );
+          } else if (
+            err == 'Error: Данный токен недействителен для любого типа токена'
+          ) {
+            setErrorMessage(
+              'возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет',
+            );
           } else if (err == 'Error: CanceledError: canceled') {
-            console.log('загрузка прервана из-за слабого интернет соединения')
-            setErrorMessage('загрузка прервана из-за слабого интернет соединения');
+            console.log('загрузка прервана из-за слабого интернет соединения');
+            setErrorMessage(
+              'загрузка прервана из-за слабого интернет соединения',
+            );
           }
           setSendPhotoReportFail(true);
           setUnactive(prev =>
             prev.map((string, idx) => (idx === index ? 'Отправить' : string)),
-          )
+          );
         } finally {
-          clearTimeout(timeoutId)
-          setIsSending(false)
+          clearTimeout(timeoutId);
+          setIsSending(false);
         }
       }
     }
   }
- 
+
   const openYandexMaps = (address: string) => {
-    const url = `https://yandex.ru/maps/?text=${encodeURIComponent("Москва, " + address.slice(0, 20))}`;
+    const url = `https://yandex.ru/maps/?text=${encodeURIComponent('Москва, ' + address.slice(0, 20))}`;
     window.open(url, '_blank');
   };
   const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  const handleSingleClick = (str: string, phoneOrAdress:"phone"|"address") => {
-    if (phoneOrAdress == "address") {
-      setAdressForMaps(str)
-      setOpenMaps(true)
+  const handleSingleClick = (
+    str: string,
+    phoneOrAdress: 'phone' | 'address',
+  ) => {
+    if (phoneOrAdress == 'address') {
+      setAdressForMaps(str);
+      setOpenMaps(true);
     } else {
-       setPhoneForCall(str); setOpenCall(true)
-}
-  };
-
-  const handleDoubleClick = (index: number, str: string, phoneOrAdress:"phone"|"address") => {
-    copy(str);
-    if (phoneOrAdress == "address") {
-      setIsTouchAddress(prev =>
-        prev.map((isOpen, ind) =>
-          ind == index ? !isOpen : isOpen,
-           ));
-         setTimeout(() => {
-           setIsTouchAddress(prev =>
-          prev.map((isOpen, ind) =>
-            ind == index ? !isOpen : isOpen,
-             ))
-         }, 1000)
-    } else {
-      setIsTouchPhone(prev =>
-        prev.map((isOpen, ind) =>
-          ind == index ? !isOpen : isOpen,
-           ));
-         setTimeout(() => {
-           setIsTouchPhone(prev =>
-          prev.map((isOpen, ind) =>
-            ind == index ? !isOpen : isOpen,
-             ))
-         }, 1000)
+      setPhoneForCall(str);
+      setOpenCall(true);
     }
   };
 
+  const handleDoubleClick = (
+    index: number,
+    str: string,
+    phoneOrAdress: 'phone' | 'address',
+  ) => {
+    copy(str);
+    if (phoneOrAdress == 'address') {
+      setIsTouchAddress(prev =>
+        prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+      );
+      setTimeout(() => {
+        setIsTouchAddress(prev =>
+          prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+        );
+      }, 1000);
+    } else {
+      setIsTouchPhone(prev =>
+        prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+      );
+      setTimeout(() => {
+        setIsTouchPhone(prev =>
+          prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+        );
+      }, 1000);
+    }
+  };
 
-
-  const handleClick = (index:number, str:string, phoneOrAdress:"phone"|"address") => {
+  const handleClick = (
+    index: number,
+    str: string,
+    phoneOrAdress: 'phone' | 'address',
+  ) => {
     if (clickTimeout) {
       clearTimeout(clickTimeout); // Отменяем выполнение одинарного клика
       setClickTimeout(null);
@@ -254,228 +272,275 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     }
   };
   return (
-    <div key={routeSheetId + 'routeSheetViewVolunteer'} className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
+    <div
+      key={routeSheetId + 'routeSheetViewVolunteer'}
+      className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
     >
-      {(!routes || routes.length == 0) ?
-        (<div className='w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center'
-        >Упс, этот маршрутный лист пуст!</div>)
-         : routes.map((route, index) => (
-        <div key={route.id + routeSheetId + 'routeSheetViewVolunteer'}
-          className={`w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 h-fit p-4
-             ${route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? 'opacity-70 dark:opacity-65 ' : "" }
+      {!routes || routes.length == 0 ? (
+        <div className="w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center">
+          Упс, этот маршрутный лист пуст!
+        </div>
+      ) : (
+        routes.map((route, index) => (
+          <div
+            key={route.id + routeSheetId + 'routeSheetViewVolunteer'}
+            className={`w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center mt-1 pt-[40px] h-fit p-4
+             ${route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? 'opacity-70 dark:opacity-65 ' : ''}
             `}
-        >
-          <div className="flex w-full items-left justify-between  ">
-                <textarea value={route.address} readOnly className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
-                 onClick={(e) => { 
-                   e.preventDefault();
-                   handleClick (index, route.address, 'address')
-                 }}
-                 onContextMenu={e => {
-                   e.preventDefault();
-                   copy(route.address);
-                   setIsTouchAddress(prev =>
-                  prev.map((isOpen, ind) =>
-                    ind == index ? !isOpen : isOpen,
-                     ));
-                   setTimeout(() => {
-                     setIsTouchAddress(prev =>
+          >
+            <div className="flex w-full items-left justify-between ">
+              <textarea
+                value={route.address}
+                readOnly
+                className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+                onClick={e => {
+                  e.preventDefault();
+                  handleClick(index, route.address, 'address');
+                }}
+                onContextMenu={e => {
+                  e.preventDefault();
+                  copy(route.address);
+                  setIsTouchAddress(prev =>
                     prev.map((isOpen, ind) =>
                       ind == index ? !isOpen : isOpen,
-                       ))
-                   }, 1000)
-                 }}
-               />
-                {isTouchAddress[index] && (<p className='ToastViewport ToastRoot '>Адрес скопирован</p>)}
-               {route.beneficiar[0].address && array.indexOf(route.beneficiar[0].address) != -1 && 
-                 object[array.indexOf(route.beneficiar[0].address)][1].length > 0 && (
-                   <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
-                     <a href={object[array.indexOf(route.beneficiar[0].address)][1]}>
-                       Ссылка
-                     </a>
-                   </button>
-                 )     
-               }
-               </div>
-          {/* {comment[index].length > 0 && (
-            <div className="self-start w-full mt-2 bg-light-gray-1  dark:bg-light-gray-6 min-h-[60px] rounded-2xl p-3 text-light-gray-8-text dark:text-light-gray-1 font-gerbera-h3 focus: outline-0">
-              Комментарий
-              <br />
-              <p className="text-light-gray-5 font-gerbera-sub3 dark:text-light-gray-3 mt-[6px]">
-                {comment[index]}
-              </p>
+                    ),
+                  );
+                  setTimeout(() => {
+                    setIsTouchAddress(prev =>
+                      prev.map((isOpen, ind) =>
+                        ind == index ? !isOpen : isOpen,
+                      ),
+                    );
+                  }, 1000);
+                }}
+              />
+              {isTouchAddress[index] && (
+                <p className=" bg-light-gray-white shadow-xl font-gerbera-h3  text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white ToastViewport ToastRoot">
+                  Адрес скопирован
+                </p>
+              )}
+              {route.beneficiar[0].address &&
+                array.indexOf(route.beneficiar[0].address) != -1 &&
+                object[array.indexOf(route.beneficiar[0].address)][1].length >
+                  0 && (
+                  <button className="w-28 min-w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 dark:bg-light-gray-6 text-light-brand-green">
+                    <a
+                      href={
+                        object[array.indexOf(route.beneficiar[0].address)][1]
+                      }
+                    >
+                      Ссылка
+                    </a>
+                  </button>
+                )}
             </div>
-          )} */}
-          {/* {beneficiarIsAbsent[index] && (
-            <p className=" text-light-gray-5 dark:text-light-gray-1 font-gerbera-sub3 mt-2 self-start">
-              Благополучателя нет на месте
-            </p>
-          )} */}
-              <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
-                  {/* {route.beneficiar.length == 1 ? 'Благополучатель' : 'Благополучатели'} */}
-                  {route.beneficiar.map(ben => <p key={ben.full_name} className="font-gerbera-h3 text-light-gray-7-logo dark:text-light-gray-3 mt-[6px]">
-                  {ben.full_name}<br/>
-                  </p>)}
-                  {route.beneficiar.find(ben => ben.phone && ben.phone.length > 0) && (
-                    <div className='relative'>
-                    {/* Основной телефон */}
-                   {route.beneficiar.map((ben, index)=>
-                       <p key={ben.phone + index} className=" font-gerbera-h3 selection:bg-none text-light-brand-green mt-[6px]"
-                       onClick={() => {
-                         handleClick(index, ben.phone, 'phone')
-                       }}
-                       onContextMenu={e => {
-                           e.preventDefault(); copy(ben.phone);
-                           setIsTouchPhone(prev =>
-                          prev.map((isOpen, ind) =>
-                            ind == index ? !isOpen : isOpen,
-                             ));
-                           setTimeout(() => {
-                             setIsTouchPhone(prev =>
-                            prev.map((isOpen, ind) =>
-                              ind == index ? !isOpen : isOpen,
-                               ))
-                           }, 1000)
-                       }}
-                       >{ben.phone}
-                       </p>
-                   )}  
-                    </div>
-               )}
-               {isTouchPhone[index] && (<p className='ToastViewport ToastRoot '>Телефон скопирован</p>)}
-             </div>
-          <div className="h-fit flex flex-col items-center justify-between mt-4 space-y-2">
-              <button
-                 className={
-                   unactive[index] == 'Отправить'
-                     ? 'btn-B-WhiteDefault dark:text-light-brand-green text-center'
-                     : 'btn-B-GreenInactive  cursor-default text-center'
-                 }
-                 onClick={() => {
-                   if (unactive[index] == 'Отправить') {
-                     setUploadPictureModal(prev =>
-                       prev.map((isOpen, ind) =>
-                         ind == index ? !isOpen : isOpen,
-                       ),
-                     )
-                   } else if (unactive[index] == 'Отправлен' || unactive[index] == 'Отправка') {
-                   }
-                 }}
-            > 
-                 {unactive[index] == 'Отправить' ? "Фотоотчет" : unactive[index] == 'Отправка' ? "Отправка" : "Фотоотчет отправлен"}
-            </button> 
-             </div>
-             {((route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length > 0)) || (route.beneficiar.find(ben => ben.comment && ben.comment.length > 0))) &&
-              <div className="flex items-center justify-between w-full mb-2 mt-4">
-              <p className="font-gerbera-h3 text-light-gray-5"
-              onClick={() =>
-                setFullView(prev =>
-                  prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-                )
-              }
-              >Дополнительно</p>
-              <div
-                className="w-6 h-6 cursor-pointer"
-                onClick={() =>
-                  setFullView(prev =>
-                    prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-                  )
-                }
-              >
-                <Arrow_down
-                  className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
-                />
-              </div>
-            </div>
-             }
-          {fullView[index] && (
-            <div className="flex justify-center items-center w-full" key={index+"beneficiar"}>
-              <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
-                {route.beneficiar.find(ben => ben.second_phone && ben.second_phone.length> 0) && (
-                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Запасной телефон
-                       {route.beneficiar.map((ben, index) =>
-                         <p key={ben.second_phone + index} className="font-gerbera-sub3 text-light-brand-green"
-                         onClick={() => { setPhoneForCall(ben.phone); setOpenCall(true) }}
-                         onContextMenu={e => {
-                           e.preventDefault(); copy(ben.phone);
-                           setIsTouchPhone(prev =>
-                          prev.map((isOpen, ind) =>
-                            ind == index ? !isOpen : isOpen,
-                             ));
-                           setTimeout(() => {
-                             setIsTouchPhone(prev =>
-                            prev.map((isOpen, ind) =>
-                              ind == index ? !isOpen : isOpen,
-                            )) }, 1000) }}>
-                        {ben.second_phone}
-                    </p>)}
-                    {isTouchPhone[index] && (<p className='ToastViewport ToastRoot '>Телефон скопирован</p>)}
-                    </div>
-                  )}
-                {route.beneficiar.find(ben=> ben.comment && ben.comment.length > 0) && (
-                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
-                    Информация
-                    {route.beneficiar.map( (ben, index)=>
-                    <p key={ben.comment+index} className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]">
-                    {ben.comment}
+            <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
+              {route.beneficiar.map(ben => (
+                <div key={ben.full_name + index}>
+                  <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-3 mt-[16px] mb-[20px]">
+                    {ben.full_name}
+                    <br />
                   </p>
-                    )}
+                  {ben.phone && ben.phone.length > 0 && (
+                    <p
+                      className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2"
+                      onClick={() => {
+                        handleClick(index, ben.phone, 'phone');
+                      }}
+                      onContextMenu={e => {
+                        e.preventDefault();
+                        copy(ben.phone);
+                        setIsTouchPhone(prev =>
+                          prev.map((isOpen, ind) =>
+                            ind == index ? !isOpen : isOpen,
+                          ),
+                        );
+                        setTimeout(() => {
+                          setIsTouchPhone(prev =>
+                            prev.map((isOpen, ind) =>
+                              ind == index ? !isOpen : isOpen,
+                            ),
+                          );
+                        }, 1000);
+                      }}
+                    >
+                      {ben.phone}
+                    </p>
+                  )}
+                  {ben.second_phone && ben.second_phone.length > 0 && (
+                    <p
+                      className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green  inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2 "
+                      onClick={() => {
+                        handleClick(index, ben.second_phone, 'phone');
+                      }}
+                      onContextMenu={e => {
+                        e.preventDefault();
+                        copy(ben.second_phone);
+                        setIsTouchPhone(prev =>
+                          prev.map((isOpen, ind) =>
+                            ind == index ? !isOpen : isOpen,
+                          ),
+                        );
+                        setTimeout(() => {
+                          setIsTouchPhone(prev =>
+                            prev.map((isOpen, ind) =>
+                              ind == index ? !isOpen : isOpen,
+                            ),
+                          );
+                        }, 1000);
+                      }}
+                    >
+                      {ben.second_phone}
+                    </p>
+                  )}
+                </div>
+              ))}
+              {isTouchPhone[index] && (
+                <p className=" bg-light-gray-white shadow-xl font-gerbera-h3 text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white  ToastViewport ToastRoot ">
+                  Телефон скопирован
+                </p>
+              )}
+            </div>
+            <div className="h-fit flex flex-col items-center justify-between mt-8 mb-[20px] space-y-2">
+              <button
+                className={
+                  unactive[index] == 'Отправить'
+                    ? 'btn-B-WhiteDefault dark:text-light-brand-green text-center'
+                    : 'btn-B-GreenInactive  cursor-default text-center'
+                }
+                onClick={() => {
+                  if (unactive[index] == 'Отправить') {
+                    setUploadPictureModal(prev =>
+                      prev.map((isOpen, ind) =>
+                        ind == index ? !isOpen : isOpen,
+                      ),
+                    );
+                  } else if (
+                    unactive[index] == 'Отправлен' ||
+                    unactive[index] == 'Отправка'
+                  ) {
+                  }
+                }}
+              >
+                {unactive[index] == 'Отправить'
+                  ? 'Фотоотчет'
+                  : unactive[index] == 'Отправка'
+                    ? 'Отправка'
+                    : 'Фотоотчет отправлен'}
+              </button>
+            </div>
+            {route.beneficiar.find(
+              ben => ben.comment && ben.comment.length > 0,
+            ) && (
+              <div className="flex items-center justify-between w-full mb-2 ">
+                <p
+                  className="font-gerbera-h3 text-light-gray-5"
+                  onClick={() =>
+                    setFullView(prev =>
+                      prev.map((isOpen, idx) =>
+                        idx === index ? !isOpen : isOpen,
+                      ),
+                    )
+                  }
+                >
+                  Дополнительно
+                </p>
+                <div
+                  className="w-6 h-6 cursor-pointer"
+                  onClick={() =>
+                    setFullView(prev =>
+                      prev.map((isOpen, idx) =>
+                        idx === index ? !isOpen : isOpen,
+                      ),
+                    )
+                  }
+                >
+                  <Arrow_down
+                    className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${fullView[index] ? 'transform rotate-180' : ''}`}
+                  />
+                </div>
+              </div>
+            )}
+            {fullView[index] && (
+              <div
+                className="flex justify-center items-center w-full -[32px]"
+                key={index + 'beneficiar'}
+              >
+                <div className="flex flex-col items-start w-full h-fit space-y-[14px]">
+                  {route.beneficiar.find(
+                    ben => ben.comment && ben.comment.length > 0,
+                  ) && (
+                    <div className="bg-light-gray-1 dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit p-[12px]">
+                      Информация
+                      {route.beneficiar.map((ben, index) => (
+                        <p
+                          key={ben.comment + index}
+                          className="font-gerbera-sub3 mb-[4px] text-light-gray-5 dark:text-light-gray-3 mt-[6px]"
+                        >
+                          {ben.comment}
+                        </p>
+                      ))}
                     </div>
                   )}
+                </div>
               </div>
-            </div>
-          )}
-          <Modal
-            isOpen={uploadPictureModal[index]}
-            onOpenChange={() =>
-              setUploadPictureModal(prev =>
-                prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
-              )
-            }
-            onOpenChangeComment={() =>
-              setUploadPictureModal(prev =>
-                prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
-              )
-            }
-          >
-            <UploadPic
+            )}
+            <Modal
+              isOpen={uploadPictureModal[index]}
               onOpenChange={() =>
                 setUploadPictureModal(prev =>
                   prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
                 )
               }
-              index={index}
-              setUploadedFileLink={setUploadedFileLink}
-              setFileUploaded={setFileUploaded}
-              fileUploaded={fileUploaded}
-              uploadedFileLink={uploadedFileLink}
-              beneficiarIsAbsent={beneficiarIsAbsent[index]}
-              setBeneficiarIsAbsent={setBeneficiarIsAbsent}
-              setFiles={setFiles}
-              files={files}
-              sendPhotoReportFunc={submitPhotoReport}
+              onOpenChangeComment={() =>
+                setUploadPictureModal(prev =>
+                  prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+                )
+              }
+            >
+              <UploadPic
+                onOpenChange={() =>
+                  setUploadPictureModal(prev =>
+                    prev.map((isOpen, ind) =>
+                      ind == index ? !isOpen : isOpen,
+                    ),
+                  )
+                }
+                index={index}
+                setUploadedFileLink={setUploadedFileLink}
+                setFileUploaded={setFileUploaded}
+                fileUploaded={fileUploaded}
+                uploadedFileLink={uploadedFileLink}
+                beneficiarIsAbsent={beneficiarIsAbsent[index]}
+                setBeneficiarIsAbsent={setBeneficiarIsAbsent}
+                setFiles={setFiles}
+                files={files}
+                sendPhotoReportFunc={submitPhotoReport}
                 name={route.address}
                 onSave={handleAddComment}
                 idForComment={route.beneficiar[0].id}
                 savedComment={comment[index]}
-            />
-          </Modal>
-        </div>
-      ))}
+              />
+            </Modal>
+          </div>
+        ))
+      )}
       <ConfirmModal
         isOpen={sendPhotoReportFail}
         onOpenChange={setSendPhotoReportFail}
-        onConfirm={() => { setSendPhotoReportFail(false); setErrorMessage('') }}
-        title={errorMessage.length > 0 ? (
-          <p>
-          Упс, {errorMessage}.
-        </p>
-        ) : (<p>
-            Упс, что-то пошло не так
-            <br /> Попробуйте позже.
-          </p>)
-          
+        onConfirm={() => {
+          setSendPhotoReportFail(false);
+          setErrorMessage('');
+        }}
+        title={
+          errorMessage.length > 0 ? (
+            <p>Упс, {errorMessage}.</p>
+          ) : (
+            <p>
+              Упс, что-то пошло не так
+              <br /> Попробуйте позже.
+            </p>
+          )
         }
         description=""
         confirmText="Закрыть"
@@ -487,7 +552,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         onConfirm={() => setSendPhotoReportSuccess(false)}
         title={
           <p>
-            Фотоотчет по адресу: <br /> {sendMessage} { }
+            Фотоотчет по адресу: <br /> {sendMessage} {}
             успешно отправлен.
           </p>
         }
@@ -504,7 +569,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         confirmText="Закрыть"
         isSingleButton={true}
       />
-       <ConfirmModal
+      <ConfirmModal
         isOpen={openMaps}
         onOpenChange={setOpenMaps}
         onConfirm={() => openYandexMaps(adressForMaps)}
@@ -512,10 +577,10 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         description=""
         onCancel={() => setOpenMaps(false)}
         confirmText="Открыть"
-        cancelText='Отмена'
+        cancelText="Отмена"
         isSingleButton={false}
       />
-       <ConfirmModal
+      <ConfirmModal
         isOpen={openCall}
         onOpenChange={setOpenCall}
         onConfirm={() => setOpenCall(false)}
@@ -523,12 +588,12 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         description=""
         onCancel={() => setOpenCall(false)}
         confirmText={<a href={`tel:${phoneForCall}`}>Позвонить</a>}
-        cancelText='Отмена'
+        cancelText="Отмена"
         isSingleButton={false}
       />
-       <Modal onOpenChange={()=>{}} isOpen={isSending}>
+      <Modal onOpenChange={() => {}} isOpen={isSending}>
         <div className="h-screen items-center flex flex-col justify-center ">
-          <div className='loader'></div>
+          <div className="loader"></div>
         </div>
       </Modal>
     </div>
