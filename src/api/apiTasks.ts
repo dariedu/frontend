@@ -114,7 +114,28 @@ export const postTaskRefuse = async (
   try {
     const response: AxiosResponse<ITask> = await axios.post(
       `${tasksUrl}${taskId}/refuse/`,
-      {},
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          accept: 'application/json',
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postTaskRefuse has failed', err);
+    throw new Error('Post request postTaskRefuse has failed');
+  }
+};
+
+// Подтвердить свое участие в добром деле
+export const postTaskConfirm = async (
+  taskId: number,
+  access: string,
+): Promise<ITask> => {
+  try {
+    const response: AxiosResponse<ITask> = await axios.post(
+      `${tasksUrl}${taskId}/confirm/`,
       {
         headers: {
           Authorization: `Bearer ${access}`,

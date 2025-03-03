@@ -132,6 +132,31 @@ export const postDeliveryCancel = async (
   }
 };
 
+////// подтверждаем доставку
+export const postDeliveryConfirm = async (
+  access: string|null,
+  deliveryId: number,
+): Promise<IDelivery> => {
+  try {
+    const response: AxiosResponse<IDelivery> = await axios({
+      url: `${deliveriesUrl}${deliveryId}/confirm/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postDeliveryCancel has failed', err);
+    throw new Error('Post request postDeliveryCancel has failed');
+  }
+};
+
+
+
+
 // берем доставку себе
 export const postDeliveryTake = async (
   access: string,

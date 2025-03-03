@@ -75,7 +75,7 @@ const CalendarTabVolunteer = () => {
            setMyPast(past)
          }
          localStorage.setItem(`vol_current_for_calendar_tab`, JSON.stringify(current))
-         localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(current))
+         localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(past))
     }
     } catch (err) {
       console.log(err, "CalendarTabVolunteer getMyDeliveries has failed")
