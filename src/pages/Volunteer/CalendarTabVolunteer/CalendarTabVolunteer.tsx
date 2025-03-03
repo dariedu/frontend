@@ -10,8 +10,9 @@ import CancelledDeliveryOrTaskFeedback from '../../../components/DeliveryOrTaskF
 import { Modal } from '../../../components/ui/Modal/Modal';
 import { getMyTasksNoFilter, postTaskRefuse, type ITask } from '../../../api/apiTasks';
 import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVolunteer';
-import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
+// import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 import { UserContext } from '../../../core/UserContext';
+import Bread from './../../../assets/icons/bread.svg?react'
 
 
 const CalendarTabVolunteer = () => {
@@ -77,7 +78,7 @@ const CalendarTabVolunteer = () => {
          localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(current))
     }
     } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+      console.log(err, "CalendarTabVolunteer getMyDeliveries has failed")
     }
   }
   
@@ -100,7 +101,7 @@ const CalendarTabVolunteer = () => {
           setCompletedTaskFeedbacks(allMySubmitedFeedbacksForCompletedTasks)
         }
       } catch (err) {
-        console.log("getAllMyFeedbacks volunteer tab has failed")
+        console.log("CalendarTabVolunteer getAllMyFeedbacks has failed")
     }
   }
   }
@@ -125,7 +126,7 @@ const CalendarTabVolunteer = () => {
         }
       }
     } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+      console.log(err, "CalendarTabVolunteer getMyTasks fail")
     }
   }
 
@@ -187,7 +188,7 @@ try {
 }
 } catch (err) {
   setCancelDeliveryFail(true)
-  console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
+  console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
 }
   }
   
@@ -250,12 +251,14 @@ try {
                 )
               )
           )) : ""}
-          {myCurrent.length == 0 && allMyTasks.length == 0 ? (
+          {myCurrent.length == 0 && allMyTasks.length == 0 ?
+            (
           <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
-            <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-            <p className=' text-light-gray-black dark:text-light-gray-1 '>Пока нет запланированных<br/>добрых дел</p>
+            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-4 '/>
+            <p className=' text-light-gray-black dark:text-light-gray-1 w-64 '>Пока нет запланированных<br/>добрых дел</p>
         </div>
-        ): ""}
+          )
+        : ""}
         </div>
       </div>    
       <ConfirmModal

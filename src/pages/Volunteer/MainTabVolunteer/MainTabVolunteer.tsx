@@ -1,5 +1,5 @@
 import SliderStories from '../../../components/SliderStories/SliderStories';
-// import Calendar from '../../../components/Calendar/Calendar';
+import Calendar from '../../../components/Calendar/Calendar';
 import SliderCardsDeliveries from '../../../components/SliderCards/SliderCardsDeliveries';
 import { useState, useContext, useEffect } from 'react';
 import { DeliveryContext } from '../../../core/DeliveryContext';
@@ -23,15 +23,14 @@ import {
   type ITask,
 } from '../../../api/apiTasks';
 import SliderCardsTaskVolunteer from '../../../components/SliderCards/SliderCardsTasksVolunteer';
-import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react';
-
+import Bread from './../../../assets/icons/bread.svg?react';
 
 type TMainTabVolunteerProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
-  // const [selectedDate, setSelectedDate] = useState(new Date());
+const [selectedDate, setSelectedDate] = useState<Date|null>(null);
 
   const [takeDeliverySuccess, setTakeDeliverySuccess] =
     useState<boolean>(false); //// подтверждение бронирования доставки
@@ -48,6 +47,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
   const [takeTaskFailString, setTakeTaskFailString] = useState<string|JSX.Element>(''); //переменная для записи названия ошибки при взятии доброго дела
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<IDelivery[]>(localStorage.getItem(`all_del_vol`) !== null && localStorage.getItem(`all_del_vol`) !== undefined ? JSON.parse(localStorage.getItem(`all_del_vol`) as string) : []);
+  const [filteredDeliveriesBeforeCalendarFilter, setFilteredDeliveriesBeforeCalendarFilter] = useState<IDelivery[]>(localStorage.getItem(`all_del_vol`) !== null && localStorage.getItem(`all_del_vol`) !== undefined ? JSON.parse(localStorage.getItem(`all_del_vol`) as string) : []);
   const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]); /// сверяемся есть ли доставки в моих забронированных
 
   const [allAvaliableTasks, setAllAvaliableTasks] = useState<ITask[]>([]);
@@ -78,6 +78,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       );
       localStorage.setItem(`all_del_vol`, JSON.stringify(filtered))
       setFilteredDeliveries(filtered);
+      setFilteredDeliveriesBeforeCalendarFilter(filtered)
     }
   }
 
@@ -114,6 +115,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
              return i.curator.photo = i.curator.photo.replace('http', 'https')
             }
           })
+         console.log(result, "getAllTasks() main page vol" )
           setAllAvaliableTasks(result);
         }
       }
@@ -171,7 +173,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
         } else if ((err = ' Error: User does not confirmed')) {
           setTakeTaskFail(true);
           setTakeTaskFailString(
-            <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
+            <p>Вы сможете записаться на доставку и добрые дела после завершения регистрации.<br/> 
+            📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+                @volunteers_dari_edu
+                </a></p>,
           );
          }  else {
           setTakeDeliveryFail(true);
@@ -180,9 +185,6 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       }
     } 
   }
-
-
-
 
   function getDelivery(delivery: IDelivery) {
     const deliveryDate = new Date(Date.parse(delivery.date) + 180* 60000);
@@ -235,7 +237,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
       } else if ((err = ' Error: User does not confirmed')) {
         setTakeTaskFail(true);
         setTakeTaskFailString(
-          <p>Ошибка!<br/> Ваш профиль пока не был авторизован.<br/> Попробуйте позже.</p>,
+          <p>Вы сможете записаться на доброе дело и доставки после завершения регистрации.<br/> 
+          📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+              @volunteers_dari_edu
+              </a></p>,
         );
       } else {
         setTakeTaskFail(true);
@@ -281,7 +286,7 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
 
   return (
     <>
-      <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px]">
+      <div className="flex flex-col h-fit mb-5 overflow-x-hidden w-full max-w-[500px]">
         <div>
           <SliderStories />
           {myCurrent.length > 0
@@ -295,17 +300,17 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
                 }
               })
             : ''}
-          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
+          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-[278px] overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
-              Расписание доставок
+              Благотворительная доставка
             </div>
-            {/* <Calendar
+            <Calendar
+              startOfWeekDate={new Date()}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
-              showHeader={false}
-              showFilterButton={false}
-              showDatePickerButton={false}
-            /> */}
+              deliveries={filteredDeliveriesBeforeCalendarFilter}
+              setFilteredDeliveries={setFilteredDeliveries}
+            />
             {filteredDeliveries.length > 0 ? (
               <SliderCardsDeliveries
                 deliveries={filteredDeliveries}
@@ -317,16 +322,14 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
                 setTakeDeliverySuccess={setTakeDeliverySuccess}
               />
             ) : (
-              <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
-              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
-              <p className="dark:text-light-gray-1">
-                Скоро тут появятся доставки
-              </p>
-            </div>
+              <div className='flex flex-col items-center justify-center overflow-y-hidden mt-6'>
+              <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-2'/>
+            <p className='text-light-gray-black dark:text-light-gray-1 w-54'>Скоро тут появятся доставки</p>
+          </div>
             )}
           </div>
         </div>
-        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-fit">
+        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-[190px]">
           <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-4">
             Другие добрые дела
           </div>
@@ -341,12 +344,10 @@ const MainTabVolunteer: React.FC<TMainTabVolunteerProps> = ({ switchTab }) => {
               setTakeTaskSuccess={setTakeTaskSuccess}
             />
           ) : (
-            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
-              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
-              <p className="dark:text-light-gray-1">
-                Скоро тут появятся добрые дела
-              </p>
-            </div>
+            <div className='flex flex-col items-center justify-center overflow-y-hidden mt-8'>
+            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-2'/>
+          <p className='text-light-gray-black dark:text-light-gray-1 w-54'>Скоро тут появятся добрые дела</p>
+        </div>
           )}
         </div>
       </div>

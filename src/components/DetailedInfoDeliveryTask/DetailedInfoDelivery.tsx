@@ -89,7 +89,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                   {`${deliveryDate.getUTCDate()}
-              ${deliveryDate.toLocaleDateString("RU", {month:"short"})} в
+              ${deliveryDate.toLocaleDateString("RU", {month:"short"}).slice(0, 3) + "."} в
               ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
                 </p>
               </div>

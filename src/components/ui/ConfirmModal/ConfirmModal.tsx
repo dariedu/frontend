@@ -2,15 +2,15 @@ import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
 
 interface IConfirmModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
-  onCancel?: () => void;
-  title: string | JSX.Element;
-  description: string;
-  confirmText: string;
-  cancelText?: string;
-  isSingleButton?: boolean;
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  onConfirm: () => void
+  onCancel?: () => void
+  title: string | JSX.Element
+  description: string
+  confirmText: string | JSX.Element
+  cancelText?: string
+  isSingleButton?: boolean
   zIndex?: boolean
 }
 

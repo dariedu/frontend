@@ -36,14 +36,16 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
   const { currentUser } = useContext(UserContext);
   const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState<boolean>(false);
 
-  ///запрашиваем все репорты и отбираем только отчеты этого пользователя
+  //запрашиваем все репорты и отбираем только отчеты этого пользователя
   async function requestPhotoReports() {
     if (token && currentUser) {
       try {
         let result = await getPhotoReportsByDeliveryId(token, deliveryId);
         let filtered = result.filter(report => {
-          if (report.user.id == currentUser.id)
+          if (report.user && report.user.id) {
+            if (report.user.id == currentUser.id)
            return report
+          }
         })
         console.log(result, `photo report by deliveryid ${deliveryId}`)
         setMyPhotoReports(filtered)

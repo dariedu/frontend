@@ -178,6 +178,28 @@ export const postDeliveryComplete = async (
   }
 };
 
+// куратор активирует доставку
+export const postDeliveryActivate = async (
+  access: string,
+  deliveryId: number,
+): Promise<IDelivery> => {
+  try {
+    const response: AxiosResponse<IDelivery> = await axios({
+      url: `${deliveriesUrl}${deliveryId}/delivery_activation/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error(err)
+    throw new Error(err.response.data.error)
+  }
+};
+
 
 
 // Получение доставок куратора

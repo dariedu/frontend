@@ -22,7 +22,9 @@ interface RouteSheetsProps {
   deliveryId: number
   assignedRouteSheets: IRouteSheetAssignments[]
   changeAssignedRouteSheets: () => {}
-  completeDeliveryFunc: (deliveryId: number)=> Promise<void>
+  completeDeliveryFunc: (deliveryId: number) => Promise<void>
+  activateDeliveryFunc: (deliveryId: number) => Promise<void>
+  setCurrentStatus:React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
@@ -35,7 +37,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   deliveryId,
   assignedRouteSheets,
   changeAssignedRouteSheets,
-  completeDeliveryFunc
+  completeDeliveryFunc,
+  activateDeliveryFunc,
+  setCurrentStatus
 }) => {
 
 
@@ -52,8 +56,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
+  const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
-
+  // const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
 
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
@@ -153,9 +158,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>
         <h2 className="font-gerbera-h1 text-lg text-light-gray-black dark:text-light-gray-1 ">{status} доставка</h2>
       </div>
-      <div className="flex flex-col">
+      
         {filtered.length > 0 && filtered.sort((a,b) => a.name.localeCompare(b.name)).map((routeS, index) => {
           return (
+            <div className="flex flex-col" key={routeS.id + index}>
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
               listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}
               changeListOfVolunteers={changeListOfVolunteers}
@@ -164,9 +170,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               openRouteSheets={openRouteSheets} setOpenRouteSheets={setOpenRouteSheets} myPhotoReports={myPhotoReports}
             />
+          </div>
           );
         })}
-      </div>
       {status == 'Активная' &&
         <button className={currentStatus == 'completed'? "btn-B-GreenInactive mt-10 self-center" : 'btn-B-GreenDefault mt-10 self-center'} onClick={() => {
           if (currentStatus == 'completed') { 
@@ -176,16 +182,37 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           }
         }}>
         {currentStatus == 'completed' ? "Завершена" : "Завершить доставку"} 
+        </button>}
+        {status == 'Ближайшая' &&
+        <button className={currentStatus == 'active'? "btn-B-GreenInactive mt-10 self-center" : 'btn-B-GreenDefault mt-10 self-center'} onClick={() => {
+          if (currentStatus == 'active') { 
+            ()=>{}
+          } else {
+            setAskCuratorActivateDelivery(true)
+          }
+        }}>
+        {currentStatus == 'active' ? "Активирована" : "Активировать доставку"} 
        </button>}
       <ConfirmModal
         isOpen={askCuratorCompleteDelivery}
         onOpenChange={setAskCuratorCompleteDelivery}
-        onConfirm={() => { completeDeliveryFunc(deliveryId); setAskCuratorCompleteDelivery(false)} }
+        onConfirm={() => { completeDeliveryFunc(deliveryId); setAskCuratorCompleteDelivery(false);  setCurrentStatus('completed')} }
         onCancel={() => setAskCuratorCompleteDelivery(false)}
         title="Вы уверены, что хотите завершить доставку?"
         cancelText='Закрыть'
         description=""
         confirmText="Завершить"
+        isSingleButton={false}
+      />
+      <ConfirmModal
+        isOpen={askCuratorActivateDelivery}
+        onOpenChange={setAskCuratorActivateDelivery}
+        onConfirm={() => { activateDeliveryFunc(deliveryId); setAskCuratorActivateDelivery(false);  setCurrentStatus('active') } }
+        onCancel={() => setAskCuratorActivateDelivery(false)}
+        title="Вы уверены, что хотите активировать эту доставку?"
+        cancelText='Закрыть'
+        description=""
+        confirmText="Активировать"
         isSingleButton={false}
       />
       

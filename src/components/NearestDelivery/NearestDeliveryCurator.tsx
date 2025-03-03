@@ -9,7 +9,7 @@ import { Modal } from '../ui/Modal/Modal';
 import { ModalTop } from '../ui/Modal/ModalTop';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
-import { type IDelivery, TCuratorDelivery, getDeliveryById, TVolunteerForDeliveryAssignments, postDeliveryComplete } from '../../api/apiDeliveries';
+import { type IDelivery, TCuratorDelivery, getDeliveryById, TVolunteerForDeliveryAssignments, postDeliveryComplete, postDeliveryActivate } from '../../api/apiDeliveries';
 import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { TokenContext } from '../../core/TokenContext';
@@ -46,7 +46,8 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
   const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
   const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
-
+  const [activateDeliverySuccess, setActivateDeliverySuccess] = useState(false);
+//  const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
    
   ///// используем контекст токена
@@ -80,6 +81,24 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           }
      }
   }
+
+    ////активация доставки куратором
+    async function requestDeliveryActivate(deliveryId:number) {
+      if (token) {
+        try {
+          const result: IDelivery = await postDeliveryActivate(token, deliveryId);
+          if (result) {
+            setCurrentStatus('active')
+            setActivateDeliverySuccess(true)
+          }
+        } catch (err) {
+          console.log("requestDeliveryActivate, NearestDeliveryCurator has failed")
+       }
+     } 
+    }
+
+
+
   ////завершение доставки куратором
   async function requestDeliveryComplete(deliveryId:number) {
     if (token && delivery) {
@@ -287,8 +306,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
       { routeSheets && assignedRouteSheetsSuccess ? (
        <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
-        status={deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная'}
+        status={currentStatus ? (currentStatus == 'nearest' ? 'Ближайшая' : currentStatus == 'active' ? 'Активная' : 'Завершенная'):(deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная')}
         currentStatus={currentStatus}
+        setCurrentStatus={setCurrentStatus}
         onClose={() => setFullViewActive(false)}
         routeSheetsData={routeSheets}
         listOfVolunteers={listOfVolunteers}
@@ -297,6 +317,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         assignedRouteSheets={assignedRouteSheets}
         changeAssignedRouteSheets={requestRouteSheetsAssignments}
         completeDeliveryFunc={requestDeliveryComplete}
+        activateDeliveryFunc={requestDeliveryActivate}
        />
      </ModalTop>
       ): ("")
@@ -352,6 +373,22 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
           <p>
             Доставка завершена
             <br /> +{delivery.price} {getBallCorrectEndingName(delivery.price)}
+          </p>
+        }
+        description=""
+        confirmText="Закрыть"
+        isSingleButton={true}
+      />
+      }
+      {delivery &&
+        <ConfirmModal
+        isOpen={activateDeliverySuccess}
+        onOpenChange={setActivateDeliverySuccess}
+        onConfirm={() => setActivateDeliverySuccess(false)}
+        title={
+          <p>
+            Доставка активирована,
+            <br />теперь волонтёры смогут видеть назначенные маршрутные листы.
           </p>
         }
         description=""
