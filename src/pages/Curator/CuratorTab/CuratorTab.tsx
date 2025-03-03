@@ -107,21 +107,21 @@ async function getMyCuratorDeliveries() {
   return (
     <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-fit pb-20 overflow-y-auto w-full max-w-[500px]">
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
-        curatorInProcessDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
+        curatorInProcessDeliveries.map((del, index) => {
             return(<div key={index}>
               <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' />
             </div>)
         })
       )}
       {curatorActiveDeliveries && curatorActiveDeliveries.length >0 && (
-        curatorActiveDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
+        curatorActiveDeliveries.map((del, index) => {
           return (<div key={index}>
             <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' />
           </div>)
         })
       )}
          {curtorTasks && curtorTasks.length > 0 &&
-        curtorTasks.filter(i =>!i.is_completed).sort((a, b) => { return +(new Date(a.start_date)) - +(new Date(b.start_date)) }).map((task, index) => {
+        curtorTasks.filter(i =>!i.is_completed).map((task, index) => {
           const submited = completedTaskFeedbacks.includes(task.id) ? true : false;
           return (  <div key={index}>
             <NearestTaskCurator
@@ -135,7 +135,7 @@ async function getMyCuratorDeliveries() {
         )
       }
       {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
-       curatorCompletedDeliveries.sort((a, b) => { return +(new Date(a.id_delivery)) - +(new Date(b.id_delivery)) }).map((del, index) => {
+       curatorCompletedDeliveries.map((del, index) => {
           return (<div key={index}>
             <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}/>
           </div>)
