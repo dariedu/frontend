@@ -23,8 +23,7 @@ import {
   type ITask,
 } from '../../../api/apiTasks';
 import SliderCardsTaskVolunteer from '../../../components/SliderCards/SliderCardsTasksVolunteer';
-import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react';
-
+import Bread from './../../../assets/icons/bread.svg?react';
 
 type TMainTabVolunteerProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -187,9 +186,6 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
     } 
   }
 
-
-
-
   function getDelivery(delivery: IDelivery) {
     const deliveryDate = new Date(Date.parse(delivery.date) + 180* 60000);
     const date = deliveryDate.getUTCDate();
@@ -290,7 +286,7 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
 
   return (
     <>
-      <div className="flex flex-col h-fit mb-20 overflow-x-hidden w-full max-w-[500px]">
+      <div className="flex flex-col h-fit mb-5 overflow-x-hidden w-full max-w-[500px]">
         <div>
           <SliderStories />
           {myCurrent.length > 0
@@ -304,7 +300,7 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
                 }
               })
             : ''}
-          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-fit overflow-x-hidden">
+          <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl h-[278px] overflow-x-hidden">
             <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-[20px]">
               Благотворительная доставка
             </div>
@@ -326,16 +322,14 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
                 setTakeDeliverySuccess={setTakeDeliverySuccess}
               />
             ) : (
-              <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
-              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
-              <p className="dark:text-light-gray-1">
-                Скоро тут появятся доставки
-              </p>
-            </div>
+              <div className='flex flex-col items-center justify-center overflow-y-hidden mt-6'>
+              <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-2'/>
+            <p className='text-light-gray-black dark:text-light-gray-1 w-54'>Скоро тут появятся доставки</p>
+          </div>
             )}
           </div>
         </div>
-        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-fit">
+        <div className="mt-[6px] bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl overflow-x-hidden mb-20 h-[190px]">
           <div className="text-start font-gerbera-h1 text-light-gray-black ml-4 dark:text-light-gray-white pt-4">
             Другие добрые дела
           </div>
@@ -350,12 +344,10 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
               setTakeTaskSuccess={setTakeTaskSuccess}
             />
           ) : (
-            <div className="flex flex-col w-full max-w-[500px] items-center mt-8 h-[100px] justify-between mb-5">
-              <LogoNoTaskYet className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
-              <p className="dark:text-light-gray-1">
-                Скоро тут появятся добрые дела
-              </p>
-            </div>
+            <div className='flex flex-col items-center justify-center overflow-y-hidden mt-8'>
+            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-2'/>
+          <p className='text-light-gray-black dark:text-light-gray-1 w-54'>Скоро тут появятся добрые дела</p>
+        </div>
           )}
         </div>
       </div>

@@ -168,7 +168,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         }
         // Создаем AbortController для установки таймаута
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // Таймаут 15 секунд
+        const timeoutId = setTimeout(() => controller.abort(), 20000); // Таймаут 20 секунд
 
         try {
           await postPhotoReport(token, formData, controller.signal);
@@ -181,18 +181,18 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         } catch (err: any) {
           if (err == 'Error: AxiosError: Network Error') {
             setErrorMessage(
-              'возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет',
+              'Возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет',
             );
           } else if (
             err == 'Error: Данный токен недействителен для любого типа токена'
           ) {
             setErrorMessage(
-              'возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет',
+              'Возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет',
             );
           } else if (err == 'Error: CanceledError: canceled') {
-            console.log('загрузка прервана из-за слабого интернет соединения');
+            console.log('Загрузка прервана из-за слабого интернет соединения');
             setErrorMessage(
-              'загрузка прервана из-за слабого интернет соединения',
+              'Загрузка прервана из-за слабого интернет соединения',
             );
           }
           setSendPhotoReportFail(true);
@@ -278,7 +278,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     >
       {!routes || routes.length == 0 ? (
         <div className="w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center">
-          Упс, этот маршрутный лист пуст!
+          Упс! Этот маршрутный лист пуст!
         </div>
       ) : (
         routes.map((route, index) => (
@@ -289,10 +289,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
             `}
           >
             <div className="flex w-full items-left justify-between ">
-              <textarea
-                value={route.address}
-                readOnly
-                className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+              <p
+
+                className=" font-gerbera-h3 bg-transparent text-light-brand-green h-fit cursor-pointer w-full max-w-[72%] overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
                 onClick={e => {
                   e.preventDefault();
                   handleClick(index, route.address, 'address');
@@ -313,7 +312,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                     );
                   }, 1000);
                 }}
-              />
+              >{route.address}</p>
               {isTouchAddress[index] && (
                 <p className=" bg-light-gray-white shadow-xl font-gerbera-h3  text-light-gray-black dark:bg-light-gray-7-logo opacity-1 dark:text-light-gray-white ToastViewport ToastRoot">
                   Адрес скопирован
@@ -334,16 +333,16 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   </button>
                 )}
             </div>
-            <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
+            <div className="  dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
               {route.beneficiar.map(ben => (
                 <div key={ben.full_name + index}>
-                  <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-3 mt-[16px] mb-[20px]">
+                  <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-2 mt-8 mb-4">
                     {ben.full_name}
                     <br />
                   </p>
                   {ben.phone && ben.phone.length > 0 && (
                     <p
-                      className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2"
+                      className=" dark:bg-light-gray-6 bg-light-gray-1 px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green inline w-[113px] h-30px rounded-[40px] mr-2"
                       onClick={() => {
                         handleClick(index, ben.phone, 'phone');
                       }}
@@ -369,7 +368,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                   )}
                   {ben.second_phone && ben.second_phone.length > 0 && (
                     <p
-                      className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green  inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2 "
+                      className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green  inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-6 rounded-[40px] mr-2 "
                       onClick={() => {
                         handleClick(index, ben.second_phone, 'phone');
                       }}
@@ -534,7 +533,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
         }}
         title={
           errorMessage.length > 0 ? (
-            <p>Упс, {errorMessage}.</p>
+            <p>Упс! {errorMessage}.</p>
           ) : (
             <p>
               Упс, что-то пошло не так

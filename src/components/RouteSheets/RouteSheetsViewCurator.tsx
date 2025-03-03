@@ -144,7 +144,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
             className="w-full bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl flex flex-col justify-between items-center "
           >
               <div className="flex w-full items-left justify-between ">
-                <textarea value={route.address} readOnly className=" font-gerbera-h3 bg-transparent text-light-brand-green mb-[4px] cursor-pointer w-full max-w-[80%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
+                <p className=" font-gerbera-h3 bg-light-gray-white dark:bg-light-gray-7-logo  text-light-brand-green cursor-pointer w-full max-w-[72%] h-fit overflow-auto text-wrap border-none  focus:outline-none selection:bg-none resize-none "
                  onClick={(e) => { 
                    e.preventDefault();
                    handleClick (index, route.address, 'address')
@@ -163,10 +163,10 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                        ))
                    }, 1000)
                  }}
-               />
+               >{route.address}</p>
                {
                  isTouchAddress[index] &&
-                 (<p className=' opacity-1 bg-light-gray-white shadow-xl font-gerbera-h3  text-light-gray-black dark:bg-light-gray-7-logo dark:text-light-gray-white ToastViewport ToastRoot'>Адрес скопирован</p>)}
+                 (<p className=' opacity-1 bg-light-gray-white dark:bg-light-gray-7-logo shadow-xl font-gerbera-h3  text-light-gray-black  dark:text-light-gray-white ToastViewport ToastRoot'>Адрес скопирован</p>)}
               {array.indexOf(route.beneficiar[0].address) != -1 &&
               object[array.indexOf(route.beneficiar[0].address)][1].length >
                 0 ? (
@@ -181,7 +181,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                 <Camera className="w-[26px] h-[26px] min-h-[26px] min-w-[26px] rounded-full fill-light-gray-3 " />
               )}
                </div>
-              <div className=" dark:bg-light-gray-6 dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
+              <div className="  dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
            
                {route.beneficiar.map
                  (
@@ -190,7 +190,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                        <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-3 mt-8 mb-4">
                   {ben.full_name}<br/>
                        </p>
-                       {ben.phone && ben.phone.length > 0 && <p className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2"
+                       {ben.phone && ben.phone.length > 0 && <p className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-6 rounded-[40px] mr-2"
                          onClick={() => {
                            handleClick(index, ben.phone, 'phone')
                          }}
@@ -209,7 +209,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
                          }}
                        >{ben.phone}
                        </p>}
-                       {ben.second_phone && ben.second_phone.length > 0 && <p className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green  inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-4 rounded-[40px] mr-2 "
+                       {ben.second_phone && ben.second_phone.length > 0 && <p className=" px-3 py-[6px] font-gerbera-h3 selection:bg-none text-light-brand-green  inline w-[113px] h-30px bg-light-gray-1 dark:bg-light-gray-6 rounded-[40px] mr-2 "
                          onClick={() => {
                            handleClick(index, ben.second_phone, 'phone')
                          }}
@@ -247,7 +247,7 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
           )}
           {array.indexOf(route.beneficiar[0].address) != -1 &&
               beneficiarIsAbsent[array.indexOf(route.beneficiar[0].address)][1] && (
-            <p className=" text-light-gray-5 ml-1 dark:text-light-gray-1 font-gerbera-sub3 mt-2 self-start">
+            <p className=" text-light-gray-5 mt-4 dark:text-light-gray-2 font-gerbera-sub3 self-start">
               Благополучателя нет на месте
             </p>
           )}

@@ -31,7 +31,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
   const currentDate = new Date()
   const promotionDate = new Date(promotion.start_date)
-  const lessThenOneHour = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 60;
+  const lessThenTwoHours = (promotionDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [confirmMakeReservationModal, setConfirmMakeReservationModal] = useState(false);
   const [contactPerson, setContactPerson] = useState<IUser>()
@@ -93,20 +93,19 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         <h3 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
          Детали
         </h3>
-        {promotion.is_permanent ?
+        {promotion.is_permanent && (promotion.about_tickets || promotion.ticket_file) ?
           (<p className="w-full h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-4">
-          {promotion.about_tickets}
-          </p>) : lessThenOneHour ? (
+              {promotion.about_tickets && promotion.about_tickets}
+              {promotion.ticket_file && <a href={promotion.ticket_file} target='_blank' rel="noopener noreferrer" className='text-light-brand-green'>Ссылка на билет</a>}
+          </p>) : lessThenTwoHours && (promotion.about_tickets || promotion.ticket_file) ? (
         <p className="w-full h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-4">
-        {promotion.about_tickets}
-        </p>
-        ) : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
-          За один час до мероприятия тут будет информация о вашем билете
+         {promotion.about_tickets && promotion.about_tickets}
+         {promotion.ticket_file && <a href={promotion.ticket_file} target='_blank' rel="noopener noreferrer" className='text-light-brand-green' >Ссылка на билет</a>}</p>)
+              : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
+          За два часа до мероприятия тут появится информация о вашем билете
           </p>)}
-        
       </div>
       )}
-    
       <div className="w-full min-w-[328px] flex justify-center items-center mt-[14px] self-center space-x-2">
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
           <p className="font-gerbera-sub3 text-light-gray-8-text dark:text-light-gray-1 ">

@@ -2,11 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries } from '../../../api/apiDeliveries';
 import NearestDeliveryCurator from '../../../components/NearestDelivery/NearestDeliveryCurator';
 import { TokenContext } from '../../../core/TokenContext';
-import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react';
 import { getTasksCurator, type ITask } from '../../../api/apiTasks';
 import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurator';
 import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
 import { UserContext } from '../../../core/UserContext';
+import Bread from './../../../assets/icons/bread.svg?react'
 
 const CuratorTab: React.FC = () => {
 
@@ -156,12 +156,11 @@ async function getMyCuratorDeliveries() {
         )
       }
       {curatorCompletedDeliveries.length == 0 && curatorActiveDeliveries.length == 0 && curatorInProcessDeliveries.length == 0 && curtorTasks.length == 0 && (
-        <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
-        <LogoNoTaskYet className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px] '/>
-      <p className='text-light-gray-black dark:text-light-gray-1'>Скоро тут появятся ваши доставки<br/>и добрые дела</p>
+      <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
+        <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-4'/>
+      <p className='text-light-gray-black dark:text-light-gray-1 w-64'>Скоро тут появятся ваши доставки<br/>и добрые дела</p>
     </div>
-      )
-      }
+      )} 
     </div>
   );
 };

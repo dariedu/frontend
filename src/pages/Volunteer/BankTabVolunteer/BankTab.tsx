@@ -214,9 +214,9 @@ const BankTab:React.FC = () => {
             )}
           
           </div>
-            {promotionsAll.length == 0 ? (<div className='flex flex-col w-full items-center mt-10 h-[120px] justify-between'>
-              <Bread className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-            <p className='dark:text-light-gray-1'>Скоро тут появятся интересные предложения</p>
+            {promotionsAll.length == 0 ? (<div className='flex flex-col w-full items-center mt-[44px]'>
+              <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-3'/>
+            <p className='dark:text-light-gray-1 w-56 '>Скоро тут появятся интересные предложения</p>
           </div>) : (
              <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
           )}
@@ -225,7 +225,7 @@ const BankTab:React.FC = () => {
           <div className='flex justify-between  mr-[14px] pt-[20px]'>
             <h1 className="font-gerbera-h1 text-light-gray-black dark:text-light-gray-white px-4">Мои планы</h1>
             </div>{promotionsMy.length == 0 ? 
-              (<div className='flex flex-col w-full items-center mt-10 h-[100px] justify-between'>
+              (<div className='flex flex-col w-full items-center justify-center mt-16 '>
                 <Bread className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             </div>)
             : (<SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} />)}

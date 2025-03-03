@@ -97,9 +97,8 @@ const Calendar: React.FC<ICalendarProps> = ({
         className="flex flex-col w-[32px] h-[46px] select-none justify-between "
       >
         <div className="text-light-gray-4 dark:text-light-gray-4 relative font-gerbera-sub2" >
-          {format(day, 'EE', { locale: ru }).slice(0, 1).toUpperCase() + format(day, 'EE', { locale: ru }).slice(1, 2)}
+          {format(day, 'cccccc', { locale: ru }).slice(0, 1).toUpperCase() + format(day, 'cccccc', { locale: ru }).slice(1, 2)}
         </div>
-       
         <div
           className={`w-6 h-6 min-w-6 min-h-6 flex items-center justify-center rounded-full relative
              ${

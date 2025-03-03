@@ -251,12 +251,14 @@ try {
                 )
               )
           )) : ""}
-          {myCurrent.length == 0 && allMyTasks.length == 0 ? (
+          {myCurrent.length == 0 && allMyTasks.length == 0 ?
+            (
           <div className='flex flex-col h-full mt-[50%] items-center justify-center overflow-y-hidden'>
-            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
-            <p className=' text-light-gray-black dark:text-light-gray-1 '>Пока нет запланированных<br/>добрых дел</p>
+            <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-4 '/>
+            <p className=' text-light-gray-black dark:text-light-gray-1 w-64 '>Пока нет запланированных<br/>добрых дел</p>
         </div>
-        ): ""}
+          )
+        : ""}
         </div>
       </div>    
       <ConfirmModal

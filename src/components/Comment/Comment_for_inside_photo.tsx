@@ -41,7 +41,7 @@ const Comment: React.FC<TComment> = ({ onSave, index, savedComment, id }) => {
               onFocus={e => handleFocus(e)}
               maxRows={8}
               className=" min-w-[96%] w-full  bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2
-                 placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-1"
+                 placeholder:text-light-gray-3 mb-2 dark:bg-light-gray-6 dark:text-light-gray-1 dark:placeholder:text-light-gray-3 "
               placeholder="Оставьте комментарий, если это необходимо"
               defaultValue={
                 localStorage.getItem(localeStorageName) ?? savedComment ?? ''

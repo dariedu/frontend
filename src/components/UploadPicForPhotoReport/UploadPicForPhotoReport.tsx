@@ -28,7 +28,6 @@ interface IUploadPicProps {
 ////// в компоненте уже есть модалка, если нажать на пустую модальную область она закроется
 export const UploadPic: React.FC<IUploadPicProps> = ({
   onOpenChange,
-  // onOpenChangeComment,
   index,
   uploadedFileLink,
   beneficiarIsAbsent,
@@ -109,7 +108,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           Фотоотчет к доставке по адресу {name}
         </h2>
       </div>
-      <div className="bg-light-gray-white rounded-2xl w-full flex justify-center items-center min-h-[234px]">
+      <div className="bg-light-gray-white dark:bg-light-gray-7-logo  rounded-2xl w-full flex justify-center items-center min-h-[234px]">
         <div className="h-[142px] w-[140px] min-h-[142px] min-w-[140px] bg-light-gray-2 dark:bg-light-gray-5 rounded-full flex justify-center items-center mb-4 relative">
           {uploadedFileLink[index].length > 0 ? (
             <img
@@ -144,7 +143,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           )}
         </div>
       </div>
-      <div className="bg-light-gray-white rounded-2xl w-full p-4 h-fit min-h-fit justify-center items-left flex flex-col mt-1">
+      <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl w-full p-4 h-fit min-h-fit justify-center items-left flex flex-col mt-1">
         <div>
           {!beneficiarIsAbsent ? (
             <CheckboxElement
