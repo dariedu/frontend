@@ -154,8 +154,34 @@ export const postDeliveryConfirm = async (
   }
 };
 
+// 'https://skillfactory.dariedu.site/api/deliveries/list_not_confirm/'
 
+type TNotConfirmedDeliveries = {
+  confirm: Boolean
+  delivery: number
+  id: number
+  volunteer: number[]
+}
 
+export const getDeliveryListNotConfirmed = async (
+  access: string
+): Promise<TNotConfirmedDeliveries[]> => {
+  try {
+    const response: AxiosResponse<TNotConfirmedDeliveries[]> = await axios({
+      url: `${deliveriesUrl}list_not_confirm/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getDeliveryListNotConfirmed has failed', err);
+    throw new Error('Get request getDeliveryListNotConfirmed has failed');
+  }
+};
 
 // берем доставку себе
 export const postDeliveryTake = async (
@@ -225,8 +251,6 @@ export const postDeliveryActivate = async (
   }
 };
 
-
-
 // Получение доставок куратора
 export const getCuratorDeliveries = async (
   access: string,
@@ -268,4 +292,4 @@ export const getVolunteerDeliveries = async (
 };
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments};
+export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments, TNotConfirmedDeliveries};

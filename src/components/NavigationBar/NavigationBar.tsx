@@ -4,11 +4,15 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import LogoText from './../../assets/logoText.svg?react';
 import ProfileUser from '../ProfileUser/ProfileUser';
-import Notifications from '../../assets/icons/notifications_1.svg?react';
-import { getMyDeliveries, getAllMyTasks } from './helperFunctions';
+import Notification from '../../assets/icons/notifications_1.svg?react';
+import { getMyDeliveries, getListNotConfirmed, getTasksListNotConfirmed, getAllMyTasks, getPromoListNotConfirmed, getAllMyPromo } from './helperFunctions';
 import { IDelivery } from '../../api/apiDeliveries';
-import { ITask } from '../../api/apiTasks';
+import {ITask } from '../../api/apiTasks';
 import { TokenContext } from '../../core/TokenContext';
+import './index.css';
+import Notifications from '../Notifications/Notifications';
+import { IPromotion } from '../../api/apiPromotions';
+
 
 interface INavigationBarProps {
   variant: 'volunteerForm' | 'mainScreen';
@@ -25,26 +29,64 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [haveNotifications, setHaveNotifications] = useState(false);
 
-  const [myCurrent, setMyCurrent] = useState<IDelivery[]>([]) ////доставки записанные на меня
-  const [allMyTasks, setAllMyTasks] = useState<ITask[]>([])
+
+  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]>([]) /// список не подтвержденных доставок
+  const [allNotConfirmedToday, setAllNotConfirmedToday] = useState<IDelivery[]>([]) /// список не подтвержденных доставок сегодня
+  const [allNotConfirmedTomorrow, setAllNotConfirmedTomorrow] = useState<IDelivery[]>([]) /// список не подтвержденных доставок завтра
+
+
+  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]>([]) /// список не подтвержденных tasks
+  const [allTasksNotConfirmedToday, setAllTasksNotConfirmedToday] = useState<ITask[]>([]) /// список не подтвержденных tasks сегодня
+  const [allTasksNotConfirmedTomorrow, setAllTasksNotConfirmedTomorrow] = useState<ITask[]>([]) /// список не подтвержденных tasks завтра
+  const [openNotifications, setOpenNotifications] = useState(false);
+
+  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState<number[]>([]) /// список не подтвержденных tasks
+  const [allPromoNotConfirmedToday, setAllPromoNotConfirmedToday] = useState<IPromotion[]>([]) /// список не подтвержденных tasks сегодня
+  const [allPromoNotConfirmedTomorrow, setAllPromoNotConfirmedTomorrow] = useState<IPromotion[]>([]) /// список не подтвержденных tasks завтра
+
 
     ///// используем контекст токена
   const { token } = useContext(TokenContext);
+
+    ////запрашиваем таски и доставки и промо
+    useEffect(() => {
+      if (token) {
+      getPromoListNotConfirmed(token, setAllPromoNotConfirmed)
+      getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
+      getListNotConfirmed(token, setAllNotConfirmed)
+      }
+    }, [])
   
-  ////запрашиваем таски и доставки
+  ////запрашиваем  доставки
   useEffect(() => {
     if (token) {
-    getMyDeliveries(token, setMyCurrent)
-    getAllMyTasks(token, setAllMyTasks) 
+    getMyDeliveries(token, allNotConfirmed, setAllNotConfirmedToday, setAllNotConfirmedTomorrow )
     }
-  }, [])
+  }, [allNotConfirmed])
 
+    ////запрашиваем таски 
+    useEffect(() => {
+      if (token) {
+        getAllMyTasks(token, allTasksNotConfirmed, setAllTasksNotConfirmedToday, setAllTasksNotConfirmedTomorrow )
+      }
+    }, [allTasksNotConfirmed])
+  
+      ////запрашиваем промо
+      useEffect(() => {
+        if (token) {
+          getAllMyPromo(token, allPromoNotConfirmed, setAllPromoNotConfirmedToday, setAllPromoNotConfirmedTomorrow)
+        }
+      }, [allPromoNotConfirmed])
+  
     ////если есть таски или доставки требующие подтверждения то ставим статус haveNotifications в true
   useEffect(() => {
-    if (myCurrent.length > 0 || allMyTasks.length > 0) {
+    if (allNotConfirmedToday.length > 0 || allNotConfirmedTomorrow.length > 0
+      || allTasksNotConfirmedToday.length > 0 || allTasksNotConfirmedTomorrow.length > 0 ||
+      allPromoNotConfirmedToday.length > 0 || allPromoNotConfirmedTomorrow.length > 0
+    ) {
       setHaveNotifications(true)
     }
-  },[myCurrent, allMyTasks])
+  },[allNotConfirmedToday, allNotConfirmedTomorrow, allTasksNotConfirmedToday, allTasksNotConfirmedTomorrow, allPromoNotConfirmedToday, allPromoNotConfirmedTomorrow])
 
   if (isLoading) return <div>Загрузка...</div>;
   if (!currentUser) return <div>Пользователь не найден</div>;
@@ -80,8 +122,12 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         {variant === 'mainScreen' && currentUser && (
           <div className='w-[84px] flex items-center justify-between'>
            <div className='rounded-full bg-light-gray-1 dark:bg-light-gray-6 w-8 min-w-8 h-8 min-h-8 flex items-center justify-center relative '>
-              <Notifications className='fill-light-gray-7-logo dark:fill-light-gray-1' />
-              {haveNotifications && <div className='bg-light-brand-green w-2 h-2 min-w-2 min-h-2 rounded-full top-[23px] left-[23px] absolute'></div>}
+              <Notification className='fill-light-gray-7-logo dark:fill-light-gray-1'
+                onClick={() => { openNotifications ? setOpenNotifications(false) : setOpenNotifications(true)}} />
+              {haveNotifications &&
+                <div
+                  className='bg-light-brand-green w-2 h-2 min-w-2 min-h-2 rounded-full top-[23px] left-[23px] absolute pulse'
+                ></div>}
            </div>
           <div className="flex items-center space-x-4">
             <Avatar.Root className="inline-flex items-center justify-center w-10 h-10 min-w-10 min-h-10 bg-light-gray-1 dark:bg-light-gray-5 rounded-full" onClick={handleAvatarClick}>
@@ -110,6 +156,24 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
           onClose={handleCloseProfile}
           currentUserId={currentUser.id}
           IsVolunteer={isVolunteer}
+        />
+      )}
+      {openNotifications && (
+        <Notifications
+        open={openNotifications}
+          onClose={setOpenNotifications}
+          allNotConfirmedToday={allNotConfirmedToday}
+          setAllNotConfirmedToday={setAllNotConfirmedToday}
+          allNotConfirmedTomorrow={allNotConfirmedTomorrow}
+          setAllNotConfirmedTomorrow={setAllNotConfirmedTomorrow}
+          allTasksNotConfirmedToday={allTasksNotConfirmedToday}
+          setAllTasksNotConfirmedToday={setAllTasksNotConfirmedToday}
+          allTasksNotConfirmedTomorrow={allTasksNotConfirmedTomorrow}
+          setAllTasksNotConfirmedTomorrow={setAllTasksNotConfirmedTomorrow}
+          allPromoNotConfirmedToday={allPromoNotConfirmedToday}
+          setAllPromoNotConfirmedToday={setAllPromoNotConfirmedToday}
+          allPromoNotConfirmedTomorrow={allPromoNotConfirmedTomorrow}
+          setAllPromoNotConfirmedTomorrow={setAllPromoNotConfirmedTomorrow}
         />
       )}
     </>

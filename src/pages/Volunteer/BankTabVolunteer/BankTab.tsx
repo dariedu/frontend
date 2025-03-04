@@ -177,7 +177,7 @@ const BankTab:React.FC = () => {
     const chosenId = promotion.id;
     try {
       if (token) {
-        const response = await postPromotionCancel(chosenId, promotion, token);
+        const response = await postPromotionCancel(chosenId, token);
         if (response) {
         setCancelPromotionSuccess(true)
           setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))

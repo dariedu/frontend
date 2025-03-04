@@ -150,6 +150,35 @@ export const postTaskConfirm = async (
   }
 };
 
+type TTasksNotConfirmed = {
+  id: number
+  task: number
+  volunteer: number
+  confirmed: boolean
+}
+
+// получить список всех тасков которые еще не были подтверждены
+export const getTaskListNotConfirmed = async (
+  access: string,
+): Promise<TTasksNotConfirmed[]> => {
+  try {
+    const response: AxiosResponse<TTasksNotConfirmed[]> = await axios.get(
+      `${tasksUrl}list_not_confirmed/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          accept: 'application/json',
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request pgetTaskListNotConfirmed has failed', err);
+    throw new Error('Get request getTaskListNotConfirmed has failed');
+  }
+};
+
+
 // Получить список заданий куратора
 export const getTasksCurator = async (
   access: string,
@@ -239,4 +268,4 @@ export const getMyTasksNoFilter = async (
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { ITask, TTaskCategory };
+export type { ITask, TTaskCategory, TTasksNotConfirmed };

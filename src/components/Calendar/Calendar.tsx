@@ -74,7 +74,7 @@ const Calendar: React.FC<ICalendarProps> = ({
     })
     
 }, [])
-  console.log(windowSize, 'windowsize')
+  // console.log(windowSize, 'windowsize')
   
   const renderWeekDays = () => {
     const days = Array.from({ length: 14 }).map((_, index) =>

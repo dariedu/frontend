@@ -130,7 +130,6 @@ export const postPromotionRedeem = async (
 ////// отмеинть поощрение
 export const postPromotionCancel = async (
   promotionId: number,
-  promotion: IPromotion,
   access:string
 ): Promise<IPromotion> => {
   try {
@@ -142,12 +141,62 @@ export const postPromotionCancel = async (
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
       },
-      data: promotion,
     });
     return response.data;
   } catch (err: any) {
     console.error('Post request postPromotionCancel has failed', err);
     throw new Error('Post request postPromotionCancel has failed');
+  }
+};
+
+////// подтвердить поощрение
+export const postPromotionConfirm = async (
+  promotionId: number,
+  access:string
+): Promise<IPromotion> => {
+  try {
+    const response: AxiosResponse<IPromotion> = await axios({
+      url: `${promotionsUrl}${promotionId}/confirmed/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postPromotionConfirm has failed', err);
+    throw new Error('Post request postPromotionConfirm has failed');
+  }
+};
+
+type TPromoNotConfirm = {
+  id: number,
+  user: number,
+  promotion:number,
+  received_at: string,
+  is_active: boolean
+}
+
+////// запросить все требующие подтверждения поощрения
+export const getPromotionNotConfirmed = async (
+  access:string
+): Promise<TPromoNotConfirm[]> => {
+  try {
+    const response: AxiosResponse<TPromoNotConfirm[]> = await axios({
+      url: `${promotionsUrl}not_confirmed/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getPromotionNotConfirmed has failed', err);
+    throw new Error('Get request getPromotionNotConfirmed has failed');
   }
 };
 
@@ -173,4 +222,4 @@ export const getPromotionsCategories = async (access:string): Promise<TPromotion
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { IPromotion, TPromotionCategory };
+export type { IPromotion, TPromotionCategory, TPromoNotConfirm };
