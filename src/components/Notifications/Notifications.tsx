@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect, useContext} from 'react';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import Filter from './../../assets/icons/filter.svg?react';
 import { Modal } from '../ui/Modal/Modal';
@@ -6,15 +6,18 @@ import { IDelivery } from '../../api/apiDeliveries';
 import { ITask } from '../../api/apiTasks';
 import Bread from './../../assets/icons/bread.svg?react'
 import { IPromotion } from '../../api/apiPromotions';
-import { combineAllNotConfirmed } from './helperFunctions';
-
+import { combineAllNotConfirmed, cancelPromotion, cancelTakenDelivery, cancelTakenTask } from './helperFunctions';
+import { getMetroCorrectName } from '../helperFunctions/helperFunctions';
+import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
+import { TokenContext } from '../../core/TokenContext';
 
   type TNotificationInfo = {
     objType: "task" | "delivery" | "promo"
     nameOrMetro: string
     addressOrInfo: string
     stringStart: string
-    id: string
+    idString: string
+    id:number
     timeString:string
 }
   
@@ -51,8 +54,30 @@ const Notifications: React.FC<INotifications> = ({
   allPromoNotConfirmedTomorrow,
   setAllPromoNotConfirmedTomorrow
 }) => {
+/////подтврждение
+  const [confirmParticipation, setConfirmParticipationt] = useState(false)
+  const [confirmString, setConfirmString] = useState<string>('');
 
-  console.log(setAllNotConfirmedToday,  setAllNotConfirmedTomorrow, setAllTasksNotConfirmedToday,  setAllTasksNotConfirmedTomorrow, setAllPromoNotConfirmedToday,  setAllPromoNotConfirmedTomorrow)
+  const [confirmedSuccess, setConfirmedSuccess] = useState(false);
+  const [confirmedSuccessString, setConfirmedSuccessString] = useState<string>('');
+
+  const [confirmFailed, setConfirmFailed] = useState(false);
+  const [confirmFailedString, setConfirmFailedString] = useState<string>('');
+  /////подтврждение
+  /////отмена
+  const [cancelParticipation, setCancelParticipation] = useState(false)
+  const [cancelString, setCancelString] = useState<string>('');
+
+  const [cancelSuccess, setCancelSuccess] = useState(false);
+  const [cancelSuccessString, setCancelSuccessString] = useState<string>('');
+
+  const [cancelFail, setCancelFail] = useState(false);
+  const [cancelFailString, setCancelFailString] = useState<string>('');
+  /////отмена
+  
+
+  const { token }  = useContext(TokenContext);
+  // console.log(setAllNotConfirmedToday,  setAllNotConfirmedTomorrow, setAllTasksNotConfirmedToday,  setAllTasksNotConfirmedTomorrow, setAllPromoNotConfirmedToday,  setAllPromoNotConfirmedTomorrow)
 
   
   const [allMyNotificationsToday, setAllMyNotificationsToday] = useState<TNotificationInfo[]>([]);
@@ -63,16 +88,36 @@ const Notifications: React.FC<INotifications> = ({
   },[allNotConfirmedToday,  allNotConfirmedTomorrow, allTasksNotConfirmedToday, allTasksNotConfirmedTomorrow, allPromoNotConfirmedToday, allPromoNotConfirmedTomorrow ])
 
   
-  console.log(allMyNotificationsToday, "allMyNotificationsToday")
-  console.log(allMyNotificationsTomorrow, "allMyNotificationsTomorrow")
+  // console.log(allMyNotificationsToday, "allMyNotificationsToday")
+  // console.log(allMyNotificationsTomorrow, "allMyNotificationsTomorrow")
+
+  function handleCancelClick(item:TNotificationInfo) {
+    if (item.objType == "delivery" && token) {
+       cancelTakenDelivery(item, token, setCancelSuccess, setCancelSuccessString, setCancelFail, setCancelFailString  ) 
+    } else if (item.objType == "task" && token) {
+      cancelTakenTask(item, token, setCancelSuccess, setCancelSuccessString, setCancelFail, setCancelFailString)
+    } else if (item.objType == "promo" && token) {
+      cancelPromotion(item, token, setCancelSuccess, setCancelSuccessString, setCancelFail, setCancelFailString)
+    }
+  }
+
+  function handleConfirmClick(item:TNotificationInfo) {
+    if (item.objType == "delivery") {
+      
+    } else if (item.objType == "task") {
+      
+    } else if (item.objType == "promo") {
+      
+    } 
+  }
 
   return (
     <Modal isOpen={open} onOpenChange={onClose}>
       <div
-        className="bg-light-gray-1 dark:bg-light-gray-black rounded-b-2xl w-full max-w-[500px] h-full flex flex-col items-center justify-start overflow-x-hidden"
+        className="bg-light-gray-1 dark:bg-light-gray-black rounded-b-2xl w-full max-w-[500px] h-full flex flex-col overflow-y-auto justify-start overflow-x-hidden"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center mb-[4px] bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] min-h-[60px] px-4">
+        <div className="flex items-center mb-[4px] px-4 bg-light-gray-white dark:bg-light-gray-7-logo dark:text-light-gray-1 w-full rounded-b-2xl h-[60px] min-h-[60px] ">
           <button onClick={() => onClose(false)}>
             <RightArrowIcon className="rotate-180 w-9 h-9 stroke-[#D7D7D7] dark:stroke-[#575757]" />
           </button>
@@ -88,47 +133,56 @@ const Notifications: React.FC<INotifications> = ({
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-start overflow-y-auto overflow-x-hidden w-full px-4">
+        <div className="flex flex-col items-center px-4 w-full max-w-[500px]">
           {allMyNotificationsToday.length > 0 || allMyNotificationsTomorrow.length > 0 ? (
-            <div>
+            <div className="flex flex-col items-center justify-center w-full max-w-[500px]">
               {allMyNotificationsToday.length > 0 && (
-                <div className='flex flex-col'>
+                <div className="flex flex-col items-center justify-center w-full max-w-[500px]">
                  <div
-                 className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6" >
+                 className="w-fit flex flex-col justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6" >
                   Сегодня
                   </div>
-                  {allMyNotificationsToday.map((past) => {
+                  {allMyNotificationsToday.map((item) => {
                         return (
-                          <div
-                            key={past.id}
-                            className="flex flex-col items-center w-full max-w-[500px]"
-                          >
-                            <div
-                              className="text-light-gray-6 h-fit w-full min-w-[328px] bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
+                            <div key={item.idString}
+                              className="text-light-gray-6 h-fit w-full  bg-light-gray-white rounded-2xl p-4 mb-4 dark:bg-light-gray-6"
                             >
-                              <div className=" flex flex-col justify-between mb-[6px]">
-                                <p className="font-gerbera-h3 dark:text-light-gray-1 w-[200px] h-fit">
-                                  {past.nameOrMetro}
+                            <div className=" flex flex-col justify-between mb-[6px]">
+                              <p className="font-gerbera-h3 dark:text-light-gray-1 text-light-gray-8-text w-fit h-fit  mb-[6px]">
+                                 Подтвердите {item.objType == "delivery" ? "доставку" :item.objType =="promo" ? "бронь" : "участие в добром деле" }
                                 </p>
-                                <p className="font-gerbera-h3 dark:text-light-gray-1 w-[200px] h-fit">
-                                  {past.stringStart}
+                                <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text h-fit">
+                                {item.objType == "delivery" ? `Ст. ${getMetroCorrectName(item.nameOrMetro)}`: item.nameOrMetro.slice(0,1).toUpperCase() + item.nameOrMetro.slice(1)}
+                              </p>
+                              <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
+                                  {item.addressOrInfo}
                                 </p>
-                                <p className="font-gerbera-h3 dark:text-light-gray-1 w-[200px] h-fit">
-                                  {past.addressOrInfo}
-                                </p>
+                                <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
+                                  {item.stringStart}
+                              </p>
+                              <div className='w-[229px] h-[38px] flex justify-between items-center mt-4'>
+                                <button className='btn-S-GreenDefault'
+                                  onClick={() => {
+                                  handleConfirmClick(item)
+                                }}
+                                >Подтвердить</button>
+                                <button className='btn-S-GreenInactive'
+                                 onClick={() => {
+                                  handleCancelClick(item)
+                                 }}>Отказаться</button>
+                              </div>
                               </div>
                             </div>
-                          </div>
                         );
                       })
                   }
             </div>
               )}
               {allMyNotificationsTomorrow.length > 0 && (
-                <div className='flex flex-col'>
+                <div className='flex flex-col items-center'>
                  <div
                  className="w-fit flex justify-center items-center p-2 h-[21px] font-gerbera-sub1 rounded-2xl my-[10px] text-light-gray-8-text dark:text-light-gray-1 bg-light-gray-white dark:bg-light-gray-6" >
-                  Сегодня
+                  Завтра
                   </div>
                   {allMyNotificationsTomorrow.map((past) => {
                         return (
@@ -176,6 +230,36 @@ const Notifications: React.FC<INotifications> = ({
           handleCategoryChoice={handleCategoryChoiceFunc}
         />
       </Modal> */}
+        <ConfirmModal
+        isOpen={confirmParticipation}
+        onOpenChange={setConfirmParticipationt}
+        onConfirm={() => {
+          // if (makeReservationFunc) {
+          //   makeReservationFunc(promotion)
+          //   onOpenChange(false)
+          //   setConfirmMakeReservationModal(false)
+          // }
+        }}
+        title={confirmString}
+        description=""
+        confirmText="Подтвердить"
+        cancelText="Закрыть"
+        />
+         <ConfirmModal
+        isOpen={cancelParticipation}
+        onOpenChange={setCancelParticipation}
+        onConfirm={() => {
+          // if (makeReservationFunc) {
+          //   makeReservationFunc(promotion)
+          //   onOpenChange(false)
+          //   setConfirmMakeReservationModal(false)
+          // }
+        }}
+        title={cancelString}
+        description=""
+        confirmText="Отказаться"
+        cancelText="Закрыть"
+      />
       </div>
     </Modal>
   );

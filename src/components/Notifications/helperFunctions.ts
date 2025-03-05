@@ -3,6 +3,9 @@ import { IDelivery } from "../../api/apiDeliveries"
 import { IPromotion } from "../../api/apiPromotions"
 import { TNotificationInfo } from "./Notifications"
 import { getMonthCorrectEndingName } from "../helperFunctions/helperFunctions"
+import { postDeliveryCancel } from "../../api/apiDeliveries"
+import { postTaskRefuse } from "../../api/apiTasks"
+import { postPromotionCancel } from "../../api/apiPromotions";
 
 // objType: "task" | "delivery" | "promo"
 // nameOrMetro: string
@@ -27,79 +30,155 @@ function combineAllNotConfirmed(
   
   if (allNotConfirmedToday.length > 0) {
     allNotConfirmedToday.forEach(item => {
-      const obj:TNotificationInfo = {
+
+      const deliveryDate = new Date(Date.parse(item.date) + 180 * 60000);
+      const obj: TNotificationInfo = {
         objType: "delivery",
         nameOrMetro: item.location.subway,
         addressOrInfo: item.location.address,
-        stringStart: `${new Date(item.date).getHours()} : ${new Date(item.date).getMinutes()}`,
-        id: `delivrtry${item.id}`,
-        timeString:item.date
-      }
+        stringStart: `${deliveryDate.getUTCDate()}
+        ${getMonthCorrectEndingName(deliveryDate)} в
+        ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`,
+        id: item.id,
+        idString: `delivrtry${item.id}`,
+        timeString: item.date
+    };
+
       allForToday.push(obj)
     })
   }
   
   if (allNotConfirmedTomorrow.length > 0) {
     allNotConfirmedTomorrow.forEach(item => {
-      const obj:TNotificationInfo = {
+      const deliveryDate = new Date(Date.parse(item.date) + 180 * 60000);
+      const obj: TNotificationInfo = {
         objType: "delivery",
         nameOrMetro: item.location.subway,
         addressOrInfo: item.location.address,
-        stringStart: `${new Date(item.date).getHours()} : ${new Date(item.date).getMinutes()}`,
-        id: `delivrtry${item.id}`,
-        timeString:item.date
-      }
+        stringStart: `${deliveryDate.getUTCDate()}
+        ${getMonthCorrectEndingName(deliveryDate)} в
+        ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`,
+        id: item.id,
+        idString: `delivrtry${item.id}`,
+        timeString: item.date
+    };
       allForTomorrow.push(obj)
     })
   }
+
   if (allTasksNotConfirmedToday.length > 0) {
-    allTasksNotConfirmedToday.forEach(item => {
+
+    
+    allTasksNotConfirmedToday.forEach(task => {
+
+      const taskStartDate = new Date(Date.parse(task.start_date) + 180*60000);
+      const startDay = taskStartDate.getUTCDate();
+      const startMonth = getMonthCorrectEndingName(taskStartDate);
+      
+      const hours = taskStartDate ? String(taskStartDate.getUTCHours()).padStart(2, '0') : '--';
+      const minutes = taskStartDate ? String(taskStartDate.getUTCMinutes()).padStart(2, '0') : '--';
+      
+      const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
+      const endDay = taskEndDate.getUTCDate();
+      const endMonth = getMonthCorrectEndingName(taskEndDate)
+       let dateString: string;
+       if (startDay == endDay && startMonth == endMonth) {
+        dateString = `${startDay} ${getMonthCorrectEndingName(taskEndDate)} в ${hours}:${minutes}`
+       } else {
+         if (startMonth == endMonth) {
+            dateString = `${startDay} - ${endDay} ${endMonth}`
+         } else {
+            dateString = `${startDay} ${startMonth} - ${endDay} ${endMonth}`
+         }
+      }
+
+
       const obj:TNotificationInfo = {
         objType: "task",
-        nameOrMetro: item.name,
-        addressOrInfo: item.description ? item.description.slice(0, 20) : item.category ? String(item.category) : '',
-        stringStart: `${new Date(item.start_date).getDate()} ${ getMonthCorrectEndingName(new Date(item.start_date)), new Date(item.start_date).getHours()} : ${new Date(item.start_date).getMinutes()}`,
-        id: `task${item.id}`,
-        timeString:item.start_date
+        nameOrMetro: task.name,
+        addressOrInfo: task.description ? task.description.slice(0, 100)+"..." : task.category ? String(task.category) : '',
+        stringStart: dateString,
+        id: task.id,
+        idString: `task${task.id}`,
+        timeString:task.start_date
       }
       allForToday.push(obj)
     })
   }
   if (allTasksNotConfirmedTomorrow.length > 0) {
-    allTasksNotConfirmedTomorrow.forEach(item => {
+    allTasksNotConfirmedTomorrow.forEach(task => {
+
+      const taskStartDate = new Date(Date.parse(task.start_date) + 180*60000);
+      const startDay = taskStartDate.getUTCDate();
+      const startMonth = getMonthCorrectEndingName(taskStartDate);
+      
+      const hours = taskStartDate ? String(taskStartDate.getUTCHours()).padStart(2, '0') : '--';
+      const minutes = taskStartDate ? String(taskStartDate.getUTCMinutes()).padStart(2, '0') : '--';
+      
+      const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
+      const endDay = taskEndDate.getUTCDate();
+      const endMonth = getMonthCorrectEndingName(taskEndDate)
+       let dateString: string;
+       if (startDay == endDay && startMonth == endMonth) {
+        dateString = `${startDay} ${getMonthCorrectEndingName(taskEndDate)} в ${hours}:${minutes}`
+       } else {
+         if (startMonth == endMonth) {
+            dateString = `${startDay} - ${endDay} ${endMonth}`
+         } else {
+            dateString = `${startDay} ${startMonth} - ${endDay} ${endMonth}`
+         }
+      }
+
+
       const obj:TNotificationInfo = {
         objType: "task",
-        nameOrMetro: item.name,
-        addressOrInfo: item.description ? item.description.slice(0, 20) : item.category ? String(item.category) : '',
-        stringStart: `${new Date(item.start_date).getDate()} ${ getMonthCorrectEndingName(new Date(item.start_date)), new Date(item.start_date).getHours()} : ${new Date(item.start_date).getMinutes()}`,
-        id: `task${item.id}`,
-        timeString:item.start_date
+        nameOrMetro: task.name,
+        addressOrInfo: task.description ?  task.description.slice(0, 100)+"..." : task.category ? String(task.category) : '',
+        stringStart: dateString,
+        id: task.id,
+        idString: `task${task.id}`,
+        timeString:task.start_date
       }
+      
       allForTomorrow.push(obj)
     })
   }
   if (allPromoNotConfirmedToday.length > 0) {
-    allPromoNotConfirmedToday.forEach(item => {
+    allPromoNotConfirmedToday.forEach(promotion => {
+
+      const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
       const obj:TNotificationInfo = {
         objType: "promo",
-        nameOrMetro: item.name,
-        addressOrInfo: item.address ? item.address: item.category ? String(item.category) : '',
-        stringStart: item.is_permanent ? `Воспользоваться можно в любое время с момента подтверждения` : `${new Date(item.start_date).getDate()} ${ getMonthCorrectEndingName(new Date(item.start_date)), new Date(item.start_date).getHours()} : ${new Date(item.start_date).getMinutes()}`,
-        id: `promo${item.id}`,
-        timeString:item.start_date
+        nameOrMetro: promotion.name,
+        addressOrInfo: promotion.address ? promotion.address: promotion.category ? String(promotion.category) : '',
+        stringStart: promotion.is_permanent
+          ? 'В любое время'
+            : `${eventDate.getUTCDate()}
+        ${getMonthCorrectEndingName(eventDate)} в
+        ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`,
+        id: promotion.id,
+        idString: `promo${promotion.id}`,
+        timeString:promotion.start_date
       }
       allForToday.push(obj)
     })
   }
   if (allPromoNotConfirmedTomorrow.length > 0) {
-    allPromoNotConfirmedTomorrow.forEach(item => {
+    allPromoNotConfirmedTomorrow.forEach(promotion => {
+
+      const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
       const obj:TNotificationInfo = {
         objType: "promo",
-        nameOrMetro: item.name,
-        addressOrInfo: item.address ? item.address: item.category ? String(item.category) : '',
-        stringStart: item.is_permanent ? `Воспользоваться можно в любое время с момента подтверждения` : `${new Date(item.start_date).getDate()} ${ getMonthCorrectEndingName(new Date(item.start_date)), new Date(item.start_date).getHours()} : ${new Date(item.start_date).getMinutes()}`,
-        id: `promo${item.id}`,
-        timeString:item.start_date
+        nameOrMetro: promotion.name,
+        addressOrInfo: promotion.address ? promotion.address: promotion.category ? String(promotion.category) : '',
+        stringStart: promotion.is_permanent
+          ? 'В любое время'
+            : `${eventDate.getUTCDate()}
+        ${getMonthCorrectEndingName(eventDate)} в
+        ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`,
+        id: promotion.id,
+        idString: `promo${promotion.id}`,
+        timeString:promotion.start_date
       }
       allForTomorrow.push(obj)
     })
@@ -108,4 +187,57 @@ function combineAllNotConfirmed(
   setAllMyNotificationsTomorrow(allForTomorrow)
 }
 
-export {combineAllNotConfirmed }
+
+
+
+ ////функция чтобы волонтер отменил взятую доставку
+ async function cancelTakenDelivery(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+try {
+   if (token) {
+     let result: IDelivery = await postDeliveryCancel(token, item.id);
+     if (result) {
+       setCancelSuccessString(`Участие в доставке м. ${item.nameOrMetro}, ${item.stringStart} успешно отменено`);  
+       setCancelSuccess(true)
+  }
+}
+} catch (err) {
+  setCancelFail(true);
+  setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
+  console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
+}
+  }
+
+   ////функция чтобы волонтер отменил взятое доброе дело
+async function cancelTakenTask(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+  const id: number = item.id;
+try {
+   if (token) {
+     let result: ITask = await postTaskRefuse(id, token);
+     if (result) {
+      setCancelSuccessString(`Участие в добром деле ${item.stringStart} успешно отменено`);  
+       setCancelSuccess(true)
+  }
+}
+} catch (err) {
+  setCancelFail(true)
+  setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
+  console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
+}
+}
+  
+  async function cancelPromotion(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+    try {
+      if (token) {
+        const response = await postPromotionCancel(item.id, token);
+        if (response) {
+          setCancelSuccess(true)
+          setCancelSuccessString(`Ваша бронь ${item.nameOrMetro} успешно отменена`) }
+      }
+    } catch (err) {
+      setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
+      setCancelFail(true)
+      setCancelSuccess(false)
+    } 
+  }
+
+export {combineAllNotConfirmed, cancelTakenDelivery, cancelTakenTask, cancelPromotion }

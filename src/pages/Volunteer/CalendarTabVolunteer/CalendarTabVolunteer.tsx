@@ -148,7 +148,7 @@ async function cancelTakenDelivery(delivery:IDelivery) {
   const id: number = delivery.id;
 try {
    if (token) {
-     let result: IDelivery = await postDeliveryCancel(token, id, delivery);
+     let result: IDelivery = await postDeliveryCancel(token, id);
      if (result) {
       const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
        const date = deliveryDate.getUTCDate();
