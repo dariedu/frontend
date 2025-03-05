@@ -2,10 +2,10 @@ import { ITask } from "../../api/apiTasks"
 import { IDelivery } from "../../api/apiDeliveries"
 import { IPromotion } from "../../api/apiPromotions"
 import { TNotificationInfo } from "./Notifications"
-import { getMonthCorrectEndingName } from "../helperFunctions/helperFunctions"
-import { postDeliveryCancel } from "../../api/apiDeliveries"
-import { postTaskRefuse } from "../../api/apiTasks"
-import { postPromotionCancel } from "../../api/apiPromotions";
+import { getMonthCorrectEndingName, getMetroCorrectName } from "../helperFunctions/helperFunctions"
+import { postDeliveryCancel, postDeliveryConfirm } from "../../api/apiDeliveries"
+import { postTaskRefuse, postTaskConfirm } from "../../api/apiTasks"
+import { postPromotionCancel, postPromotionConfirm} from "../../api/apiPromotions";
 
 // objType: "task" | "delivery" | "promo"
 // nameOrMetro: string
@@ -41,7 +41,8 @@ function combineAllNotConfirmed(
         ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`,
         id: item.id,
         idString: `delivrtry${item.id}`,
-        timeString: item.date
+        timeString: item.date,
+        oneDay:true
     };
 
       allForToday.push(obj)
@@ -60,7 +61,8 @@ function combineAllNotConfirmed(
         ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`,
         id: item.id,
         idString: `delivrtry${item.id}`,
-        timeString: item.date
+        timeString: item.date,
+        oneDay:true
     };
       allForTomorrow.push(obj)
     })
@@ -81,10 +83,13 @@ function combineAllNotConfirmed(
       const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
       const endDay = taskEndDate.getUTCDate();
       const endMonth = getMonthCorrectEndingName(taskEndDate)
-       let dateString: string;
-       if (startDay == endDay && startMonth == endMonth) {
+      let dateString: string;
+      let  taskOneDay = false;
+      if (startDay == endDay && startMonth == endMonth) {
+        taskOneDay = true;
         dateString = `${startDay} ${getMonthCorrectEndingName(taskEndDate)} в ${hours}:${minutes}`
-       } else {
+      } else {
+        taskOneDay = false;
          if (startMonth == endMonth) {
             dateString = `${startDay} - ${endDay} ${endMonth}`
          } else {
@@ -100,7 +105,8 @@ function combineAllNotConfirmed(
         stringStart: dateString,
         id: task.id,
         idString: `task${task.id}`,
-        timeString:task.start_date
+        timeString: task.start_date,
+        oneDay: taskOneDay
       }
       allForToday.push(obj)
     })
@@ -118,10 +124,13 @@ function combineAllNotConfirmed(
       const taskEndDate = new Date(Date.parse(task.end_date) + 180* 60000);
       const endDay = taskEndDate.getUTCDate();
       const endMonth = getMonthCorrectEndingName(taskEndDate)
-       let dateString: string;
-       if (startDay == endDay && startMonth == endMonth) {
+      let dateString: string;
+      let  taskOneDay = false;
+      if (startDay == endDay && startMonth == endMonth) {
+        taskOneDay = true;
         dateString = `${startDay} ${getMonthCorrectEndingName(taskEndDate)} в ${hours}:${minutes}`
-       } else {
+      } else {
+        taskOneDay = false;
          if (startMonth == endMonth) {
             dateString = `${startDay} - ${endDay} ${endMonth}`
          } else {
@@ -137,7 +146,8 @@ function combineAllNotConfirmed(
         stringStart: dateString,
         id: task.id,
         idString: `task${task.id}`,
-        timeString:task.start_date
+        timeString: task.start_date,
+        oneDay: taskOneDay
       }
       
       allForTomorrow.push(obj)
@@ -158,14 +168,14 @@ function combineAllNotConfirmed(
         ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`,
         id: promotion.id,
         idString: `promo${promotion.id}`,
-        timeString:promotion.start_date
+        timeString: promotion.start_date,
+        oneDay: promotion.is_permanent ? false : true
       }
       allForToday.push(obj)
     })
   }
   if (allPromoNotConfirmedTomorrow.length > 0) {
     allPromoNotConfirmedTomorrow.forEach(promotion => {
-
       const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
       const obj:TNotificationInfo = {
         objType: "promo",
@@ -178,7 +188,8 @@ function combineAllNotConfirmed(
         ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`,
         id: promotion.id,
         idString: `promo${promotion.id}`,
-        timeString:promotion.start_date
+        timeString: promotion.start_date,
+        oneDay: promotion.is_permanent ? false : true
       }
       allForTomorrow.push(obj)
     })
@@ -188,56 +199,131 @@ function combineAllNotConfirmed(
 }
 
 
-
-
  ////функция чтобы волонтер отменил взятую доставку
- async function cancelTakenDelivery(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+ async function cancelTakenDelivery(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IDelivery[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IDelivery[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
 try {
    if (token) {
      let result: IDelivery = await postDeliveryCancel(token, item.id);
      if (result) {
-       setCancelSuccessString(`Участие в доставке м. ${item.nameOrMetro}, ${item.stringStart} успешно отменено`);  
+       let filtered:IDelivery[] = allNotConfirmed.filter(i => {return i.id != item.id })
+       setAllNotConfirmed(filtered)
+       setCancelSuccessString(`Участие в доставке м. ${getMetroCorrectName(item.nameOrMetro)}, ${item.stringStart} успешно отменено`);  
        setCancelSuccess(true)
+       setNotifDay(null)
   }
 }
 } catch (err) {
   setCancelFail(true);
   setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
-  console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
+  console.log(err, "Notifications cancelTakenDelivery has failed")
+  setNotifDay(null)
 }
   }
 
    ////функция чтобы волонтер отменил взятое доброе дело
-async function cancelTakenTask(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
-  const id: number = item.id;
+async function cancelTakenTask(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:ITask[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<ITask[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
 try {
    if (token) {
-     let result: ITask = await postTaskRefuse(id, token);
+     let result: ITask = await postTaskRefuse(item.id, token);
      if (result) {
+      let filtered:ITask[] = allNotConfirmed.filter(i => {return i.id != item.id })
+      setAllNotConfirmed(filtered)
       setCancelSuccessString(`Участие в добром деле ${item.stringStart} успешно отменено`);  
        setCancelSuccess(true)
+       setNotifDay(null)
   }
 }
 } catch (err) {
   setCancelFail(true)
   setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
-  console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
+  console.log(err, "Notifications cancelTakenTask has failed")
+  setNotifDay(null)
 }
 }
   
-  async function cancelPromotion(item:TNotificationInfo, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+  async function cancelPromotion(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IPromotion[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IPromotion[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
     try {
       if (token) {
         const response = await postPromotionCancel(item.id, token);
         if (response) {
+          let filtered:IPromotion[] = allNotConfirmed.filter(i => {return i.id != item.id })
+          setAllNotConfirmed(filtered)
           setCancelSuccess(true)
-          setCancelSuccessString(`Ваша бронь ${item.nameOrMetro} успешно отменена`) }
+          setCancelSuccessString(`Ваша бронь ${item.nameOrMetro} успешно отменена`)
+          setNotifDay(null)
+        }
+
       }
     } catch (err) {
       setCancelFailString("Упс, что-то пошло не так, попробуйте позже.")
+      console.log(err, "Notifications cancelPromotion has failed")
       setCancelFail(true)
       setCancelSuccess(false)
+      setNotifDay(null)
     } 
+}
+  
+////функция чтобы волонтер отменил взятую доставку
+async function confirmDelivery(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IDelivery[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IDelivery[]>>, token:string, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>) {
+  try {
+     if (token) {
+       let result: IDelivery = await postDeliveryConfirm(token, item.id);
+       if (result) {
+        let filtered:IDelivery[] = allNotConfirmed.filter(i => {return i.id != item.id })
+        setAllNotConfirmed(filtered)
+        setConfirmedSuccessString(`Участие в доставке м. ${getMetroCorrectName(item.nameOrMetro)}, ${item.stringStart} успешно подтверждено`);  
+         setConfirmedSuccess(true)
+         setNotifDay(null)
+    }
+  }
+  } catch (err) {
+    setConfirmFailed(true);
+    setConfirmFailedString("Упс, что-то пошло не так, попробуйте позже.")
+    console.log(err, "Notifications confirmDelivery has failed")
+    setNotifDay(null)
+  }
+    }
+  
+     ////функция чтобы волонтер отменил взятое доброе дело
+  async function confirmTask(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:ITask[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<ITask[]>>, token:string, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>) {
+  try {
+    if (token) {
+     
+       let result: ITask = await postTaskConfirm(item.id, token);
+      if (result) {
+        let filtered:ITask[] = allNotConfirmed.filter(i => {return i.id != item.id })
+        setAllNotConfirmed(filtered)
+        setConfirmedSuccessString(`Участие в добром деле ${item.stringStart} успешно подтверждено`);  
+        setConfirmedSuccess(true)
+        setNotifDay(null)
+    }
+  }
+  } catch (err) {
+    setConfirmFailed(true)
+    setConfirmFailedString("Упс, что-то пошло не так, попробуйте позже.")
+    console.log(err, "Notifications  confirmTask has failed")
+    setNotifDay(null)
+  }
   }
 
-export {combineAllNotConfirmed, cancelTakenDelivery, cancelTakenTask, cancelPromotion }
+    async function confirmPromotion(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IPromotion[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IPromotion[]>>, token:string, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>) {
+      try {
+        if (token) {
+          const response = await postPromotionConfirm(item.id, token);
+          if (response) {
+            let filtered:IPromotion[] = allNotConfirmed.filter(i => {return i.id != item.id })
+            setAllNotConfirmed(filtered)
+            setConfirmedSuccessString(`Ваша бронь ${item.nameOrMetro} успешно подтверждена`) }
+          setConfirmedSuccess(true)
+          setNotifDay(null)
+            
+        }
+      } catch (err) {
+        setConfirmFailedString("Упс, что-то пошло не так, попробуйте позже.")
+        console.log(err, "Notifications confirmPromotion has failed")
+        setConfirmFailed(true)
+        setNotifDay(null)
+      } 
+    }
+
+export {combineAllNotConfirmed, cancelTakenDelivery, cancelTakenTask, cancelPromotion, confirmDelivery, confirmTask, confirmPromotion }

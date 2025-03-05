@@ -152,7 +152,6 @@ export const postDeliveryConfirm = async (
   }
 };
 
-// 'https://skillfactory.dariedu.site/api/deliveries/list_not_confirm/'
 
 type TNotConfirmedDeliveries = {
   confirm: Boolean
