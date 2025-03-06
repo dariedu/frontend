@@ -18,6 +18,8 @@ import {
 import { getMetroCorrectName } from '../helperFunctions/helperFunctions';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
+import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
+
 
 type TNotificationInfo = {
   objType: 'task' | 'delivery' | 'promo';
@@ -91,12 +93,15 @@ const Notifications: React.FC<INotifications> = ({
   const [cancelFail, setCancelFail] = useState(false);
   const [cancelFailString, setCancelFailString] = useState<string>('');
   /////отмена
+  const [cancelTaskId, setCancelTaskId] = useState<number|undefined>()
+  const [cancelDeliveryId, setCancelDeliveryId] = useState<number|undefined>()
+  const [cancelTaskDeliveryReasonOpenModal, setCancelTaskDeliveryReasonOpenModal] = useState(false);
+  const [isCancelledTaskDeliveryFeedbackSubmited, setIsCancelledTaskDeliveryFeedbackSubmited] = useState(false);
 
   const { token } = useContext(TokenContext);
   // console.log(setAllNotConfirmedToday,  setAllNotConfirmedTomorrow, setAllTasksNotConfirmedToday,  setAllTasksNotConfirmedTomorrow, setAllPromoNotConfirmedToday,  setAllPromoNotConfirmedTomorrow)
 
-  const [allMyNotificationsToday, setAllMyNotificationsToday] = useState<
-    TNotificationInfo[]
+  const [allMyNotificationsToday, setAllMyNotificationsToday] = useState<TNotificationInfo[]
   >([]);
   const [allMyNotificationsTomorrow, setAllMyNotificationsTomorrow] = useState<
     TNotificationInfo[]
@@ -128,6 +133,7 @@ const Notifications: React.FC<INotifications> = ({
       if (item.objType == 'delivery' && token) {
         cancelTakenDelivery(
           item,
+          setCancelDeliveryId,
           setNotifDay,
           notifDay == "today" ? allNotConfirmedToday : allNotConfirmedTomorrow,
           notifDay == "today" ? setAllNotConfirmedToday : setAllNotConfirmedTomorrow,
@@ -140,6 +146,7 @@ const Notifications: React.FC<INotifications> = ({
       } else if (item.objType == 'task' && token) {
         cancelTakenTask(
           item,
+          setCancelTaskId,
           setNotifDay,
           notifDay == "today" ? allTasksNotConfirmedToday : allTasksNotConfirmedTomorrow,
           notifDay == "today" ? setAllTasksNotConfirmedToday :setAllTasksNotConfirmedTomorrow,
@@ -532,7 +539,7 @@ const Notifications: React.FC<INotifications> = ({
         <ConfirmModal
           isOpen={cancelSuccess}
           onOpenChange={setCancelSuccess}
-          onConfirm={() => setCancelSuccess(false)}
+          onConfirm={() => { setCancelSuccess(false); setCancelTaskDeliveryReasonOpenModal(true) }}
           title={cancelSuccessString}
           description=""
           confirmText="Закрыть"
@@ -547,6 +554,29 @@ const Notifications: React.FC<INotifications> = ({
           confirmText="Закрыть"
           isSingleButton={true}
         />
+      {(cancelTaskId != undefined || cancelDeliveryId != undefined) &&
+      <Modal isOpen={cancelTaskDeliveryReasonOpenModal} onOpenChange={()=>{}} >
+      <CancelledDeliveryOrTaskFeedback
+      onOpenChange={setCancelTaskDeliveryReasonOpenModal}
+      onSubmitFidback={setIsCancelledTaskDeliveryFeedbackSubmited}
+      delivery={cancelTaskId ? false : true}
+      deliveryOrTaskId={cancelTaskId != undefined ? cancelTaskId : cancelDeliveryId!= undefined ? cancelDeliveryId : 0}
+      />
+      </Modal>}
+        <ConfirmModal
+      isOpen={isCancelledTaskDeliveryFeedbackSubmited}
+      onOpenChange={setIsCancelledTaskDeliveryFeedbackSubmited}
+          onConfirm={() => { setIsCancelledTaskDeliveryFeedbackSubmited(false); setCancelTaskId(undefined); setCancelDeliveryId(undefined) }}
+      title={
+        <p>
+          Спасибо, что поделились!
+          <br /> Это важно.
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+      />
       </div>
     </Modal>
   );

@@ -69,7 +69,6 @@ export const postTaskAccept = async (
   try {
     const response: AxiosResponse<ITask> = await axios.post(
       `${tasksUrl}${taskId}/accept/`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${access}`,
@@ -91,7 +90,6 @@ export const postTaskComplete = async (
   try {
     const response: AxiosResponse<ITask> = await axios.post(
       `${tasksUrl}${taskId}/complete/`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${access}`,

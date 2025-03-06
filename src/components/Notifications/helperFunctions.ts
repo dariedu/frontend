@@ -200,7 +200,7 @@ function combineAllNotConfirmed(
 
 
  ////функция чтобы волонтер отменил взятую доставку
- async function cancelTakenDelivery(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IDelivery[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IDelivery[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+ async function cancelTakenDelivery(item:TNotificationInfo, setCancelDeliveryId:React.Dispatch<React.SetStateAction<number|undefined>>, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:IDelivery[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<IDelivery[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
 try {
    if (token) {
      let result: IDelivery = await postDeliveryCancel(token, item.id);
@@ -208,6 +208,7 @@ try {
        let filtered:IDelivery[] = allNotConfirmed.filter(i => {return i.id != item.id })
        setAllNotConfirmed(filtered)
        setCancelSuccessString(`Участие в доставке м. ${getMetroCorrectName(item.nameOrMetro)}, ${item.stringStart} успешно отменено`);  
+       setCancelDeliveryId(item.id)
        setCancelSuccess(true)
        setNotifDay(null)
   }
@@ -221,14 +222,15 @@ try {
   }
 
    ////функция чтобы волонтер отменил взятое доброе дело
-async function cancelTakenTask(item:TNotificationInfo, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:ITask[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<ITask[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
+async function cancelTakenTask(item:TNotificationInfo, setCancelTaskId:React.Dispatch<React.SetStateAction<number|undefined>>, setNotifDay:React.Dispatch<React.SetStateAction<'today'|"tomorrow"|null>>, allNotConfirmed:ITask[], setAllNotConfirmed:React.Dispatch<React.SetStateAction<ITask[]>>, token:string, setCancelSuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelSuccessString:React.Dispatch<React.SetStateAction<string>>, setCancelFail:React.Dispatch<React.SetStateAction<boolean>>, setCancelFailString:React.Dispatch<React.SetStateAction<string>>) {
 try {
    if (token) {
      let result: ITask = await postTaskRefuse(item.id, token);
      if (result) {
       let filtered:ITask[] = allNotConfirmed.filter(i => {return i.id != item.id })
-      setAllNotConfirmed(filtered)
-      setCancelSuccessString(`Участие в добром деле ${item.stringStart} успешно отменено`);  
+       setAllNotConfirmed(filtered)
+       setCancelSuccessString(`Участие в добром деле ${item.stringStart} успешно отменено`);  
+       setCancelTaskId(item.id)
        setCancelSuccess(true)
        setNotifDay(null)
   }
