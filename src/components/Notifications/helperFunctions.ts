@@ -194,8 +194,12 @@ function combineAllNotConfirmed(
       allForTomorrow.push(obj)
     })
   } 
-  setAllMyNotificationsToday(allForToday)
-  setAllMyNotificationsTomorrow(allForTomorrow)
+
+  const sortedForToday = allForToday.sort((a, b) => { return +new Date(a.timeString) - +new Date(b.timeString) })
+  const sortedForTomorrow = allForTomorrow.sort((a, b) => { return +new Date(a.timeString) - +new Date(b.timeString) })
+  
+  setAllMyNotificationsToday(sortedForToday)
+  setAllMyNotificationsTomorrow(sortedForTomorrow)
 }
 
 

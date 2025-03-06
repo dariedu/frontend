@@ -7,7 +7,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { TokenContext } from '../../core/TokenContext.tsx';
 import { getUserById, IUser } from '../..//api/userApi.ts';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
-
+import { UserContext } from '../../core/UserContext.tsx';
 
 interface IDefaultInfoProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -15,8 +15,17 @@ interface IDefaultInfoProps {
   promotion: IPromotion
   reserved: boolean 
   confirmed?: boolean
-  makeReservationFunc?: (promotion: IPromotion) => void
-  cancelPromotion?: (promotion: IPromotion) => void
+  makeReservationFunc?: (promotion: IPromotion, token:string|null, setRedeemPromotionSuccessName:React.Dispatch<React.SetStateAction<string>>,setRedeemPromotionSuccess:React.Dispatch<React.SetStateAction<boolean>>, userValue:any, setRedeemPromotionErr: React.Dispatch<React.SetStateAction<string>>,setError:React.Dispatch<React.SetStateAction<boolean>>) => {}
+  cancelPromotion?: (promotion: IPromotion, token:string|null,setCancelPromotionSuccess:React.Dispatch<React.SetStateAction<boolean>>,setCancelPromotionSuccessName:React.Dispatch<React.SetStateAction<string>>, userValue:any,setCancelPromotionErr:React.Dispatch<React.SetStateAction<string>>,setCancelError:React.Dispatch<React.SetStateAction<boolean>>) => {}
+  setRedeemPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>
+  setRedeemPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setRedeemPromotionErr: React.Dispatch<React.SetStateAction<string>>
+  setError: React.Dispatch<React.SetStateAction<boolean>>
+  setCancelPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setCancelPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>
+  setCancelPromotionErr: React.Dispatch<React.SetStateAction<string>>
+  setCancelError: React.Dispatch<React.SetStateAction<boolean>>
+  allPromoNotConfirmed: number[]
 }
 
  
@@ -26,7 +35,16 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   promotion,
   reserved,
   makeReservationFunc,
-  cancelPromotion
+  setRedeemPromotionSuccessName,
+  setRedeemPromotionSuccess,
+  setRedeemPromotionErr,
+  setError,
+  cancelPromotion,
+  setCancelPromotionSuccess,
+  setCancelPromotionSuccessName,
+  setCancelPromotionErr,
+  setCancelError,
+  allPromoNotConfirmed
 }) => {
   const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
   const currentDate = new Date()
@@ -37,6 +55,9 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const [contactPerson, setContactPerson] = useState<IUser>()
 
   const { token } = useContext(TokenContext);
+   ////// используем контекст юзера, чтобы вывести количество доступных баллов 
+    const userValue = useContext(UserContext);
+  // const userPoints = userValue.currentUser?.point;
 
   async function getContactName() {
     if (token) {
@@ -191,7 +212,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           Забронировать
         </button>
       </div>
-      ) : (
+      ) : allPromoNotConfirmed.includes(promotion.id) && (
        <div className="w-full flex justify-center items-center mt-[14px] self-center">
        <button
          onClick={() => {
@@ -208,7 +229,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         onOpenChange={setConfirmCancelModal}
         onConfirm={() => {
          if (cancelPromotion) {
-            cancelPromotion(promotion)
+            cancelPromotion(promotion, token,setCancelPromotionSuccess,setCancelPromotionSuccessName, userValue,setCancelPromotionErr,setCancelError)
            onOpenChange(false);
            setConfirmCancelModal(false)
           }
@@ -223,7 +244,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         onOpenChange={setConfirmMakeReservationModal}
         onConfirm={() => {
           if (makeReservationFunc) {
-            makeReservationFunc(promotion)
+            makeReservationFunc(promotion, token, setRedeemPromotionSuccessName, setRedeemPromotionSuccess, userValue, setRedeemPromotionErr, setError)
             onOpenChange(false)
             setConfirmMakeReservationModal(false)
           }

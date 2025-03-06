@@ -1,17 +1,18 @@
 
 import React, {useState, useEffect, useContext} from 'react'
 import Points from "../../../components/ui/Points/Points";
-//import ActionsVolunteer from "../../../components/ActionsVolunteer/ActionsVolunteer";
 import SliderCardsPromotions from "../../../components/ui/Cards/CardPromotion/SliderCardsPromotions";
 import FilterPromotions from "../../../components/FilterPromotions/FilterPromotions";
 import { Modal } from '../../../components/ui/Modal/Modal';
-import { getAllPromotions, getMyPromotions, getPromotionsCategories, postPromotionCancel, postPromotionRedeem, type IPromotion, type TPromotionCategory} from '../../../api/apiPromotions';
+import {  type IPromotion, type TPromotionCategory} from '../../../api/apiPromotions';
 import { UserContext } from '../../../core/UserContext';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import Filter from "./../../../assets/icons/filter.svg?react"
-// import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 import { TokenContext } from '../../../core/TokenContext';
 import Bread from './../../../assets/icons/bread.svg?react'
+import { getPromoListNotConfirmed } from '../../../components/NavigationBar/helperFunctions';
+import { reqAllPromotions, reqMyPromotions, redeemPromotion, requestPromotionsCategories, cancelPromotion} from './helperFunctions';
+
 
 const BankTab:React.FC = () => {
 
@@ -24,7 +25,7 @@ const BankTab:React.FC = () => {
   const [filterCategories, setFilterCategories] = useState<TPromotionCategory[]>([]) /// устанавливаем категории для фильтра
   //записываем ошибку при бронировании поощрения
   const [redeemPromotionErr, setRedeemPromotionErr] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false); 
   ////// записываем результат бронирования поощрения
   const [redeemPromotionSuccess, setRedeemPromotionSuccess] = useState<boolean>(false);
   const [redeemPromotionSuccessName, setRedeemPromotionSuccessName] = useState<string>('');
@@ -35,6 +36,8 @@ const BankTab:React.FC = () => {
   const [cancelPromotionErr, setCancelPromotionErr] = useState<string>('')
   const [cancelError, setCancelError] = useState<boolean>(false);
  
+  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState <number[]>([])
+
   //// функция вызывается при нажатии на фильтр
   function handleCategoryChoice(obj: TPromotionCategory) {
     let copy = Object.assign([], filterCategories);
@@ -50,74 +53,78 @@ const BankTab:React.FC = () => {
     const userValue = useContext(UserContext);
   const userPoints = userValue.currentUser?.point;
    ///// используем контекст токена
-   const tokenContext = useContext(TokenContext);
-   const token = tokenContext.token;
+   const {token} = useContext(TokenContext);
+  //  const token = tokenContext.token;
   ////// используем контекст
 
+
+  useEffect(() => {
+    getPromoListNotConfirmed (token, setAllPromoNotConfirmed)
+}, [])
   
   
-  async function reqAllPromotions() {
-    try {
-      if (token) {
-        const allPromotinsArr = await getAllPromotions(token);
-        if (allPromotinsArr) {
-          allPromotinsArr.map(i => {
-            if (i.picture && !(i.picture?.includes('https'))) {
-             return i.picture = i.picture.replace('http', 'https')
-            }
-          })
-          const filtered = allPromotinsArr.filter(i => { return i.available_quantity !== 0 }).sort((a, b) => {return +new Date(a.start_date) - +new Date(b.start_date)})
-        setPromotionsAll(filtered);
-        }
-      }
-    } catch (err) {
-      console.error(err, 'reqAllPromotions has failed, BankTab');
-    } 
-  }
+  // async function reqAllPromotions() {
+  //   try {
+  //     if (token) {
+  //       const allPromotinsArr = await getAllPromotions(token);
+  //       if (allPromotinsArr) {
+  //         allPromotinsArr.map(i => {
+  //           if (i.picture && !(i.picture?.includes('https'))) {
+  //            return i.picture = i.picture.replace('http', 'https')
+  //           }
+  //         })
+  //         const filtered = allPromotinsArr.filter(i => { return i.available_quantity !== 0 }).sort((a, b) => {return +new Date(a.start_date) - +new Date(b.start_date)})
+  //       setPromotionsAll(filtered);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error(err, 'reqAllPromotions has failed, BankTab');
+  //   } 
+  // }
 
-  async function reqMyPromotions() {
-    let myPromotinsArr: IPromotion[] = [];
-    try {
-      if (token) {
-        myPromotinsArr = await getMyPromotions(token);
-        if (myPromotinsArr) {
-          let filtered = myPromotinsArr.filter(prom => { if (prom.is_active) return prom }).sort((a, b) => { return +new Date(a.start_date) - +new Date(b.start_date) });
-          filtered.map(i => {
-            if (i.picture && !(i.picture?.includes('https'))) {
-              return i.picture = i.picture.replace('http', 'https')
-              };
-            })
-      setPromotionsMy(filtered)
-        }
-     }
-   } catch (err) {
-     console.error(err, 'reqMyPromotions has failed, BankTab');
-   } 
- }
+//   async function reqMyPromotions() {
+//     let myPromotinsArr: IPromotion[] = [];
+//     try {
+//       if (token) {
+//         myPromotinsArr = await getMyPromotions(token);
+//         if (myPromotinsArr) {
+//           let filtered = myPromotinsArr.filter(prom => { if (prom.is_active) return prom }).sort((a, b) => { return +new Date(a.start_date) - +new Date(b.start_date) });
+//           filtered.map(i => {
+//             if (i.picture && !(i.picture?.includes('https'))) {
+//               return i.picture = i.picture.replace('http', 'https')
+//               };
+//             })
+//       setPromotionsMy(filtered)
+//         }
+//      }
+//    } catch (err) {
+//      console.error(err, 'reqMyPromotions has failed, BankTab');
+//    } 
+//  }
 
-  async function requestPromotionsCategories() {
-    let categories: TPromotionCategory[] = [];
-    try {
-      if (token) {
-       categories = await getPromotionsCategories(token); 
-     }
-   } catch (err) {
-     console.error(err, 'requestPromotionsCategories has failed, BankTab');
-   } finally {
-     if (categories.length > 0) {
-      setPpromotionCategory(categories);
-     }
-   }
- }
+//   async function requestPromotionsCategories() {
+//     let categories: TPromotionCategory[] = [];
+//     try {
+//       if (token) {
+//        categories = await getPromotionsCategories(token); 
+//      }
+//    } catch (err) {
+//      console.error(err, 'requestPromotionsCategories has failed, BankTab');
+//    } finally {
+//      if (categories.length > 0) {
+//       setPpromotionCategory(categories);
+//      }
+//    }
+//  }
   /////запрашиваем категории промоушенов один раз при загрузке страницы
   useEffect(() => {
-    requestPromotionsCategories(); 
+    requestPromotionsCategories(token, setPpromotionCategory) 
   }, []); 
 
  /////обновляем промоушены каждый раз при броинровании или отмене промоушена
   useEffect(() => {
-    reqAllPromotions();
-    reqMyPromotions();
+    reqAllPromotions(token, setPromotionsAll)
+    reqMyPromotions(token, setPromotionsMy)
   }, [cancelPromotionSuccessName, redeemPromotionSuccessName]); 
 
 /////сортируем промоушены, когда получили их с сервера
@@ -142,56 +149,56 @@ const BankTab:React.FC = () => {
   //   }
   // } 
 
-  async function redeemPromotion(promotion: IPromotion) {
-   const chosenId = promotion.id;
-   try {
-     if (token) {
-       const response = await postPromotionRedeem(chosenId, promotion, token);
-       if (response) {
-        setRedeemPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
-         setRedeemPromotionSuccess(true);
-         if (userValue && userValue.currentUser) {
-            userValue.currentUser.point = userValue.currentUser.point-promotion.price
-         }
-      }
-     }
-   } catch (err) {
-     if (err == "Error: Недостаточно баллов для приобретения"){
-       setRedeemPromotionErr("Недостаточно баллов для приобретения")
-       setError(true)
-       setRedeemPromotionSuccess(false);
-     } else if (err == "Error: Вы уже приобрели этот поощрение") { 
-       setRedeemPromotionErr("Вы уже приобрели это поощрение")
-       setError(true)
-       setRedeemPromotionSuccess(false);
-     } else {
-       setRedeemPromotionErr("Что-то пошло не так, попробуйте позже")
-       setError(true)
-       setRedeemPromotionSuccess(false);
-     }
-   } 
-  }
+  // async function redeemPromotion(promotion: IPromotion) {
+  //  const chosenId = promotion.id;
+  //  try {
+  //    if (token) {
+  //      const response = await postPromotionRedeem(chosenId, promotion, token);
+  //      if (response) {
+  //       setRedeemPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
+  //        setRedeemPromotionSuccess(true);
+  //        if (userValue && userValue.currentUser) {
+  //           userValue.currentUser.point = userValue.currentUser.point-promotion.price
+  //        }
+  //     }
+  //    }
+  //  } catch (err) {
+  //    if (err == "Error: Недостаточно баллов для приобретения"){
+  //      setRedeemPromotionErr("Недостаточно баллов для приобретения")
+  //      setError(true)
+  //      setRedeemPromotionSuccess(false);
+  //    } else if (err == "Error: Вы уже приобрели этот поощрение") { 
+  //      setRedeemPromotionErr("Вы уже приобрели это поощрение")
+  //      setError(true)
+  //      setRedeemPromotionSuccess(false);
+  //    } else {
+  //      setRedeemPromotionErr("Что-то пошло не так, попробуйте позже")
+  //      setError(true)
+  //      setRedeemPromotionSuccess(false);
+  //    }
+  //  } 
+  // }
 
 
-  async function cancelPromotion(promotion: IPromotion) {
-    const chosenId = promotion.id;
-    try {
-      if (token) {
-        const response = await postPromotionCancel(chosenId, token);
-        if (response) {
-        setCancelPromotionSuccess(true)
-          setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
-          if (userValue && userValue.currentUser && userValue.currentUser.point >=0) {
-            userValue.currentUser.point +=promotion.price
-         }
-      }
-      }
-    } catch (err) {
-      setCancelPromotionErr("Что-то пошло не так, попробуйте позже")
-      setCancelError(true)
-      setCancelPromotionSuccess(false)
-    } 
-  }
+  // async function cancelPromotion(promotion: IPromotion) {
+  //   const chosenId = promotion.id;
+  //   try {
+  //     if (token) {
+  //       const response = await postPromotionCancel(chosenId, token);
+  //       if (response) {
+  //       setCancelPromotionSuccess(true)
+  //         setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
+  //         if (userValue && userValue.currentUser && userValue.currentUser.point >=0) {
+  //           userValue.currentUser.point +=promotion.price
+  //        }
+  //     }
+  //     }
+  //   } catch (err) {
+  //     setCancelPromotionErr("Что-то пошло не так, попробуйте позже")
+  //     setCancelError(true)
+  //     setCancelPromotionSuccess(false)
+  //   } 
+  // }
 
   
   return (
@@ -218,7 +225,16 @@ const BankTab:React.FC = () => {
               <Bread className='fill-[#000000] dark:fill-[#F8F8F8] mb-3'/>
             <p className='dark:text-light-gray-1 w-56 '>Скоро тут появятся интересные предложения</p>
           </div>) : (
-             <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} /> 
+             <SliderCardsPromotions filterCategory={filterCategories} promotions={promotionsAll} optional={true} reserved={false} makeReservationFunc={redeemPromotion} setRedeemPromotionSuccessName={setRedeemPromotionSuccessName}
+              setRedeemPromotionSuccess={setRedeemPromotionSuccess}
+              setRedeemPromotionErr={setRedeemPromotionErr}
+                  setError={setError}
+                  setCancelPromotionSuccess={setCancelPromotionSuccess}
+                  setCancelPromotionSuccessName={setCancelPromotionSuccessName}
+                  setCancelPromotionErr={setCancelPromotionErr}
+                  setCancelError={setCancelError}
+                  allPromoNotConfirmed={allPromoNotConfirmed}
+                /> 
           )}
         </div>
         <div className='h-[258px] bg-light-gray-white rounded-2xl mt-1  dark:bg-light-gray-7-logo' >
@@ -228,7 +244,15 @@ const BankTab:React.FC = () => {
               (<div className='flex flex-col w-full items-center justify-center mt-16 '>
                 <Bread className='fill-[#000000] dark:fill-[#F8F8F8] w-[100px]'/>
             </div>)
-            : (<SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} />)}
+            : (<SliderCardsPromotions promotions={promotionsMy} optional={false} reserved={true} cancelPromotion={cancelPromotion} setRedeemPromotionSuccessName={setRedeemPromotionSuccessName}
+              setRedeemPromotionSuccess={setRedeemPromotionSuccess}
+              setRedeemPromotionErr={setRedeemPromotionErr}
+                setError={setError}
+                setCancelPromotionSuccess={setCancelPromotionSuccess}
+                setCancelPromotionSuccessName={setCancelPromotionSuccessName}
+                setCancelPromotionErr={setCancelPromotionErr}
+                setCancelError={setCancelError}
+                allPromoNotConfirmed={allPromoNotConfirmed}/>)}
           </div>
           </div>
  </div>

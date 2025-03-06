@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   getBallCorrectEndingName,
   // getMonthCorrectEndingName,
@@ -10,12 +10,22 @@ import { type ITask } from '../../api/apiTasks';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 import * as Avatar from '@radix-ui/react-avatar';
+import { TokenContext } from '../../core/TokenContext';
 
 interface INearestTaskProps {
   task: ITask
   taskFilter: TTaskFilter
-  cancelFunc: (task: ITask) => {}
-  feedbackSubmited:boolean
+  cancelFunc: (task: ITask, token: string|null,
+    setCancelTaskId: React.Dispatch<React.SetStateAction<number|undefined>>,
+    setCancelTaskSuccessString: React.Dispatch<React.SetStateAction<string>>,
+    setCancelTaskSuccess: React.Dispatch<React.SetStateAction<boolean>>,
+    setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>>) => {}
+  feedbackSubmited: boolean
+  setCancelTaskId: React.Dispatch<React.SetStateAction<number | undefined>>
+  setCancelTaskSuccessString: React.Dispatch<React.SetStateAction<string>>
+  setCancelTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>
+  setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>>
+  allTasksNotConfirmed:number[]
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -24,7 +34,12 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   task,
   cancelFunc,
   taskFilter,
-  feedbackSubmited
+  setCancelTaskId,
+  setCancelTaskSuccessString,
+  feedbackSubmited,
+  setCancelTaskSuccess,
+  setCancelDeliveryFail,
+  allTasksNotConfirmed
 }) => {
   // const taskDate = new Date(Date.parse(task.start_date) + 180 * 60000);
 
@@ -40,6 +55,9 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   const [isDeliveryCancelledModalOpen, setIsDeliveryCancelledModalOpen] =
     useState(false); //// модальное окно для подтверждения отмены доставки
 
+  
+    const { token } = useContext(TokenContext);
+  
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120;
   let curatorTelegramNik: string = '';
   if (task.curator.tg_username && task.curator.tg_username.length > 0) {
@@ -195,7 +213,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
           )
         }
 
-        {fullView ? (taskFilter == 'nearest' ? (
+        {fullView ? (taskFilter == 'nearest' && allTasksNotConfirmed.includes(task.id) ? (
               <button
                 className="btn-B-GrayDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {
@@ -287,7 +305,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         isOpen={isCancelDeliveryModalOpen}
         onOpenChange={setIsCancelDeliveryModalOpen}
         onConfirm={() => {
-          cancelFunc? cancelFunc(task) : ()=>{}
+          cancelFunc? cancelFunc(task, token, setCancelTaskId, setCancelTaskSuccessString, setCancelTaskSuccess, setCancelDeliveryFail) : ()=>{}
           //setIsDeliveryCancelledModalOpen(true);
            setIsCancelDeliveryModalOpen(false);
         }}

@@ -1,18 +1,62 @@
 import React from 'react';
 import CardPromotion from './CardPromotion';
-import { type IPromotion, type TPromotionCategory } from '../../../../api/apiPromotions';
+import {
+  type IPromotion,
+  type TPromotionCategory,
+} from '../../../../api/apiPromotions';
 import './SliderCardStyles.css';
 
 type TSliderCardsPromotionsProps = {
-  promotions: IPromotion[]
-  optional: boolean
-  reserved: boolean
-  makeReservationFunc?: (promotion: IPromotion) => void
-  cancelPromotion?: (promotion: IPromotion) => void
-  filterCategory?:TPromotionCategory[]
-}
+  promotions: IPromotion[];
+  optional: boolean;
+  reserved: boolean;
+  makeReservationFunc?: (
+    promotion: IPromotion,
+    token: string | null,
+    setRedeemPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>,
+    setRedeemPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>,
+    userValue: any,
+    setRedeemPromotionErr: React.Dispatch<React.SetStateAction<string>>,
+    setError: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {};
+  cancelPromotion?: (
+    promotion: IPromotion,
+    token: string | null,
+    setCancelPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>,
+    setCancelPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>,
+    userValue: any,
+    setCancelPromotionErr: React.Dispatch<React.SetStateAction<string>>,
+    setCancelError: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {};
+  filterCategory?: TPromotionCategory[];
+  setRedeemPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>;
+  setRedeemPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setRedeemPromotionErr: React.Dispatch<React.SetStateAction<string>>;
+  setError: React.Dispatch<React.SetStateAction<boolean>>;
+  setCancelPromotionSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setCancelPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>;
+  setCancelPromotionErr: React.Dispatch<React.SetStateAction<string>>;
+  setCancelError: React.Dispatch<React.SetStateAction<boolean>>;
+  allPromoNotConfirmed: number[];
+};
 
-const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotions, optional, reserved, makeReservationFunc, filterCategory, cancelPromotion}) => {
+const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({
+  promotions,
+  optional,
+  reserved,
+  makeReservationFunc,
+  filterCategory,
+  cancelPromotion,
+  setRedeemPromotionSuccessName,
+  setRedeemPromotionSuccess,
+  setRedeemPromotionErr,
+  setError,
+  setCancelPromotionSuccess,
+  setCancelPromotionSuccessName,
+  setCancelPromotionErr,
+  setCancelError,
+  allPromoNotConfirmed,
+}) => {
   // const sliderRef = useRef<HTMLDivElement>(null);
   // const [isDragging, setIsDragging] = useState(false);
   // const [startX, setStartX] = useState(0);
@@ -56,10 +100,9 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
   //   };
   // }, [isDragging]);
 
-
   return (
     <div
-      className='sliderPromotionsScrollbar py-2 flex justify-start overflow-x-auto w-full max-w-[500px] px-4 space-x-2 '
+      className="sliderPromotionsScrollbar py-2 flex justify-start overflow-x-auto w-full max-w-[500px] px-4 space-x-2 "
       //ref={sliderRef}
       // className={`overflow-x-hidden flex space-x-4 py-2 scrollbar-hide w-[360px] ${
       //   isDragging ? 'cursor-grabbing' : 'cursor-grab'
@@ -68,28 +111,54 @@ const SliderCardsPromotions: React.FC<TSliderCardsPromotionsProps> = ({promotion
       onDragStart={e => e.preventDefault()}
     >
       {/* Render each CardPromotion */}
-      {filterCategory && filterCategory.length > 0 ? (
-        promotions.filter((promo) => {
-          if (promo.category) {
-           if (filterCategory.find(i => i.id === promo.category.id)
-          ) return promo
-        }}
-          ).map((promo, index) => (
-        <div key={index} className="flex-shrink-0">
-          <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion}
-          />
-        </div>
-        ))
-      ): (
-        promotions.map((promo, index) => (
-          <div key={index} className="flex-shrink-0">
-            <CardPromotion promotion={promo} optional={optional} reserved={reserved} makeReservationFunc={makeReservationFunc} cancelPromotion={cancelPromotion}
-            />
-          </div>
-          ))
-      )
-
-      }
+      {filterCategory && filterCategory.length > 0
+        ? promotions
+            .filter(promo => {
+              if (promo.category) {
+                if (filterCategory.find(i => i.id === promo.category.id))
+                  return promo;
+              }
+            })
+            .map((promo, index) => (
+              <div key={index} className="flex-shrink-0">
+                <CardPromotion
+                  promotion={promo}
+                  optional={optional}
+                  reserved={reserved}
+                  makeReservationFunc={makeReservationFunc}
+                  cancelPromotion={cancelPromotion}
+                  setRedeemPromotionSuccessName={setRedeemPromotionSuccessName}
+                  setRedeemPromotionSuccess={setRedeemPromotionSuccess}
+                  setRedeemPromotionErr={setRedeemPromotionErr}
+                  setError={setError}
+                  setCancelPromotionSuccess={setCancelPromotionSuccess}
+                  setCancelPromotionSuccessName={setCancelPromotionSuccessName}
+                  setCancelPromotionErr={setCancelPromotionErr}
+                  setCancelError={setCancelError}
+                  allPromoNotConfirmed={allPromoNotConfirmed}
+                />
+              </div>
+            ))
+        : promotions.map((promo, index) => (
+            <div key={index} className="flex-shrink-0">
+              <CardPromotion
+                promotion={promo}
+                optional={optional}
+                reserved={reserved}
+                makeReservationFunc={makeReservationFunc}
+                cancelPromotion={cancelPromotion}
+                setRedeemPromotionSuccessName={setRedeemPromotionSuccessName}
+                setRedeemPromotionSuccess={setRedeemPromotionSuccess}
+                setRedeemPromotionErr={setRedeemPromotionErr}
+                setError={setError}
+                setCancelPromotionSuccess={setCancelPromotionSuccess}
+                setCancelPromotionSuccessName={setCancelPromotionSuccessName}
+                setCancelPromotionErr={setCancelPromotionErr}
+                setCancelError={setCancelError}
+                allPromoNotConfirmed={allPromoNotConfirmed}
+              />
+            </div>
+          ))}
     </div>
   );
 };

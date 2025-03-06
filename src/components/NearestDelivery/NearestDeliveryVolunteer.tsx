@@ -21,10 +21,15 @@ import * as Avatar from '@radix-ui/react-avatar';
 interface INearestDeliveryProps {
   delivery: IDelivery;
   status: TDeliveryFilter
-  cancelFunc?: (dellivery: IDelivery) => {}
+  cancelFunc?: (delivery:IDelivery, token: string | null, setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>,setCancelId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail:React.Dispatch<React.SetStateAction<boolean>>) => {}
   isFeedbackSubmitedModalOpen?:boolean
   setIsFeedbackSubmitedModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
   feedbackSubmited?: boolean
+  setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>
+  setCancelId: React.Dispatch<React.SetStateAction<number | undefined>>
+  setCancelDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>>
+  allNotConfirmed:number[]
 }
 
 
@@ -36,6 +41,11 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   isFeedbackSubmitedModalOpen, 
   setIsFeedbackSubmitedModalOpen,
   feedbackSubmited,
+  setCancelDeliverySuccessString,
+  setCancelId,
+  setCancelDeliverySuccess,
+  setCancelDeliveryFail,
+  allNotConfirmed
 }) => {
 
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
@@ -255,7 +265,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         </div>
           )}
 
-        {fullView ? (currentStatus == 'nearest' ? (
+        {fullView ? (currentStatus == 'nearest' && allNotConfirmed.includes(delivery.id) ? (
               <button
                 className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {
@@ -292,8 +302,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         isOpen={isCancelDeliveryModalOpen}
         onOpenChange={setIsCancelDeliveryModalOpen}
         onConfirm={() => {
-          cancelFunc ? cancelFunc(delivery) : () => { };          
-          setIsCancelDeliveryModalOpen(false);
+        cancelFunc ? cancelFunc(delivery, token, setCancelDeliverySuccessString,setCancelId, setCancelDeliverySuccess, setCancelDeliveryFail) : () => { };          
+        setIsCancelDeliveryModalOpen(false);
         }}
         title={<p>Уверены, что хотите отменить участие в доставке?</p>}
         description=""
