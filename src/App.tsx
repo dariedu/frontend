@@ -39,9 +39,9 @@ const App: React.FC = () => {
 // getDeviceType()
 // }, [])
   // console.log(window.Telegram.WebApp.platform, "window.Telegram.WebApp.platform")
-  // if (window.Telegram.WebApp.platform === 'unknown' || window.Telegram.WebApp.platform === undefined || window.Telegram.WebApp.platform === null) {
-  //   return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение через Telegram</div>
-  // } else {
+  if (window.Telegram.WebApp.platform === 'unknown' || window.Telegram.WebApp.platform === undefined || window.Telegram.WebApp.platform === null) {
+    return <div className='flex justify-center items-center h-screen dark:text-light-gray-white'>Пожалуйста, откройте приложение через Telegram</div>
+  } else {
     if (isLoading) {
       return <div className='h-screen items-center flex flex-col justify-center '>
         <div className='loader'></div>
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       // Пользователь зарегистрирован, но не является сотрудником
       return <VolunteerPage />;
      }
-    //  }
+     }
 };
 
 export default App;

@@ -8,14 +8,16 @@ type TSliderCardsDeliveriesProps = {
   deliveries: IDelivery[]
   myDeliveries: IDelivery[]
   switchTab: React.Dispatch<React.SetStateAction<string>>;
-  getDelivery: (delivery: IDelivery) =>void
   stringForModal: string
   takeDeliverySuccess: boolean
-  setTakeDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
+  setTakeDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setTakeDeliverySuccessDateName:React.Dispatch<React.SetStateAction<string>>;
+      setDeliveryForReservation:React.Dispatch<React.SetStateAction<IDelivery|undefined>>;
+      setTakeDeliveryModal:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, myDeliveries, switchTab, getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
+const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliveries, myDeliveries, switchTab,  stringForModal, takeDeliverySuccess, setTakeDeliverySuccess, setTakeDeliverySuccessDateName, setDeliveryForReservation, setTakeDeliveryModal }) => {
 
   let arrOfMyDeliveriesId: number[] = [];
   myDeliveries.forEach(i => arrOfMyDeliveriesId.push(i.id));
@@ -29,11 +31,11 @@ const SliderCardsDeliveries: React.FC<TSliderCardsDeliveriesProps> = ({deliverie
         {deliveries.sort((a,b)=>{return +new Date(a.date)- +new Date(b.date)}).map((delivery: IDelivery) => {
           if (!arrOfMyDeliveriesId.includes(delivery.id)) {
             return <div key={delivery.id} className="">
-            <CardDelivery delivery={delivery} canBook={true} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+            <CardDelivery delivery={delivery} canBook={true} switchTab={switchTab}  stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} setTakeDeliverySuccessDateName={setTakeDeliverySuccessDateName} setDeliveryForReservation={setDeliveryForReservation} setTakeDeliveryModal={setTakeDeliveryModal}  />
           </div>
           } else {
             return <div key={delivery.id} className="" >
-            <CardDelivery delivery={delivery} canBook={false} switchTab={switchTab} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+            <CardDelivery delivery={delivery} canBook={false} switchTab={switchTab}  stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} setTakeDeliverySuccessDateName={setTakeDeliverySuccessDateName} setDeliveryForReservation={setDeliveryForReservation} setTakeDeliveryModal={setTakeDeliveryModal}  />
           </div>
           }
         })}

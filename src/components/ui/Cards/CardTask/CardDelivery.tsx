@@ -14,13 +14,17 @@ type TCardDeliveryProps = {
   delivery: IDelivery
   canBook: boolean
   switchTab: React.Dispatch<React.SetStateAction<string>>;
-  getDelivery: (delivery: IDelivery) => void;
+  // getDelivery: (delivery: IDelivery) => void;
   stringForModal: string;
   takeDeliverySuccess: boolean;
   setTakeDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>;
+    setTakeDeliverySuccessDateName:React.Dispatch<React.SetStateAction<string>>;
+    setDeliveryForReservation:React.Dispatch<React.SetStateAction<IDelivery|undefined>>;
+    setTakeDeliveryModal:React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab,  getDelivery, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess}) => {
+const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchTab, stringForModal, takeDeliverySuccess, setTakeDeliverySuccess, setTakeDeliverySuccessDateName, setDeliveryForReservation, setTakeDeliveryModal
+}) => {
  const [isOpen, setIsOpen] = useState(false);
 
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
@@ -62,7 +66,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
            </div>
            
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-       <DetailedInfoDelivery delivery={delivery} canBook={canBook} switchTab={switchTab} onOpenChange={setIsOpen} getDelivery={getDelivery} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} />
+           <DetailedInfoDelivery delivery={delivery} canBook={canBook} switchTab={switchTab} onOpenChange={setIsOpen} stringForModal={stringForModal} takeDeliverySuccess={takeDeliverySuccess} setTakeDeliverySuccess={setTakeDeliverySuccess} setTakeDeliverySuccessDateName={setTakeDeliverySuccessDateName} setDeliveryForReservation={setDeliveryForReservation} setTakeDeliveryModal={setTakeDeliveryModal} />
       </Modal>
          </>
          )

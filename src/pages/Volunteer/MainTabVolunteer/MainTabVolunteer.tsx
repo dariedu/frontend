@@ -4,26 +4,24 @@ import SliderCardsDeliveries from '../../../components/SliderCards/SliderCardsDe
 import { useState, useContext, useEffect } from 'react';
 import { DeliveryContext } from '../../../core/DeliveryContext';
 import {
-  postDeliveryTake,
-  getVolunteerDeliveries,
   type IDelivery,
-  type IVolunteerDeliveries,
 } from '../../../api/apiDeliveries';
 import { TokenContext } from '../../../core/TokenContext';
 import {
-  getMetroCorrectName,
   getMonthCorrectEndingName,
 } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import NearestDeliveryVolunteer from '../../../components/NearestDeliveryVolunteer/NearestDeliveryVolunteer';
 import {
-  getAllAvaliableTasks,
-  postTaskAccept,
-  getMyTasksNoFilter,
   type ITask,
 } from '../../../api/apiTasks';
 import SliderCardsTaskVolunteer from '../../../components/SliderCards/SliderCardsTasksVolunteer';
 import Bread from './../../../assets/icons/bread.svg?react';
+import {
+  filterDeliveries, getMyDeliveries, getAllTasks, getDeliveryFromServer,
+  getTaskFromServer,
+  getAllMyTasks
+} from './helperFunctions';
 
 type TMainTabVolunteerProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -69,185 +67,187 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
 },[])
   
 
-  ///// убираем все неактивные (завершенные заявки из списка)
-  function filterDeliveries() {
-    if (deliveries.length > 0) {
-      const today = new Date();
-      const filtered: IDelivery[] = deliveries.filter(
-        i =>i.is_completed == false && i.is_active == true && (new Date(i.date) > new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() - 1, today.getMinutes()))
-      );
-      localStorage.setItem(`all_del_vol`, JSON.stringify(filtered))
-      setFilteredDeliveries(filtered);
-      setFilteredDeliveriesBeforeCalendarFilter(filtered)
-    }
-  }
+  // ///// убираем все неактивные (завершенные заявки из списка)
+  // function filterDeliveries() {
+  //   if (deliveries.length > 0) {
+  //     const today = new Date();
+  //     const filtered: IDelivery[] = deliveries.filter(
+  //       i =>i.is_completed == false && i.is_active == true && (new Date(i.date) > new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() - 1, today.getMinutes()))
+  //     );
+  //     localStorage.setItem(`all_del_vol`, JSON.stringify(filtered))
+  //     setFilteredDeliveries(filtered);
+  //     setFilteredDeliveriesBeforeCalendarFilter(filtered)
+  //   }
+  // }
 
-  async function getMyDeliveries() {
-    const current: IDelivery[] = [];
-    try {
-      if (token) {
-        let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
-        if (result) {
-          result['мои активные доставки'].forEach(i => {
-            current.push(i);
-          });
-          current.map(i => {
-            if (i.curator.photo && !(i.curator.photo.includes('https'))) {
-             return i.curator.photo = i.curator.photo.replace('http', 'https')
-            }
-          })
+  // async function getMyDeliveries() {
+  //   const current: IDelivery[] = [];
+  //   try {
+  //     if (token) {
+  //       let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
+  //       if (result) {
+  //         result['мои активные доставки'].forEach(i => {
+  //           current.push(i);
+  //         });
+  //         current.map(i => {
+  //           if (i.curator.photo && !(i.curator.photo.includes('https'))) {
+  //            return i.curator.photo = i.curator.photo.replace('http', 'https')
+  //           }
+  //         })
 
-          setMyCurrent(current);
-        }
-      }
-    } catch (err) {
-      console.log(err, 'CalendarTabVolunteer getMyDeliveries fail');
-    }
-  }
+  //         setMyCurrent(current);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err, 'CalendarTabVolunteer getMyDeliveries fail');
+  //   }
+  // }
 
-  async function getAllTasks() {
-    try {
-      if (token) {
-        let result: ITask[] = await getAllAvaliableTasks(token);
-        if (result) {
-          result.map(i => {
-            if (i.curator.photo && !(i.curator.photo?.includes('https'))) {
-             return i.curator.photo = i.curator.photo.replace('http', 'https')
-            }
-          })
-         console.log(result, "getAllTasks() main page vol" )
-          setAllAvaliableTasks(result);
-        }
-      }
-    } catch (err) {
-      console.log(err, 'getAllTasks() has failed volunteer main tab');
-    }
-  }
+  // async function getAllTasks() {
+  //   try {
+  //     if (token) {
+  //       let result: ITask[] = await getAllAvaliableTasks(token);
+  //       if (result) {
+  //         result.map(i => {
+  //           if (i.curator.photo && !(i.curator.photo?.includes('https'))) {
+  //            return i.curator.photo = i.curator.photo.replace('http', 'https')
+  //           }
+  //         })
+  //        console.log(result, "getAllTasks() main page vol" )
+  //         setAllAvaliableTasks(result);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err, 'getAllTasks() has failed volunteer main tab');
+  //   }
+  // }
 
   useEffect(() => {
-    getAllTasks();
+    getAllTasks(token, setAllAvaliableTasks);
   }, []);
 
   useEffect(() => {
-    getMyDeliveries();
-    filterDeliveries();
+    getMyDeliveries(token, setMyCurrent);
+    filterDeliveries(deliveries, setFilteredDeliveries, setFilteredDeliveriesBeforeCalendarFilter);
   }, [deliveries, takeDeliverySuccess]);
+
+  
 
   // const deliveryDate = new Date(Date.parse(delivery.date) + 180 *60000);
   //   console.log(deliveryDate.getDate(), deliveryDate.getHours())
 
-  ////функция чтобы волонтер взял доставку
-  async function getDeliveryFromServer(delivery: IDelivery) {
-    const id: number = delivery.id;
+  // ////функция чтобы волонтер взял доставку
+  // async function getDeliveryFromServer(delivery: IDelivery) {
+  //   const id: number = delivery.id;
   
-    const deliveryDate = new Date(Date.parse(delivery.date) + 180 *60000);
-    console.log(deliveryDate.getDate(), deliveryDate.getHours())
-    const date = deliveryDate.getUTCDate();
-    const month = getMonthCorrectEndingName(deliveryDate);
-    const hours =
-      deliveryDate.getUTCHours() < 10
-        ? '0' + (deliveryDate.getUTCHours())
-        : deliveryDate.getUTCHours();
-    const minutes =
-      deliveryDate.getUTCMinutes() < 10
-        ? '0' + deliveryDate.getUTCMinutes()
-        : deliveryDate.getUTCMinutes();
-    const subway = getMetroCorrectName(delivery.location.subway);
-    const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
+  //   const deliveryDate = new Date(Date.parse(delivery.date) + 180 *60000);
+  //   console.log(deliveryDate.getDate(), deliveryDate.getHours())
+  //   const date = deliveryDate.getUTCDate();
+  //   const month = getMonthCorrectEndingName(deliveryDate);
+  //   const hours =
+  //     deliveryDate.getUTCHours() < 10
+  //       ? '0' + (deliveryDate.getUTCHours())
+  //       : deliveryDate.getUTCHours();
+  //   const minutes =
+  //     deliveryDate.getUTCMinutes() < 10
+  //       ? '0' + deliveryDate.getUTCMinutes()
+  //       : deliveryDate.getUTCMinutes();
+  //   const subway = getMetroCorrectName(delivery.location.subway);
+  //   const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
     
-      if (token) {
-        try {
-        let result = await postDeliveryTake(token, id, delivery);
-        if (result) {
-          setTakeDeliverySuccess(true);
-          setTakeDeliverySuccessDateName(finalString);
-          setDeliveryForReservation(undefined)
-          }
-        }
-        catch (err) {
-        if (err == 'Error: You have already taken this delivery') {
-          setTakeDeliveryFail(true);
-          setTakeDeliveryFailString(
-            `Ошибка, доставка ${finalString}, уже у вас в календаре`,
-          );
-        } else if ((err = ' Error: User does not confirmed')) {
-          setTakeTaskFail(true);
-          setTakeTaskFailString(
-            <p>Вы сможете записаться на доставку и добрые дела после завершения регистрации.<br/> 
-            📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
-                @volunteers_dari_edu
-                </a></p>,
-          );
-         }  else {
-          setTakeDeliveryFail(true);
-          setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
-        }
-      }
-    } 
-  }
+  //     if (token) {
+  //       try {
+  //       let result = await postDeliveryTake(token, id, delivery);
+  //       if (result) {
+  //         setTakeDeliverySuccess(true);
+  //         setTakeDeliverySuccessDateName(finalString);
+  //         setDeliveryForReservation(undefined)
+  //         }
+  //       }
+  //       catch (err) {
+  //       if (err == 'Error: You have already taken this delivery') {
+  //         setTakeDeliveryFail(true);
+  //         setTakeDeliveryFailString(
+  //           `Ошибка, доставка ${finalString}, уже у вас в календаре`,
+  //         );
+  //       } else if ((err = ' Error: User does not confirmed')) {
+  //         setTakeTaskFail(true);
+  //         setTakeTaskFailString(
+  //           <p>Вы сможете записаться на доставку и добрые дела после завершения регистрации.<br/> 
+  //           📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+  //               @volunteers_dari_edu
+  //               </a></p>,
+  //         );
+  //        }  else {
+  //         setTakeDeliveryFail(true);
+  //         setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
+  //       }
+  //     }
+  //   } 
+  // }
 
-  function getDelivery(delivery: IDelivery) {
-    const deliveryDate = new Date(Date.parse(delivery.date) + 180* 60000);
-    const date = deliveryDate.getUTCDate();
-    const month = getMonthCorrectEndingName(deliveryDate);
-    const hours =
-      deliveryDate.getUTCHours() < 10
-        ? '0' + deliveryDate.getUTCHours()
-        : deliveryDate.getUTCHours();
-    const minutes =
-      deliveryDate.getUTCMinutes() < 10
-        ? '0' + deliveryDate.getUTCMinutes()
-        : deliveryDate.getUTCMinutes();
-    const subway = getMetroCorrectName(delivery.location.subway);
-    const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
-    setTakeDeliverySuccessDateName(finalString)
-    setDeliveryForReservation(delivery);
-    setTakeDeliveryModal(true)
-  }
+  // function getDelivery(delivery: IDelivery) {
+  //   const deliveryDate = new Date(Date.parse(delivery.date) + 180* 60000);
+  //   const date = deliveryDate.getUTCDate();
+  //   const month = getMonthCorrectEndingName(deliveryDate);
+  //   const hours =
+  //     deliveryDate.getUTCHours() < 10
+  //       ? '0' + deliveryDate.getUTCHours()
+  //       : deliveryDate.getUTCHours();
+  //   const minutes =
+  //     deliveryDate.getUTCMinutes() < 10
+  //       ? '0' + deliveryDate.getUTCMinutes()
+  //       : deliveryDate.getUTCMinutes();
+  //   const subway = getMetroCorrectName(delivery.location.subway);
+  //   const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
+  //   setTakeDeliverySuccessDateName(finalString)
+  //   setDeliveryForReservation(delivery);
+  //   setTakeDeliveryModal(true)
+  // }
 
-  ////функция чтобы волонтер взял оброе дело
-  async function getTaskFromServer(task: ITask) {
-    const id: number = task.id;
-    const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
-    const date = taskDate.getUTCDate();
-    const month = getMonthCorrectEndingName(taskDate);
-    const hours =
-      taskDate.getUTCHours() < 10
-        ? '0' + taskDate.getUTCHours()
-        : taskDate.getUTCHours();
-    const minutes =
-      taskDate.getUTCMinutes() < 10
-        ? '0' + taskDate.getUTCMinutes()
-        : taskDate.getUTCMinutes();
-    const finalString = `\"${task.name.slice(0, 1).toUpperCase() + task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
-    try {
-      if (token) {
-        let result: ITask = await postTaskAccept(id, token);
-        if (result) {
-          setTakeTaskSuccess(true);
-          setTakeTaskSuccessDateName(finalString);
-        }
-      }
-    } catch (err) {
-      if (err == "Error: You've already taken this task!") {
-        setTakeTaskFail(true);
-        setTakeTaskFailString(
-          `Ошибка, доброе дело ${finalString}, уже в календаре`,
-        );
-      } else if ((err = ' Error: User does not confirmed')) {
-        setTakeTaskFail(true);
-        setTakeTaskFailString(
-          <p>Вы сможете записаться на доброе дело и доставки после завершения регистрации.<br/> 
-          📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
-              @volunteers_dari_edu
-              </a></p>,
-        );
-      } else {
-        setTakeTaskFail(true);
-        setTakeTaskFailString(`Упс, что то пошло не так, попробуйте позже`);
-      }
-    }
-  }
+  // ////функция чтобы волонтер взял оброе дело
+  // async function getTaskFromServer(task: ITask) {
+  //   const id: number = task.id;
+  //   const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
+  //   const date = taskDate.getUTCDate();
+  //   const month = getMonthCorrectEndingName(taskDate);
+  //   const hours =
+  //     taskDate.getUTCHours() < 10
+  //       ? '0' + taskDate.getUTCHours()
+  //       : taskDate.getUTCHours();
+  //   const minutes =
+  //     taskDate.getUTCMinutes() < 10
+  //       ? '0' + taskDate.getUTCMinutes()
+  //       : taskDate.getUTCMinutes();
+  //   const finalString = `\"${task.name.slice(0, 1).toUpperCase() + task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
+  //   try {
+  //     if (token) {
+  //       let result: ITask = await postTaskAccept(id, token);
+  //       if (result) {
+  //         setTakeTaskSuccess(true);
+  //         setTakeTaskSuccessDateName(finalString);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     if (err == "Error: You've already taken this task!") {
+  //       setTakeTaskFail(true);
+  //       setTakeTaskFailString(
+  //         `Ошибка, доброе дело ${finalString}, уже в календаре`,
+  //       );
+  //     } else if ((err = ' Error: User does not confirmed')) {
+  //       setTakeTaskFail(true);
+  //       setTakeTaskFailString(
+  //         <p>Вы сможете записаться на доброе дело и доставки после завершения регистрации.<br/> 
+  //         📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green ' >
+  //             @volunteers_dari_edu
+  //             </a></p>,
+  //       );
+  //     } else {
+  //       setTakeTaskFail(true);
+  //       setTakeTaskFailString(`Упс, что то пошло не так, попробуйте позже`);
+  //     }
+  //   }
+  // }
 
   function getTask(task: ITask) {
     const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
@@ -267,22 +267,22 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
     setTakeTaskModal(true)
   }
 
-  async function getAllMyTasks() {
-    let idArr: number[] = [];
-    try {
-      if (token) {
-        let result: ITask[] = await getMyTasksNoFilter(token);
-        if (result) {
-          result.filter(i => !i.is_completed).forEach(i => idArr.push(i.id));
-          setAllMyTasksId(idArr)
-        }
-      }
-    } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
-    }
-  }
+  // async function getAllMyTasks() {
+  //   let idArr: number[] = [];
+  //   try {
+  //     if (token) {
+  //       let result: ITask[] = await getMyTasksNoFilter(token);
+  //       if (result) {
+  //         result.filter(i => !i.is_completed).forEach(i => idArr.push(i.id));
+  //         setAllMyTasksId(idArr)
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err, "CalendarTabVolunteer getMyDeliveries fail")
+  //   }
+  // }
 
-  useEffect(() => { getAllMyTasks() }, [takeTaskSuccess]);
+  useEffect(() => { getAllMyTasks(token, setAllMyTasksId) }, [takeTaskSuccess]);
 
   return (
     <>
@@ -316,10 +316,13 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
                 deliveries={filteredDeliveries}
                 myDeliveries={myCurrent}
                 switchTab={switchTab}
-                getDelivery={getDelivery}
+                // getDelivery={getDelivery}
                 stringForModal={takeDeliverySuccessDateName}
                 takeDeliverySuccess={takeDeliverySuccess}
                 setTakeDeliverySuccess={setTakeDeliverySuccess}
+                setTakeDeliverySuccessDateName={setTakeDeliverySuccessDateName}
+                setDeliveryForReservation={setDeliveryForReservation}
+                setTakeDeliveryModal={setTakeDeliveryModal} 
               />
             ) : (
               <div className='flex flex-col items-center justify-center overflow-y-hidden mt-6'>
@@ -356,7 +359,10 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
         isOpen={takeDeliveryModal}
         onOpenChange={setTakeDeliveryModal}
         onConfirm={() => {
-          getDeliveryFromServer(deliveryForReservation);
+          getDeliveryFromServer(deliveryForReservation, token, setTakeDeliverySuccess,
+  setTakeDeliverySuccessDateName, setDeliveryForReservation, setTakeDeliveryFail,
+  setTakeDeliveryFailString, setTakeTaskFail,  setTakeTaskFailString
+          );
           setTakeDeliveryModal(false)
         }}
         onCancel={() => {
@@ -374,7 +380,7 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
           isOpen={takeTaskModal}
           onOpenChange={setTakeTaskModal}
           onConfirm={() => {
-            getTaskFromServer(taskForReservation);
+            getTaskFromServer(taskForReservation, token, setTakeTaskSuccess,  setTakeTaskSuccessDateName, setTakeTaskFail, setTakeTaskFailString);
             setTakeTaskModal(false)
           }}
           onCancel={() => {

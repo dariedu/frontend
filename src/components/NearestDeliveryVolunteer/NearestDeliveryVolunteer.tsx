@@ -40,7 +40,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   delivery,
   status,
   cancelFunc,
-  isFeedbackSubmitedModalOpen, 
+  isFeedbackSubmitedModalOpen,
   setIsFeedbackSubmitedModalOpen,
   feedbackSubmited,
   setCancelDeliverySuccessString,
@@ -52,13 +52,13 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
 
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
   //const currentDate = new Date();
-// console.log(delivery, "delivery")
+  // console.log(delivery, "delivery")
   const [fullView, setFullView] = useState(false); ////раскрываем доставку, чтобы увидеть детали
   const currentStatus = status;
   const [isCancelDeliveryModalOpen, setIsCancelDeliveryModalOpen] = useState(false); //// модальное окно для отмены доставки
   const [isModalOpen, setIsModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке волонтера
   const [myRouteSheet, setMyRouteSheet] = useState<IRouteSheetAssignments[]>(); /// записываем результат функции requestRouteSheetsAssignments()
-  const [routeSheets, setRouteSheets]= useState<IRouteSheet[]>()
+  const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>()
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
   const [confirmParticipation, setConfirmParticipation] = useState(false);
   const [confirmedSuccess, setConfirmedSuccess] = useState(false);
@@ -67,23 +67,23 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   const [confirmFailedString, setConfirmFailedString] = useState("");
   // const [notifDay, setNotifDay] = useState<'today' | "tomorrow" | null>(null);
 
-   ///// используем контекст токена
+  ///// используем контекст токена
   const { token } = useContext(TokenContext);
-  const {currentUser} = useContext(UserContext)
+  const { currentUser } = useContext(UserContext)
   ////// используем контекст
 
   /////////////////////////////
   let curatorTelegramNik = delivery.curator.tg_username;
   if (delivery.curator.tg_username && delivery.curator.tg_username.length > 0) {
     curatorTelegramNik = delivery.curator.tg_username.includes('@', 0)
-    ? delivery.curator.tg_username.slice(1)
-    : delivery.curator.tg_username;
+      ? delivery.curator.tg_username.slice(1)
+      : delivery.curator.tg_username;
   }
   ///////////////////////////////////
 
   useEffect(() => {
     requestRouteSheetsAssignments(token, currentUser, delivery, setMyRouteSheet)
-  },[])
+  }, [])
 
 
   useEffect(() => {
@@ -108,19 +108,19 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       {/* ///// раскрываем полные детали активной доставки для волонтера///// */}
       {currentStatus == 'active' && routeSheets && (
         <ModalTop onOpenChange={setFullView} isOpen={fullView}>
-         <RouteSheetsVolunteer
-          status={status == 'nearest' ? 'Ближайшая' : status ==  'active' ? 'Активная' : 'Завершенная'}
-          onClose={() => setFullView(false)}
-          routeSheetsData={routeSheets}
-          deliveryId={delivery.id}
-          curatorName={`${delivery.curator.name} ${delivery.curator.last_name}`}
+          <RouteSheetsVolunteer
+            status={status == 'nearest' ? 'Ближайшая' : status == 'active' ? 'Активная' : 'Завершенная'}
+            onClose={() => setFullView(false)}
+            routeSheetsData={routeSheets}
+            deliveryId={delivery.id}
+            curatorName={`${delivery.curator.name} ${delivery.curator.last_name}`}
             curatorTelegramNik={curatorTelegramNik}
             curatorImg={delivery.curator.photo}
-          /> 
-       </ModalTop>
-          )}
+          />
+        </ModalTop>
+      )}
       <div
-        className={`${currentStatus == 'active'? (fullView == true ? 'hidden' : '') : '' } w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
+        className={`${currentStatus == 'active' ? (fullView == true ? 'hidden' : '') : ''} w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col bg-light-gray-white dark:bg-light-gray-7-logo mt-1`}
       >
         <div className="flex justify-between w-full">
           {currentStatus == 'nearest' ? (
@@ -142,35 +142,35 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
           <div className="flex items-center">
             <p
               className={'font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 mr-2 cursor-pointer'}
-              onClick={() => {fullView == true ? setFullView(false) : setFullView(true)}}>
+              onClick={() => { fullView == true ? setFullView(false) : setFullView(true) }}>
               Доставка{' '}
             </p>
             {currentStatus == 'nearest' || currentStatus == 'completed' ? (
-            <Arrow_down  className={`${!fullView ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
-            onClick={() => {
-              fullView == true ? setFullView(false) : setFullView(true);
-            }}/>
+              <Arrow_down className={`${!fullView ? 'rotate-180' : ''} stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer`}
+                onClick={() => {
+                  fullView == true ? setFullView(false) : setFullView(true);
+                }} />
             ) : (
-              <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"
-              onClick={() => {
-                fullView == true ? setFullView(false) : setFullView(true);
-              }}/>
+              <Arrow_right className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"
+                onClick={() => {
+                  fullView == true ? setFullView(false) : setFullView(true);
+                }} />
 
             )}
           </div>
         </div>
         {/* /////////////////////// */}
         <div className="flex w-fit pt-[10px]">
-          <Metro_station  className='bg-[#F8F8F8] fill-[#000000] rounded-full dark:bg-[#323232] dark:fill-[#F8F8F8]' />
-            <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
-              <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
-               {getMetroCorrectName(delivery.location.subway)}
-              </h1>
-              <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
-                {delivery.location.address}
-              </p>
-            </div>
+          <Metro_station className='bg-[#F8F8F8] fill-[#000000] rounded-full dark:bg-[#323232] dark:fill-[#F8F8F8]' />
+          <div className="flex flex-col justify-center items-start pl-2 max-w-[290px]">
+            <h1 className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+              {getMetroCorrectName(delivery.location.subway)}
+            </h1>
+            <p className="font-gerbera-sub1 text-light-gray-5 text-left h-fit max-w-[290px] dark:text-light-gray-3">
+              {delivery.location.address}
+            </p>
           </div>
+        </div>
         {/* /////////////////////// */}
         {currentStatus == 'completed' ? ('') : (
           <div className="flex justify-center items-center mt-[14px] space-x-2">
@@ -180,7 +180,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               </p>
               <p className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
                 {`${deliveryDate.getUTCDate()}
-              ${deliveryDate.toLocaleDateString("RU", {month:"short"})} в
+              ${deliveryDate.toLocaleDateString("RU", { month: "short" })} в
               ${deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours()}:${deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes()}`}
               </p>
             </div>
@@ -197,104 +197,104 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         )
         }
         {currentStatus == 'nearest' || currentStatus == 'completed' ? (
-            fullView && (
-              <div className="w-full h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] box-border flex items-center justify-between px-4 dark:bg-light-gray-6">
+          fullView && (
+            <div className="w-full h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] box-border flex items-center justify-between px-4 dark:bg-light-gray-6">
               <div className="flex">
-              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
-              <Avatar.Image
-                src={delivery.curator.photo}
-                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
-              />
-              <Avatar.Fallback
-                className="text-black dark:text-white"
-              >
-                {delivery.curator.name ? delivery.curator.name[0] : 'A'}
-              </Avatar.Fallback>
-            </Avatar.Root>
-                  <div className="felx flex-col justify-center items-start ml-4">
-                    <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
-                      {delivery.curator.name}
-                    </h1>
-                    <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
-                      Куратор
-                    </p>
-                  </div>
+                <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
+                  <Avatar.Image
+                    src={delivery.curator.photo}
+                    className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+                  />
+                  <Avatar.Fallback
+                    className="text-black dark:text-white"
+                  >
+                    {delivery.curator.name ? delivery.curator.name[0] : 'A'}
+                  </Avatar.Fallback>
+                </Avatar.Root>
+                <div className="felx flex-col justify-center items-start ml-4">
+                  <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
+                    {delivery.curator.name}
+                  </h1>
+                  <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
+                    Куратор
+                  </p>
                 </div>
-              <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-              <Small_sms className="w-[36px] h-[35px]"/>
-                </a>
               </div>
-            ) ) : (
-          <div className="w-full box-border  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
-          <div className="flex">
-          <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
-              <Avatar.Image
-                src={delivery.curator.photo}
-                className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
-              />
-              <Avatar.Fallback
-                className="text-black dark:text-white"
-              >
-                {delivery.curator.name ? delivery.curator.name[0] : 'A'}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            <div className="felx flex-col justify-center items-start ml-4">
-              <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
-                {delivery.curator.name}
-              </h1>
-              <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
-                Куратор
-              </p>
-            </div>
-          </div>
               <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
-              <Small_sms className="w-[36px] h-[35px]"/>
-          </a>
-        </div>
-          )}
+                <Small_sms className="w-[36px] h-[35px]" />
+              </a>
+            </div>
+          )) : (
+          <div className="w-full box-border  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+            <div className="flex">
+              <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
+                <Avatar.Image
+                  src={delivery.curator.photo}
+                  className="h-[32px] w-[32px] object-cover rounded-full cursor-pointer"
+                />
+                <Avatar.Fallback
+                  className="text-black dark:text-white"
+                >
+                  {delivery.curator.name ? delivery.curator.name[0] : 'A'}
+                </Avatar.Fallback>
+              </Avatar.Root>
+              <div className="felx flex-col justify-center items-start ml-4">
+                <h1 className="font-gerbera-h3 text-light-gray-8-text text-start dark:text-light-gray-1">
+                  {delivery.curator.name}
+                </h1>
+                <p className="font-gerbera-sub3 text-light-gray-4 text-start dark:text-light-gray-3">
+                  Куратор
+                </p>
+              </div>
+            </div>
+            <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
+              <Small_sms className="w-[36px] h-[35px]" />
+            </a>
+          </div>
+        )}
 
         {fullView ? (currentStatus == 'nearest' && (!allNotConfirmed || (allNotConfirmed && allNotConfirmed.includes(delivery.id))) ? (
           <div className='mt-[20px] flex w-[328px] justify-between items-center self-center'>
             <button
-                className="btn-M-GreenDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
-                onClick={e => {
-                  e.preventDefault();
-                  setConfirmParticipation(true)
-                }}
-              >
-                Подтвердить
-              </button>
-            <button
-                className="btn-M-WhiteDefault dark:bg-light-gray-6 dark:text-light-gray-white self-center"
-                onClick={e => {
-                  e.preventDefault();
-                  setIsCancelDeliveryModalOpen(true)
-                }}
-              >
-                Отказаться
-              </button>
-            </div>
-             
-            ): currentStatus == 'completed' ? feedbackSubmited ? (
-              <button
-              className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+              className="btn-M-GreenDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
               onClick={e => {
                 e.preventDefault();
+                setConfirmParticipation(true)
               }}
             >
-              Oтзыв отправлен
+              Подтвердить
             </button>
-            ): (
-              <button
-                className="btn-B-GreenDefault  mt-[20px] self-center"
-                onClick={e => {
-                  e.preventDefault();
-                  setIsModalOpen(true);
-                }}
-              >
-                Поделиться впечатлениями
-              </button>
-            ): "")   : ""}
+            <button
+              className="btn-M-WhiteDefault dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+              onClick={e => {
+                e.preventDefault();
+                setIsCancelDeliveryModalOpen(true)
+              }}
+            >
+              Отказаться
+            </button>
+          </div>
+             
+        ) : currentStatus == 'completed' ? feedbackSubmited ? (
+          <button
+            className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
+            onClick={e => {
+              e.preventDefault();
+            }}
+          >
+            Oтзыв отправлен
+          </button>
+        ) : (
+          <button
+            className="btn-B-GreenDefault  mt-[20px] self-center"
+            onClick={e => {
+              e.preventDefault();
+              setIsModalOpen(true);
+            }}
+          >
+            Поделиться впечатлениями
+          </button>
+        ) : "") : ""}
          
       </div>
 
@@ -302,8 +302,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         isOpen={isCancelDeliveryModalOpen}
         onOpenChange={setIsCancelDeliveryModalOpen}
         onConfirm={() => {
-        (cancelFunc&&setCancelDeliverySuccessString && setCancelId && setCancelDeliverySuccess && setCancelDeliveryFail) ? cancelFunc(delivery, token, setCancelDeliverySuccessString, setCancelId, setCancelDeliverySuccess, setCancelDeliveryFail) : () => { };          
-        setIsCancelDeliveryModalOpen(false);
+          (cancelFunc && setCancelDeliverySuccessString && setCancelId && setCancelDeliverySuccess && setCancelDeliveryFail) ? cancelFunc(delivery, token, setCancelDeliverySuccessString, setCancelId, setCancelDeliverySuccess, setCancelDeliveryFail) : () => { };
+          setIsCancelDeliveryModalOpen(false);
         }}
         title={<p>Уверены, что хотите отменить участие в доставке?</p>}
         description=""
@@ -313,7 +313,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
         <CompletedDeliveryOrTaskFeedback
           onOpenChange={setIsModalOpen}
-          onSubmitFidback={() => setIsFeedbackSubmitedModalOpen ? setIsFeedbackSubmitedModalOpen(true) : ()=>{}}
+          onSubmitFidback={() => setIsFeedbackSubmitedModalOpen ? setIsFeedbackSubmitedModalOpen(true) : () => { }}
           volunteer={true}
           delivery={true}
           deliveryOrTaskId={delivery.id}
@@ -321,43 +321,39 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       </Modal>
 
 
-      {(isFeedbackSubmitedModalOpen && setIsFeedbackSubmitedModalOpen) && 
-      <ConfirmModal
-      isOpen={isFeedbackSubmitedModalOpen}
-      onOpenChange={setIsFeedbackSubmitedModalOpen}
-      onConfirm={() => setIsFeedbackSubmitedModalOpen(false)}
-      title={
-        <p>
-          Спасибо, что поделились!
-          <br /> Это важно.
-        </p>
-      }
-      description=""
-      confirmText="Закрыть"
-      isSingleButton={true}
-    />
-      }
+      {(isFeedbackSubmitedModalOpen && setIsFeedbackSubmitedModalOpen) &&
         <ConfirmModal
-          isOpen={confirmParticipation}
-          onOpenChange={setConfirmParticipation}
-          onConfirm={() => {
+          isOpen={isFeedbackSubmitedModalOpen}
+          onOpenChange={setIsFeedbackSubmitedModalOpen}
+          onConfirm={() => setIsFeedbackSubmitedModalOpen(false)}
+          title={
+            <p>
+              Спасибо, что поделились!
+              <br /> Это важно.
+            </p>
+          }
+          description=""
+          confirmText="Закрыть"
+          isSingleButton={true}
+        />
+      }
+      <ConfirmModal
+        isOpen={confirmParticipation}
+        onOpenChange={setConfirmParticipation}
+        onConfirm={() => {
           handleConfirmClick();
           setConfirmParticipation(false);
-          }}
+        }}
         title={<p>Уверены, что хотите подтвердить участие в доставке?</p>}
-          description=""
-          confirmText="Подтвердить"
-          cancelText="Закрыть"
+        description=""
+        confirmText="Подтвердить"
+        cancelText="Закрыть"
       />
       <ConfirmModal
-      isOpen={confirmedSuccess}
-      onOpenChange={setConfirmedSuccess}
-      onConfirm={() => setConfirmedSuccess(false)}
-      title={
-        <p>
-          Спасибо, что подтвердили участие в доставке ${confirmedSuccessString}!
-        </p>
-      }
+        isOpen={confirmedSuccess}
+        onOpenChange={setConfirmedSuccess}
+        onConfirm={() => setConfirmedSuccess(false)}
+        title={<p>Спасибо, что подтвердили участие в доставке {confirmedSuccessString}</p>}
       description=""
       confirmText="Закрыть"
       isSingleButton={true}

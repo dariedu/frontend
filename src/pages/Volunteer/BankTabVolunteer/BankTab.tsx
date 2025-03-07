@@ -62,60 +62,7 @@ const BankTab:React.FC = () => {
     getPromoListNotConfirmed (token, setAllPromoNotConfirmed)
 }, [])
   
-  
-  // async function reqAllPromotions() {
-  //   try {
-  //     if (token) {
-  //       const allPromotinsArr = await getAllPromotions(token);
-  //       if (allPromotinsArr) {
-  //         allPromotinsArr.map(i => {
-  //           if (i.picture && !(i.picture?.includes('https'))) {
-  //            return i.picture = i.picture.replace('http', 'https')
-  //           }
-  //         })
-  //         const filtered = allPromotinsArr.filter(i => { return i.available_quantity !== 0 }).sort((a, b) => {return +new Date(a.start_date) - +new Date(b.start_date)})
-  //       setPromotionsAll(filtered);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error(err, 'reqAllPromotions has failed, BankTab');
-  //   } 
-  // }
 
-//   async function reqMyPromotions() {
-//     let myPromotinsArr: IPromotion[] = [];
-//     try {
-//       if (token) {
-//         myPromotinsArr = await getMyPromotions(token);
-//         if (myPromotinsArr) {
-//           let filtered = myPromotinsArr.filter(prom => { if (prom.is_active) return prom }).sort((a, b) => { return +new Date(a.start_date) - +new Date(b.start_date) });
-//           filtered.map(i => {
-//             if (i.picture && !(i.picture?.includes('https'))) {
-//               return i.picture = i.picture.replace('http', 'https')
-//               };
-//             })
-//       setPromotionsMy(filtered)
-//         }
-//      }
-//    } catch (err) {
-//      console.error(err, 'reqMyPromotions has failed, BankTab');
-//    } 
-//  }
-
-//   async function requestPromotionsCategories() {
-//     let categories: TPromotionCategory[] = [];
-//     try {
-//       if (token) {
-//        categories = await getPromotionsCategories(token); 
-//      }
-//    } catch (err) {
-//      console.error(err, 'requestPromotionsCategories has failed, BankTab');
-//    } finally {
-//      if (categories.length > 0) {
-//       setPpromotionCategory(categories);
-//      }
-//    }
-//  }
   /////запрашиваем категории промоушенов один раз при загрузке страницы
   useEffect(() => {
     requestPromotionsCategories(token, setPpromotionCategory) 
@@ -127,80 +74,7 @@ const BankTab:React.FC = () => {
     reqMyPromotions(token, setPromotionsMy)
   }, [cancelPromotionSuccessName, redeemPromotionSuccessName]); 
 
-/////сортируем промоушены, когда получили их с сервера
-  // useEffect(() => {
-  //   sortPromotions()
-  // }, [promotionsAll, promotionsMy]); 
 
-  // function sortPromotions() {
-  //   let allAvaliableButWithoutBookedPromotions: IPromotion[] = [];
-  //   if (promotionsAll.length > 0) {
-  //     if (promotionsMy.length > 0) {
-  //        let arr:number[] = [];
-  //     promotionsMy.forEach(i => { arr.push(i.id) })
-  //       allAvaliableButWithoutBookedPromotions = promotionsAll.filter(
-  //         (prom) => {
-  //           if (!arr.includes(prom.id)) { return prom }
-  //         });
-  //       setSortedPromotions(allAvaliableButWithoutBookedPromotions)
-  //     } else {
-  //       setSortedPromotions(promotionsAll)
-  //     }
-  //   }
-  // } 
-
-  // async function redeemPromotion(promotion: IPromotion) {
-  //  const chosenId = promotion.id;
-  //  try {
-  //    if (token) {
-  //      const response = await postPromotionRedeem(chosenId, promotion, token);
-  //      if (response) {
-  //       setRedeemPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
-  //        setRedeemPromotionSuccess(true);
-  //        if (userValue && userValue.currentUser) {
-  //           userValue.currentUser.point = userValue.currentUser.point-promotion.price
-  //        }
-  //     }
-  //    }
-  //  } catch (err) {
-  //    if (err == "Error: Недостаточно баллов для приобретения"){
-  //      setRedeemPromotionErr("Недостаточно баллов для приобретения")
-  //      setError(true)
-  //      setRedeemPromotionSuccess(false);
-  //    } else if (err == "Error: Вы уже приобрели этот поощрение") { 
-  //      setRedeemPromotionErr("Вы уже приобрели это поощрение")
-  //      setError(true)
-  //      setRedeemPromotionSuccess(false);
-  //    } else {
-  //      setRedeemPromotionErr("Что-то пошло не так, попробуйте позже")
-  //      setError(true)
-  //      setRedeemPromotionSuccess(false);
-  //    }
-  //  } 
-  // }
-
-
-  // async function cancelPromotion(promotion: IPromotion) {
-  //   const chosenId = promotion.id;
-  //   try {
-  //     if (token) {
-  //       const response = await postPromotionCancel(chosenId, token);
-  //       if (response) {
-  //       setCancelPromotionSuccess(true)
-  //         setCancelPromotionSuccessName(promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1))
-  //         if (userValue && userValue.currentUser && userValue.currentUser.point >=0) {
-  //           userValue.currentUser.point +=promotion.price
-  //        }
-  //     }
-  //     }
-  //   } catch (err) {
-  //     setCancelPromotionErr("Что-то пошло не так, попробуйте позже")
-  //     setCancelError(true)
-  //     setCancelPromotionSuccess(false)
-  //   } 
-  // }
-
-  
   return (
     <>
       <div className="mt-1 mb-4 flex flex-col pb-4 overflow-y-auto overflow-x-hidden h-fit w-full max-w-[500px]">
