@@ -29,7 +29,7 @@ interface INearestDeliveryProps {
   setCancelId?: React.Dispatch<React.SetStateAction<number | undefined>>
   setCancelDeliverySuccess?: React.Dispatch<React.SetStateAction<boolean>>
   setCancelDeliveryFail?: React.Dispatch<React.SetStateAction<boolean>>
-  allNotConfirmed?:number[]
+  allNotConfirmed?:number[]|null
 }
 
 
@@ -265,7 +265,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         </div>
           )}
 
-        {fullView ? (currentStatus == 'nearest' && allNotConfirmed && allNotConfirmed.includes(delivery.id) ? (
+        {fullView ? (currentStatus == 'nearest' && ( !allNotConfirmed  || ( allNotConfirmed && allNotConfirmed.includes(delivery.id)) ) ? (
               <button
                 className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {

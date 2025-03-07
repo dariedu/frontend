@@ -25,7 +25,7 @@ interface INearestTaskProps {
   setCancelTaskSuccessString: React.Dispatch<React.SetStateAction<string>>
   setCancelTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>
   setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>>
-  allTasksNotConfirmed:number[]
+  allTasksNotConfirmed:number[]|null
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -213,7 +213,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
           )
         }
 
-        {fullView ? (taskFilter == 'nearest' && allTasksNotConfirmed.includes(task.id) ? (
+        {fullView ? (taskFilter == 'nearest' && ( !allTasksNotConfirmed || allTasksNotConfirmed.includes(task.id)) ? (
               <button
                 className="btn-B-GrayDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {

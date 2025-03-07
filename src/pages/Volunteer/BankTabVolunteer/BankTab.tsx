@@ -36,7 +36,7 @@ const BankTab:React.FC = () => {
   const [cancelPromotionErr, setCancelPromotionErr] = useState<string>('')
   const [cancelError, setCancelError] = useState<boolean>(false);
  
-  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState <number[]>([])
+  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState<number[]|null>(null)
 
   //// функция вызывается при нажатии на фильтр
   function handleCategoryChoice(obj: TPromotionCategory) {

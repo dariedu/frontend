@@ -25,7 +25,7 @@ interface IDefaultInfoProps {
   setCancelPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>
   setCancelPromotionErr: React.Dispatch<React.SetStateAction<string>>
   setCancelError: React.Dispatch<React.SetStateAction<boolean>>
-  allPromoNotConfirmed: number[]
+  allPromoNotConfirmed: number[]|null
 }
 
  
@@ -212,7 +212,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           Забронировать
         </button>
       </div>
-      ) : allPromoNotConfirmed.includes(promotion.id) && (
+      ) : (!allPromoNotConfirmed || allPromoNotConfirmed.includes(promotion.id)) && (
        <div className="w-full flex justify-center items-center mt-[14px] self-center">
        <button
          onClick={() => {

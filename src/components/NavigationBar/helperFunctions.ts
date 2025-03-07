@@ -10,7 +10,7 @@ import {getPromotionNotConfirmed,  getMyPromotions, IPromotion, TPromoNotConfirm
 // сортируем их на сегодня и завтра для уведомлений по подтверждению или отказу от доставки
 async function getMyDeliveries(
   token: string,
-  allNotConfirmed: number[], 
+  allNotConfirmed: number[]|null, 
   setAllNotConfirmedToday: React.Dispatch<React.SetStateAction<IDelivery[]>>,
   setAllNotConfirmedTomorrow:React.Dispatch<React.SetStateAction<IDelivery[]>>,
 ) {
@@ -33,8 +33,11 @@ async function getMyDeliveries(
         console.log(todayMoscow , "todayMoscow")
 
          result['мои активные доставки'].forEach(i => { current.push(i) });
-         const filtered = current.filter(del => {
-         return allNotConfirmed.includes(del.id)
+        const filtered = current.filter(del => {
+          if (allNotConfirmed) {
+               return allNotConfirmed.includes(del.id)
+           }
+       
          })
            
          const filteredToday = filtered.filter(del => {
@@ -77,7 +80,7 @@ async function getMyDeliveries(
 }
 
 
-async function getListNotConfirmed(token: string|null, setAllNotConfirmed: React.Dispatch<React.SetStateAction<number[]>>) {
+async function getListNotConfirmed(token: string|null, setAllNotConfirmed: React.Dispatch<React.SetStateAction<number[]|null>>) {
   const arr: number[] = [];
   try {
     if (token) {
@@ -94,7 +97,7 @@ async function getListNotConfirmed(token: string|null, setAllNotConfirmed: React
 
 ///////////////
 // 
-async function getTasksListNotConfirmed(token: string|null, setAllTasksNotConfirmed: React.Dispatch<React.SetStateAction<number[]>>) {
+async function getTasksListNotConfirmed(token: string|null, setAllTasksNotConfirmed: React.Dispatch<React.SetStateAction<number[]|null>>) {
   const arr: number[] = [];
   try {
     if (token) {
@@ -112,7 +115,7 @@ async function getTasksListNotConfirmed(token: string|null, setAllTasksNotConfir
 
 
 async function getAllMyTasks(token: string|null,
-  allTasksNotConfirmed: number[], 
+  allTasksNotConfirmed: number[]|null, 
   setAllTasksNotConfirmedToday: React.Dispatch<React.SetStateAction<ITask[]>>,
   setAllTasksNotConfirmedTomorrow:React.Dispatch<React.SetStateAction<ITask[]>>,
 ) {
@@ -133,7 +136,9 @@ async function getAllMyTasks(token: string|null,
         const todayMoscow = new Date(Date.parse(todayGrinvich.toUTCString()) + 180 * 60000);
 
         const filtered = result.filter(task => {
-          return allTasksNotConfirmed.includes(task.id)
+          if (allTasksNotConfirmed) {
+            return allTasksNotConfirmed.includes(task.id)
+          }
         })
         
         const tasksFilteredToday = filtered.filter(task => {
@@ -190,7 +195,7 @@ async function getAllMyTasks(token: string|null,
 }
 
 
-async function getPromoListNotConfirmed(token: string|null, setAllPromoNotConfirmed: React.Dispatch<React.SetStateAction<number[]>>) {
+async function getPromoListNotConfirmed(token: string|null, setAllPromoNotConfirmed: React.Dispatch<React.SetStateAction<number[]|null>>) {
   const arr: number[] = [];
   try {
     if (token) {
@@ -207,7 +212,7 @@ async function getPromoListNotConfirmed(token: string|null, setAllPromoNotConfir
 }
 
 async function getAllMyPromo(token: string,
-  allPromoNotConfirmed: number[],
+  allPromoNotConfirmed: number[]|null,
   setAllPromoNotConfirmedToday:React.Dispatch<React.SetStateAction<IPromotion[]>>,
   setAllPromoNotConfirmedTomorrow:React.Dispatch<React.SetStateAction<IPromotion[]>>
 ) {
@@ -228,7 +233,9 @@ async function getAllMyPromo(token: string,
         const todayMoscow = new Date(Date.parse(todayGrinvich.toUTCString()) + 180 * 60000);
        
         const filtered = result.filter(promo => {
-          return allPromoNotConfirmed.includes(promo.id)
+          if (allPromoNotConfirmed) {
+            return allPromoNotConfirmed.includes(promo.id)
+          }
           })
 
         const promoFilteredToday = filtered.filter(promo => {  

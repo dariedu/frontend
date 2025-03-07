@@ -37,8 +37,8 @@ const CalendarTabVolunteer = () => {
   const [cancelTaskReasonOpenModal, setCancelTaskReasonOpenModal] = useState(false);  /// модальное окно для отправки отзыва
   const [cancelTaskId, setCancelTaskId] = useState<number>();
   const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] = useState(false);
-  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]>([]);
-  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]>([]);
+  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]|null>(null);
+  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]|null>(null);
 
   ///// используем контекст токена
   const { token } = useContext(TokenContext);

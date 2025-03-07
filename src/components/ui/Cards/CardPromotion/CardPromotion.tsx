@@ -39,7 +39,7 @@ interface IPromotionProps {
   setCancelPromotionSuccessName: React.Dispatch<React.SetStateAction<string>>;
   setCancelPromotionErr: React.Dispatch<React.SetStateAction<string>>;
   setCancelError: React.Dispatch<React.SetStateAction<boolean>>;
-  allPromoNotConfirmed: number[];
+  allPromoNotConfirmed: number[]|null;
 }
 
 const CardPromotion: React.FC<IPromotionProps> = ({

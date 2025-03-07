@@ -30,17 +30,17 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   const [haveNotifications, setHaveNotifications] = useState(false);
 
 
-  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]>([]) /// список не подтвержденных доставок
+  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]|null>(null) /// список не подтвержденных доставок
   const [allNotConfirmedToday, setAllNotConfirmedToday] = useState<IDelivery[]>([]) /// список не подтвержденных доставок сегодня
   const [allNotConfirmedTomorrow, setAllNotConfirmedTomorrow] = useState<IDelivery[]>([]) /// список не подтвержденных доставок завтра
 
 
-  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]>([]) /// список не подтвержденных tasks
+  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]|null>(null) /// список не подтвержденных tasks
   const [allTasksNotConfirmedToday, setAllTasksNotConfirmedToday] = useState<ITask[]>([]) /// список не подтвержденных tasks сегодня
   const [allTasksNotConfirmedTomorrow, setAllTasksNotConfirmedTomorrow] = useState<ITask[]>([]) /// список не подтвержденных tasks завтра
   const [openNotifications, setOpenNotifications] = useState(false);
 
-  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState<number[]>([]) /// список не подтвержденных tasks
+  const [allPromoNotConfirmed, setAllPromoNotConfirmed] = useState<number[]|null>(null) /// список не подтвержденных tasks
   const [allPromoNotConfirmedToday, setAllPromoNotConfirmedToday] = useState<IPromotion[]>([]) /// список не подтвержденных tasks сегодня
   const [allPromoNotConfirmedTomorrow, setAllPromoNotConfirmedTomorrow] = useState<IPromotion[]>([]) /// список не подтвержденных tasks завтра
 
