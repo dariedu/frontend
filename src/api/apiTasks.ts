@@ -67,15 +67,14 @@ export const postTaskAccept = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/accept/`,
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/accept/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
       },
-    );
+    });
     return response.data;
   } catch (err: any) {
      throw new Error(err.response.data.error)
@@ -88,15 +87,15 @@ export const postTaskComplete = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/complete/`,
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
-      },
-    );
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/complete/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
     return response.data;
   } catch (err: any) {
     console.error('Post request postTaskComplete has failed', err);
@@ -110,15 +109,15 @@ export const postTaskRefuse = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/refuse/`,
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/refuse/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
       },
-    );
+    });
     return response.data;
   } catch (err: any) {
     console.error('Post request postTaskRefuse has failed', err);
@@ -132,15 +131,15 @@ export const postTaskConfirm = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/confirm/`,
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
-      },
-    );
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/confirm/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
     return response.data;
   } catch (err: any) {
     console.error('Post request postTaskRefuse has failed', err);
