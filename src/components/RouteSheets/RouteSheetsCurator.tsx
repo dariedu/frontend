@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
-import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
+import { type TVolunteerForDeliveryAssignments , type TCuratorDelivery } from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
@@ -10,6 +10,8 @@ import {
   type TServerResponsePhotoReport,
 } from '../../api/apiPhotoReports';
 import RouteSheet from './CuratorRSCreator';
+import { requestDeliveryActivate, requestDeliveryComplete, requestRouteSheetsAssignments} from '../NearestDeliveryCurator/helperFunctions'
+
 
 
 interface RouteSheetsProps {
@@ -21,10 +23,12 @@ interface RouteSheetsProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
   deliveryId: number
   assignedRouteSheets: IRouteSheetAssignments[]
-  changeAssignedRouteSheets: () => {}
-  completeDeliveryFunc: (deliveryId: number) => Promise<void>
-  activateDeliveryFunc: (deliveryId: number) => Promise<void>
-  setCurrentStatus:React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
+  setActivateDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setCompleteDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
+  setCurrentStatus: React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
+  curatorDelivery: TCuratorDelivery
+  setAssignedRouteSheets: React.Dispatch<React.SetStateAction<IRouteSheetAssignments[]>>
+  setAssignedRouteSheetsSuccess: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
@@ -36,10 +40,12 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   listOfVolunteers,
   deliveryId,
   assignedRouteSheets,
-  changeAssignedRouteSheets,
-  completeDeliveryFunc,
-  activateDeliveryFunc,
-  setCurrentStatus
+  setActivateDeliverySuccess,
+  setCompleteDeliverySuccess,
+  setCurrentStatus,
+  curatorDelivery,
+  setAssignedRouteSheets,
+  setAssignedRouteSheetsSuccess
 }) => {
 
 
@@ -115,7 +121,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       try {
         let result = await assignRouteSheet(token, object)
         if (result == true) {
-          changeAssignedRouteSheets()
+         requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setAssignedRouteSheetsSuccess);
           setAssignVolunteerSuccess(true)
         }
       } catch (err) {
@@ -196,7 +202,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       <ConfirmModal
         isOpen={askCuratorCompleteDelivery}
         onOpenChange={setAskCuratorCompleteDelivery}
-        onConfirm={() => { completeDeliveryFunc(deliveryId); setAskCuratorCompleteDelivery(false);  setCurrentStatus('completed')} }
+        onConfirm={() => {
+          requestDeliveryComplete(
+            token,  deliveryId, setCurrentStatus, setCompleteDeliverySuccess
+        ); setAskCuratorCompleteDelivery(false);  setCurrentStatus('completed')} }
         onCancel={() => setAskCuratorCompleteDelivery(false)}
         title="Вы уверены, что хотите завершить доставку?"
         cancelText='Закрыть'
@@ -207,7 +216,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       <ConfirmModal
         isOpen={askCuratorActivateDelivery}
         onOpenChange={setAskCuratorActivateDelivery}
-        onConfirm={() => { activateDeliveryFunc(deliveryId); setAskCuratorActivateDelivery(false);  setCurrentStatus('active') } }
+        onConfirm={() => {
+          requestDeliveryActivate(token, deliveryId, setCurrentStatus, setActivateDeliverySuccess);
+          setAskCuratorActivateDelivery(false); setCurrentStatus('active')
+        }}
         onCancel={() => setAskCuratorActivateDelivery(false)}
         title="Вы уверены, что хотите активировать эту доставку?"
         cancelText='Закрыть'

@@ -207,7 +207,6 @@ export const postDeliveryTake = async (
 export const postDeliveryComplete = async (
   access: string,
   deliveryId: number,
-  delivery:IDelivery
 ): Promise<IDelivery> => {
   try {
     const response: AxiosResponse<IDelivery> = await axios({
@@ -217,8 +216,7 @@ export const postDeliveryComplete = async (
         Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
-      },
-      data: delivery,
+      }
     });
     return response.data;
   } catch (err: any) {

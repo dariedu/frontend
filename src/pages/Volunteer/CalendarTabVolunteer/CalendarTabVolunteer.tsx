@@ -1,5 +1,5 @@
 import {useState, useContext, useEffect} from 'react'
-import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
+import NearestDeliveryVolunteer from "../../../components/NearestDeliveryVolunteer/NearestDeliveryVolunteer";
 import { type IDelivery } from '../../../api/apiDeliveries';
 import { TokenContext } from '../../../core/TokenContext';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';

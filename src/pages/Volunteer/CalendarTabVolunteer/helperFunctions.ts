@@ -1,6 +1,6 @@
 
 import { ITask, getMyTasksNoFilter, postTaskRefuse} from "../../../api/apiTasks";
-import { IDelivery, IVolunteerDeliveries, getVolunteerDeliveries, postDeliveryCancel } from "../../../api/apiDeliveries";
+import { IDelivery, IVolunteerDeliveries, getVolunteerDeliveries, postDeliveryCancel, postDeliveryConfirm } from "../../../api/apiDeliveries";
 import { TMyFeedback, getMyFeedbacks } from "../../../api/feedbackApi";
 import { IUser } from "../../../core/types";
 import { getMonthCorrectEndingName, getMetroCorrectName } from '../../../components/helperFunctions/helperFunctions';
@@ -116,6 +116,34 @@ try {
   console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
 }
 }
+
+
+//   ////функция чтобы волонтер подтвердил взятую доставку
+async function confirmDelivery(delivery:IDelivery, token:string|null, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>) {
+  try {
+     if (token) {
+       let result: IDelivery = await postDeliveryConfirm(token, delivery.id);
+       if (result) {
+       const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
+       const date = deliveryDate.getUTCDate();
+       const month = getMonthCorrectEndingName(deliveryDate);
+       const hours = deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours();
+       const minutes = deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes();    
+       const subway = getMetroCorrectName(delivery.location.subway)
+       const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
+       setConfirmedSuccessString(finalString);  
+       setConfirmedSuccess(true)
+       }
+    }
+  } catch (err) {
+    setConfirmFailed(true);
+    setConfirmFailedString("Упс, что-то пошло не так, попробуйте позже.")
+    console.log(err, "NearestDeliveryVolunteer confirmDelivery has failed")
+
+  }
+    }
+  
+
   
 ////функция чтобы волонтер отменил взятое доброе дело
 async function cancelTakenTask(task: ITask, token: string | null, setCancelTaskId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelTaskSuccessString: React.Dispatch<React.SetStateAction<string>>, setCancelTaskSuccess: React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>> ) {
@@ -139,6 +167,8 @@ try {
   setCancelDeliveryFail(true)
   console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
 }
-  }
+}
+  
 
-export {getMyDeliveries, getAllMyFeedbacks, getAllMyTasks, cancelTakenDelivery, cancelTakenTask}
+
+export {getMyDeliveries, getAllMyFeedbacks, getAllMyTasks, cancelTakenDelivery, cancelTakenTask, confirmDelivery}

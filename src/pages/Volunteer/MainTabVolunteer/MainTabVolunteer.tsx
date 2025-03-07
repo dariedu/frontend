@@ -15,7 +15,7 @@ import {
   getMonthCorrectEndingName,
 } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
-import NearestDeliveryVolunteer from '../../../components/NearestDelivery/NearestDeliveryVolunteer';
+import NearestDeliveryVolunteer from '../../../components/NearestDeliveryVolunteer/NearestDeliveryVolunteer';
 import {
   getAllAvaliableTasks,
   postTaskAccept,

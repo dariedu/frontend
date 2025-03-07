@@ -10,12 +10,14 @@ import Arrow_right from './../../assets/icons/arrow_right.svg?react'
 import Metro_station from './../../assets/icons/metro_station.svg?react'
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import { TokenContext } from '../../core/TokenContext';
-import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+import {  type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { UserContext } from '../../core/UserContext';
-import { getRouteSheetById, type IRouteSheet } from '../../api/routeSheetApi';
+import { type IRouteSheet } from '../../api/routeSheetApi';
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
 import RouteSheetsVolunteer from '../RouteSheets/RouteSheetsVolunteer';
 import * as Avatar from '@radix-ui/react-avatar';
+import { confirmDelivery } from '../../pages/Volunteer/CalendarTabVolunteer/helperFunctions';
+import { requestEachMyRouteSheet, requestRouteSheetsAssignments } from './helperFunctions';
 
 
 interface INearestDeliveryProps {
@@ -58,6 +60,12 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   const [myRouteSheet, setMyRouteSheet] = useState<IRouteSheetAssignments[]>(); /// записываем результат функции requestRouteSheetsAssignments()
   const [routeSheets, setRouteSheets]= useState<IRouteSheet[]>()
   //const lessThenTwoHours = (deliveryDate.valueOf() - currentDate.valueOf()) / 60000 <= 120
+  const [confirmParticipation, setConfirmParticipation] = useState(false);
+  const [confirmedSuccess, setConfirmedSuccess] = useState(false);
+  const [confirmedSuccessString, setConfirmedSuccessString] = useState("");
+  const [confirmFailed, setConfirmFailed] = useState(false);
+  const [confirmFailedString, setConfirmFailedString] = useState("");
+  // const [notifDay, setNotifDay] = useState<'today' | "tomorrow" | null>(null);
 
    ///// используем контекст токена
   const { token } = useContext(TokenContext);
@@ -73,47 +81,27 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   }
   ///////////////////////////////////
 
-    ////запрашиваем все записанные на волонтеров маршрутные листы
-    async function requestRouteSheetsAssignments() {
-      if (token) {
-        try {
-          const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
-          if (response) {
-            let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id && delivery.in_execution == true);
-            if (filtered) {
-              setMyRouteSheet(filtered)
-           }
-          }
-        } catch (err) {
-          console.log(err)
-        }
-      }
-  }
-  
   useEffect(() => {
-    requestRouteSheetsAssignments()
+    requestRouteSheetsAssignments(token, currentUser, delivery, setMyRouteSheet)
   },[])
 
-     //// 4. запрашиваем все маршрутные листы по отдельности
-  function requestEachMyRouteSheet() {
-  let routesArr: IRouteSheet[] = [];
-    if (token && myRouteSheet) {
-      Promise.allSettled(myRouteSheet.map(routeS => getRouteSheetById(token, routeS.route_sheet)))
-        .then(responses => responses.forEach((result, num) => {
-          if (result.status == "fulfilled") {
-            routesArr.push(result.value)
-          }
-          if (result.status == "rejected") {
-            console.log(`${num} routeSheet was not fetched`)
-          }
-        })).finally(() => { setRouteSheets(routesArr)}
-        )
-   }
- }
 
   useEffect(() => {
-    requestEachMyRouteSheet()
-}, [myRouteSheet])
+    requestEachMyRouteSheet(token, myRouteSheet, setRouteSheets)
+  }, [myRouteSheet])
+  
+
+ 
+  function handleConfirmClick() {
+    confirmDelivery(
+      delivery,
+      token,
+      setConfirmedSuccess,
+      setConfirmedSuccessString,
+      setConfirmFailed,
+      setConfirmFailedString,
+    );
+  }
 
   return (
     <div key={delivery.id}>
@@ -265,9 +253,19 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         </div>
           )}
 
-        {fullView ? (currentStatus == 'nearest' && ( !allNotConfirmed  || ( allNotConfirmed && allNotConfirmed.includes(delivery.id)) ) ? (
-              <button
-                className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+        {fullView ? (currentStatus == 'nearest' && (!allNotConfirmed || (allNotConfirmed && allNotConfirmed.includes(delivery.id))) ? (
+          <div className='mt-[20px] flex w-[328px] justify-between items-center self-center'>
+            <button
+                className="btn-M-GreenDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+                onClick={e => {
+                  e.preventDefault();
+                  setConfirmParticipation(true)
+                }}
+              >
+                Подтвердить
+              </button>
+            <button
+                className="btn-M-WhiteDefault dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {
                   e.preventDefault();
                   setIsCancelDeliveryModalOpen(true)
@@ -275,6 +273,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               >
                 Отказаться
               </button>
+            </div>
+             
             ): currentStatus == 'completed' ? feedbackSubmited ? (
               <button
               className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
@@ -321,7 +321,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       </Modal>
 
 
-      {(isFeedbackSubmitedModalOpen && setIsFeedbackSubmitedModalOpen) ? (
+      {(isFeedbackSubmitedModalOpen && setIsFeedbackSubmitedModalOpen) && 
       <ConfirmModal
       isOpen={isFeedbackSubmitedModalOpen}
       onOpenChange={setIsFeedbackSubmitedModalOpen}
@@ -336,8 +336,41 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       confirmText="Закрыть"
       isSingleButton={true}
     />
-      ) : ""}
-      
+      }
+        <ConfirmModal
+          isOpen={confirmParticipation}
+          onOpenChange={setConfirmParticipation}
+          onConfirm={() => {
+          handleConfirmClick();
+          setConfirmParticipation(false);
+          }}
+        title={<p>Уверены, что хотите подтвердить участие в доставке?</p>}
+          description=""
+          confirmText="Подтвердить"
+          cancelText="Закрыть"
+      />
+      <ConfirmModal
+      isOpen={confirmedSuccess}
+      onOpenChange={setConfirmedSuccess}
+      onConfirm={() => setConfirmedSuccess(false)}
+      title={
+        <p>
+          Спасибо, что подтвердили участие в доставке ${confirmedSuccessString}!
+        </p>
+      }
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+      />
+       <ConfirmModal
+      isOpen={confirmFailed}
+      onOpenChange={setConfirmFailed}
+      onConfirm={() => setConfirmFailed(false)}
+      title={confirmFailedString}
+      description=""
+      confirmText="Закрыть"
+      isSingleButton={true}
+    />
     </div>
     
   );

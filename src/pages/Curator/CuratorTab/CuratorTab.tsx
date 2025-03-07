@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries } from '../../../api/apiDeliveries';
-import NearestDeliveryCurator from '../../../components/NearestDelivery/NearestDeliveryCurator';
+import NearestDeliveryCurator from '../../../components/NearestDeliveryCurator/NearestDeliveryCurator';
 import { TokenContext } from '../../../core/TokenContext';
 import { getTasksCurator, type ITask } from '../../../api/apiTasks';
 import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurator';
