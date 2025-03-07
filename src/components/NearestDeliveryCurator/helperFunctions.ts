@@ -4,6 +4,8 @@ import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api
 import {TDeliveryFilter} from './NearestDeliveryCurator'
 
 
+
+
   function filterVolList(arrayListOfConfirmedVol:TDeliveryListConfirmedForCurator[]|null, curatorDelivery:TCuratorDelivery,  setListOfConfirmedVol:React.Dispatch<React.SetStateAction<number[]|null>>) {
     if (arrayListOfConfirmedVol && arrayListOfConfirmedVol.length > 0) {
       console.log(arrayListOfConfirmedVol, "arrayListOfConfirmedVol nearestDeliveryCurator")

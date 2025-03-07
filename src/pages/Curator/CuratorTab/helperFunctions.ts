@@ -1,7 +1,22 @@
 import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries, getDeliveryListConfirmedForCurator, type TDeliveryListConfirmedForCurator  } from '../../../api/apiDeliveries';
-import { getTasksCurator, ITask } from '../../../api/apiTasks';
+import { getTasksCurator, type ITask, getTaskListConfirmedForCurator, type TTasksConfirmedForCurator } from '../../../api/apiTasks';
 
+
+
+  ////активация доставки куратором
+  async function requestTaskConfirmedList(token:string|null, setArrayListOfConfirmedVolTask:React.Dispatch<React.SetStateAction<TTasksConfirmedForCurator[]|null>>) {
+    if (token) {
+      try {
+        const result: TTasksConfirmedForCurator[] = await getTaskListConfirmedForCurator(token);
+        if (result) {
+          setArrayListOfConfirmedVolTask(result)
+        }
+      } catch (err) {
+        console.log("requestTaskConfirmedList CuratorTab has failed")
+     }
+   } 
+  }
 
    ////активация доставки куратором
    async function requestDeliveryConfirmedList(token:string|null, setArrayListOfConfirmedVol:React.Dispatch<React.SetStateAction<TDeliveryListConfirmedForCurator[]|null>>) {
@@ -90,4 +105,4 @@ async function getMyCuratorDeliveries(token:string|null, setCuratorActiveDeliver
 }
 }
 
-export {getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks, requestDeliveryConfirmedList}
+export {getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks, requestDeliveryConfirmedList, requestTaskConfirmedList}

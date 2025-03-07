@@ -142,8 +142,8 @@ export const postTaskConfirm = async (
     });
     return response.data;
   } catch (err: any) {
-    console.error('Post request postTaskRefuse has failed', err);
-    throw new Error('Post request postTaskRefuse has failed');
+    console.error('Post request postTaskConfirm has failed', err);
+    throw new Error('Post request postTaskConfirm has failed');
   }
 };
 
@@ -170,11 +170,38 @@ export const getTaskListNotConfirmed = async (
     );
     return response.data;
   } catch (err: any) {
-    console.error('Get request pgetTaskListNotConfirmed has failed', err);
+    console.error('Get request getTaskListNotConfirmed has failed', err);
     throw new Error('Get request getTaskListNotConfirmed has failed');
   }
 };
 
+type TTasksConfirmedForCurator = {
+  id: number
+  task: number
+  volunteer: number[]
+  confirmed: boolean
+}
+
+// получить список всех тасков которые еще не были подтверждены
+export const getTaskListConfirmedForCurator = async (
+  access: string,
+): Promise<TTasksConfirmedForCurator[]> => {
+  try {
+    const response: AxiosResponse<TTasksConfirmedForCurator[]> = await axios.get(
+      `${tasksUrl}list_confirmed_tasks/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          accept: 'application/json',
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getTaskListConfirmedForCurator has failed', err);
+    throw new Error('Get request getTaskListConfirmedForCurator has failed');
+  }
+};
 
 // Получить список заданий куратора
 export const getTasksCurator = async (
@@ -265,4 +292,4 @@ export const getMyTasksNoFilter = async (
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { ITask, TTaskCategory, TTasksNotConfirmed };
+export type { ITask, TTaskCategory, TTasksNotConfirmed, TTasksConfirmedForCurator };

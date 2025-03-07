@@ -7,12 +7,14 @@ import { IUser } from '../../core/types';
 
 interface ListOfVolunteersProps {
   listOfVolunteers: IUser[]
-  onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  listOfConfirmedVolTask: number[] | null
 }
 
 const ListOfVolunteersTasks: React.FC<ListOfVolunteersProps> = ({
   listOfVolunteers,
   onOpenChange,
+  listOfConfirmedVolTask
 }) => {
 
 
@@ -24,7 +26,9 @@ const ListOfVolunteersTasks: React.FC<ListOfVolunteersProps> = ({
         listOfVolunteers.map((volunteer, index) => (
           <div
           key={index}
-          className={"flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" }
+            className={listOfConfirmedVolTask && listOfConfirmedVolTask.length > 0  && listOfConfirmedVolTask.includes(volunteer.id) ?
+              "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"
+              : "flex items-center justify-between space-x-4 p-4 bg-light-gray-2 dark:bg-light-gray-5 rounded-[16px] shadow cursor-pointer w-full" }
          >
           <div className='flex w-fit items-center'>
             <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">

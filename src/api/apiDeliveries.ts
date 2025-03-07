@@ -147,8 +147,8 @@ export const postDeliveryConfirm = async (
     });
     return response.data;
   } catch (err: any) {
-    console.error('Post request postDeliveryCancel has failed', err);
-    throw new Error('Post request postDeliveryCancel has failed');
+    console.error('Post request postDeliveryConfirm has failed', err);
+    throw new Error('Post request postDeliveryConfirm  has failed');
   }
 };
 
@@ -204,8 +204,8 @@ export const getDeliveryListConfirmedForCurator = async (
     });
     return response.data;
   } catch (err: any) {
-    console.error('Get request getDeliveryListNotConfirmed has failed', err);
-    throw new Error('Get request getDeliveryListNotConfirmed has failed');
+    console.error('Get request getDeliveryListConfirmedForCurator has failed', err);
+    throw new Error('Get request getDeliveryListConfirmedForCurator has failed');
   }
 };
 

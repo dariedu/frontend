@@ -2,12 +2,12 @@ import React, { useState, useContext, useEffect } from 'react';
 import {  TCuratorDelivery, type TDeliveryListConfirmedForCurator  } from '../../../api/apiDeliveries';
 import NearestDeliveryCurator from '../../../components/NearestDeliveryCurator/NearestDeliveryCurator';
 import { TokenContext } from '../../../core/TokenContext';
-import { type ITask } from '../../../api/apiTasks';
+import { type TTasksConfirmedForCurator, type ITask } from '../../../api/apiTasks';
 import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurator';
 
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
-import {requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks } from './helperFunctions';
+import {requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks,requestTaskConfirmedList} from './helperFunctions';
 
 
 const CuratorTab: React.FC = () => {
@@ -18,7 +18,9 @@ const CuratorTab: React.FC = () => {
    const [curtorTasks, setCurtorTasks] = useState<ITask[]>(localStorage.getItem(`curator_tasks_for_curator_tab`) !== null && localStorage.getItem(`curator_tasks_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_tasks_for_curator_tab`) as string) : []);  
    const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
    const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
-   const [arrayListOfConfirmedVol, setArrayListOfConfirmedVol] = useState<TDeliveryListConfirmedForCurator[]|null>(null)
+  const [arrayListOfConfirmedVol, setArrayListOfConfirmedVol] = useState<TDeliveryListConfirmedForCurator[] | null>(null);
+  const [arrayListOfConfirmedVolTask, setArrayListOfConfirmedVolTask] = useState<TTasksConfirmedForCurator[] | null>(null)
+  
    ///// используем контекст токена
    const {token} = useContext(TokenContext);
    const {currentUser} = useContext(UserContext);
@@ -29,6 +31,7 @@ const CuratorTab: React.FC = () => {
       getMyCuratorTasks(token,  setCurtorTasks)
       getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
       requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
+      requestTaskConfirmedList(token, setArrayListOfConfirmedVolTask) 
  }, [])
 
  
@@ -55,7 +58,8 @@ const CuratorTab: React.FC = () => {
             <NearestTaskCurator
              task={task}
              taskFilter={+new Date() - +new Date(task.start_date) <= 0 ? 'nearest' : 'active'}
-             feedbackSubmited={submited}
+              feedbackSubmited={submited}
+              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}
        />
           </div>
           )
@@ -76,7 +80,8 @@ const CuratorTab: React.FC = () => {
             <NearestTaskCurator
              task={task}
              taskFilter={"completed"}
-             feedbackSubmited={submited}
+              feedbackSubmited={submited}
+              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}
        />
           </div>
           )
