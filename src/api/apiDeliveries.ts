@@ -154,7 +154,7 @@ export const postDeliveryConfirm = async (
 
 
 type TNotConfirmedDeliveries = {
-  confirm: Boolean
+  confirm: boolean
   delivery: number
   id: number
   volunteer: number[]
@@ -179,6 +179,36 @@ export const getDeliveryListNotConfirmed = async (
     throw new Error('Get request getDeliveryListNotConfirmed has failed');
   }
 };
+
+
+
+type TDeliveryListConfirmedForCurator = {
+  confirm: boolean
+  delivery: number
+  id: number
+  volunteer: number[]
+}
+
+export const getDeliveryListConfirmedForCurator = async (
+  access: string
+): Promise<TDeliveryListConfirmedForCurator[]> => {
+  try {
+    const response: AxiosResponse<TDeliveryListConfirmedForCurator[]> = await axios({
+      url: `${deliveriesUrl}list_confirm/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getDeliveryListNotConfirmed has failed', err);
+    throw new Error('Get request getDeliveryListNotConfirmed has failed');
+  }
+};
+
 
 // берем доставку себе
 export const postDeliveryTake = async (
@@ -287,4 +317,4 @@ export const getVolunteerDeliveries = async (
 };
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments, TNotConfirmedDeliveries};
+export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments, TNotConfirmedDeliveries, TDeliveryListConfirmedForCurator};

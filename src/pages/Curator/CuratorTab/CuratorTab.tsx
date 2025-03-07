@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {  TCuratorDelivery,  } from '../../../api/apiDeliveries';
+import {  TCuratorDelivery, type TDeliveryListConfirmedForCurator  } from '../../../api/apiDeliveries';
 import NearestDeliveryCurator from '../../../components/NearestDeliveryCurator/NearestDeliveryCurator';
 import { TokenContext } from '../../../core/TokenContext';
 import { type ITask } from '../../../api/apiTasks';
@@ -7,7 +7,7 @@ import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurat
 
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
-import { getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks } from './helperFunctions';
+import {requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks } from './helperFunctions';
 
 
 const CuratorTab: React.FC = () => {
@@ -18,7 +18,7 @@ const CuratorTab: React.FC = () => {
    const [curtorTasks, setCurtorTasks] = useState<ITask[]>(localStorage.getItem(`curator_tasks_for_curator_tab`) !== null && localStorage.getItem(`curator_tasks_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_tasks_for_curator_tab`) as string) : []);  
    const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
    const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
-
+   const [arrayListOfConfirmedVol, setArrayListOfConfirmedVol] = useState<TDeliveryListConfirmedForCurator[]|null>(null)
    ///// используем контекст токена
    const {token} = useContext(TokenContext);
    const {currentUser} = useContext(UserContext);
@@ -27,7 +27,8 @@ const CuratorTab: React.FC = () => {
     useEffect(() => {
       getMyCuratorDeliveries(token,setCuratorActiveDeliveries, setCuratorInProcessDeliveries, setCuratorCompletedDeliveries )
       getMyCuratorTasks(token,  setCurtorTasks)
-      getAllMyFeedbacks(token,  currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+      getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+      requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
  }, [])
 
  
@@ -36,14 +37,14 @@ const CuratorTab: React.FC = () => {
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
         curatorInProcessDeliveries.map((del, index) => {
             return(<div key={index}>
-              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' />
+              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' arrayListOfConfirmedVol={arrayListOfConfirmedVol} />
             </div>)
         })
       )}
       {curatorActiveDeliveries && curatorActiveDeliveries.length >0 && (
         curatorActiveDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' />
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest'  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
           </div>)
         })
       )}
@@ -64,7 +65,7 @@ const CuratorTab: React.FC = () => {
       {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
        curatorCompletedDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}/>
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
           </div>)
         })
       )}  

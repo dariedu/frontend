@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
-import { type TVolunteerForDeliveryAssignments , type TCuratorDelivery } from '../../api/apiDeliveries';
+import { type TVolunteerForDeliveryAssignments , type TCuratorDelivery} from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
@@ -21,6 +21,7 @@ interface RouteSheetsProps {
   onClose: () => void
   changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
+  listOfConfirmedVol:number[]|null
   deliveryId: number
   assignedRouteSheets: IRouteSheetAssignments[]
   setActivateDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,6 +39,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   onClose,
   changeListOfVolunteers,
   listOfVolunteers,
+  listOfConfirmedVol,
   deliveryId,
   assignedRouteSheets,
   setActivateDeliverySuccess,
@@ -65,7 +67,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
   // const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
-
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
   const token = tokenContext.token;
@@ -134,7 +135,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       if (token) {
         try {
           let result = await getPhotoReportsByDeliveryId(token, deliveryId);
-          console.log(result, `photo report by deliveryid ${deliveryId}`)
+          // console.log(result, `photo report by deliveryid ${deliveryId}`)
           setMyPhotoReports(result);
           localStorage.setItem(`curator_del_${deliveryId}`, JSON.stringify(result))
         } catch (err) {
@@ -169,7 +170,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           return (
             <div className="flex flex-col" key={routeS.id + index}>
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
-              listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}
+              listOfVolunteers={listOfVolunteers} listOfConfirmedVol={listOfConfirmedVol} openVolunteerLists={openVolunteerLists}
               changeListOfVolunteers={changeListOfVolunteers}
               onVolunteerAssign={onVolunteerAssign} deliveryId={deliveryId}
               assignVolunteerFail={assignVolunteerFail} setAssignVolunteerFail={setAssignVolunteerFail}

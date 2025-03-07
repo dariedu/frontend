@@ -30,7 +30,7 @@ export const TokenProvider: React.FC<{ children: React.ReactNode }> = ({
    if (window.Telegram?.WebApp?.initDataUnsafe) {
     const initData = window.Telegram.WebApp.initDataUnsafe;
     tgIdFromTgParams = initData.user?.id;
-    console.log("init data unsafe tgId", initData.user?.id)
+    // console.log("init data unsafe tgId", initData.user?.id)
   }
 }, [])
 
@@ -41,7 +41,7 @@ const fetchRefreshToken = async () => {
            if (mainToken) {
              setToken(mainToken.access);
              setRefresh(mainToken.refresh)
-             console.log('new token received', new Date())
+            //  console.log('new token received', new Date())
           }
          } else {
           if (tgId) {
@@ -49,7 +49,7 @@ const fetchRefreshToken = async () => {
                if (mainToken) {
                 setToken(mainToken.access);
                  setRefresh(mainToken.refresh)
-                 console.log('new token received', new Date())
+                //  console.log('new token received', new Date())
             }
           } else {
             if (tgIdFromTgParams) {
@@ -57,7 +57,7 @@ const fetchRefreshToken = async () => {
                  if (mainToken) {
                   setToken(mainToken.access);
                    setRefresh(mainToken.refresh)
-                   console.log('new token received', new Date())
+                  //  console.log('new token received', new Date())
                  }
                }
              } 
@@ -85,7 +85,7 @@ useEffect(() => {
       // Вкладка снова видна, обновляем токен
       setRefresh(null)
       fetchRefreshToken();
-      console.log('document is visible again')
+      // console.log('document is visible again')
     }
   };
 

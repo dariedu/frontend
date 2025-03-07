@@ -1,7 +1,17 @@
-import { type IDelivery,  getDeliveryById, TCuratorDelivery, postDeliveryComplete, postDeliveryActivate, type TVolunteerForDeliveryAssignments} from '../../api/apiDeliveries';
+import { type IDelivery,  getDeliveryById, TCuratorDelivery, postDeliveryComplete, postDeliveryActivate, type TVolunteerForDeliveryAssignments, type TDeliveryListConfirmedForCurator} from '../../api/apiDeliveries';
 import { type IRouteSheet, getRouteSheetById} from '../../api/routeSheetApi';
 import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import {TDeliveryFilter} from './NearestDeliveryCurator'
+
+
+  function filterVolList(arrayListOfConfirmedVol:TDeliveryListConfirmedForCurator[]|null, curatorDelivery:TCuratorDelivery,  setListOfConfirmedVol:React.Dispatch<React.SetStateAction<number[]|null>>) {
+    if (arrayListOfConfirmedVol && arrayListOfConfirmedVol.length > 0) {
+      console.log(arrayListOfConfirmedVol, "arrayListOfConfirmedVol nearestDeliveryCurator")
+      const filtered: TDeliveryListConfirmedForCurator[] = arrayListOfConfirmedVol.filter(i => { return i.delivery == curatorDelivery.id_delivery });
+      setListOfConfirmedVol(filtered[0]?.volunteer)
+    }
+  }
+
 
   async function requestMyDelivery(token:string|null, curatorDelivery:TCuratorDelivery, setDelivery:React.Dispatch<React.SetStateAction<IDelivery | undefined>>, setDeliveryDate:React.Dispatch<React.SetStateAction<Date | undefined>>,setListOfVolunteers:React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>> ) { 
      if (token) {
@@ -74,7 +84,10 @@ import {TDeliveryFilter} from './NearestDeliveryCurator'
            if (result.status == "rejected") {
              console.log(`${num} routeSheet was not fetched`)
            }
-         })).finally(() => { setRouteSheets(routesArr);  console.log(routesArr, "routesArr")}
+         })).finally(() => {
+           setRouteSheets(routesArr);
+          //  console.log(routesArr, "routesArr")
+         }
          )
    }
   
@@ -97,4 +110,4 @@ import {TDeliveryFilter} from './NearestDeliveryCurator'
       }
 }
     
-export {requestMyDelivery, requestDeliveryActivate,requestDeliveryComplete, requestEachMyRouteSheet, requestRouteSheetsAssignments}
+export {requestMyDelivery, requestDeliveryActivate,requestDeliveryComplete, requestEachMyRouteSheet, requestRouteSheetsAssignments, filterVolList}
