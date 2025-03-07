@@ -106,7 +106,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
               Доставка{' '}
             </p>
 
-                {currentStatus == 'active' || (currentStatus == 'nearest' && delivery.volunteers_taken != 0) ? (
+                {currentStatus == 'active' || (currentStatus == 'nearest') ? (
                     <Arrow_right  className="stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer"
                     onClick={() => {
                       setFullViewActive(true);
@@ -181,7 +181,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
                Баллы
                 </p>
                 <p className="font-gerbera-h3 text-light-gray-8 dark:text-light-gray-1">
-                      + {delivery.price} {getBallCorrectEndingName(delivery.price)}
+                  + {delivery.price} {getBallCorrectEndingName(delivery.price)}
                 </p>
               </div>
                 </div>

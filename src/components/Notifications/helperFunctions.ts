@@ -7,12 +7,6 @@ import { postDeliveryCancel, postDeliveryConfirm } from "../../api/apiDeliveries
 import { postTaskRefuse, postTaskConfirm } from "../../api/apiTasks"
 import { postPromotionCancel, postPromotionConfirm} from "../../api/apiPromotions";
 
-// objType: "task" | "delivery" | "promo"
-// nameOrMetro: string
-// addressOrInfo: string
-// stringStart: string
-// id: string
-// timeString:string
 
 function combineAllNotConfirmed(
   allNotConfirmedToday: IDelivery[],
@@ -318,8 +312,8 @@ async function confirmDelivery(item:TNotificationInfo, setNotifDay:React.Dispatc
           const response = await postPromotionConfirm(item.id, token);
           if (response) {
             let filtered:IPromotion[] = allNotConfirmed.filter(i => {return i.id != item.id })
-            setAllNotConfirmed(filtered)
-            setConfirmedSuccessString(`Ваша бронь ${item.nameOrMetro} успешно подтверждена`) }
+          setAllNotConfirmed(filtered)
+          setConfirmedSuccessString(`Ваша бронь ${item.nameOrMetro} успешно подтверждена`) }
           setConfirmedSuccess(true)
           setNotifDay(null)
             

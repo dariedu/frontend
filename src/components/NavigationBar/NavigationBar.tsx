@@ -78,14 +78,21 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
         }
       }, [allPromoNotConfirmed])
   
-    ////если есть таски или доставки требующие подтверждения то ставим статус haveNotifications в true
-  useEffect(() => {
+  
+  function checkHaveNotification() {
     if (allNotConfirmedToday.length > 0 || allNotConfirmedTomorrow.length > 0
       || allTasksNotConfirmedToday.length > 0 || allTasksNotConfirmedTomorrow.length > 0 ||
       allPromoNotConfirmedToday.length > 0 || allPromoNotConfirmedTomorrow.length > 0
     ) {
       setHaveNotifications(true)
+    } else {
+      setHaveNotifications(false)
     }
+  }
+  
+    ////если есть таски или доставки требующие подтверждения то ставим статус haveNotifications в true
+  useEffect(() => {
+    checkHaveNotification()
   },[allNotConfirmedToday, allNotConfirmedTomorrow, allTasksNotConfirmedToday, allTasksNotConfirmedTomorrow, allPromoNotConfirmedToday, allPromoNotConfirmedTomorrow])
 
   if (isLoading) return <div>Загрузка...</div>;
