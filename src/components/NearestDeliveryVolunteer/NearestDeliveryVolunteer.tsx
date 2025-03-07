@@ -23,7 +23,7 @@ import { requestEachMyRouteSheet, requestRouteSheetsAssignments } from './helper
 interface INearestDeliveryProps {
   delivery: IDelivery;
   status: TDeliveryFilter
-  cancelFunc?: (delivery:IDelivery, token: string | null, setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>,setCancelId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail:React.Dispatch<React.SetStateAction<boolean>>) => {}
+  cancelFunc?: (delivery:IDelivery, token: string | null, setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>,setCancelId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail:React.Dispatch<React.SetStateAction<boolean>>, allNotConfirmed:number[]|null, setAllNotConfirmed:React.Dispatch<React.SetStateAction<number[]|null>>) => {}
   isFeedbackSubmitedModalOpen?:boolean
   setIsFeedbackSubmitedModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
   feedbackSubmited?: boolean
@@ -31,7 +31,8 @@ interface INearestDeliveryProps {
   setCancelId?: React.Dispatch<React.SetStateAction<number | undefined>>
   setCancelDeliverySuccess?: React.Dispatch<React.SetStateAction<boolean>>
   setCancelDeliveryFail?: React.Dispatch<React.SetStateAction<boolean>>
-  allNotConfirmed?:number[]|null
+  allNotConfirmed?: number[] | null
+  setAllNotConfirmed?:React.Dispatch<React.SetStateAction<number[] | null>>
 }
 
 
@@ -47,7 +48,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   setCancelId,
   setCancelDeliverySuccess,
   setCancelDeliveryFail,
-  allNotConfirmed
+  allNotConfirmed, 
+  setAllNotConfirmed
 }) => {
 
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
@@ -100,6 +102,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
       setConfirmedSuccessString,
       setConfirmFailed,
       setConfirmFailedString,
+      allNotConfirmed,
+      setAllNotConfirmed
     );
   }
 
@@ -223,9 +227,11 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
               <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
                 <Small_sms className="w-[36px] h-[35px]" />
               </a>
+              
             </div>
           )) : (
-          <div className="w-full box-border  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
+            <div className='flex flex-col items-center'>
+            <div className="w-full box-border  h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between px-4 dark:bg-light-gray-6">
             <div className="flex">
               <Avatar.Root className="inline-flex items-center justify-center h-[32px] w-[32px] bg-light-gray-white dark:bg-light-gray-8-text rounded-full">
                 <Avatar.Image
@@ -249,32 +255,51 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             </div>
             <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
               <Small_sms className="w-[36px] h-[35px]" />
-            </a>
+              </a>
           </div>
+          <button
+            className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+            onClick={e => {
+              e.preventDefault();
+              setIsCancelDeliveryModalOpen(true)
+            }}
+          >
+            Отказаться
+          </button>  
+              </div>
+        
         )}
 
-        {fullView ? (currentStatus == 'nearest' && (!allNotConfirmed || (allNotConfirmed && allNotConfirmed.includes(delivery.id))) ? (
-          <div className='mt-[20px] flex w-[328px] justify-between items-center self-center'>
+        {fullView ? (currentStatus == 'nearest' ? (
+            (!allNotConfirmed || (allNotConfirmed && allNotConfirmed.includes(delivery.id))) ? ( <div className='mt-[20px] flex w-[328px] justify-between items-center self-center'>
+              <button
+                className="btn-M-GreenDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+                onClick={e => {
+                  e.preventDefault();
+                  setConfirmParticipation(true)
+                }}
+              >
+                Подтвердить
+              </button>
+              <button
+                className="btn-M-WhiteDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+                onClick={e => {
+                  e.preventDefault();
+                  setIsCancelDeliveryModalOpen(true)
+                }}
+              >
+                Отказаться
+              </button>
+        </div>) : 
             <button
-              className="btn-M-GreenDefault  dark:bg-light-gray-6 dark:text-light-gray-white self-center"
-              onClick={e => {
-                e.preventDefault();
-                setConfirmParticipation(true)
-              }}
-            >
-              Подтвердить
-            </button>
-            <button
-              className="btn-M-WhiteDefault dark:bg-light-gray-6 dark:text-light-gray-white self-center"
-              onClick={e => {
-                e.preventDefault();
-                setIsCancelDeliveryModalOpen(true)
-              }}
-            >
-              Отказаться
-            </button>
-          </div>
-             
+            className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
+            onClick={e => {
+              e.preventDefault();
+              setIsCancelDeliveryModalOpen(true)
+            }}
+          >
+            Отказаться
+          </button>     
         ) : currentStatus == 'completed' ? feedbackSubmited ? (
           <button
             className="btn-B-WhiteDefault mt-[20px] self-center cursor-default"
@@ -302,7 +327,7 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
         isOpen={isCancelDeliveryModalOpen}
         onOpenChange={setIsCancelDeliveryModalOpen}
         onConfirm={() => {
-          (cancelFunc && setCancelDeliverySuccessString && setCancelId && setCancelDeliverySuccess && setCancelDeliveryFail) ? cancelFunc(delivery, token, setCancelDeliverySuccessString, setCancelId, setCancelDeliverySuccess, setCancelDeliveryFail) : () => { };
+          (cancelFunc && setCancelDeliverySuccessString && setCancelId && setCancelDeliverySuccess && setCancelDeliveryFail && allNotConfirmed && setAllNotConfirmed) ? cancelFunc(delivery, token, setCancelDeliverySuccessString, setCancelId, setCancelDeliverySuccess, setCancelDeliveryFail, allNotConfirmed, setAllNotConfirmed) : () => { };
           setIsCancelDeliveryModalOpen(false);
         }}
         title={<p>Уверены, что хотите отменить участие в доставке?</p>}

@@ -10,7 +10,7 @@ import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVol
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
 import { getAllMyTasks, getAllMyFeedbacks, getMyDeliveries, cancelTakenDelivery, cancelTakenTask } from './helperFunctions';
-import {getListNotConfirmed,  getTasksListNotConfirmed} from '../../../components/NavigationBar/helperFunctions'
+import {getListNotConfirmed } from '../../../components/NavigationBar/helperFunctions'
 
 
 const CalendarTabVolunteer = () => {
@@ -38,7 +38,7 @@ const CalendarTabVolunteer = () => {
   const [cancelTaskId, setCancelTaskId] = useState<number>();
   const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] = useState(false);
   const [allNotConfirmed, setAllNotConfirmed] = useState<number[]|null>(null);
-  const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]|null>(null);
+  // const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]|null>(null);
 
   ///// используем контекст токена
   const { token } = useContext(TokenContext);
@@ -60,7 +60,7 @@ const CalendarTabVolunteer = () => {
   
     useEffect(() => {
       getListNotConfirmed(token, setAllNotConfirmed)
-      getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
+      // getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
   }, [])
 
 
@@ -74,7 +74,7 @@ const CalendarTabVolunteer = () => {
                 const currentStatus = i.in_execution == true ? "active" : "nearest";
                 return(
                 <div key={i.id}>
-                    <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={currentStatus} cancelFunc={cancelTakenDelivery}  />
+                    <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={currentStatus} cancelFunc={cancelTakenDelivery} setAllNotConfirmed={setAllNotConfirmed} />
                 </div>)
               })
             ) : ""
@@ -86,7 +86,7 @@ const CalendarTabVolunteer = () => {
                 let taskDate = new Date(task.start_date)
                taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
                 return (<div key={task.id}>
-                  <NearestTaskVolunteer task={task} allTasksNotConfirmed={allTasksNotConfirmed}  taskFilter={taskFilter} setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId}  feedbackSubmited={true} />
+                  <NearestTaskVolunteer task={task}   taskFilter={taskFilter} setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId}  feedbackSubmited={true} />
                 </div>
                 )
             })
@@ -97,15 +97,15 @@ const CalendarTabVolunteer = () => {
               completedDeliveryFeedbacks.length > 0 ? (
                 completedDeliveryFeedbacks.includes(i.id) ? (
               <div key={i.id}>
-              <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={true} />
+              <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed} setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={true} />
               </div>
                 ) : (
                   <div key={i.id}>
-            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
+            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
             </div>   
               )) : (
                <div key={i.id}>
-            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
+            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed} setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
             </div>)
             ))) : ""
           }
@@ -113,11 +113,11 @@ const CalendarTabVolunteer = () => {
             allMyTasks.filter(i => i.is_completed).sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => (
                   completedTaskFeedbacks.includes(task.id) ? (
                 <div key={task.id}>
-                  <NearestTaskVolunteer task={task} allTasksNotConfirmed={allTasksNotConfirmed} taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={true}/>
+                  <NearestTaskVolunteer task={task}  taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={true}/>
                 </div>
                 ): (
               <div key={task.id}>
-                  <NearestTaskVolunteer task={task} allTasksNotConfirmed={allTasksNotConfirmed}  taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={false}/>
+                  <NearestTaskVolunteer task={task}   taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={false}/>
                 </div>
                 )
               )

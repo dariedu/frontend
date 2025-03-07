@@ -93,7 +93,7 @@ async function getAllMyTasks(token:string|null, setAllMyTasks:React.Dispatch<Rea
 
 
 ////функция чтобы волонтер отменил взятую доставку
-async function cancelTakenDelivery(delivery:IDelivery, token: string | null, setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>,setCancelId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail:React.Dispatch<React.SetStateAction<boolean>> ) {
+async function cancelTakenDelivery(delivery:IDelivery, token: string | null, setCancelDeliverySuccessString: React.Dispatch<React.SetStateAction<string>>,setCancelId: React.Dispatch<React.SetStateAction<number|undefined>>, setCancelDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>, setCancelDeliveryFail:React.Dispatch<React.SetStateAction<boolean>>, allNotConfirmed:number[]|null, setAllNotConfirmed:React.Dispatch<React.SetStateAction<number[]|null>> ) {
   const id: number = delivery.id;
 try {
    if (token) {
@@ -109,6 +109,10 @@ try {
        setCancelDeliverySuccessString(finalString);  
        setCancelId(id)
        setCancelDeliverySuccess(true)
+       if (allNotConfirmed && allNotConfirmed.length >0) {
+        let filtered:number[] = allNotConfirmed.filter(i => {return i != delivery.id })
+       setAllNotConfirmed(filtered)
+       }
   }
 }
 } catch (err) {
@@ -119,7 +123,7 @@ try {
 
 
 //   ////функция чтобы волонтер подтвердил взятую доставку
-async function confirmDelivery(delivery:IDelivery, token:string|null, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>) {
+async function confirmDelivery(delivery:IDelivery, token:string|null, setConfirmedSuccess:React.Dispatch<React.SetStateAction<boolean>>, setConfirmedSuccessString:React.Dispatch<React.SetStateAction<string>>, setConfirmFailed:React.Dispatch<React.SetStateAction<boolean>>, setConfirmFailedString:React.Dispatch<React.SetStateAction<string>>, allNotConfirmed:number[]|null|undefined, setAllNotConfirmed:React.Dispatch<React.SetStateAction<number[]|null>>|undefined) {
   try {
      if (token) {
        let result: IDelivery = await postDeliveryConfirm(token, delivery.id);
@@ -132,7 +136,12 @@ async function confirmDelivery(delivery:IDelivery, token:string|null, setConfirm
        const subway = getMetroCorrectName(delivery.location.subway)
        const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
        setConfirmedSuccessString(finalString);  
-       setConfirmedSuccess(true)
+         setConfirmedSuccess(true)
+         if (allNotConfirmed && allNotConfirmed.length > 0 && setAllNotConfirmed) {
+          let filtered:number[] = allNotConfirmed.filter(i => {return i != delivery.id })
+         setAllNotConfirmed(filtered)
+         }
+        
        }
     }
   } catch (err) {

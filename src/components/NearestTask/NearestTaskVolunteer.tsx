@@ -25,7 +25,6 @@ interface INearestTaskProps {
   setCancelTaskSuccessString: React.Dispatch<React.SetStateAction<string>>
   setCancelTaskSuccess:React.Dispatch<React.SetStateAction<boolean>>
   setCancelDeliveryFail: React.Dispatch<React.SetStateAction<boolean>>
-  allTasksNotConfirmed:number[]|null
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -38,8 +37,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
   setCancelTaskSuccessString,
   feedbackSubmited,
   setCancelTaskSuccess,
-  setCancelDeliveryFail,
-  allTasksNotConfirmed
+  setCancelDeliveryFail
 }) => {
   // const taskDate = new Date(Date.parse(task.start_date) + 180 * 60000);
 
@@ -194,7 +192,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
         </div>
           ) : ""
         ): ""}
-       {(taskFilter == 'active' || taskFilter == 'nearest') && fullView ? (
+        {(taskFilter == 'active' || taskFilter == 'nearest') && fullView ? (
               <div>{task.description && task.description.length != 0 ? (
                 <div className="w-full  h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
                   <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
@@ -213,7 +211,7 @@ const NearestTaskVolunteer: React.FC<INearestTaskProps> = ({
           )
         }
 
-        {fullView ? (taskFilter == 'nearest' && ( !allTasksNotConfirmed || allTasksNotConfirmed.includes(task.id)) ? (
+        {fullView ? (taskFilter == 'nearest' || taskFilter == 'active'  ? (
               <button
                 className="btn-B-GrayDefault  mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
                 onClick={e => {
