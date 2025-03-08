@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
-import Filter from './../../assets/icons/filter.svg?react';
+// import Filter from './../../assets/icons/filter.svg?react';
 import { Modal } from '../ui/Modal/Modal';
 import { IDelivery } from '../../api/apiDeliveries';
 import { ITask } from '../../api/apiTasks';
@@ -230,12 +230,12 @@ const Notifications: React.FC<INotifications> = ({
             <h2 className="text-light-gray-black dark:text-light-gray-1 ml-2">
               Уведомления
             </h2>
-            <Filter
+            {/* <Filter
               // onClick={() => {
               //   setOpenFilter(true);
               // }}
               className="cursor-pointer rounded-full bg-light-gray-1 fill-[#0A0A0A] dark:bg-light-gray-6 dark:fill-[#F8F8F8]"
-            />
+            /> */}
           </div>
         </div>
         <div className="flex flex-col items-center px-4 w-full max-w-[500px]">
