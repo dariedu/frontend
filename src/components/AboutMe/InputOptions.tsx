@@ -34,6 +34,7 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
 
   return  (
     <div
+      data-testid="hiddenDiv"
       className={
         clicked
           ? 'bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl '
@@ -44,8 +45,9 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
         handleClick(clicked, setClicked);
       }}
     >
-      <p className={ 
-
+      <p
+        data-testid="choice"
+        className={ 
         clicked
         ? 'px-4 py-[18px] h-[54px] text-light-gray-8-text dark:text-light-gray-white font-gerbera-h3 text-left w-full bg-light-gray-1 dark:bg-light-gray-6 rounded-t-2xl'
         : 'px-4 py-[18px] h-[54px] text-light-gray-8-text dark:text-light-gray-white font-gerbera-h3 text-left w-full bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl'
@@ -77,7 +79,7 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
           .map((opt: [number, string] | string[], i: number) => {
             return (
               choiceMade == opt[0] ? (
-                <div key={i} className= 'flex list-none p-4 rounded-2xl text-light-gray-8-text dark:text-light-gray-white font-gerbera-h3'>
+                <div  key={i} className= 'flex list-none p-4 rounded-2xl text-light-gray-8-text dark:text-light-gray-white font-gerbera-h3'>
                   <Tick />
                   <li
                     className='ml-4'
@@ -88,7 +90,7 @@ const InputOptions: React.FC<IInputOptionsProps> = ({
                 </div>
                 
               ) : (
-              <div  key={i}
+              <div  key={i} 
               className='ml-6 list-none p-4 rounded-2xl text-light-gray-8-text dark:text-light-gray-white font-gerbera-h3'>
                     <li className='ml-4' onClick={() => { setChoiceMade(opt[0]); setButtonActive(true) }}>
               {opt[1]}

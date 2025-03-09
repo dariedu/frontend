@@ -28,7 +28,7 @@ describe('BecameCurator component', () => {
   });
 
   it('should render the component with form fields and submit button', () => {
-
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     expect(screen.queryByText('На какой локации вы бы хотели стать куратором и почему?')).toBeNull();
     expect(screen.queryByText('Готовы ли вы присутствовать на локации во время доставок?')).toBeNull();
     expect(screen.queryByText('Какой у вас график работы/ учёбы?')).toBeNull();
@@ -54,6 +54,7 @@ describe('BecameCurator component', () => {
 
 
   it('should enable submit button when all fields are filled', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     render(
       <TokenContext.Provider value={mockTokenContext}>
         <UserContext.Provider value={mockUserContext}>

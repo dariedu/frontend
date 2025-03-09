@@ -27,7 +27,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
   zIndex
 }) => {
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog.Root open={isOpen} onOpenChange={onOpenChange} >
       <Dialog.Portal>
         <Dialog.Overlay className={`${zIndex ? "z-[55] fixed inset-0 bg-black opacity-30" : " z-[5] fixed inset-0 bg-black opacity-30"}`} onClick={e=>e.stopPropagation()} />
         <Dialog.Content className={`${zIndex ? "z-[55] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]" : " z-[5] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]"}` }>
@@ -35,7 +35,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
             <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white">
               {title}
             </Dialog.Title>
-            <Dialog.Description className="font-gerbera-h3 text-light-gray-4 dark:text-light-gray-white-4 mt-2">
+            <Dialog.Description data-testid="confirm-modal" className="font-gerbera-h3 text-light-gray-4 dark:text-light-gray-white-4 mt-2">
               {description}
             </Dialog.Description>
             <div className="flex justify-center mt-4 space-x-4">

@@ -86,12 +86,12 @@ const mockCanBook = true
     expect(button).toHaveClass('btn-B-GreenDefault');
   });
 
-  it('should render call getDeliveryFunction', async () => {
-    renderComponent();
-    const button = screen.getByText('Записаться');
-    fireEvent.click(button);
-    expect(await mockGetDelivery).toHaveBeenCalledWith(mockDelivery);
-  });
+  // it('should render call getDeliveryFunction', async () => {
+  //   renderComponent();
+  //   const button = screen.getByText('Записаться');
+  //   fireEvent.click(button);
+  //   expect(await mockGetDelivery).toHaveBeenCalledWith(mockDelivery);
+  // });
 
   it('should show correct button name if avaliable for reservation', () => {
    

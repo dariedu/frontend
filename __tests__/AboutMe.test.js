@@ -30,18 +30,14 @@ describe('AboutMe.tsx', () => {
   });
 
   it("renders AboutMe.ts",  () => {
-    render(
-              <AboutMe onClose={jest.fn()} />
-        )
+    render(  <AboutMe onClose={jest.fn()} />)
     expect(screen.getByText(/Обо мне/)).toBeInTheDocument();
     expect(screen.getByText(/Выберите ваш род деятельности/)).toBeInTheDocument();
   });
 
   it("renders inpit in AboutMe.ts", async () => {
     window.HTMLElement.prototype.scrollIntoView = function() {};
-    const { getByTestId } = render(
-              <AboutMe onClose={jest.fn()} />
-    )
+    const { getByTestId } = render(<AboutMe onClose={jest.fn()} />  )
     expect(screen.queryByText(/qwertyuiop/)).toBeNull();
     await userEvent.type(getByTestId('textbox'), 'qwertyuiop');
     expect(await screen.findByText(/qwertyuiop/)).toBeInTheDocument()

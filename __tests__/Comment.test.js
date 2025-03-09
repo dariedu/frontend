@@ -58,6 +58,7 @@ describe('Comment component', () => {
   });
 
   it('should call onSave with correct arguments when form is submitted', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     render(
       <Comment
         name={name}
@@ -80,6 +81,7 @@ describe('Comment component', () => {
   });
 
   it('should enable save button when textarea has more than 5 characters', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     render(
       <Comment
         name={name}
@@ -104,7 +106,7 @@ describe('Comment component', () => {
 
 
   it('should show error message when textarea has less than 10 characters', async () => {
-
+    window.HTMLElement.prototype.scrollIntoView = function() {};
     render(
       <Comment
         name={name}
@@ -115,6 +117,7 @@ describe('Comment component', () => {
         id={id}
       />
     );
+
     expect(screen.queryByText('Сообщение слишком короткое, минимальное количество символов 10')).toBeNull();
     const textarea = screen.getByLabelText('В свободной форме поделитесь информацией о доставке');
     const saveButton = screen.getByText('Сохранить');
