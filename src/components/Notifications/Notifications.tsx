@@ -482,7 +482,7 @@ const Notifications: React.FC<INotifications> = ({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full mt-[50%]">
-              <Bread className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
+              <Bread data-testid="bread" className="fill-[#000000] dark:fill-[#F8F8F8] w-[100px]" />
               <p className="font-gerbera-h2 text-light-gray-black dark:text-light-gray-1 mt-7 text-center">
                 Пока нет планов
                 <br />

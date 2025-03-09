@@ -41,6 +41,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
             <div className="flex justify-center mt-4 space-x-4">
               {/* Кнопка подтверждения */}
               <button
+                data-testid="confirmRunFunc"
                 onClick={onConfirm}
                 className="btn-S-GreenDefault"
               >
