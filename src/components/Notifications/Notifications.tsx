@@ -42,16 +42,13 @@ interface INotifications {
   allTasksNotConfirmedToday: ITask[];
   setAllTasksNotConfirmedToday: React.Dispatch<React.SetStateAction<ITask[]>>;
   allTasksNotConfirmedTomorrow: ITask[];
-  setAllTasksNotConfirmedTomorrow: React.Dispatch<
-    React.SetStateAction<ITask[]>
+  setAllTasksNotConfirmedTomorrow: React.Dispatch<React.SetStateAction<ITask[]>
   >;
   allPromoNotConfirmedToday: IPromotion[];
-  setAllPromoNotConfirmedToday: React.Dispatch<
-    React.SetStateAction<IPromotion[]>
+  setAllPromoNotConfirmedToday: React.Dispatch<React.SetStateAction<IPromotion[]>
   >;
   allPromoNotConfirmedTomorrow: IPromotion[];
-  setAllPromoNotConfirmedTomorrow: React.Dispatch<
-    React.SetStateAction<IPromotion[]>
+  setAllPromoNotConfirmedTomorrow: React.Dispatch<React.SetStateAction<IPromotion[]>
   >;
 }
 
@@ -128,7 +125,7 @@ const Notifications: React.FC<INotifications> = ({
   ]);
 
   function handleCancelClick(item: TNotificationInfo) {
-    console.log(item, 'item to cancel');
+    // console.log(item, 'item to cancel');
     if (notifDay == "today" || notifDay == "tomorrow") {
       if (item.objType == 'delivery' && token) {
         cancelTakenDelivery(

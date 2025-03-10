@@ -5,6 +5,18 @@ import {getPromotionNotConfirmed,  getMyPromotions, IPromotion, TPromoNotConfirm
 
 // const eventDate: Date = new Date(Date.parse(promotion.start_date) + 180*60000);
 // eventDate.getUTCHours()
+
+  function checkHaveNotification(allNotConfirmedToday: IDelivery[], allNotConfirmedTomorrow: IDelivery[],
+    allTasksNotConfirmedToday:ITask[], allTasksNotConfirmedTomorrow:ITask[], allPromoNotConfirmedToday:IPromotion[], allPromoNotConfirmedTomorrow:IPromotion[], setHaveNotifications:React.Dispatch<React.SetStateAction<boolean>>) {
+    if (allNotConfirmedToday.length > 0 || allNotConfirmedTomorrow.length > 0
+      || allTasksNotConfirmedToday.length > 0 || allTasksNotConfirmedTomorrow.length > 0 ||
+      allPromoNotConfirmedToday.length > 0 || allPromoNotConfirmedTomorrow.length > 0
+    ) {
+      setHaveNotifications(true)
+    } else {
+      setHaveNotifications(false)
+    }
+  }
  
 //// берем все доставки волонтера, ищем те, которые еще не подтверждены,
 // сортируем их на сегодня и завтра для уведомлений по подтверждению или отказу от доставки
@@ -29,8 +41,8 @@ async function getMyDeliveries(
 
         const todayGrinvich = new Date(year, month, day, hour, min);
         const todayMoscow = new Date(Date.parse(todayGrinvich.toUTCString()) + 180 * 60000);
-        console.log(todayGrinvich, "todayGrinvich")
-        console.log(todayMoscow , "todayMoscow")
+        // console.log(todayGrinvich, "todayGrinvich")
+        // console.log(todayMoscow , "todayMoscow")
 
          result['мои активные доставки'].forEach(i => { current.push(i) });
         const filtered = current.filter(del => {
@@ -48,11 +60,11 @@ async function getMyDeliveries(
            const hourD = deliveryDate.getUTCHours();
            const minD = deliveryDate.getUTCMinutes();
 
-           console.log(deliveryDate, "deliveryDate grinvich", new Date(yearD, monthD, dayD, hourD, minD), "deliveryDate Moscow time")
+          //  console.log(deliveryDate, "deliveryDate grinvich", new Date(yearD, monthD, dayD, hourD, minD), "deliveryDate Moscow time")
            const midnight = new Date(todayMoscow.getUTCFullYear(), todayMoscow.getUTCMonth(), todayMoscow.getUTCDate(), 23, 59);
           return new Date(yearD, monthD, dayD, hourD, minD) >= todayMoscow && new Date(yearD, monthD, dayD, hourD, minD) <= midnight
          })
-        console.log(filteredToday, "filteredToday")
+        // console.log(filteredToday, "filteredToday")
          setAllNotConfirmedToday(filteredToday)
 
 
@@ -69,7 +81,7 @@ async function getMyDeliveries(
             const tomorrowMidnight = new Date(todayMoscow.getUTCFullYear(), todayMoscow.getUTCMonth(), todayMoscow.getUTCDate() + 1, 23, 59)
            return new Date(yearD, monthD, dayD, hourD, minD) >= tomorrow && new Date(yearD, monthD, dayD, hourD, minD) <= tomorrowMidnight
          })
-         console.log(filteredTomorrow, "filteredTomorrow")
+        //  console.log(filteredTomorrow, "filteredTomorrow")
          setAllNotConfirmedTomorrow(filteredTomorrow)
        }}
           }
@@ -87,11 +99,12 @@ async function getListNotConfirmed(token: string|null, setAllNotConfirmed: React
       let result: TNotConfirmedDeliveries[] = await getDeliveryListNotConfirmed(token);
       if (result) {
         result.forEach(i => arr.push(i.delivery))
+        console.log(result, " getListNotConfirmed Deliveries navigation bar")
         setAllNotConfirmed(arr)
       }
     }
   } catch (err) {
-    console.log(err, "NavigationBar getListNotConfirmed has failed")
+    console.log(err, "NavigationBar getListNotConfirmed Deliveries has failed")
   }
 }
 
@@ -104,7 +117,8 @@ async function getTasksListNotConfirmed(token: string|null, setAllTasksNotConfir
 
       let result:TTasksNotConfirmed[]  = await getTaskListNotConfirmed(token);
       if (result) {
-        result.forEach((i:TTasksNotConfirmed)=> arr.push(i.task))
+        result.forEach((i: TTasksNotConfirmed) => arr.push(i.task))
+        console.log(result, " getTaskListNotConfirmed navigation bar")
         setAllTasksNotConfirmed(arr)
       }
     }
@@ -159,13 +173,13 @@ async function getAllMyTasks(token: string|null,
           const minTe = taskEndDate.getUTCMinutes();
 
 
-            console.log(taskStartDate, " taskStartDate")
-            console.log(taskEndDate," taskEndDate")
+            // console.log(taskStartDate, " taskStartDate")
+            // console.log(taskEndDate," taskEndDate")
      
             const midnight = new Date(todayMoscow.getUTCFullYear(), todayMoscow.getUTCMonth(), todayMoscow.getUTCDate(), 23, 59);
           return new Date(yearTs, monthTs, dayTs, hourTs, minTs) >= todayMoscow && new Date(yearTs, monthTs, dayTs, hourTs, minTs) <= midnight || (new Date(yearTs, monthTs, dayTs, hourTs, minTs) < todayMoscow && new Date(yearTe, monthTe, dayTe, hourTe, minTe) >= todayMoscow) 
           })
-           console.log(tasksFilteredToday, "tasksFilteredToday")
+          //  console.log(tasksFilteredToday, "tasksFilteredToday")
         setAllTasksNotConfirmedToday(tasksFilteredToday);
 
 
@@ -184,7 +198,7 @@ async function getAllMyTasks(token: string|null,
             // return taskStartDate >= tomorrow && taskStartDate <= tomorrowMidnight
             return new Date(yearTs, monthTs, dayTs, hourTs, minTs) >= tomorrow && new Date(yearTs, monthTs, dayTs, hourTs, minTs) <= tomorrowMidnight;
           })
-          console.log(tasksFilteredTomorrow, "filteredTomorrowTasks")
+          // console.log(tasksFilteredTomorrow, "filteredTomorrowTasks")
           setAllTasksNotConfirmedTomorrow(tasksFilteredTomorrow)
         }
       }
@@ -201,7 +215,7 @@ async function getPromoListNotConfirmed(token: string|null, setAllPromoNotConfir
     if (token) {
       let result:TPromoNotConfirm[] = await getPromotionNotConfirmed(token);
       if (result) {
-        
+        console.log(result, " getPromoListNotConfirmed navigation bar")
         result.forEach((i:TPromoNotConfirm)=> arr.push(i.promotion))
         setAllPromoNotConfirmed(arr)
       }
@@ -260,7 +274,7 @@ async function getAllMyPromo(token: string,
           // return promoStartDate >= today && promoStartDate <= midnight || (promoStartDate < today && (promoEndDate ? promoEndDate >= today : promo.is_permanent)) 
           return new Date(yearPs, monthPs, dayPs, hourPs, minPs) >= todayMoscow && new Date(yearPs, monthPs, dayPs, hourPs, minPs) <= midnight || (new Date(yearPs, monthPs, dayPs, hourPs, minPs) < todayMoscow && ((yearPe && monthPe && dayPe && hourPe && minPe) ? new Date(yearPe, monthPe, dayPe, hourPe, minPe) >= todayMoscow : promo.is_permanent)) 
           })
-           console.log(promoFilteredToday, "promoFilteredToday")
+          //  console.log(promoFilteredToday, "promoFilteredToday")
         setAllPromoNotConfirmedToday(promoFilteredToday)
         
         if (todayMoscow >= new Date(todayMoscow.getUTCFullYear(), todayMoscow.getUTCMonth(), todayMoscow.getUTCDate(), 18, 0)) {
@@ -280,7 +294,7 @@ async function getAllMyPromo(token: string,
             // return promoStartDate >= tomorrow && promoStartDate <= tomorrowMidnight
             return new Date(yearPs, monthPs, dayPs, hourPs, minPs) >= tomorrow && new Date(yearPs, monthPs, dayPs, hourPs, minPs) <= tomorrowMidnight
           })
-        console.log(promoFilteredTomorrow, "promoFilteredTomorrow")
+        // console.log(promoFilteredTomorrow, "promoFilteredTomorrow")
           setAllPromoNotConfirmedTomorrow(promoFilteredTomorrow)
         }
       }
@@ -291,4 +305,4 @@ async function getAllMyPromo(token: string,
 }
 
 
-export {getAllMyTasks, getMyDeliveries, getListNotConfirmed,  getTasksListNotConfirmed, getPromoListNotConfirmed, getAllMyPromo}
+export {checkHaveNotification, getAllMyTasks, getMyDeliveries, getListNotConfirmed,  getTasksListNotConfirmed, getPromoListNotConfirmed, getAllMyPromo}

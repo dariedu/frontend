@@ -127,9 +127,10 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
 /// отсеиваем списки ищем только для данной доставки
   function filterVolList() {
   if (arrayListOfConfirmedVolTask && arrayListOfConfirmedVolTask.length > 0) {
-    console.log(arrayListOfConfirmedVolTask, "arrayListOfConfirmedVolTask nearestTaskCurator")
+    const listOfVolForTask:number[] = [];
     const filtered: TTasksConfirmedForCurator[] = arrayListOfConfirmedVolTask.filter(i => { return i.task == task.id });
-    setListOfConfirmedVolTask(filtered[0]?.volunteer)
+    filtered.forEach(i => { listOfVolForTask.push(i.volunteer) })
+    setListOfConfirmedVolTask(listOfVolForTask)
   }
 }
   

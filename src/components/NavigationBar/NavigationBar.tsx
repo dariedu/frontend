@@ -5,7 +5,7 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import LogoText from './../../assets/logoText.svg?react';
 import ProfileUser from '../ProfileUser/ProfileUser';
 import Notification from '../../assets/icons/notifications_1.svg?react';
-import { getMyDeliveries, getListNotConfirmed, getTasksListNotConfirmed, getAllMyTasks, getPromoListNotConfirmed, getAllMyPromo } from './helperFunctions';
+import {checkHaveNotification, getMyDeliveries, getListNotConfirmed, getTasksListNotConfirmed, getAllMyTasks, getPromoListNotConfirmed, getAllMyPromo } from './helperFunctions';
 import { IDelivery } from '../../api/apiDeliveries';
 import {ITask } from '../../api/apiTasks';
 import { TokenContext } from '../../core/TokenContext';
@@ -65,34 +65,25 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   }, [allNotConfirmed])
 
     ////запрашиваем таски 
-    useEffect(() => {
-      if (token) {
-        getAllMyTasks(token, allTasksNotConfirmed, setAllTasksNotConfirmedToday, setAllTasksNotConfirmedTomorrow )
-      }
-    }, [allTasksNotConfirmed])
-  
-      ////запрашиваем промо
-      useEffect(() => {
-        if (token) {
-          getAllMyPromo(token, allPromoNotConfirmed, setAllPromoNotConfirmedToday, setAllPromoNotConfirmedTomorrow)
-        }
-      }, [allPromoNotConfirmed])
-  
-  
-  function checkHaveNotification() {
-    if (allNotConfirmedToday.length > 0 || allNotConfirmedTomorrow.length > 0
-      || allTasksNotConfirmedToday.length > 0 || allTasksNotConfirmedTomorrow.length > 0 ||
-      allPromoNotConfirmedToday.length > 0 || allPromoNotConfirmedTomorrow.length > 0
-    ) {
-      setHaveNotifications(true)
-    } else {
-      setHaveNotifications(false)
-    }
+ useEffect(() => {
+  if (token) {
+   getAllMyTasks(token, allTasksNotConfirmed, setAllTasksNotConfirmedToday, setAllTasksNotConfirmedTomorrow )
   }
+}, [allTasksNotConfirmed])
+  
+   ////запрашиваем промо
+  useEffect(() => {
+     if (token) {
+      getAllMyPromo(token, allPromoNotConfirmed, setAllPromoNotConfirmedToday, setAllPromoNotConfirmedTomorrow)
+     }
+  }, [allPromoNotConfirmed])
+  
+  
+
   
     ////если есть таски или доставки требующие подтверждения то ставим статус haveNotifications в true
   useEffect(() => {
-    checkHaveNotification()
+    checkHaveNotification(allNotConfirmedToday, allNotConfirmedTomorrow, allTasksNotConfirmedToday, allTasksNotConfirmedTomorrow, allPromoNotConfirmedToday, allPromoNotConfirmedTomorrow, setHaveNotifications)
   },[allNotConfirmedToday, allNotConfirmedTomorrow, allTasksNotConfirmedToday, allTasksNotConfirmedTomorrow, allPromoNotConfirmedToday, allPromoNotConfirmedTomorrow])
 
   if (isLoading) return <div>Загрузка...</div>;
@@ -120,19 +111,21 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
               </h1>
             </>
           ) : (
-              <>
-                <LogoText className="w-[130px] h-10 fill-[#1F1F1F]  dark:fill-[#F8F8F8] "/>
-            </>
+              <div data-testid="logo">
+                <LogoText className="w-[130px] h-10 fill-[#1F1F1F]  dark:fill-[#F8F8F8] " />
+            </div>
           )}
         </div>
              
         {variant === 'mainScreen' && currentUser && (
           <div className='w-[84px] flex items-center justify-between'>
-           <div className='rounded-full bg-light-gray-1 dark:bg-light-gray-6 w-8 min-w-8 h-8 min-h-8 flex items-center justify-center relative '>
+            <div data-testid="notificationsBell"
+               onClick={() => { openNotifications ? setOpenNotifications(false) : setOpenNotifications(true)}}
+              className='rounded-full bg-light-gray-1 dark:bg-light-gray-6 w-8 min-w-8 h-8 min-h-8 flex items-center justify-center relative '>
               <Notification className='fill-light-gray-7-logo dark:fill-light-gray-1'
-                onClick={() => { openNotifications ? setOpenNotifications(false) : setOpenNotifications(true)}} />
+                />
               {haveNotifications &&
-                <div
+                <div data-testid="notificationsPulse" 
                   className='bg-light-brand-green w-2 h-2 min-w-2 min-h-2 rounded-full top-[23px] left-[23px] absolute pulse'
                 ></div>}
            </div>
@@ -167,7 +160,7 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
       )}
       {openNotifications && (
         <Notifications
-        open={openNotifications}
+          open={openNotifications}
           onClose={setOpenNotifications}
           allNotConfirmedToday={allNotConfirmedToday}
           setAllNotConfirmedToday={setAllNotConfirmedToday}

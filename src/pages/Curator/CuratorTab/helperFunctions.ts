@@ -10,6 +10,7 @@ import { getTasksCurator, type ITask, getTaskListConfirmedForCurator, type TTask
       try {
         const result: TTasksConfirmedForCurator[] = await getTaskListConfirmedForCurator(token);
         if (result) {
+          console.log(result, "requestTaskConfirmedList curator tab")
           setArrayListOfConfirmedVolTask(result)
         }
       } catch (err) {
@@ -24,6 +25,7 @@ import { getTasksCurator, type ITask, getTaskListConfirmedForCurator, type TTask
       try {
         const result: TDeliveryListConfirmedForCurator[] = await getDeliveryListConfirmedForCurator(token);
         if (result) {
+          console.log(result , "requestDeliveryConfirmedList curator tab")
           setArrayListOfConfirmedVol(result)
         }
       } catch (err) {

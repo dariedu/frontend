@@ -91,18 +91,19 @@ const RouteSheet: React.FC<IProps> = ({
   }, [myPhotoReports]);
 
   return (
+    
     <div
       key={routeS.id}
       className={`mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[124px] flex flex-col justify-around 
-      ${finished ? 'opacity-70' : ''}
       `}
     >
-      {finished && (
+      <div className={`${finished ? 'opacity-70' : ''}`}>
+ {finished && (
         <div className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white self-center text-center mt-2 ">
           Волонтёр загрузил все фотоотчеты!
         </div>
-      )}
-      <div className="flex items-center justify-between w-full mb-2 p-4">
+        )}
+        <div className="flex items-center justify-between w-full mb-2 p-4">
         <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
           {`Маршрут: ${routeS.name}`}
           <br />
@@ -120,9 +121,8 @@ const RouteSheet: React.FC<IProps> = ({
             className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${openRouteSheets[index] ? 'transform rotate-180' : ''}`}
           />
         </div>
-      </div>
-
-      <div className="flex w-full items-center justify-between">
+        </div>
+        <div className="flex w-full items-center justify-between">
         <div
           className="flex w-full items-center cursor-pointer"
           onClick={() =>
@@ -182,7 +182,8 @@ const RouteSheet: React.FC<IProps> = ({
           </div>
         </div>
       </div>
-
+      </div>
+     
       {openVolunteerLists[index] && (
         <Modal
           isOpen={openVolunteerLists[index]}

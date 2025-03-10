@@ -8,9 +8,10 @@ import {TDeliveryFilter} from './NearestDeliveryCurator'
 
   function filterVolList(arrayListOfConfirmedVol:TDeliveryListConfirmedForCurator[]|null, curatorDelivery:TCuratorDelivery,  setListOfConfirmedVol:React.Dispatch<React.SetStateAction<number[]|null>>) {
     if (arrayListOfConfirmedVol && arrayListOfConfirmedVol.length > 0) {
-      console.log(arrayListOfConfirmedVol, "arrayListOfConfirmedVol nearestDeliveryCurator")
+      const listOfVolForDel:number[] = [];
       const filtered: TDeliveryListConfirmedForCurator[] = arrayListOfConfirmedVol.filter(i => { return i.delivery == curatorDelivery.id_delivery });
-      setListOfConfirmedVol(filtered[0]?.volunteer)
+      filtered.forEach(i => { listOfVolForDel.push(i.volunteer[0]) })
+      setListOfConfirmedVol(listOfVolForDel)
     }
   }
 

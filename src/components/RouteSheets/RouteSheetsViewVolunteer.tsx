@@ -332,7 +332,9 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                     </a>
                   </button>
                 )}
+             
             </div>
+            {route.dinners && route.dinners > 0 && <div className='dark:text-light-gray-1 font-gerbera-h3 rounded-2xl text-light-gray-8-text w-full h-fit self-start'>Обедов к доставке: { route.dinners }</div>}
             <div className="  dark:text-light-gray-1 rounded-2xl text-light-gray-8-text font-gerbera-sub2 w-full h-fit self-start ">
               {route.beneficiar.map(ben => (
                 <div key={ben.full_name + index}>

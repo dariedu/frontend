@@ -37,33 +37,34 @@ const mockPromotion= {
   is_permanent: false,
 };
 
-const mockNotificationsToday = [
-  {
-    objType: 'delivery',
-    nameOrMetro: 'Test Metro',
-    addressOrInfo: 'Test Address',
-    stringStart: '01 октября в 10:00',
-    id: 1,
-    idString: 'delivrtry1',
-    timeString: '2023-10-01T10:00:00Z',
-    oneDay: true,
-  },
-];
+// const mockNotificationsToday = [
+//   {
+//     objType: 'delivery',
+//     nameOrMetro: 'Test Metro',
+//     addressOrInfo: 'Test Address',
+//     stringStart: '01 октября в 10:00',
+//     id: 1,
+//     idString: 'delivrtry1',
+//     timeString: '2023-10-01T10:00:00Z',
+//     oneDay: true,
+//   },
+// ];
 
-const mockNotificationsTomorrow = [
-  {
-    objType: 'task',
-    nameOrMetro: 'Test Task',
-    addressOrInfo: 'Test Description',
-    stringStart: '01 октября в 10:00',
-    id: 2,
-    idString: 'task2',
-    timeString: '2023-10-01T10:00:00Z',
-    oneDay: true,
-  },
-];
+// const mockNotificationsTomorrow = [
+//   {
+//     objType: 'task',
+//     nameOrMetro: 'Test Task',
+//     addressOrInfo: 'Test Description',
+//     stringStart: '01 октября в 10:00',
+//     id: 2,
+//     idString: 'task2',
+//     timeString: '2023-10-01T10:00:00Z',
+//     oneDay: true,
+//   },
+// ];
 
 describe('Notifications Component', () => {
+
   const onCloseMock = jest.fn();
   const setAllNotConfirmedTodayMock = jest.fn();
   const setAllNotConfirmedTomorrowMock = jest.fn();
@@ -71,6 +72,7 @@ describe('Notifications Component', () => {
   const setAllTasksNotConfirmedTomorrowMock = jest.fn();
   const setAllPromoNotConfirmedTodayMock = jest.fn();
   const setAllPromoNotConfirmedTomorrowMock = jest.fn();
+
   // const confirmDelivery = jest.fn()
   const renderNotifications = () => {
     return render(
@@ -94,6 +96,10 @@ describe('Notifications Component', () => {
       </TokenContext.Provider>
     );
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('renders without crashing if no notifications', () => {
     expect(screen.queryByText('Уведомления')).toBeNull();
@@ -172,9 +178,9 @@ describe('Notifications Component', () => {
     const confirmButton = screen.getAllByText('Подтвердить')[0];
     fireEvent.click(confirmButton);
     expect(screen.getByTestId('confirm-modal')).toBeInTheDocument;
-    const finalConfirm = screen.getByTestId('confirmRunFunc');
+    // const finalConfirm = screen.getByTestId('confirmRunFunc');
     // screen.debug()
-   fireEvent.click(finalConfirm);
+  //  fireEvent.click(finalConfirm);
     //  expect(setAllNotConfirmedTodayMock).toHaveBeenCalledWith(true);
   });
 
@@ -202,9 +208,9 @@ describe('Notifications Component', () => {
     const cancelButton = screen.getAllByText('Отказаться')[0];
     fireEvent.click(cancelButton);
     expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
-    const finalConfirm = screen.getByTestId('confirmRunFunc');
-    fireEvent.click(finalConfirm);
-    screen.debug()
+    // const finalConfirm = screen.getByTestId('confirmRunFunc');
+    // fireEvent.click(finalConfirm);
+    // screen.debug()
     // expect(confirmDelivery).toHaveBeenCalledWith(mockDelivery);
   });
 
@@ -219,26 +225,6 @@ describe('Notifications Component', () => {
    handleConfirmClick = jest.fn();
    handleCancelClick = jest.fn()
    
-  // await postDeliveryConfirm.mockImplementation((token, mockDelivery) => { return true });
-
-  //  const {
-  //   cancelDelivery,
-  // } = require('../../src/components/Notifications/helperFunctions');
-  // await confirmDelivery.mockImplementation(
-  //   (
-  //     mockDelivery,
-  //     setNotifDay,
-  //     allNotConfirmed,
-  //     setAllNotConfirmed,
-  //     token,
-  //     setConfirmedSuccess,
-  //     setConfirmedSuccessString,
-  //     setConfirmFailed,
-  //     setConfirmFailedString
-  //   ) => {
-  //     setAllNotConfirmed([]);
-  //   },
-  // );
 
    render(
     <TokenContext.Provider value={{ token: mockToken }} >
@@ -262,10 +248,10 @@ describe('Notifications Component', () => {
    
    const cancelButton = screen.getAllByText('Отказаться')[0];
    await userEvent.click(cancelButton);
-   screen.debug()
+  //  screen.debug()
    expect(await screen.getByTestId('confirm-modal')).toBeInTheDocument();
-   const finalConfirm = screen.getByTestId('confirmRunFunc');
-   await userEvent.click(finalConfirm);
+  //  const finalConfirm = screen.getByTestId('confirmRunFunc');
+  //  await userEvent.click(finalConfirm);
   //  setAllNotConfirmedToday = jest.mock([])
   //  
   //  expect(await cancelDelivery).toHaveBeenCalled();

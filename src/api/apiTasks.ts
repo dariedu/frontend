@@ -178,7 +178,7 @@ export const getTaskListNotConfirmed = async (
 type TTasksConfirmedForCurator = {
   id: number
   task: number
-  volunteer: number[]
+  volunteer: number
   confirmed: boolean
 }
 

@@ -50,12 +50,13 @@ type TBeneficiar = {
  
 // Интерфейс для данных адреса (Address)
 type TAddress = {
-  id: number;
+  id: number
   beneficiar: TBeneficiar[]; 
-  address: string; // Полный адрес
-  link?: string; // Ссылка (если есть)
-  location?: number; // Локация, к которой привязан адрес
-  route_sheet: number; // Идентификатор маршрутного листа
+  address: string // Полный адрес
+  link?: string // Ссылка (если есть)
+  location?: number // Локация, к которой привязан адрес
+  route_sheet: number // Идентификатор маршрутного листа
+  dinners: number
 }
 
 // Интерфейс для данных маршрутного листа (RouteSheet)
