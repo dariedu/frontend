@@ -112,7 +112,6 @@ export const getDeliveryById = async (
 export const postDeliveryCancel = async (
   access: string|null,
   deliveryId: number,
-  delivery:IDelivery
 ): Promise<IDelivery> => {
   try {
     const response: AxiosResponse<IDelivery> = await axios({
@@ -122,8 +121,7 @@ export const postDeliveryCancel = async (
         Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
-      },
-      data: delivery,
+      }
     });
     return response.data;
   } catch (err: any) {
@@ -131,6 +129,86 @@ export const postDeliveryCancel = async (
     throw new Error('Post request postDeliveryCancel has failed');
   }
 };
+
+////// подтверждаем доставку
+export const postDeliveryConfirm = async (
+  access: string|null,
+  deliveryId: number,
+): Promise<IDelivery> => {
+  try {
+    const response: AxiosResponse<IDelivery> = await axios({
+      url: `${deliveriesUrl}${deliveryId}/confirm/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postDeliveryConfirm has failed', err);
+    throw new Error('Post request postDeliveryConfirm  has failed');
+  }
+};
+
+
+type TNotConfirmedDeliveries = {
+  confirm: boolean
+  delivery: number
+  id: number
+  volunteer: number[]
+}
+
+export const getDeliveryListNotConfirmed = async (
+  access: string
+): Promise<TNotConfirmedDeliveries[]> => {
+  try {
+    const response: AxiosResponse<TNotConfirmedDeliveries[]> = await axios({
+      url: `${deliveriesUrl}list_not_confirm/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getDeliveryListNotConfirmed has failed', err);
+    throw new Error('Get request getDeliveryListNotConfirmed has failed');
+  }
+};
+
+
+
+type TDeliveryListConfirmedForCurator = {
+  confirm: boolean
+  delivery: number
+  id: number
+  volunteer: number[]
+}
+
+export const getDeliveryListConfirmedForCurator = async (
+  access: string
+): Promise<TDeliveryListConfirmedForCurator[]> => {
+  try {
+    const response: AxiosResponse<TDeliveryListConfirmedForCurator[]> = await axios({
+      url: `${deliveriesUrl}list_confirm/`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getDeliveryListConfirmedForCurator has failed', err);
+    throw new Error('Get request getDeliveryListConfirmedForCurator has failed');
+  }
+};
+
 
 // берем доставку себе
 export const postDeliveryTake = async (
@@ -159,7 +237,6 @@ export const postDeliveryTake = async (
 export const postDeliveryComplete = async (
   access: string,
   deliveryId: number,
-  delivery:IDelivery
 ): Promise<IDelivery> => {
   try {
     const response: AxiosResponse<IDelivery> = await axios({
@@ -169,8 +246,7 @@ export const postDeliveryComplete = async (
         Authorization: `Bearer ${access}`,
         accept: 'application/json',
         'cross-origin-opener-policy': 'same-origin',
-      },
-      data: delivery,
+      }
     });
     return response.data;
   } catch (err: any) {
@@ -199,8 +275,6 @@ export const postDeliveryActivate = async (
     throw new Error(err.response.data.error)
   }
 };
-
-
 
 // Получение доставок куратора
 export const getCuratorDeliveries = async (
@@ -243,4 +317,4 @@ export const getVolunteerDeliveries = async (
 };
 
 // Экспорт интерфейсов для использования в других API-файлах
-export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments};
+export type { IDelivery, IVolunteerDeliveries, TCuratorDelivery, ICuratorDeliveries, TVolunteerForDeliveryAssignments, TNotConfirmedDeliveries, TDeliveryListConfirmedForCurator};

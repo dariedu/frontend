@@ -10,29 +10,33 @@ import { IDelivery } from '../../api/apiDeliveries';
 import Metro_station from './../../assets/icons/metro_station.svg?react';
 import Small_sms from './../../assets/icons/small_sms.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
-
+import { getDelivery } from '../../pages/Volunteer/MainTabVolunteer/helperFunctions';
 type TDetailedInfoDelivery = {
   delivery: IDelivery;
   canBook: boolean;
-  // isOpen: boolean;
   switchTab: React.Dispatch<React.SetStateAction<string>>;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-  getDelivery: (delivery: IDelivery) => void;
   stringForModal: string;
   takeDeliverySuccess: boolean;
   setTakeDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setTakeDeliverySuccessDateName:React.Dispatch<React.SetStateAction<string>>;
+  setDeliveryForReservation:React.Dispatch<React.SetStateAction<IDelivery|undefined>>;
+  setTakeDeliveryModal:React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+
 
 const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
   delivery,
   canBook,
-  // isOpen,
   onOpenChange,
   switchTab,
-  getDelivery,
   stringForModal,
   takeDeliverySuccess,
   setTakeDeliverySuccess,
+  setTakeDeliverySuccessDateName,
+  setDeliveryForReservation,
+  setTakeDeliveryModal
 }) => {
   
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
@@ -183,7 +187,7 @@ const DetailedInfoDelivery: React.FC<TDetailedInfoDelivery> = ({
                 className="btn-B-GreenDefault  mt-[20px] self-center"
                 onClick={e => {
                   e.preventDefault();
-                  getDelivery(delivery);
+                  getDelivery(delivery, setTakeDeliverySuccessDateName, setDeliveryForReservation, setTakeDeliveryModal);
                 }}
               >
                 Записаться

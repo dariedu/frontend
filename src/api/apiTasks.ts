@@ -67,16 +67,14 @@ export const postTaskAccept = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/accept/`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/accept/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
       },
-    );
+    });
     return response.data;
   } catch (err: any) {
      throw new Error(err.response.data.error)
@@ -89,16 +87,15 @@ export const postTaskComplete = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/complete/`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          accept: 'application/json',
-        },
-      },
-    );
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/complete/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
     return response.data;
   } catch (err: any) {
     console.error('Post request postTaskComplete has failed', err);
@@ -112,9 +109,58 @@ export const postTaskRefuse = async (
   access: string,
 ): Promise<ITask> => {
   try {
-    const response: AxiosResponse<ITask> = await axios.post(
-      `${tasksUrl}${taskId}/refuse/`,
-      {},
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/refuse/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postTaskRefuse has failed', err);
+    throw new Error('Post request postTaskRefuse has failed');
+  }
+};
+
+// Подтвердить свое участие в добром деле
+export const postTaskConfirm = async (
+  taskId: number,
+  access: string,
+): Promise<ITask> => {
+  try {
+    const response: AxiosResponse<ITask> = await axios({
+      url: `${tasksUrl}${taskId}/confirm/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Post request postTaskConfirm has failed', err);
+    throw new Error('Post request postTaskConfirm has failed');
+  }
+};
+
+type TTasksNotConfirmed = {
+  id: number
+  task: number
+  volunteer: number
+  confirmed: boolean
+}
+
+// получить список всех тасков которые еще не были подтверждены
+export const getTaskListNotConfirmed = async (
+  access: string,
+): Promise<TTasksNotConfirmed[]> => {
+  try {
+    const response: AxiosResponse<TTasksNotConfirmed[]> = await axios.get(
+      `${tasksUrl}list_not_confirmed/`,
       {
         headers: {
           Authorization: `Bearer ${access}`,
@@ -124,8 +170,36 @@ export const postTaskRefuse = async (
     );
     return response.data;
   } catch (err: any) {
-    console.error('Post request postTaskRefuse has failed', err);
-    throw new Error('Post request postTaskRefuse has failed');
+    console.error('Get request getTaskListNotConfirmed has failed', err);
+    throw new Error('Get request getTaskListNotConfirmed has failed');
+  }
+};
+
+type TTasksConfirmedForCurator = {
+  id: number
+  task: number
+  volunteer: number
+  confirmed: boolean
+}
+
+// получить список всех тасков которые еще не были подтверждены
+export const getTaskListConfirmedForCurator = async (
+  access: string,
+): Promise<TTasksConfirmedForCurator[]> => {
+  try {
+    const response: AxiosResponse<TTasksConfirmedForCurator[]> = await axios.get(
+      `${tasksUrl}list_confirmed_tasks/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          accept: 'application/json',
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    console.error('Get request getTaskListConfirmedForCurator has failed', err);
+    throw new Error('Get request getTaskListConfirmedForCurator has failed');
   }
 };
 
@@ -218,4 +292,4 @@ export const getMyTasksNoFilter = async (
 };
 
 // Экспортируем интерфейсы и типы для использования в других API-файлах
-export type { ITask, TTaskCategory };
+export type { ITask, TTaskCategory, TTasksNotConfirmed, TTasksConfirmedForCurator };

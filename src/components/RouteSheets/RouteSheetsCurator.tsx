@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {IRouteSheet, assignRouteSheet, type TRouteSheetRequest} from '../../api/routeSheetApi';
-import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
+import { type TVolunteerForDeliveryAssignments , type TCuratorDelivery} from '../../api/apiDeliveries';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
@@ -10,6 +10,8 @@ import {
   type TServerResponsePhotoReport,
 } from '../../api/apiPhotoReports';
 import RouteSheet from './CuratorRSCreator';
+import { requestDeliveryActivate, requestDeliveryComplete, requestRouteSheetsAssignments} from '../NearestDeliveryCurator/helperFunctions'
+
 
 
 interface RouteSheetsProps {
@@ -19,12 +21,15 @@ interface RouteSheetsProps {
   onClose: () => void
   changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
+  listOfConfirmedVol:number[]|null
   deliveryId: number
   assignedRouteSheets: IRouteSheetAssignments[]
-  changeAssignedRouteSheets: () => {}
-  completeDeliveryFunc: (deliveryId: number) => Promise<void>
-  activateDeliveryFunc: (deliveryId: number) => Promise<void>
-  setCurrentStatus:React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
+  setActivateDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setCompleteDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
+  setCurrentStatus: React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
+  curatorDelivery: TCuratorDelivery
+  setAssignedRouteSheets: React.Dispatch<React.SetStateAction<IRouteSheetAssignments[]>>
+  setAssignedRouteSheetsSuccess: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const RouteSheetsM: React.FC<RouteSheetsProps> = ({
@@ -34,12 +39,15 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   onClose,
   changeListOfVolunteers,
   listOfVolunteers,
+  listOfConfirmedVol,
   deliveryId,
   assignedRouteSheets,
-  changeAssignedRouteSheets,
-  completeDeliveryFunc,
-  activateDeliveryFunc,
-  setCurrentStatus
+  setActivateDeliverySuccess,
+  setCompleteDeliverySuccess,
+  setCurrentStatus,
+  curatorDelivery,
+  setAssignedRouteSheets,
+  setAssignedRouteSheetsSuccess
 }) => {
 
 
@@ -59,7 +67,6 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
   // const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
-
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
   const token = tokenContext.token;
@@ -115,7 +122,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       try {
         let result = await assignRouteSheet(token, object)
         if (result == true) {
-          changeAssignedRouteSheets()
+         requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setAssignedRouteSheetsSuccess);
           setAssignVolunteerSuccess(true)
         }
       } catch (err) {
@@ -128,7 +135,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       if (token) {
         try {
           let result = await getPhotoReportsByDeliveryId(token, deliveryId);
-          console.log(result, `photo report by deliveryid ${deliveryId}`)
+          // console.log(result, `photo report by deliveryid ${deliveryId}`)
           setMyPhotoReports(result);
           localStorage.setItem(`curator_del_${deliveryId}`, JSON.stringify(result))
         } catch (err) {
@@ -163,7 +170,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           return (
             <div className="flex flex-col" key={routeS.id + index}>
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
-              listOfVolunteers={listOfVolunteers} openVolunteerLists={openVolunteerLists}
+              listOfVolunteers={listOfVolunteers} listOfConfirmedVol={listOfConfirmedVol} openVolunteerLists={openVolunteerLists}
               changeListOfVolunteers={changeListOfVolunteers}
               onVolunteerAssign={onVolunteerAssign} deliveryId={deliveryId}
               assignVolunteerFail={assignVolunteerFail} setAssignVolunteerFail={setAssignVolunteerFail}
@@ -196,7 +203,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       <ConfirmModal
         isOpen={askCuratorCompleteDelivery}
         onOpenChange={setAskCuratorCompleteDelivery}
-        onConfirm={() => { completeDeliveryFunc(deliveryId); setAskCuratorCompleteDelivery(false);  setCurrentStatus('completed')} }
+        onConfirm={() => {
+          requestDeliveryComplete(
+            token,  deliveryId, setCurrentStatus, setCompleteDeliverySuccess
+        ); setAskCuratorCompleteDelivery(false);  setCurrentStatus('completed')} }
         onCancel={() => setAskCuratorCompleteDelivery(false)}
         title="Вы уверены, что хотите завершить доставку?"
         cancelText='Закрыть'
@@ -207,7 +217,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
       <ConfirmModal
         isOpen={askCuratorActivateDelivery}
         onOpenChange={setAskCuratorActivateDelivery}
-        onConfirm={() => { activateDeliveryFunc(deliveryId); setAskCuratorActivateDelivery(false);  setCurrentStatus('active') } }
+        onConfirm={() => {
+          requestDeliveryActivate(token, deliveryId, setCurrentStatus, setActivateDeliverySuccess);
+          setAskCuratorActivateDelivery(false); setCurrentStatus('active')
+        }}
         onCancel={() => setAskCuratorActivateDelivery(false)}
         title="Вы уверены, что хотите активировать эту доставку?"
         cancelText='Закрыть'

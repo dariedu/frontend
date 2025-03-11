@@ -1,18 +1,16 @@
 import {useState, useContext, useEffect} from 'react'
-// import Calendar from "../../../components/Calendar/Calendar";
-import NearestDeliveryVolunteer from "../../../components/NearestDelivery/NearestDeliveryVolunteer";
-import { getVolunteerDeliveries, postDeliveryCancel, type IDelivery, type IVolunteerDeliveries } from '../../../api/apiDeliveries';
+import NearestDeliveryVolunteer from "../../../components/NearestDeliveryVolunteer/NearestDeliveryVolunteer";
+import { type IDelivery } from '../../../api/apiDeliveries';
 import { TokenContext } from '../../../core/TokenContext';
-import { getMonthCorrectEndingName, getMetroCorrectName } from '../../../components/helperFunctions/helperFunctions';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
-import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
 import CancelledDeliveryOrTaskFeedback from '../../../components/DeliveryOrTaskFeedback/CancelledDeliveryOrTaskFeedback';
 import { Modal } from '../../../components/ui/Modal/Modal';
-import { getMyTasksNoFilter, postTaskRefuse, type ITask } from '../../../api/apiTasks';
+import { type ITask } from '../../../api/apiTasks';
 import NearestTaskVolunteer from '../../../components/NearestTask/NearestTaskVolunteer';
-// import LogoNoTaskYet from './../../../assets/icons/LogoNoTaskYet.svg?react'
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
+import { getAllMyTasks, getAllMyFeedbacks, getMyDeliveries, cancelTakenDelivery, cancelTakenTask } from './helperFunctions';
+import {getListNotConfirmed } from '../../../components/NavigationBar/helperFunctions'
 
 
 const CalendarTabVolunteer = () => {
@@ -39,160 +37,33 @@ const CalendarTabVolunteer = () => {
   const [cancelTaskReasonOpenModal, setCancelTaskReasonOpenModal] = useState(false);  /// модальное окно для отправки отзыва
   const [cancelTaskId, setCancelTaskId] = useState<number>();
   const [isCancelledTaskFeedbackSubmited, setIsCancelledTaskFeedbackSubmited] = useState(false);
+  const [allNotConfirmed, setAllNotConfirmed] = useState<number[]|null>(null);
+  // const [allTasksNotConfirmed, setAllTasksNotConfirmed] = useState<number[]|null>(null);
 
   ///// используем контекст токена
   const { token } = useContext(TokenContext);
   const { currentUser } = useContext(UserContext);
  ////// используем контекст
 
-  async function getMyDeliveries() {
-    const current: IDelivery[] = [];
-    const past: IDelivery[] = [];
-   
-    try {
-       if (token) {
-         let result: IVolunteerDeliveries = await getVolunteerDeliveries(token);
-         if (result) {
-           result['мои активные доставки'].forEach(i => { current.push(i) });
-           result['мои завершенные доставки'].filter(i => {
-             let timeDiff = Math.abs(+new Date() - +new Date(i.date));
-             let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-             if(diffDays <= 5) return i
-           }).forEach(i => { past.push(i) });
-  
-           current.map(del => {
-             if (del.curator.photo && !del.curator.photo.includes('https')) {
-               del.curator.photo = del.curator.photo.replace('http', 'https')
-             }
-           })
-           past.map(del => {
-            if (del.curator.photo && !del.curator.photo.includes('https')) {
-              del.curator.photo = del.curator.photo.replace('http', 'https')
-            }
-           })
-        
-           setMyCurrent(current);
-           setMyPast(past)
-         }
-         localStorage.setItem(`vol_current_for_calendar_tab`, JSON.stringify(current))
-         localStorage.setItem(`vol_past_for_calendar_tab`, JSON.stringify(current))
-    }
-    } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyDeliveries has failed")
-    }
-  }
-  
-  async function getAllMyFeedbacks() {
-    if (token) {
-      try {
-        let result:TMyFeedback[] = await getMyFeedbacks(token);
-        if (result) {
-          let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
-          let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
-   
-          result.filter(i=>i.user ==currentUser?.id).forEach(i => {
-            if (typeof i.delivery == 'number' && i.type == 'completed_delivery') {
-              allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
-            } else if (typeof i.task == 'number' && i.type == 'completed_task') {
-              allMySubmitedFeedbacksForCompletedTasks.push(i.task)
-            }
-          })
-          setCompletedDeliveryFeedbacks(allMySubmitedFeedbacksForCompletedDeliveries)
-          setCompletedTaskFeedbacks(allMySubmitedFeedbacksForCompletedTasks)
-        }
-      } catch (err) {
-        console.log("CalendarTabVolunteer getAllMyFeedbacks has failed")
-    }
-  }
-  }
-
-  async function getAllMyTasks() {
-    try {
-      if (token) {
-        let result: ITask[] = await getMyTasksNoFilter(token);
-        if (result) {
-          result.map(task => {
-            if (task.curator.photo && !task.curator.photo.includes('https')) {
-             task.curator.photo = task.curator.photo.replace('http', 'https')
-           }
-          })
-           let filtered = result.filter(task => {
-            let timeDiff = Math.abs(+new Date() - +new Date(task.end_date));
-            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            if(diffDays <= 5) return task
-          })
-          setAllMyTasks(filtered)
-          localStorage.setItem(`vol_tasks_for_calendar_tab`, JSON.stringify(filtered))
-        }
-      }
-    } catch (err) {
-      console.log(err, "CalendarTabVolunteer getMyTasks fail")
-    }
-  }
 
   useEffect(() => {
-    getMyDeliveries();
+    getMyDeliveries(token, setMyCurrent, setMyPast)
   }, [cancelDeliverySuccess])
 
   useEffect(() => {
-    getAllMyFeedbacks()
+    getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
   }, [isFeedbackSubmitedModalOpen])
 
     useEffect(() => {
-    getAllMyTasks()
-  }, [cancelTaskSuccess])
-
-
- ////функция чтобы волонтер отменил взятую доставку
-async function cancelTakenDelivery(delivery:IDelivery) {
-  const id: number = delivery.id;
-try {
-   if (token) {
-     let result: IDelivery = await postDeliveryCancel(token, id, delivery);
-     if (result) {
-      const deliveryDate = new Date(Date.parse(delivery.date) + 180*60000);
-       const date = deliveryDate.getUTCDate();
-       const month = getMonthCorrectEndingName(deliveryDate);
-       const hours = deliveryDate.getUTCHours() < 10 ? '0' + deliveryDate.getUTCHours() : deliveryDate.getUTCHours();
-       const minutes = deliveryDate.getUTCMinutes() < 10 ? '0' + deliveryDate.getUTCMinutes() : deliveryDate.getUTCMinutes();    
-       const subway = getMetroCorrectName(delivery.location.subway)
-       const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
-       setCancelDeliverySuccessString(finalString);  
-       setCancelId(id)
-       setCancelDeliverySuccess(true)
-  }
-}
-} catch (err) {
-  setCancelDeliveryFail(true)
-  console.log(err, "CalendarTabVolunteer cancelTakenDelivery has failed")
-}
-  }
-
-   ////функция чтобы волонтер отменил взятое доброе дело
-async function cancelTakenTask(task:ITask) {
-  const id: number = task.id;
-try {
-   if (token) {
-     let result: ITask = await postTaskRefuse(id, token);
-     if (result) {
-       const taskDate = new Date(Date.parse(task.start_date) + 180* 60000);
-       const date = taskDate.getUTCDate();
-       const month = getMonthCorrectEndingName(taskDate);
-       const hours = taskDate.getUTCHours() < 10 ? '0' + taskDate.getUTCHours() : taskDate.getUTCHours();
-       const minutes = taskDate.getUTCMinutes() < 10 ? '0' + taskDate.getUTCMinutes() : taskDate.getUTCMinutes();    
-       const finalString = `\"${task.name.slice(0, 1).toLocaleUpperCase()+task.name.slice(1)}\", ${date} ${month}, ${hours}:${minutes}`;
-       setCancelTaskSuccessString(finalString);  
-       setCancelTaskId(id)
-       setCancelTaskSuccess(true)
-  }
-}
-} catch (err) {
-  setCancelDeliveryFail(true)
-  console.log(err, "CalendarTabVolunteer cancelTakenTask has failed")
-}
-  }
+      getAllMyTasks(token, setAllMyTasks )
+    }, [cancelTaskSuccess])
   
-  
+    useEffect(() => {
+      getListNotConfirmed(token, setAllNotConfirmed)
+      // getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
+  }, [])
+
+
   return (
     <>
       <div className="mb-4 flex flex-col h-full items-center overflow-x-hidden " >
@@ -203,7 +74,7 @@ try {
                 const currentStatus = i.in_execution == true ? "active" : "nearest";
                 return(
                 <div key={i.id}>
-                    <NearestDeliveryVolunteer delivery={i} status={currentStatus} cancelFunc={cancelTakenDelivery}  />
+                    <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={currentStatus} cancelFunc={cancelTakenDelivery} setAllNotConfirmed={setAllNotConfirmed} />
                 </div>)
               })
             ) : ""
@@ -215,7 +86,7 @@ try {
                 let taskDate = new Date(task.start_date)
                taskFilter = ((+date - +taskDate) > 0) ? "active" : "nearest";
                 return (<div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter={taskFilter} cancelFunc={cancelTakenTask} feedbackSubmited={true} />
+                  <NearestTaskVolunteer task={task}   taskFilter={taskFilter} setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId}  feedbackSubmited={true} />
                 </div>
                 )
             })
@@ -226,15 +97,15 @@ try {
               completedDeliveryFeedbacks.length > 0 ? (
                 completedDeliveryFeedbacks.includes(i.id) ? (
               <div key={i.id}>
-              <NearestDeliveryVolunteer delivery={i} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={true} />
+              <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed} setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={true} />
               </div>
                 ) : (
                   <div key={i.id}>
-            <NearestDeliveryVolunteer delivery={i} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
+            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed}  setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
             </div>   
               )) : (
                <div key={i.id}>
-            <NearestDeliveryVolunteer delivery={i} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
+            <NearestDeliveryVolunteer delivery={i} allNotConfirmed={allNotConfirmed} setAllNotConfirmed={setAllNotConfirmed} setCancelDeliverySuccessString={setCancelDeliverySuccessString} setCancelId={setCancelId} setCancelDeliverySuccess={setCancelDeliverySuccess} setCancelDeliveryFail={setCancelDeliveryFail} status={"completed"} isFeedbackSubmitedModalOpen={isFeedbackSubmitedModalOpen} setIsFeedbackSubmitedModalOpen={setIsFeedbackSubmitedModalOpen} feedbackSubmited={false} />
             </div>)
             ))) : ""
           }
@@ -242,11 +113,11 @@ try {
             allMyTasks.filter(i => i.is_completed).sort((a, b)=>{return +new Date(a.start_date) - +new Date(b.start_date)}).map(task => (
                   completedTaskFeedbacks.includes(task.id) ? (
                 <div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={true}/>
+                  <NearestTaskVolunteer task={task}  taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={true}/>
                 </div>
                 ): (
               <div key={task.id}>
-                  <NearestTaskVolunteer task={task} taskFilter='completed' cancelFunc={cancelTakenTask} feedbackSubmited={false}/>
+                  <NearestTaskVolunteer task={task}   taskFilter='completed' setCancelDeliveryFail={setCancelDeliveryFail} setCancelTaskSuccess={setCancelTaskSuccess} cancelFunc={cancelTakenTask} setCancelTaskSuccessString={setCancelTaskSuccessString} setCancelTaskId={setCancelTaskId} feedbackSubmited={false}/>
                 </div>
                 )
               )

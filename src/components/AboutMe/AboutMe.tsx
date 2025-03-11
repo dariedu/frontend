@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-// import {useRef} from "react";
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { UserContext } from '../../core/UserContext';
@@ -7,12 +6,10 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 
 import {
   metier,
-  // patchUser
 } from '../../api/userApi';
 import InputOptions, { type T } from './InputOptions';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
-// import { useTelegramViewportHack } from '../helperFunctions/helperFunctions';
 import { handleRequestSubmit } from './helperFunctions';
 
 
@@ -57,34 +54,6 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
     });
     localStorage.setItem(fieldName, value);
   }
-
-//   async function handleRequestSubmit() {
-
-//     const requestObject:Partial<IUser> = {
-//       metier: metierName as string,
-//       interests: requestBody.about_me,
-//  } 
-//       try {
-//           if (userId && token) {
-//         const response = await patchUser(userId, requestObject, token)
-//             if (response) {
-//               if (userValue.currentUser) {
-//                 userValue.currentUser.metier = metierName as string;
-//                 userValue.currentUser.interests = requestBody.about_me
-//               }
-//           requestBody.about_me = "";
-//           localStorage.removeItem("about_me");
-//           setButtonActive(false)
-//           setRequestAboutMeSuccess(true)
-//             }
-//         }else{
-//       setRequestAboutMeFail(true)
-//   }
-//       } catch (err) {
-//         setRequestAboutMeFail(true)
-//         console.log(err, "handleRequestSubmit aboutMe")
-//       }
-    // }
 
  
   function handleInfoInput() {
@@ -140,6 +109,7 @@ const AboutMe: React.FC<TAboutMeProps> = ({ onClose }) => {
                 <Form.Label className="font-gerbera-sub2 text-light-gray-4 dark:text-light-gray-3 line-clamp-3 dark:text-light-gray">В свободной форме поделитесь информацией о себе, всем, что посчитаете нужным. Нам интересно всё :)</Form.Label>
               <Form.Control asChild>
                 <TextareaAutosize
+                  data-testid="textbox"
                   onFocus={(e)=>handleFocus(e)}
                   maxRows={10}
                   className="w-full max-w-[500px] bg-light-gray-1 min-h-[68px] rounded-2xl py-4 px-3 text-light-gray-8-text font-gerbera-sub2 focus: outline-0 mt-2

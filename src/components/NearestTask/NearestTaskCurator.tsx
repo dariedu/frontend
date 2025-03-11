@@ -7,7 +7,7 @@ import CompletedDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/Completed
 import { Modal } from '../ui/Modal/Modal';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteersTasks from '../ListOfVolunteers/ListOfVolunteersTask';
-import {postTaskComplete, type ITask } from '../../api/apiTasks';
+import {postTaskComplete, type ITask, type TTasksConfirmedForCurator } from '../../api/apiTasks';
 import { TokenContext } from '../../core/TokenContext';
 import { getUserById, type IUser } from '../../api/userApi';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
@@ -16,7 +16,8 @@ import Arrow_down from './../../assets/icons/arrow_down.svg?react'
 interface INearestTaskProps {
   task: ITask
   taskFilter: TTaskFilter
-  feedbackSubmited:boolean
+  feedbackSubmited: boolean
+  arrayListOfConfirmedVolTask:TTasksConfirmedForCurator[] | null
 }
 
 type TTaskFilter = 'nearest' | 'active' | 'completed';
@@ -24,7 +25,8 @@ type TTaskFilter = 'nearest' | 'active' | 'completed';
 const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   task,
   taskFilter,
-  feedbackSubmited
+  feedbackSubmited,
+  arrayListOfConfirmedVolTask
 }) => {
 
 //  console.log(feedbackSubmited)
@@ -44,7 +46,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
   const [taskCompleteFail, setTaskCompleteFail] = useState(false);
 
   const [list, setList] = useState<IUser[]>([]);
-
+  const [listOfConfirmedVolTask, setListOfConfirmedVolTask] = useState<number[]|null>(null)
 
  ///// работаем с датой //////////////
  const taskStartDate = new Date(Date.parse(task.start_date) + 180 * 60000);
@@ -122,7 +124,21 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
     }
   }
 
+/// отсеиваем списки ищем только для данной доставки
+  function filterVolList() {
+  if (arrayListOfConfirmedVolTask && arrayListOfConfirmedVolTask.length > 0) {
+    const listOfVolForTask:number[] = [];
+    const filtered: TTasksConfirmedForCurator[] = arrayListOfConfirmedVolTask.filter(i => { return i.task == task.id });
+    filtered.forEach(i => { listOfVolForTask.push(i.volunteer) })
+    setListOfConfirmedVolTask(listOfVolForTask)
+  }
+}
   
+  useEffect(() => {
+    filterVolList()
+  }, [arrayListOfConfirmedVolTask])
+
+
   return (
     <>
       <div
@@ -338,6 +354,7 @@ const NearestTaskCurator: React.FC<INearestTaskProps> = ({
           <ListOfVolunteersTasks
             listOfVolunteers={list} 
             onOpenChange={setOpenVolunteerList}
+            listOfConfirmedVolTask={listOfConfirmedVolTask}
           />
         </Modal>
       )}

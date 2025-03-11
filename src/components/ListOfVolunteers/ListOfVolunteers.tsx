@@ -13,6 +13,7 @@ import { TokenContext } from '../../core/TokenContext';
 
 interface ListOfVolunteersProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
+  listOfConfirmedVol:number[]|null
   changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>
   onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
   showActions: boolean; // Добавляем пропс для контроля видимости кнопок
@@ -30,6 +31,7 @@ interface ListOfVolunteersProps {
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   listOfVolunteers,
+  listOfConfirmedVol,
   changeListOfVolunteers,
   onOpenChange,
   showActions,
@@ -63,7 +65,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   const {token} = useContext(TokenContext);
 
 
-  ////функция чтобы волонтер взял доставку
+  ////функция чтобы куратор взял себе доставку
   async function getDelivery(delivery: IDelivery) {
     const id: number = delivery.id;
     const deliveryDate = new Date(delivery.date);
@@ -137,7 +139,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
-          className={showActions? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full": "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" } 
+            className={listOfConfirmedVol && listOfConfirmedVol.includes(volunteer.id) ? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" : 
+              "flex items-center justify-between space-x-4 p-4 bg-light-gray-2 dark:bg-light-gray-5 rounded-[16px] shadow cursor-pointer w-full"}
           onClick={(e) => {
             e.stopPropagation();
             setVolunteerId(volunteer.id)
@@ -209,9 +212,12 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onOpenChange={setVolunteerClicked}
   onConfirm={() => { onVolunteerAssign(volunteerId, deliveryId, routeSheetId); setVolunteerClicked(false) }}
   onCancel={()=>setVolunteerClicked(false)}
-  title={assignedVolunteerName && assignedVolunteerName.length > 0 ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: `Назначить волонтёра ${volunteerName} на ${routeSheetName}?`}
+          title={assignedVolunteerName && assignedVolunteerName.length > 0 ?
+            listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId) ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его вместо {assignedVolunteerName}  на {routeSheetName}? </p>
+            : listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId) ? `Назначить волонтёра ${volunteerName} на ${routeSheetName}?` : <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его на {routeSheetName}? </p> }
   description=""
   confirmText="Назначить"
+  cancelText='Закрыть'
   isSingleButton={false}
 />
       ) : ("")}

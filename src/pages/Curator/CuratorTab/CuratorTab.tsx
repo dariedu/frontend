@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries } from '../../../api/apiDeliveries';
-import NearestDeliveryCurator from '../../../components/NearestDelivery/NearestDeliveryCurator';
+import {  TCuratorDelivery, type TDeliveryListConfirmedForCurator  } from '../../../api/apiDeliveries';
+import NearestDeliveryCurator from '../../../components/NearestDeliveryCurator/NearestDeliveryCurator';
 import { TokenContext } from '../../../core/TokenContext';
-import { getTasksCurator, type ITask } from '../../../api/apiTasks';
+import { type TTasksConfirmedForCurator, type ITask } from '../../../api/apiTasks';
 import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurator';
-import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
+
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
+import {requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks,requestTaskConfirmedList} from './helperFunctions';
+
 
 const CuratorTab: React.FC = () => {
 
@@ -16,107 +18,36 @@ const CuratorTab: React.FC = () => {
    const [curtorTasks, setCurtorTasks] = useState<ITask[]>(localStorage.getItem(`curator_tasks_for_curator_tab`) !== null && localStorage.getItem(`curator_tasks_for_curator_tab`) !== undefined ? JSON.parse(localStorage.getItem(`curator_tasks_for_curator_tab`) as string) : []);  
    const [completedTaskFeedbacks, setCompletedTaskFeedbacks] = useState<number[]>([]) ///все отзывы по таскам
    const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
-
+  const [arrayListOfConfirmedVol, setArrayListOfConfirmedVol] = useState<TDeliveryListConfirmedForCurator[] | null>(null);
+  const [arrayListOfConfirmedVolTask, setArrayListOfConfirmedVolTask] = useState<TTasksConfirmedForCurator[] | null>(null)
+  
    ///// используем контекст токена
    const {token} = useContext(TokenContext);
    const {currentUser} = useContext(UserContext);
   ////// используем контекст
 
-//// 1. запрашиваем кураторские доставки и берем активные и в процессе исполнения
-async function getMyCuratorDeliveries() {
-  const activeDeliveries: TCuratorDelivery[] = [];
-  const inProcessDeliveries: TCuratorDelivery[] = [];
-  const myCompletedDeliveries: TCuratorDelivery[] = [];
-  if (token) {
-    try {
-     let result: ICuratorDeliveries = await getCuratorDeliveries(token);
-    if (result) { 
-      result['активные доставки'].forEach((i: TCuratorDelivery) => { activeDeliveries.push(i) });
-      setCuratorActiveDeliveries(activeDeliveries)/// запоминаем результат
-      localStorage.setItem(`curator_active_del_for_curator_tab`, JSON.stringify(activeDeliveries))
-     ////////////////////////
-      result['выполняются доставки'].forEach((i: TCuratorDelivery) => { inProcessDeliveries.push(i) });
-      setCuratorInProcessDeliveries(inProcessDeliveries)/// запоминаем результат
-      localStorage.setItem(`curator_inProcess_del_for_curator_tab`, JSON.stringify(inProcessDeliveries))
-      /////////////////////
-      result['завершенные доставки'].forEach((i: TCuratorDelivery) => { myCompletedDeliveries.push(i) })
-      setCuratorCompletedDeliveries(myCompletedDeliveries)
-      localStorage.setItem(`curator_completed_del_for_curator_tab`, JSON.stringify(myCompletedDeliveries))
-    }
-}catch (err) {
-  console.log(err, "getMyCuratorDeliveries CuratorPage fail")
-}
-    }
-  }
-  
-  async function getMyCuratorTasks() {
-    if (token) {
-      try {
-        let result = await getTasksCurator(token);
-        if (result) {
-         let filtered = result.filter(task => {
-            if (task.is_completed) {
-            let timeDiff = Math.abs(+new Date() - +new Date(task.end_date));
-            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            if(diffDays <= 5) return task
-            } else {
-              return task
-            }
-         })
-          setCurtorTasks(filtered)
-          localStorage.setItem(`curator_tasks_for_curator_tab`, JSON.stringify(filtered))
-        } 
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
-
-
- async function getAllMyFeedbacks() {
-  if (token) {
-    try {
-      let result:TMyFeedback[] = await getMyFeedbacks(token);
-      if (result) {
-        let allMySubmitedFeedbacksForCompletedDeliveries: number[] = []
-        let allMySubmitedFeedbacksForCompletedTasks: number[] = [];
-
-        result.filter(i=>i.user == currentUser?.id).forEach(i => {
-          if (typeof i.delivery == 'number' && i.type == 'completed_delivery_curator') {
-            allMySubmitedFeedbacksForCompletedDeliveries.push(i.delivery)
-          } else if (typeof i.task == 'number' && i.type == 'completed_task_curator') {
-            allMySubmitedFeedbacksForCompletedTasks.push(i.task)
-          }
-        })
-        setCompletedDeliveryFeedbacks(allMySubmitedFeedbacksForCompletedDeliveries)
-        setCompletedTaskFeedbacks(allMySubmitedFeedbacksForCompletedTasks)
-      }
-    } catch (err) {
-      console.log("getAllMyFeedbacks volunteer tab has failed")
-  }
-}
-}
     useEffect(() => {
-      getMyCuratorDeliveries()
-      getMyCuratorTasks()
-      getAllMyFeedbacks()
+      getMyCuratorDeliveries(token,setCuratorActiveDeliveries, setCuratorInProcessDeliveries, setCuratorCompletedDeliveries )
+      getMyCuratorTasks(token,  setCurtorTasks)
+      getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+      requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
+      requestTaskConfirmedList(token, setArrayListOfConfirmedVolTask) 
  }, [])
 
-  
  
   return (
     <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-fit pb-20 overflow-y-auto w-full max-w-[500px]">
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
         curatorInProcessDeliveries.map((del, index) => {
             return(<div key={index}>
-              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' />
+              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' arrayListOfConfirmedVol={arrayListOfConfirmedVol} />
             </div>)
         })
       )}
       {curatorActiveDeliveries && curatorActiveDeliveries.length >0 && (
         curatorActiveDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' />
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest'  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
           </div>)
         })
       )}
@@ -127,7 +58,8 @@ async function getMyCuratorDeliveries() {
             <NearestTaskCurator
              task={task}
              taskFilter={+new Date() - +new Date(task.start_date) <= 0 ? 'nearest' : 'active'}
-             feedbackSubmited={submited}
+              feedbackSubmited={submited}
+              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}
        />
           </div>
           )
@@ -137,7 +69,7 @@ async function getMyCuratorDeliveries() {
       {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
        curatorCompletedDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}/>
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
           </div>)
         })
       )}  
@@ -148,7 +80,8 @@ async function getMyCuratorDeliveries() {
             <NearestTaskCurator
              task={task}
              taskFilter={"completed"}
-             feedbackSubmited={submited}
+              feedbackSubmited={submited}
+              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}
        />
           </div>
           )
