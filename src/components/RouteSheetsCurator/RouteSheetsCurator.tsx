@@ -66,6 +66,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
   const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
+  const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
   // const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
@@ -146,7 +147,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   
  useEffect(() => {
     requestPhotoReports();
-  }, []);
+  }, [sendPhotoReportSuccess]);
 
 
   return (routeSheetsData.length == 0 ? (
@@ -176,6 +177,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
               assignVolunteerFail={assignVolunteerFail} setAssignVolunteerFail={setAssignVolunteerFail}
               assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               openRouteSheets={openRouteSheets} setOpenRouteSheets={setOpenRouteSheets} myPhotoReports={myPhotoReports}
+              sendPhotoReportSuccess={sendPhotoReportSuccess} setSendPhotoReportSuccess={setSendPhotoReportSuccess}
             />
           </div>
           );

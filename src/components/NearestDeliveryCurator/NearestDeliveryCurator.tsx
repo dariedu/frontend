@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext} from 'react';
 import {
   getBallCorrectEndingName,
 } from '../helperFunctions/helperFunctions';
-import RouteSheetsM from '../RouteSheets/RouteSheetsCurator';
+import RouteSheetsM from '../RouteSheetsCurator/RouteSheetsCurator';
 import DeliveryFeedback from '../DeliveryOrTaskFeedback/CompletedDeliveryOrTaskFeedback';
 import { Modal } from '../ui/Modal/Modal';
 import { ModalTop } from '../ui/Modal/ModalTop';

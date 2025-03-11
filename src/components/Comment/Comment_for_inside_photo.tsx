@@ -1,31 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as Form from '@radix-ui/react-form';
 import TextareaAutosize from 'react-textarea-autosize';
 
 type TComment = {
-  onSave: (index: number, comment: string) => void;
-  index: number;
+  // onSave: (comment: string) => void;
+  // index: number;
   savedComment: string;
-  id: number;
+  // id: number
+  localeStorageName: string
+  handleFormFieldChange: (fieldName: string, value: string) => void
+  requestBody: {
+    [x: string]: any;
+}
 };
 
-const Comment: React.FC<TComment> = ({ onSave, index, savedComment, id }) => {
-  const localeStorageName = `comment${id}`;
-  type TComment = typeof localeStorageName;
 
-  const [requestBody, setRequestBody] = useState({
-    [`${localeStorageName}`]:
-      localStorage.getItem(localeStorageName) ?? savedComment ?? '',
-  });
+const Comment: React.FC<TComment> = ({ savedComment, localeStorageName, handleFormFieldChange }) => {
+  // type TComment = typeof localeStorageName;
+  // const localeStorageName = `comment${id}`;
+  // type TComment = typeof localeStorageName;
 
-  // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
-  function handleFormFieldChange(fieldName: TComment, value: string) {
-    setRequestBody({
-      ...requestBody,
-      [fieldName]: value,
-    });
-    localStorage.setItem(fieldName, value);
-  }
+  // const [requestBody, setRequestBody] = useState({[`${localeStorageName}`]: localStorage.getItem(localeStorageName) ?? savedComment ?? '' });
+
+  // // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
+  // function handleFormFieldChange(fieldName: TComment, value: string) {
+  //   setRequestBody({
+  //     ...requestBody,
+  //     [fieldName]: value,
+  //   });
+  //   localStorage.setItem(fieldName, value);
+  // }
 
   ////поднимаем текстэриа в фокус пользователя для айфона
   function handleFocus(e: React.FocusEvent<HTMLTextAreaElement, Element>) {
@@ -49,7 +53,7 @@ const Comment: React.FC<TComment> = ({ onSave, index, savedComment, id }) => {
               onChange={e => {
                 handleFormFieldChange(localeStorageName, e.target.value);
               }}
-              onBlur={() => onSave(index, requestBody[`${localeStorageName}`])}
+              // onBlur={() => onSave(requestBody[`${localeStorageName}`])}
             />
           </Form.Control>
         </Form.Field>

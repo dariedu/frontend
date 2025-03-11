@@ -9,6 +9,7 @@ import { getPhotoReportsByDeliveryId, type TServerResponsePhotoReport} from '../
 import { TokenContext } from '../../core/TokenContext';
 import { UserContext } from '../../core/UserContext';
 
+
 interface RouteSheetsProps {
   status: 'Активная' | 'Ближайшая' | 'Завершенная' 
   routeSheetsData: IRouteSheet[]
@@ -16,7 +17,7 @@ interface RouteSheetsProps {
   deliveryId: number
   curatorName:string
   curatorTelegramNik: string
-  curatorImg:string
+  curatorImg: string
 }
 
 const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
@@ -42,8 +43,10 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
       try {
         let result = await getPhotoReportsByDeliveryId(token, deliveryId);
         let filtered = result.filter(report => {
-          if (report.user && report.user.id) {
-            if (report.user.id == currentUser.id)
+          const arr: number[] = [];
+          routeSheetsData.forEach(i =>arr.push(i.id) )
+          if (report.route_sheet_id ) {
+            if (arr.includes(report.route_sheet_id))
            return report
           }
         })

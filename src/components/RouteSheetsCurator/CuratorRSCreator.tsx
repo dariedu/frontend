@@ -37,6 +37,8 @@ interface IProps {
   openRouteSheets: boolean[];
   setOpenRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
   myPhotoReports: TServerResponsePhotoReport[];
+  sendPhotoReportSuccess:boolean
+  setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const RouteSheet: React.FC<IProps> = ({
@@ -56,6 +58,8 @@ const RouteSheet: React.FC<IProps> = ({
   openRouteSheets,
   setOpenRouteSheets,
   myPhotoReports,
+  sendPhotoReportSuccess,
+  setSendPhotoReportSuccess
 }) => {
   const [finished, setFinished] = useState(false);
   const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<
@@ -216,6 +220,7 @@ const RouteSheet: React.FC<IProps> = ({
             assignVolunteerFail={assignVolunteerFail}
             assignVolunteerSuccess={assignVolunteerSuccess}
             assignedVolunteerName={routeS.volunteerFullName}
+            
           />
         </Modal>
       )}
@@ -223,6 +228,10 @@ const RouteSheet: React.FC<IProps> = ({
         <RouteSheetsView
           routes={routeS.address.map(addr => addr)}
           myPhotoReports={thisRouteMyPhotoReports}
+          deliveryId={deliveryId}
+          routeSheetId={routeS.id}
+          sendPhotoReportSuccess={sendPhotoReportSuccess}
+          setSendPhotoReportSuccess={setSendPhotoReportSuccess}
         />
       )}
     </div>

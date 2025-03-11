@@ -11,15 +11,27 @@ import {
 import './index.css'
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import copy from 'clipboard-copy'; // Импортируем библиотеку
+// import { submitPhotoReport } from '../RouteSheetsVolunteer/helperFunctions';
+import { Modal } from '../ui/Modal/Modal';
+import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
+import { submitPhotoReport } from '../RouteSheetsVolunteer/helperFunctions';
 
 interface IRouteSheetsViewProps {
   routes: TAddress[]
-  myPhotoReports:TServerResponsePhotoReport[]
+  myPhotoReports: TServerResponsePhotoReport[]
+  deliveryId: number
+  routeSheetId: number
+  sendPhotoReportSuccess:boolean
+  setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   routes,
-  myPhotoReports
+  myPhotoReports,
+  deliveryId,
+  routeSheetId,
+  sendPhotoReportSuccess,
+  setSendPhotoReportSuccess
 }) => {
 
   const [fullView, setFullView] = useState<boolean[]>(Array(routes.length).fill(false)); // раскрываем детали о благополучателе
@@ -37,6 +49,28 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
     const [openCall, setOpenCall] = useState(false); // открываем модалку для набора номера
     const [phoneForCall, setPhoneForCall] = useState(''); // номер телефона для набора
 
+    const [unactive, setUnactive] = useState<
+      ('Отправить' | 'Отправка' | 'Отправлен')[]
+    >(Array(routes.length).fill('Отправить'));
+    const [uploadPictureModal, setUploadPictureModal] = useState<boolean[]>(
+      Array(routes.length).fill(false),
+  );
+    const [uploadedFileLink, setUploadedFileLink] = useState<string[]>(
+      Array(routes.length).fill(''),
+    );
+    //const [routeAddressId, setRouteAddressId] = useState<number[]>(Array(routes.length).fill(NaN));
+    const [fileUploaded, setFileUploaded] = useState<boolean[]>(
+      Array(routes.length).fill(false),
+  );
+    const [sendMessage, setSendMessage] = useState<string>('');
+// const [beneficiarIsAbsentP, setBeneficiarIsAbsentP] = useState<boolean[]>(
+//     Array(routes.length).fill(false),
+//   ); ////  проверяем благополучатель на месте или нет
+   const [isSending, setIsSending] = useState(false); //// отслеживаем отправку фотоотчета
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
+  // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
+  
   function checkoForUploadedReports() {
     const arr: number[] = [];
     const obj: [number, string][] = [];
@@ -68,9 +102,6 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
   useEffect(() => {
     checkoForUploadedReports();
   }, [myPhotoReports]);
-
-
-
 
 
 
@@ -245,13 +276,42 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               </p>
             </div>
           )}
-          {array.indexOf(route.beneficiar[0].address) != -1 &&
-              beneficiarIsAbsent[array.indexOf(route.beneficiar[0].address)][1] && (
+          {array.indexOf(route.beneficiar[0].address) != -1 && beneficiarIsAbsent[array.indexOf(route.beneficiar[0].address)][1] && (
             <p className=" text-light-gray-5 mt-4 dark:text-light-gray-2 font-gerbera-sub3 self-start">
               Благополучателя нет на месте
             </p>
           )}
-          </div>
+            </div>
+            {array.indexOf(route.beneficiar[0].address) != -1 && object[array.indexOf(route.beneficiar[0].address)][1].length > 0 ? ("") : (
+                <div className="h-fit flex flex-col items-center justify-between mt-8 mb-[20px] space-y-2">
+                <button
+                  className={
+                    unactive[index] == 'Отправить'
+                      ? 'btn-B-WhiteDefault dark:text-light-brand-green text-center'
+                      : 'btn-B-GreenInactive  cursor-default text-center'
+                  }
+                  onClick={() => {
+                    if (unactive[index] == 'Отправить') {
+                      setUploadPictureModal(prev =>
+                        prev.map((isOpen, ind) =>
+                          ind == index ? !isOpen : isOpen,
+                        ),
+                      );
+                    } else if (
+                      unactive[index] == 'Отправлен' ||
+                      unactive[index] == 'Отправка'
+                    ) {
+                    }
+                  }}
+                >
+                  {unactive[index] == 'Отправить'
+                    ? 'Фотоотчет'
+                    : unactive[index] == 'Отправка'
+                      ? 'Отправка'
+                      : 'Фотоотчет отправлен'}
+                </button>
+              </div>
+                )}
             <div className="w-full">
               {route.beneficiar.find(ben => ben.comment && ben.comment.length > 0) &&
               <div className="flex items-center justify-between w-full mb-2 mt-[20px]">
@@ -293,7 +353,55 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
               </div>
             </div>
           )}
-          </div>
+            </div>
+            <Modal
+              isOpen={uploadPictureModal[index]}
+              onOpenChange={() =>
+                setUploadPictureModal(prev =>
+                  prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+                )
+              }
+              onOpenChangeComment={() =>
+                setUploadPictureModal(prev =>
+                  prev.map((isOpen, ind) => (ind == index ? !isOpen : isOpen)),
+                )
+              }
+            >
+              <UploadPic
+                onOpenChange={() =>
+                  setUploadPictureModal(prev =>
+                    prev.map((isOpen, ind) =>
+                      ind == index ? !isOpen : isOpen,
+                    ),
+                  )
+                }
+                index={index}
+                setUploadedFileLink={setUploadedFileLink}
+                setFileUploaded={setFileUploaded}
+                fileUploaded={fileUploaded}
+                uploadedFileLink={uploadedFileLink}
+                // beneficiarIsAbsentInd={beneficiarIsAbsentP[index]}
+                // setBeneficiarIsAbsent={setBeneficiarIsAbsentP}
+                // setFiles={setFiles}
+                // files={files}
+                sendPhotoReportFunc={submitPhotoReport}
+                name={route.address}
+                // onSave={handleAddComment}
+                idForComment={route.beneficiar[0].id}
+                // savedComment={comment[index]}
+                setSendMessage={setSendMessage}
+                setUnactive={setUnactive}
+                setIsSending={setIsSending}
+                routeSheetId={routeSheetId}
+                deliveryId={deliveryId}
+                routes={routes}
+                // beneficiarIsAbsent={beneficiarIsAbsentP}
+                // comment={comment}
+                setSendPhotoReportSuccess={setSendPhotoReportSuccess}
+                setErrorMessage={setErrorMessage}
+                setSendPhotoReportFail={setSendPhotoReportFail}
+              />
+            </Modal>
         </div>
         ))}
       <ConfirmModal
@@ -318,6 +426,46 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
         cancelText='Отмена'
         isSingleButton={false}
       />
+      <ConfirmModal
+        isOpen={sendPhotoReportFail}
+        onOpenChange={setSendPhotoReportFail}
+        onConfirm={() => {
+          setSendPhotoReportFail(false);
+          setErrorMessage('');
+        }}
+        title={
+          errorMessage.length > 0 ? (
+            <p>Упс! {errorMessage}.</p>
+          ) : (
+            <p>
+              Упс, что-то пошло не так
+              <br /> Попробуйте позже.
+            </p>
+          )
+        }
+        description=""
+        confirmText="Закрыть"
+        isSingleButton={true}
+      />
+       <ConfirmModal
+        isOpen={sendPhotoReportSuccess}
+        onOpenChange={setSendPhotoReportSuccess}
+        onConfirm={() => setSendPhotoReportSuccess(false)}
+        title={
+          <p>
+            Фотоотчет по адресу: <br /> {sendMessage} {}
+            успешно отправлен.
+          </p>
+        }
+        description=""
+        confirmText="Закрыть"
+        isSingleButton={true}
+      />
+      <Modal onOpenChange={() => {}} isOpen={isSending}>
+              <div className="h-screen items-center flex flex-col justify-center ">
+                <div className="loader"></div>
+              </div>
+            </Modal>
     </div>
   );
 };

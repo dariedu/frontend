@@ -1,55 +1,114 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { CheckboxElement } from '../ui/CheckboxElement/CheckboxElement';
 import Small_pencile from './../../assets/icons/small_pencile.svg?react';
 import Photo from './../../assets/icons/photo.svg?react';
-// import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import Comment from '../Comment/Comment_for_inside_photo';
 import RightArrowIcon from '../../assets/icons/arrow_right.svg?react';
+import { TAddress } from '../../api/routeSheetApi';
+import { UserContext } from '../../core/UserContext';
+import { TokenContext } from '../../core/TokenContext';
 
 interface IUploadPicProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   // onOpenChangeComment?: ()=>void
   index: number;
   setUploadedFileLink: React.Dispatch<React.SetStateAction<string[]>>;
-  beneficiarIsAbsent: boolean;
-  setBeneficiarIsAbsent: React.Dispatch<React.SetStateAction<boolean[]>>;
+  // beneficiarIsAbsentInd: boolean;
+  // setBeneficiarIsAbsent: React.Dispatch<React.SetStateAction<boolean[]>>;
   uploadedFileLink: string[];
   fileUploaded: boolean[];
   setFileUploaded: React.Dispatch<React.SetStateAction<boolean[]>>;
-  setFiles: React.Dispatch<React.SetStateAction<Blob[]>>;
-  files: Blob[];
-  sendPhotoReportFunc: (index: number) => void;
+  // setFiles: React.Dispatch<React.SetStateAction<Blob[]>>;
+  // files: Blob[];
+  sendPhotoReportFunc: (index: number, currentUser: any, token: string | null,
+    setSendMessage: React.Dispatch<React.SetStateAction<string>>,
+    setUnactive: React.Dispatch<React.SetStateAction<("Отправить" | "Отправка" | "Отправлен")[]>>,
+    setIsSending: React.Dispatch<React.SetStateAction<boolean>>, routeSheetId:number, deliveryId:number, routes:TAddress[], 
+    files: Blob, comment: string, beneficiarIsAbsent: boolean, setSendPhotoReportSuccess: React.Dispatch<React.SetStateAction<boolean>>, 
+    setErrorMessage:React.Dispatch<React.SetStateAction<string>>,  setSendPhotoReportFail:React.Dispatch<React.SetStateAction<boolean>>) => void;
   name: string;
-  onSave: (index: number, comment: string) => void;
+  // onSave: (index: number, comment: string) => void;
   idForComment: number;
-  savedComment: string;
+  // beneficiarIsAbsent: boolean[]
+  // savedComment: string;
+  setSendMessage: React.Dispatch<React.SetStateAction<string>>,
+  setUnactive: React.Dispatch<React.SetStateAction<("Отправить" | "Отправка" | "Отправлен")[]>>,
+  setIsSending: React.Dispatch<React.SetStateAction<boolean>>,
+  routeSheetId: number,
+  deliveryId: number,
+  routes: TAddress[], 
+  // comment: string[],
+  setSendPhotoReportSuccess: React.Dispatch<React.SetStateAction<boolean>>, 
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
+  setSendPhotoReportFail: React.Dispatch<React.SetStateAction<boolean>>
 }
 ////// в компоненте уже есть модалка, если нажать на пустую модальную область она закроется
 export const UploadPic: React.FC<IUploadPicProps> = ({
   onOpenChange,
   index,
   uploadedFileLink,
-  beneficiarIsAbsent,
+  // beneficiarIsAbsentInd,
   setUploadedFileLink,
-  setBeneficiarIsAbsent,
+  // setBeneficiarIsAbsent,
   setFileUploaded,
   fileUploaded,
-  setFiles,
-  files,
+  // setFiles,
+  // files,
   sendPhotoReportFunc,
   name,
-  onSave,
+  // onSave,
   idForComment,
-  savedComment,
+  // beneficiarIsAbsent,
+  // savedComment,
+  setSendMessage,
+  setUnactive,
+  setIsSending,
+  routeSheetId,
+  deliveryId,
+  routes, 
+  setSendPhotoReportSuccess, 
+  setErrorMessage,
+  setSendPhotoReportFail
+  
 }) => {
-  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const localeStorageName = `comment${idForComment}`;
+  const [errorMessageP, setErrorMessageP] = useState<string>('');
   const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const [files, setFiles] = useState<Blob>(new Blob()); ////форматит фото в блоб файл
+  const [comment, addComment] = useState<string>(localStorage.getItem(localeStorageName) ?? "")
+  const [beneficiarIsAbsent, setBeneficiarIsAbsent] = useState<boolean>(false); ////  проверяем благополучатель на месте или нет
+  
+// console.log(routeSheetId, "routeSheetId")
+
+    const { currentUser } = useContext(UserContext);
+  const { token } = useContext(TokenContext);
+
+  
+  // function handleAddComment(comment: string) {
+  //   addComment(comment);
+  //   localStorage.removeItem('comment');
+  // }
+
+
+
+  // type TComment = typeof localeStorageName;
+
+  const [requestBody, setRequestBody] = useState({[`${localeStorageName}`]: localStorage.getItem(localeStorageName) ?? comment ?? '' });
+
+  // при каждом изменении в полях формы вносим изменения в юзера и обновляем localeStorage
+  function handleFormFieldChange(fieldName: string, value: string) {
+    setRequestBody({
+      ...requestBody,
+      [fieldName]: value,
+    });
+    addComment(value)
+    localStorage.setItem(fieldName, value);
+  }
 
   const handleCheckChange = (): void => {
-    setBeneficiarIsAbsent(prev =>
-      prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-    );
+   beneficiarIsAbsent ?  setBeneficiarIsAbsent(false) : setBeneficiarIsAbsent(true)
   };
 
   // Допустимые форматы файлов
@@ -65,20 +124,20 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
       const file = e.target.files[0];
 
       if (!allowedTypes.includes(file.type)) {
-        setErrorMessage(
+        setErrorMessageP(
           'Неподходящий формат файла. Разрешены только JPEG, JPG.',
         );
         setIsErrorOpen(true);
       } else {
         if (file.size > maxFileSize) {
-          setErrorMessage(
+          setErrorMessageP(
             'Файл слишком большой. Рекомендованный размер до 5 МБ. Возможны сложности с отправкой фотоотчета',
           );
           setIsErrorOpen(true);
         }
 
-        let fileList: Blob[] = files.slice();
-        fileList[index] = file;
+        let fileList: Blob = files;
+        fileList = file;
         setFiles(fileList);
 
         let uploadedFilesList: string[] = uploadedFileLink.slice();
@@ -145,7 +204,7 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
       </div>
       <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl w-full p-4 h-fit min-h-fit justify-center items-left flex flex-col mt-1">
         <div>
-          {!beneficiarIsAbsent ? (
+          {!beneficiarIsAbsent? (
             <CheckboxElement
               onCheckedChange={handleCheckChange}
               checked={false}
@@ -163,10 +222,13 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           )}
         </div>
         <Comment
-          onSave={onSave}
-          index={index}
-          savedComment={savedComment}
-          id={idForComment}
+          // onSave={handleAddComment}
+          // index={index}
+          savedComment={comment}
+          // id={idForComment}
+          localeStorageName={localeStorageName}
+          handleFormFieldChange={handleFormFieldChange}
+          requestBody={requestBody}
         />
       </div>
 
@@ -175,24 +237,24 @@ export const UploadPic: React.FC<IUploadPicProps> = ({
           className="btn-B-GreenDefault mt-[39px] "
           onClick={() => {
             onOpenChange(false);
-            sendPhotoReportFunc(index);
+            sendPhotoReportFunc( index, currentUser, token,  setSendMessage,  setUnactive,  setIsSending, routeSheetId, deliveryId, routes,  files, comment, beneficiarIsAbsent, setSendPhotoReportSuccess, setErrorMessage, setSendPhotoReportFail);
           }}
         >
           Отправить фотоотчет
         </button>
       )}
-      {errorMessage.length > 0 && (
+      {errorMessageP.length > 0 && (
         <ConfirmModal
           isOpen={isErrorOpen}
           onOpenChange={setIsErrorOpen}
           onConfirm={() => {
             setIsErrorOpen(false);
-            setErrorMessage('');
+            setErrorMessageP('');
           }}
           title={
             <p>
               Упс,
-              <br /> {errorMessage}
+              <br /> {errorMessageP}
             </p>
           }
           description=""
