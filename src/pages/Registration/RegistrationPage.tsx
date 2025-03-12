@@ -345,15 +345,14 @@ function RegistrationPage() {
       }
     }
     if (formData.get('tg_username') == '' || formData.get('tg_username') == null || formData.get('tg_username') == '@'|| formData.get('tg_username') == 'none' || formData.get('tg_username') == 'None') {
-      setRegistrationHasFailedString(<div>Для регистрации в приложении вам необходимо 
-        <p className='text-light-brand-green ' onClick={() => { setRegistrationhasFailed(false); setOpenNickInstruction(true) }}>создать имя пользователя в Telegram.</p> Оно необходимо, чтобы мы и наши кураторы могли связаться с вами.</div>)
+      setRegistrationHasFailedString(<div>Для регистрации в приложении вам необходимо
+        <p className='text-light-brand-green ' onClick={() => { setRegistrationhasFailed(false); setOpenNickInstruction(true) }}>создать имя пользователя Telegram.</p> Оно нужно, чтобы мы с вами оставались на связи.</div>)
       setRequestSent(false);
       setRegistrationhasFailed(true);
       setIsSending(false);
     } else {
       fetchRegistration(formData); ////отправляем запрос на сервер с даттыми формДата
     }
-
   }
 
 
