@@ -11,7 +11,7 @@ const CreateTelegramNik = ({onOpenChange}:{onOpenChange:React.Dispatch<React.Set
                 </a>) необходимо:</p>
       <br /><br />
       <p className="font-gerbera-h3 text-light-gray-7-logo text-justify px-2 dark:text-light-gray-3">
-        Зайти в настройки телеграм (правый нижний угол), далее в правом верхнем углу нажать «Изм.», найти строку «Имя пользователя» и ввести желаемое имя латинскими буквами.<br/><br/><br /><br />
+        Зайти в настройки телеграм (правый нижний угол), далее в правом верхнем углу нажать «Изм.», найти строку «Имя пользователя» и ввести желаемое имя латинскими буквами. Имя пользователя должно быть уникальным. Следуйте подсказкам Telegram при выборе имени.<br/><br/><br />
         После попробуйте заново зайти в приложение <a href={'https://t.me/DariEduFundBot'} target="_blank" className='text-light-brand-green '>
         @DariEduFundBot </a>  и зарегистрироваться.</p>
     </div>
