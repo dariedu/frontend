@@ -105,7 +105,7 @@ const RouteSheetsVolunteer: React.FC<RouteSheetsProps> = ({
               <div className="flex items-center justify-between w-[96%] mb-2 ">
                 <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-4 p-4">
                   {`Маршрут: ${routeS.name}`} <br/>
-                  {`Обедов к доставке: ${routeS.diners}`} 
+                  {`Обедов к доставке: ${routeS.dinners}`} 
                 </span>
                 <div
                   className="w-6 h-6 cursor-pointer "

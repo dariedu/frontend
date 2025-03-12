@@ -66,7 +66,7 @@ interface IRouteSheet {
   address: TAddress[] // Список адресов
   name: string // Название маршрутного листа
   map?: string // Карта (если есть)
-  diners: number
+  dinners: number
 }
 
 

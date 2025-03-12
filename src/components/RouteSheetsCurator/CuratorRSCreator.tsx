@@ -20,10 +20,11 @@ interface IProps {
   index: number;
   setOpenVolunteerLists: React.Dispatch<React.SetStateAction<boolean[]>>;
   listOfVolunteers: TVolunteerForDeliveryAssignments[];
-  listOfConfirmedVol:number[]|null
+  listOfConfirmedVol: number[] | null;
   openVolunteerLists: boolean[];
   changeListOfVolunteers: React.Dispatch<
-  React.SetStateAction<TVolunteerForDeliveryAssignments[]>>;
+    React.SetStateAction<TVolunteerForDeliveryAssignments[]>
+  >;
   onVolunteerAssign: (
     volunteerId: number,
     deliveryId: number,
@@ -37,8 +38,8 @@ interface IProps {
   openRouteSheets: boolean[];
   setOpenRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
   myPhotoReports: TServerResponsePhotoReport[];
-  sendPhotoReportSuccess:boolean
-  setSendPhotoReportSuccess:React.Dispatch<React.SetStateAction<boolean>>
+  sendPhotoReportSuccess: boolean;
+  setSendPhotoReportSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RouteSheet: React.FC<IProps> = ({
@@ -59,7 +60,7 @@ const RouteSheet: React.FC<IProps> = ({
   setOpenRouteSheets,
   myPhotoReports,
   sendPhotoReportSuccess,
-  setSendPhotoReportSuccess
+  setSendPhotoReportSuccess,
 }) => {
   const [finished, setFinished] = useState(false);
   const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<
@@ -95,99 +96,98 @@ const RouteSheet: React.FC<IProps> = ({
   }, [myPhotoReports]);
 
   return (
-    
     <div
       key={routeS.id}
       className={`mb-1 rounded-xl bg-light-gray-white dark:bg-light-gray-7-logo min-h-[124px] flex flex-col justify-around 
       `}
     >
       <div className={`${finished ? 'opacity-70' : ''}`}>
- {finished && (
-        <div className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white self-center text-center mt-2 ">
-          Волонтёр загрузил все фотоотчеты!
-        </div>
+        {finished && (
+          <div className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white self-center text-center mt-2 ">
+            Волонтёр загрузил все фотоотчеты!
+          </div>
         )}
         <div className="flex items-center justify-between w-full mb-2 p-4">
-        <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
-          {`Маршрут: ${routeS.name}`}
-          <br />
-          {`Обедов к доставке: ${routeS.diners}`}
-        </span>
-        <div
-          className="w-6 h-6 cursor-pointer"
-          onClick={() =>
-            setOpenRouteSheets(prev =>
-              prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-            )
-          }
-        >
-          <Arrow_down
-            className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${openRouteSheets[index] ? 'transform rotate-180' : ''}`}
-          />
-        </div>
+          <span className="font-gerbera-h3 text-light-gray-5 dark:text-light-gray-4">
+            {`Маршрут: ${routeS.name}`}
+            <br />
+            {`Обедов к доставке: ${routeS.dinners}`}
+          </span>
+          <div
+            className="w-6 h-6 cursor-pointer"
+            onClick={() =>
+              setOpenRouteSheets(prev =>
+                prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+              )
+            }
+          >
+            <Arrow_down
+              className={`mt-2 stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer  ${openRouteSheets[index] ? 'transform rotate-180' : ''}`}
+            />
+          </div>
         </div>
         <div className="flex w-full items-center justify-between">
-        <div
-          className="flex w-full items-center cursor-pointer"
-          onClick={() =>
-            setOpenVolunteerLists(prev =>
-              prev.map((isOpen, idx) =>
-                idx === index ? (isOpen ? false : true) : isOpen,
-              ),
-            )
-          }
-        >
-          <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 ">
-            <div className="flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white">
-              {routeS.volunteerFullName ? (
-                <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
-                  <Avatar.Image
-                    className="w-[40px] h-[40px] object-cover"
-                    src={
-                      listOfVolunteers.find(
-                        i => i.tg_username == routeS.telegramNik,
-                      )?.photo
-                    }
-                  />
-                  <Avatar.Fallback
-                    className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
-                    delayMs={600}
-                  >
-                    {routeS.volunteerFullName?.charAt(0)}
-                  </Avatar.Fallback>
-                </Avatar.Root>
-              ) : (
-                <AvatarIcon />
-              )}
+          <div
+            className="flex w-full items-center cursor-pointer"
+            onClick={() =>
+              setOpenVolunteerLists(prev =>
+                prev.map((isOpen, idx) =>
+                  idx === index ? (isOpen ? false : true) : isOpen,
+                ),
+              )
+            }
+          >
+            <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 ">
+              <div className="flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white">
+                {routeS.volunteerFullName ? (
+                  <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
+                    <Avatar.Image
+                      className="w-[40px] h-[40px] object-cover"
+                      src={
+                        listOfVolunteers.find(
+                          i => i.tg_username == routeS.telegramNik,
+                        )?.photo
+                      }
+                    />
+                    <Avatar.Fallback
+                      className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
+                      delayMs={600}
+                    >
+                      {routeS.volunteerFullName?.charAt(0)}
+                    </Avatar.Fallback>
+                  </Avatar.Root>
+                ) : (
+                  <AvatarIcon />
+                )}
 
-              {routeS.volunteerFullName &&
-              routeS.volunteerFullName.length > 0 ? (
-                <p className="ml-3 w-full">{routeS.volunteerFullName}</p>
-              ) : (
-                <p className="ml-3 w-full">Не выбран</p>
-              )}
-              {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
-                <a
-                  href={
-                    'https://t.me/' +
-                    (routeS.telegramNik.includes('@')
-                      ? routeS.telegramNik.slice(1)
-                      : routeS.telegramNik)
-                  }
-                  target="_blank"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <Small_sms className="w-[36px] h-[35px]" />
-                </a>
-              ) : (
-                ''
-              )}
+                {routeS.volunteerFullName &&
+                routeS.volunteerFullName.length > 0 ? (
+                  <p className="ml-3 w-full">{routeS.volunteerFullName}</p>
+                ) : (
+                  <p className="ml-3 w-full">Не выбран</p>
+                )}
+                {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
+                  <a
+                    href={
+                      'https://t.me/' +
+                      (routeS.telegramNik.includes('@')
+                        ? routeS.telegramNik.slice(1)
+                        : routeS.telegramNik)
+                    }
+                    target="_blank"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <Small_sms className="w-[36px] h-[35px]" />
+                  </a>
+                ) : (
+                  ''
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      </div>
-     
+
       {openVolunteerLists[index] && (
         <Modal
           isOpen={openVolunteerLists[index]}
@@ -220,7 +220,6 @@ const RouteSheet: React.FC<IProps> = ({
             assignVolunteerFail={assignVolunteerFail}
             assignVolunteerSuccess={assignVolunteerSuccess}
             assignedVolunteerName={routeS.volunteerFullName}
-            
           />
         </Modal>
       )}

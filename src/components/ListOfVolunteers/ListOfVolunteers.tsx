@@ -1,4 +1,7 @@
-import React, {useState, useContext} from 'react';
+import React, {
+  useState,
+  useContext
+} from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
@@ -49,19 +52,15 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   const [volunteerClicked, setVolunteerClicked] = useState(false);
   const [volunteerId, setVolunteerId] = useState<number>();
   const [volunteerName, setVolunteerName] = useState<string>('')
-  // const [listOfVolunteersThisPage, setListOfVolunteersThisPage] = useState<TVolunteerForDeliveryAssignments[]>(listOfVolunteers)
   
-  const [takeDeliverySuccess, setTakeDeliverySuccess] =
-    useState<boolean>(false); //// подтверждение бронирования доставки
-  const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] =
-    useState<string>(''); ///строка для вывова названия и времени доставки в алерт
+  const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
+  const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
   const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
-  const [takeDeliveryFailString, setTakeDeliveryFailString] =
-    useState<string>(''); //переменная для записи названия ошибки при взятии доставки
+  const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>(''); //переменная для записи названия ошибки при взятии доставки
   const [askCurator, setAskCurator] = useState(false) ///спрашиваем куратора точно ли он хочет записать доставку на себя
   
   const {currentUser} = useContext(UserContext);
-  ///// используем контекст токена
+  /// используем контекст токена
   const {token} = useContext(TokenContext);
 
 
@@ -139,8 +138,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
-            className={listOfConfirmedVol && listOfConfirmedVol.includes(volunteer.id) ? "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full" : 
-              "flex items-center justify-between space-x-4 p-4 bg-light-gray-2 dark:bg-light-gray-5 rounded-[16px] shadow cursor-pointer w-full"}
+            className={ "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"}
           onClick={(e) => {
             e.stopPropagation();
             setVolunteerId(volunteer.id)
@@ -167,7 +165,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
           </Avatar.Root>
           {/* Имя волонтера */}
           <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1  ml-[10px]">
-            {`${volunteer.last_name} ${volunteer.name}`}
+                {`${volunteer.last_name} ${volunteer.name}`}
+                {listOfConfirmedVol && listOfConfirmedVol.includes(volunteer.id) && <p className='text-light-gray-5 dark:text-light-gray-4 font-gerbera-sub3'>Подтвержден</p>}
            </span>
          </div>
           
