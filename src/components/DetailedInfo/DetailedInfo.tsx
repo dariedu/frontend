@@ -95,7 +95,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex w-[90%]">
           <div className="flex flex-col justify-center items-start">
-            <h1 className="w-full h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
+            <h1 className="w-full h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1 mb-1 flex items-center justify-center max-w-[90%]" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
             <p className="w-full font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
