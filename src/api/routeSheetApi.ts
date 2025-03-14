@@ -67,6 +67,7 @@ interface IRouteSheet {
   name: string // Название маршрутного листа
   map?: string // Карта (если есть)
   dinners: number
+  // volunteers:number[]
 }
 
 
@@ -154,6 +155,31 @@ export const assignRouteSheet = async (
   } catch (error: any) {
     console.error('Error assigning route sheet:', error);
     throw new Error('Failed to assign route sheet');
+  }
+};
+
+// Снять маршрутный лист с волонтера
+export const unassignRouteSheet = async (
+  access:string,
+  data: TRouteSheetRequest,
+): Promise<boolean|any> => {
+  try {
+    const response: AxiosResponse<boolean> = await axios({
+      url: `${API_URL}/route_sheets/unassign/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+      data: data,
+    })
+    if (response) {
+      return true;
+    }
+  } catch (error: any) {
+    console.error('Error  unassignRouteSheet:', error);
+    throw new Error('Failed to unassignRouteSheet');
   }
 };
 

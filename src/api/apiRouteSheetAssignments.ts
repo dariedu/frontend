@@ -11,7 +11,7 @@ const routeSheetsAssignmentEndpoint = `${API_URL}/route_assignments/`;
 interface IRouteSheetAssignments {
 id: number
 route_sheet: number
-volunteer: number
+volunteer: number[]
 delivery: number
 }
 

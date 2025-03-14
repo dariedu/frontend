@@ -253,9 +253,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           if (makeReservationFunc) {
             makeReservationFunc(promotion, token, setRedeemPromotionSuccessName, setRedeemPromotionSuccess, userValue, setRedeemPromotionErr, setError)
             onOpenChange(false)
-            setConfirmMakeReservationModal(false)
-          }
-        }}
+            setConfirmMakeReservationModal(false) } }}
         title={<p>Уверены, что хотите забронировать мероприятие?</p>}
         description=""
         confirmText="Да"

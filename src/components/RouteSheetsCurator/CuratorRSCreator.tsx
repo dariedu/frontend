@@ -9,6 +9,8 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { Modal } from '../ui/Modal/Modal';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type TServerResponsePhotoReport } from '../../api/apiPhotoReports';
+// import { onVolunteerUnassign, onVolunteerAssign } from './helperFunctions';
+
 
 interface IfilteredRouteSheet extends IRouteSheet {
   volunteerFullName?: string;
@@ -22,19 +24,15 @@ interface IProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[];
   listOfConfirmedVol: number[] | null;
   openVolunteerLists: boolean[];
-  changeListOfVolunteers: React.Dispatch<
-    React.SetStateAction<TVolunteerForDeliveryAssignments[]>
-  >;
-  onVolunteerAssign: (
-    volunteerId: number,
-    deliveryId: number,
-    routeSheetId: number,
-  ) => Promise<void>;
+  changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>;
+  // onVolunteerAssign: (volunteerId: number, deliveryId: number, routeSheetId: number) => Promise<void>;
+  // onVolunteerUnassign: (volunteerId: number, deliveryId: number, routeSheetId: number) => Promise<void>;
   deliveryId: number;
-  assignVolunteerFail: boolean;
-  setAssignVolunteerFail: React.Dispatch<React.SetStateAction<boolean>>;
+  // assignVolunteerFail: boolean;
   assignVolunteerSuccess: boolean;
   setAssignVolunteerSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  unassignVolunteerSuccess: boolean
+  setUnassignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>
   openRouteSheets: boolean[];
   setOpenRouteSheets: React.Dispatch<React.SetStateAction<boolean[]>>;
   myPhotoReports: TServerResponsePhotoReport[];
@@ -50,12 +48,12 @@ const RouteSheet: React.FC<IProps> = ({
   listOfConfirmedVol,
   openVolunteerLists,
   changeListOfVolunteers,
-  onVolunteerAssign,
   deliveryId,
-  assignVolunteerFail,
-  setAssignVolunteerFail,
+  // assignVolunteerFail,
   assignVolunteerSuccess,
   setAssignVolunteerSuccess,
+  unassignVolunteerSuccess,
+  setUnassignVolunteerSuccess,
   openRouteSheets,
   setOpenRouteSheets,
   myPhotoReports,
@@ -63,9 +61,12 @@ const RouteSheet: React.FC<IProps> = ({
   setSendPhotoReportSuccess,
 }) => {
   const [finished, setFinished] = useState(false);
-  const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<
-    TServerResponsePhotoReport[]
-  >([]);
+  const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
+ 
+ 
+ 
+  // console.log(routeS, "routeS")
+
 
   function filterPhotoReports() {
     if (
@@ -94,6 +95,10 @@ const RouteSheet: React.FC<IProps> = ({
       console.log('all photo uploaded', routeS.address[0].id);
     }
   }, [myPhotoReports]);
+
+
+  // console.log(routeS, "routeS", "dliveryId", deliveryId);
+
 
   return (
     <div
@@ -211,14 +216,18 @@ const RouteSheet: React.FC<IProps> = ({
               );
             }}
             showActions={true}
-            onVolunteerAssign={onVolunteerAssign}
+            // onVolunteerAssign={onVolunteerAssign}
+            // onVolunteerUnassign={onVolunteerUnassign}
             deliveryId={deliveryId}
             routeSheetName={`Маршрутный лист: ${routeS.name}`}
             routeSheetId={routeS.id}
-            setAssignVolunteerFail={setAssignVolunteerFail}
-            setAssignVolunteerSuccess={setAssignVolunteerSuccess}
-            assignVolunteerFail={assignVolunteerFail}
+            // setAssignVolunteerFail={setAssignVolunteerFail}
             assignVolunteerSuccess={assignVolunteerSuccess}
+            setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+            unassignVolunteerSuccess={unassignVolunteerSuccess}
+            setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+            // assignVolunteerFail={assignVolunteerFail}
+            
             assignedVolunteerName={routeS.volunteerFullName}
           />
         </Modal>

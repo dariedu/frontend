@@ -9,7 +9,10 @@ import { ModalTop } from '../ui/Modal/ModalTop';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery, TCuratorDelivery,  TVolunteerForDeliveryAssignments, type TDeliveryListConfirmedForCurator } from '../../api/apiDeliveries';
-import { type IRouteSheet} from '../../api/routeSheetApi';
+import {
+  // assignRouteSheet,
+  type IRouteSheet
+} from '../../api/routeSheetApi';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { TokenContext } from '../../core/TokenContext';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react'
@@ -45,7 +48,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   
   const [listOfVolunteers, setListOfVolunteers] = useState<TVolunteerForDeliveryAssignments[]>([])
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
-  const [assignedRouteSheetsSuccess, setAssignedRouteSheetsSuccess] = useState(false)
+  const [reqAssignedRouteSheetsSuccess, setReqAssignedRouteSheetsSuccess] = useState(false);///для апи запроса всех записанных маршрутных листов на волонтеров
   const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
   const [activateDeliverySuccess, setActivateDeliverySuccess] = useState(false);
 //  const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
@@ -57,8 +60,10 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
 
-
-
+  // assignVolunteerSuccess, unassignVolunteerSuccess
+ const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
+  const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
+  
   useEffect(() => {
     filterVolList(arrayListOfConfirmedVol, curatorDelivery,  setListOfConfirmedVol)
   }, [arrayListOfConfirmedVol])
@@ -66,11 +71,14 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
   useEffect(() => {
     requestMyDelivery(token, curatorDelivery, setDelivery, setDeliveryDate, setListOfVolunteers )
-    requestEachMyRouteSheet(token,  deliveryFilter, curatorDelivery,setRouteSheets);
-    requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setAssignedRouteSheetsSuccess);
+    requestEachMyRouteSheet(token,  deliveryFilter, curatorDelivery, setRouteSheets);
   }, [])
 
+  useEffect(() => {
+    requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
+  }, [unassignVolunteerSuccess, assignVolunteerSuccess])
 
+// console.log(assignedRouteSheets, "assignedRouteSheets")
 
   return (
     <>
@@ -219,7 +227,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         )}
         {/* /////////////////////// */}
       </div>
-      { routeSheets && assignedRouteSheetsSuccess ? (
+      { routeSheets && reqAssignedRouteSheetsSuccess ? (
        <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
         status={currentStatus ? (currentStatus == 'nearest' ? 'Ближайшая' : currentStatus == 'active' ? 'Активная' : 'Завершенная'):(deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная')}
@@ -234,9 +242,11 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         setActivateDeliverySuccess={setActivateDeliverySuccess}
         setCompleteDeliverySuccess={setCompleteDeliverySuccess}
         setCurrentStatus={setCurrentStatus}
-         curatorDelivery={curatorDelivery}
-         setAssignedRouteSheets={setAssignedRouteSheets}
-         setAssignedRouteSheetsSuccess={setAssignedRouteSheetsSuccess}
+         unassignVolunteerSuccess={unassignVolunteerSuccess}
+         setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+         assignVolunteerSuccess={assignVolunteerSuccess}
+         setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+                
        />
      </ModalTop>
       ): ("")

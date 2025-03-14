@@ -6,13 +6,14 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-import {
-  postDeliveryTake,
-  type IDelivery, getDeliveryById
-} from '../../api/apiDeliveries';
-import { UserContext } from '../../core/UserContext';
-import { getMetroCorrectName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
+// import {
+//   postDeliveryTake,
+//   type IDelivery, getDeliveryById
+// } from '../../api/apiDeliveries';
+// import { UserContext } from '../../core/UserContext';
+// import { getMetroCorrectName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
 import { TokenContext } from '../../core/TokenContext';
+import { onVolunteerAssign, onVolunteerUnassign } from '../RouteSheetsCurator/helperFunctions';
 
 interface ListOfVolunteersProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
@@ -23,11 +24,10 @@ interface ListOfVolunteersProps {
   deliveryId: number
   routeSheetId?: number
   routeSheetName?: string
-  onVolunteerAssign?: (volunteerId: number, deliveryId: number, routeSheetId: number) => {}
-  assignVolunteerFail?: boolean
   assignVolunteerSuccess?: boolean
-  setAssignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
-  setAssignVolunteerFail?: React.Dispatch<React.SetStateAction<boolean>>
+  setAssignVolunteerSuccess ?: React.Dispatch<React.SetStateAction<boolean>>
+  unassignVolunteerSuccess?: boolean
+  setUnassignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
   assignedVolunteerName?: string
   preview?:boolean
 }
@@ -35,98 +35,102 @@ interface ListOfVolunteersProps {
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   listOfVolunteers,
   listOfConfirmedVol,
-  changeListOfVolunteers,
   onOpenChange,
   showActions,
   deliveryId,
   routeSheetId,
   routeSheetName,
-  onVolunteerAssign,
-  assignVolunteerFail,
+  // onVolunteerAssign,
+  // onVolunteerUnassign,
   assignVolunteerSuccess,
-  setAssignVolunteerFail,
   setAssignVolunteerSuccess,
+  unassignVolunteerSuccess,
+  setUnassignVolunteerSuccess,
   assignedVolunteerName,
   preview
 }) => {
-  const [volunteerClicked, setVolunteerClicked] = useState(false);
-  const [volunteerId, setVolunteerId] = useState<number>();
-  const [volunteerName, setVolunteerName] = useState<string>('')
+
+  const [volunteerAssignClicked, setVolunteerAssignClicked] = useState(false);
+  const [volunteerUnassignClicked, setVolunteerUnassignClicked] = useState(false);
+  const [volunteerId, setVolunteerId] = useState<number[]>([]);
+  const [volunteerName, setVolunteerName] = useState<string[]>([])
+  const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
+  const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
   
-  const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
-  const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
+  // const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
+  // const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
   const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
   const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>(''); //переменная для записи названия ошибки при взятии доставки
-  const [askCurator, setAskCurator] = useState(false) ///спрашиваем куратора точно ли он хочет записать доставку на себя
+  // const [askCurator, setAskCurator] = useState(false) ///спрашиваем куратора точно ли он хочет записать доставку на себя
   
-  const {currentUser} = useContext(UserContext);
+  // const {currentUser} = useContext(UserContext);
   /// используем контекст токена
   const {token} = useContext(TokenContext);
 
 
   ////функция чтобы куратор взял себе доставку
-  async function getDelivery(delivery: IDelivery) {
-    const id: number = delivery.id;
-    const deliveryDate = new Date(delivery.date);
-    const date = deliveryDate.getDate();
-    const month = getMonthCorrectEndingName(deliveryDate);
-    const hours =
-      deliveryDate.getHours() < 10
-        ? '0' + deliveryDate.getHours()
-        : deliveryDate.getHours();
-    const minutes =
-      deliveryDate.getMinutes() < 10
-        ? '0' + deliveryDate.getMinutes()
-        : deliveryDate.getMinutes();
-    const subway = getMetroCorrectName(delivery.location.subway);
-    const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
-    try {
-      if (token) {
-        let result: IDelivery = await postDeliveryTake(token, id, delivery);
-        if (result) {
-          setTakeDeliverySuccess(true);
-          setTakeDeliverySuccessDateName(finalString);
-          let list: TVolunteerForDeliveryAssignments[] = [];
-          listOfVolunteers.forEach(i => list.push(i));
-          if (currentUser && currentUser.tg_username && currentUser.last_name && currentUser.name && currentUser.photo) {
-            list.push({
-              id: currentUser.id,
-              tg_username: currentUser.tg_username,
-              last_name: currentUser.last_name,
-              name: currentUser.name,
-              photo: currentUser.photo
-            })
-          }
-          changeListOfVolunteers(list)
-        }
-      }
-    } catch (err) {
-      if (err == 'Error: You have already taken this delivery') {
-        setTakeDeliveryFail(true);
-        setTakeDeliveryFailString(
-          `Ошибка, ${finalString} доставка, уже у вас в календаре`,
-        );
-      } else {
-        setTakeDeliveryFail(true);
-        setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
-      }
-    }
-  }
+  // async function getDelivery(delivery: IDelivery) {
+  //   const id: number = delivery.id;
+  //   const deliveryDate = new Date(delivery.date);
+  //   const date = deliveryDate.getDate();
+  //   const month = getMonthCorrectEndingName(deliveryDate);
+  //   const hours =
+  //     deliveryDate.getHours() < 10
+  //       ? '0' + deliveryDate.getHours()
+  //       : deliveryDate.getHours();
+  //   const minutes =
+  //     deliveryDate.getMinutes() < 10
+  //       ? '0' + deliveryDate.getMinutes()
+  //       : deliveryDate.getMinutes();
+  //   const subway = getMetroCorrectName(delivery.location.subway);
+  //   const finalString = `м. ${subway}, ${date} ${month}, ${hours}:${minutes}`;
+  //   try {
+  //     if (token) {
+  //       let result: IDelivery = await postDeliveryTake(token, id, delivery);
+  //       if (result) {
+  //         setTakeDeliverySuccess(true);
+  //         setTakeDeliverySuccessDateName(finalString);
+  //         let list: TVolunteerForDeliveryAssignments[] = [];
+  //         listOfVolunteers.forEach(i => list.push(i));
+  //         if (currentUser && currentUser.tg_username && currentUser.last_name && currentUser.name && currentUser.photo) {
+  //           list.push({
+  //             id: currentUser.id,
+  //             tg_username: currentUser.tg_username,
+  //             last_name: currentUser.last_name,
+  //             name: currentUser.name,
+  //             photo: currentUser.photo
+  //           })
+  //         }
+  //         changeListOfVolunteers(list)
+  //       }
+  //     }
+  //   } catch (err) {
+  //     if (err == 'Error: You have already taken this delivery') {
+  //       setTakeDeliveryFail(true);
+  //       setTakeDeliveryFailString(
+  //         `Ошибка, ${finalString} доставка, уже у вас в календаре`,
+  //       );
+  //     } else {
+  //       setTakeDeliveryFail(true);
+  //       setTakeDeliveryFailString(`Упс, что то пошло не так, попробуйте позже`);
+  //     }
+  //   }
+  // }
 
 
   
-    async function getDeliveryId(deliveryId: number) {
-      if (token) {
-        try {
-          let result: IDelivery = await getDeliveryById(token, deliveryId);
-          if (result) {
-         getDelivery(result)
-      }
-        } catch (err) {
-          console.log(err, "getDeliveryId, ListOfVolunteers")
-        }
-      }
-  }
+  //   async function getDeliveryId(deliveryId: number) {
+  //     if (token) {
+  //       try {
+  //         let result: IDelivery = await getDeliveryById(token, deliveryId);
+  //         if (result) {
+  //        getDelivery(result)
+  //     }
+  //       } catch (err) {
+  //         console.log(err, "getDeliveryId, ListOfVolunteers")
+  //       }
+  //     }
+  // }
   
 
 
@@ -141,9 +145,16 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
             className={ "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"}
           onClick={(e) => {
             e.stopPropagation();
-            setVolunteerId(volunteer.id)
-            setVolunteerName(`${volunteer.name} ${volunteer.last_name}`)
-            setVolunteerClicked(true)
+
+            const listOfVol: string[] = [];
+            const listOfVolId:number[] = [];
+            volunteerName.forEach(i => listOfVol.push(i))
+            listOfVol.push(`${volunteer.name} ${volunteer.last_name}`)
+            setVolunteerName(listOfVol);
+
+            volunteerId.forEach(i => listOfVolId.push(i))
+            listOfVolId.push(volunteer.id)
+            setVolunteerId(listOfVolId)
           }
           }
         >
@@ -175,7 +186,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                     <Small_sms className="w-[36px] h-[35px]"/>
              </a>
                ) : ""} 
-        </div>
+          </div>
        ))}  
       </div>
       
@@ -192,36 +203,62 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         <div className="flex justify-between mt-4 w-[328px]">
             <button
               className={'btn-M-GreenDefault'}
-            onClick={()=>onOpenChange(false)}
+            onClick={e => {
+              e.stopPropagation();
+              setVolunteerAssignClicked(true)
+            }
+          }
           >
-            Закрыть
+            Назначить
           </button>
-          <button
+          {/* <button
             className={'btn-M-GreenClicked'}
             onClick={()=>setAskCurator(true)}
           >
             Забрать себе
+          </button> */}
+          <button
+            className={'btn-M-GreenClicked'}
+            onClick={e => {
+              e.stopPropagation();
+              setVolunteerUnassignClicked(true)
+
+            }}
+          >
+            Снять
           </button>
         </div>
       )}
       {/* </div> */}
-      {onVolunteerAssign && volunteerId && deliveryId && routeSheetId ? (
+      {setAssignVolunteerSuccess && volunteerId && deliveryId && routeSheetId ? (
   <ConfirmModal
-  isOpen={volunteerClicked}
-  onOpenChange={setVolunteerClicked}
-  onConfirm={() => { onVolunteerAssign(volunteerId, deliveryId, routeSheetId); setVolunteerClicked(false) }}
-  onCancel={()=>setVolunteerClicked(false)}
-          title={assignedVolunteerName && assignedVolunteerName.length > 0 ?
-            listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId) ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его вместо {assignedVolunteerName}  на {routeSheetName}? </p>
-            : listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId) ? `Назначить волонтёра ${volunteerName} на ${routeSheetName}?` : <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его на {routeSheetName}? </p> }
+  isOpen={volunteerAssignClicked}
+  onOpenChange={setVolunteerAssignClicked}
+  onConfirm={() => { onVolunteerAssign(volunteerId[0], deliveryId, routeSheetId, token, setAssignVolunteerSuccess, setAssignVolunteerFail); setVolunteerAssignClicked(false) }}
+  onCancel={()=>setVolunteerAssignClicked(false)}
+  title={assignedVolunteerName && assignedVolunteerName.length > 0 ?
+  listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его вместо {assignedVolunteerName}  на {routeSheetName}? </p>
+  : listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `Назначить волонтёра ${volunteerName} на ${routeSheetName}?` : <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его на {routeSheetName}? </p> }
   description=""
   confirmText="Назначить"
   cancelText='Закрыть'
   isSingleButton={false}
 />
       ) : ("")}
-      {onVolunteerAssign && assignVolunteerFail && setAssignVolunteerFail ? (
-        <>
+{setUnassignVolunteerSuccess && volunteerId && deliveryId && routeSheetId ? (
+  <ConfirmModal
+  isOpen={volunteerUnassignClicked}
+  onOpenChange={setVolunteerUnassignClicked}
+  onConfirm={() => {assignedVolunteerName && assignedVolunteerName.length > 0  && onVolunteerUnassign(volunteerId[0], deliveryId, routeSheetId, token, setUnassignVolunteerSuccess, setUnassignVolunteerFail); setVolunteerUnassignClicked(false) }}
+  onCancel={()=>setVolunteerUnassignClicked(false)}
+  title={assignedVolunteerName && assignedVolunteerName.length > 0  ? `Снять волонтёра ${volunteerName} с ${routeSheetName}?` : "Этот волонтер не назначен на эту доставку"}
+  description=""
+  confirmText="Снять"
+  cancelText='Закрыть'
+  isSingleButton={false}
+/>
+      ) : ("")}
+      {assignVolunteerFail && setAssignVolunteerFail && (
       <ConfirmModal
       isOpen={assignVolunteerFail}
       onOpenChange={setAssignVolunteerFail}
@@ -236,26 +273,55 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       confirmText="Ок"
       isSingleButton={true}
     />
-        </>
-      ) : ("")}
-      {onVolunteerAssign  && assignVolunteerSuccess && setAssignVolunteerSuccess ? (
-        <>
+
+      )}
+      {assignVolunteerSuccess && setAssignVolunteerSuccess && (
         <ConfirmModal
       isOpen={assignVolunteerSuccess}
       onOpenChange={setAssignVolunteerSuccess}
         onConfirm = {() => {setAssignVolunteerSuccess(false)}}
       title={
         <p>
-        Волонтер успешно назначен на доставку!
+        Волонтер успешно назначен на маршрут!
         </p>
       }
       description=""
       confirmText="Ок"
       isSingleButton={true}
           />
-        </>
-      ) : ("")}
+      )}
+       {unassignVolunteerFail && (
       <ConfirmModal
+      isOpen={unassignVolunteerFail}
+      onOpenChange={setUnassignVolunteerFail}
+        onConfirm = {() => {setUnassignVolunteerFail(false)}}
+      title={
+        <p>
+          Упс, что-то пошло не так<br />
+          Попробуйте позже
+        </p>
+      }
+      description=""
+      confirmText="Ок"
+      isSingleButton={true}
+    />
+      ) }
+      {unassignVolunteerSuccess && setUnassignVolunteerSuccess &&  (
+        <ConfirmModal
+      isOpen={unassignVolunteerSuccess}
+      onOpenChange={setUnassignVolunteerSuccess}
+        onConfirm = {() => {setUnassignVolunteerSuccess(false)}}
+      title={
+        <p>
+        Волонтер успешно снят с маршрута!
+        </p>
+      }
+      description=""
+      confirmText="Ок"
+      isSingleButton={true}
+          />
+      )}
+      {/* <ConfirmModal
         isOpen={askCurator}
         onOpenChange={setAskCurator}
         onConfirm={() => {
@@ -267,8 +333,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         confirmText="Да"
         cancelText='Отменить'
         isSingleButton={false}
-      />
-       <ConfirmModal
+      /> */}
+       {/* <ConfirmModal
         isOpen={takeDeliverySuccess}
         onOpenChange={setTakeDeliverySuccess}
         onConfirm={() => {
@@ -278,7 +344,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         description=""
         confirmText="Ок"
         isSingleButton={true}
-      />
+      /> */}
       <ConfirmModal
         isOpen={takeDeliveryFail}
         onOpenChange={setTakeDeliveryFail}

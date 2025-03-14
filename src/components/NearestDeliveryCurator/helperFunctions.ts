@@ -82,11 +82,9 @@ import {TDeliveryFilter} from './NearestDeliveryCurator'
      Promise.allSettled(curatorDelivery.id_route_sheet.map(routeS => { return getRouteSheetById(token, routeS) }))
          .then(responses => responses.forEach((result, num) => {
            if (result.status == "fulfilled") {
-             routesArr.push(result.value)
-           }
+             routesArr.push(result.value)}
            if (result.status == "rejected") {
-             console.log(`${num} routeSheet was not fetched`)
-           }
+             console.log(`${num} routeSheet was not fetched`) }
          })).finally(() => {
            setRouteSheets(routesArr);
           //  console.log(routesArr, "routesArr")
@@ -98,14 +96,61 @@ import {TDeliveryFilter} from './NearestDeliveryCurator'
   
 
   ////запрашиваем все записанные на волонтеров маршрутные листы
-    async function requestRouteSheetsAssignments(token:string|null, curatorDelivery: TCuratorDelivery,setAssignedRouteSheets:React.Dispatch<React.SetStateAction<IRouteSheetAssignments[]>>, setAssignedRouteSheetsSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
+    async function requestRouteSheetsAssignments(token:string|null, curatorDelivery: TCuratorDelivery,setAssignedRouteSheets:React.Dispatch<React.SetStateAction<IRouteSheetAssignments[]>>, setReqAssignedRouteSheetsSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
       if (token) {
         try {
           const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
           if (response) {
             let filtered = response.filter(i => i.delivery == curatorDelivery.id_delivery)
+              // .filter(i => { return i.volunteer.length > 0 })
+              .sort((a, b) => { return a.route_sheet - b.route_sheet })
+            console.log(filtered, "filtered requestRouteSheetsAssignments by id", curatorDelivery.id_delivery, "delivery id")
+            // console.log(filtered, "filtered", curatorDelivery.id_delivery, "curatorDelivery.id_delivery")
+            const ids: number[] = [];
+            const arrWithArrayOfVolunteers: IRouteSheetAssignments[] = [];
+           
+            filtered.forEach(i => {
+              if (!ids.includes(i.route_sheet)) {
+                ids.push(i.route_sheet)
+              }
+            });
+        
+            // if (filtered.length > 0) {
+             
+            //   const current = 0;
+
+            //   for (let i = 0; i <= filtered.length-1; i++){
+
+            //   if (i == 0) {
+            //     arrWithArrayOfVolunteers.push({id: filtered[i].id, route_sheet: filtered[i].route_sheet, delivery: filtered[i].delivery, volunteer: filtered[i].volunteer})
+            //   } else {
+            //     if (filtered[i].route_sheet == ids[current]) {
+                  
+            //     }
+
+            //   //   if (arrWithArrayOfVolunteers[i - 1].route_sheet == filtered[i].route_sheet) {
+            //   //     arrWithArrayOfVolunteers[i - 1].volunteer.push(filtered[i].volunteer[0])
+            //   //   } else {
+            //   //     arrWithArrayOfVolunteers.push({id: filtered[i].id, route_sheet: filtered[i].route_sheet, delivery: filtered[i].delivery, volunteer: filtered[i].volunteer})
+            //   //  }
+            //   }
+            //   // else {
+            //   //   // console.log(i, "i")
+            //   //   if (arrWithArrayOfVolunteers[i - 1].route_sheet == filtered[i].route_sheet) {
+            //   //     if (filtered[i].volunteer.length > 0) {
+            //   //       arrWithArrayOfVolunteers[i - 1].volunteer.push(filtered[i].volunteer[0])
+            //   //     }
+            //   //   } else {
+            //   //     arrWithArrayOfVolunteers.push({id: filtered[i].id, route_sheet: filtered[i].route_sheet, delivery: filtered[i].delivery, volunteer: filtered[i].volunteer})
+            //   //   }
+            //   //   }
+            // }
+            // }
+           
+            console.log(arrWithArrayOfVolunteers, "arrWithArrayOfVolunteers")
+
             setAssignedRouteSheets(filtered)
-            setAssignedRouteSheetsSuccess(true);
+            setReqAssignedRouteSheetsSuccess(true);
           }
         } catch (err) {
           console.log(err)
