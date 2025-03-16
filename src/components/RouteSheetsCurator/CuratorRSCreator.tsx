@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IRouteSheet } from '../../api/routeSheetApi';
+// import { IRouteSheet } from '../../api/routeSheetApi';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import AvatarIcon from '../../assets/route_sheets_avatar.svg?react';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
@@ -9,13 +9,8 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { Modal } from '../ui/Modal/Modal';
 import { TVolunteerForDeliveryAssignments } from '../../api/apiDeliveries';
 import { type TServerResponsePhotoReport } from '../../api/apiPhotoReports';
-// import { onVolunteerUnassign, onVolunteerAssign } from './helperFunctions';
+import { IfilteredRouteSheet } from './helperFunctions';
 
-
-interface IfilteredRouteSheet extends IRouteSheet {
-  volunteerFullName?: string;
-  telegramNik?: string;
-}
 
 interface IProps {
   routeS: IfilteredRouteSheet;
@@ -25,10 +20,7 @@ interface IProps {
   listOfConfirmedVol: number[] | null;
   openVolunteerLists: boolean[];
   changeListOfVolunteers: React.Dispatch<React.SetStateAction<TVolunteerForDeliveryAssignments[]>>;
-  // onVolunteerAssign: (volunteerId: number, deliveryId: number, routeSheetId: number) => Promise<void>;
-  // onVolunteerUnassign: (volunteerId: number, deliveryId: number, routeSheetId: number) => Promise<void>;
   deliveryId: number;
-  // assignVolunteerFail: boolean;
   assignVolunteerSuccess: boolean;
   setAssignVolunteerSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   unassignVolunteerSuccess: boolean
@@ -62,12 +54,8 @@ const RouteSheet: React.FC<IProps> = ({
 }) => {
   const [finished, setFinished] = useState(false);
   const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
- 
- 
- 
-  // console.log(routeS, "routeS")
 
-
+// console.log(routeS, "routeS")
   function filterPhotoReports() {
     if (
       myPhotoReports &&
@@ -144,13 +132,16 @@ const RouteSheet: React.FC<IProps> = ({
           >
             <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 ">
               <div className="flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white">
-                {routeS.volunteerFullName ? (
-                  <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
+                <div className='justify-left items-center flex relative'>
+                  {routeS.volunteerFullName && routeS.telegramNik ? (
+                    <Avatar.Root
+                      className={`inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full
+                       bg-light-gray-2 dark:bg-light-gray-5 ${routeS.telegramNik.length == 2 ? " -mt-[9px] ml-5" : ""}`} >
                     <Avatar.Image
-                      className="w-[40px] h-[40px] object-cover"
+                      className="w-[40px] h-[40px] min-w-[40px] min-h-[40px] object-cover"
                       src={
                         listOfVolunteers.find(
-                          i => i.tg_username == routeS.telegramNik,
+                          i => i.tg_username == (routeS.telegramNik&&routeS.telegramNik[0]),
                         )?.photo
                       }
                     />
@@ -158,20 +149,44 @@ const RouteSheet: React.FC<IProps> = ({
                       className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
                       delayMs={600}
                     >
-                      {routeS.volunteerFullName?.charAt(0)}
+                      {routeS.volunteerFullName[0].charAt(0).toLocaleUpperCase()}
                     </Avatar.Fallback>
                   </Avatar.Root>
                 ) : (
                   <AvatarIcon />
+                  )}
+                  {routeS.volunteerFullName && routeS.volunteerFullName.length > 1 && (
+                    <Avatar.Root className={`inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5 ${routeS.volunteerFullName.length == 2 ? "absolute" : ""}`}>
+                    <Avatar.Image
+                      className="w-[40px] h-[40px] min-w-[40px] min-h-[40px] object-cover"
+                      src={
+                        listOfVolunteers.find(
+                          i => i.tg_username == (routeS.telegramNik && routeS.telegramNik[1]),
+                        )?.photo
+                      }
+                    />
+                    <Avatar.Fallback
+                      className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-1 dark:text-white dark:bg-black"
+                      delayMs={600}
+                    >
+                      {routeS.volunteerFullName[1].charAt(0).toLocaleUpperCase()}
+                    </Avatar.Fallback>
+                  </Avatar.Root>
                 )}
-
-                {routeS.volunteerFullName &&
-                routeS.volunteerFullName.length > 0 ? (
-                  <p className="ml-3 w-full">{routeS.volunteerFullName}</p>
-                ) : (
+                </div>
+                {routeS.volunteerFullName && routeS.volunteerFullName.length > 0 ? (
+                  routeS.volunteerFullName.length > 1 ? (
+                    <p className="ml-3 w-full" >
+                      {routeS.volunteerFullName[0]}  и<br />  {routeS.volunteerFullName[1]}
+                      </p>)
+                    : (
+                      <p className="ml-3 w-full" >
+                      {routeS.volunteerFullName[0]}
+                      </p>
+                 )) : (
                   <p className="ml-3 w-full">Не выбран</p>
                 )}
-                {routeS.telegramNik && routeS.telegramNik.length > 0 ? (
+                {routeS.telegramNik && routeS.telegramNik.length == 1 ? (
                   <a
                     href={
                       'https://t.me/' +
@@ -207,6 +222,7 @@ const RouteSheet: React.FC<IProps> = ({
           <ListOfVolunteers
             listOfVolunteers={listOfVolunteers}
             listOfConfirmedVol={listOfConfirmedVol}
+            routeS={routeS}
             changeListOfVolunteers={changeListOfVolunteers}
             onOpenChange={() => {
               setOpenVolunteerLists(prev =>
@@ -216,19 +232,14 @@ const RouteSheet: React.FC<IProps> = ({
               );
             }}
             showActions={true}
-            // onVolunteerAssign={onVolunteerAssign}
-            // onVolunteerUnassign={onVolunteerUnassign}
             deliveryId={deliveryId}
             routeSheetName={`Маршрутный лист: ${routeS.name}`}
-            routeSheetId={routeS.id}
-            // setAssignVolunteerFail={setAssignVolunteerFail}
+            // routeSheetId={routeS.id}
             assignVolunteerSuccess={assignVolunteerSuccess}
             setAssignVolunteerSuccess={setAssignVolunteerSuccess}
             unassignVolunteerSuccess={unassignVolunteerSuccess}
             setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
-            // assignVolunteerFail={assignVolunteerFail}
-            
-            assignedVolunteerName={routeS.volunteerFullName}
+            // assignedVolunteerName={routeS.volunteerFullName}
           />
         </Modal>
       )}

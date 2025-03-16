@@ -67,17 +67,18 @@ interface IRouteSheet {
   name: string // Название маршрутного листа
   map?: string // Карта (если есть)
   dinners: number
-  // volunteers:number[]
+  volunteers:number[]
 }
 
 
 ///////Проверено!
 // Тип данных для запроса при создании или обновлении маршрутного листа
 type TRouteSheetRequest = {
-  volunteer_id: number
+  volunteer_ids: number[]
   delivery_id: number
   routesheet_id:number
 };
+// { "routesheet_id": 1, "volunteer_ids": [7, 6], "delivery_id": 17}
 
 //// кастомный тип для некоторых компонетов куратора
 type TRouteSheetIndividual = {

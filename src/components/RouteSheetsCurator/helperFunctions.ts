@@ -11,8 +11,8 @@ import {
 } from '../../api/apiPhotoReports';
 
 interface IfilteredRouteSheet extends IRouteSheet{
-  volunteerFullName?: string
-  telegramNik?: string
+  volunteerFullName?: string[]
+  telegramNik?: string[]
 }
 ////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
 function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
@@ -20,47 +20,43 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
   listOfVolunteers: TVolunteerForDeliveryAssignments[],
   setFiltered: React.Dispatch<React.SetStateAction<IfilteredRouteSheet[]>>,
   setFilteredSuccess: React.Dispatch<React.SetStateAction<boolean>>) {
- 
-  let filteredRouteSId: number[] = [];
-  const routeSheetsWithVName: IfilteredRouteSheet[]=[];
-  routeSheetsData.forEach(i => routeSheetsWithVName.push(i));
-  routeSheetsData.forEach((item) => filteredRouteSId.push(item.id));
-
-  let final: { id: number, volunteerId: number[], volunteerFullName: string, telegramNik: string }[] = [];
   
-  for (let i = 0; i < filteredRouteSId.length; i++){
-    assignedRouteSheets.forEach(r => {
-      if (r.route_sheet == filteredRouteSId[i])
-        final.push({ id: r.route_sheet, volunteerId: r.volunteer, volunteerFullName: "", telegramNik:"" })
-    });
+   const routeSheetsWithVName: IfilteredRouteSheet[] = [];/// финальный массив который вернет этацункция
+  routeSheetsData.forEach(i => routeSheetsWithVName.push(i));//// переношу все маршрутные листы в отдельный массив для дальнейших модификаций
 
-    final.forEach(i => {
-      listOfVolunteers.forEach(y => {
-        if (y.id == i.volunteerId[0]) {
-          i.volunteerFullName = `${y.name} ${y.last_name}`
-          i.telegramNik = y.tg_username
-        }
+  //// перебираем массив назначенным маршрутных листов, добавляю туда полные имена и телеграм айди волонтеров
+  assignedRouteSheets.forEach(route => {
+    route.volunteer.forEach(vol => {
+       listOfVolunteers.forEach(assVol => {
+        if (vol == assVol.id) {
+          !route.volunteersFullNames?.includes(`${assVol.name} ${assVol.last_name}`) && route.volunteersFullNames?.push(`${assVol.name} ${assVol.last_name}`)
+          !route.telegramNiks?.includes(assVol.tg_username) && route.telegramNiks?.push(assVol.tg_username)
+          }
+        })
       })
-    });
-    
-    final.forEach((i) => {
-      routeSheetsWithVName.forEach((y => {
-        if (y.id == i.id) {
-          y.volunteerFullName = i.volunteerFullName
-          y.telegramNik = i.telegramNik
-     }
-   }))
- })
+  })
+  
+//// перебираем маршрутные листы добавляем к ним верные айди, полное имя и телеграм ник волонтера
+  routeSheetsWithVName.forEach(route => {
+    route.volunteers = [];//опустошаем аррэй с волонтерами до начала манипуляций
+    const correspRouteVol = assignedRouteSheets.find(i => i.route_sheet == route.id)
+    if (correspRouteVol?.volunteer && correspRouteVol.volunteersFullNames && correspRouteVol.telegramNiks) {
+      route.volunteers = correspRouteVol.volunteer;
+      route.volunteerFullName = correspRouteVol.volunteersFullNames;
+      route.telegramNik = correspRouteVol.telegramNiks;
+    }
+  });
+    //  console.log( routeSheetsWithVName, "routeSheetsData routeSheetsWithVName")
     setFiltered(routeSheetsWithVName);
     setFilteredSuccess(true)
-  }
+  // }
 }
 
 
-// /////// записываем маршрутный лист на волонтера
-  async function onVolunteerAssign(volunteerId: number, deliveryId: number, routeSheetId: number,  token:string|null, setAssignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>, setAssignVolunteerFail:React.Dispatch<React.SetStateAction<boolean>>) {
+///////// записываем маршрутный лист на волонтера
+  async function onVolunteerAssign(volunteerIds: number[], deliveryId: number, routeSheetId: number,  token:string|null, setTitle:React.Dispatch<React.SetStateAction<string|JSX.Element>>, setOpenModal:React.Dispatch<React.SetStateAction<boolean>>, setAssignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
     let object:TRouteSheetRequest = {
-      volunteer_id: volunteerId,
+      volunteer_ids: volunteerIds,
       delivery_id: deliveryId,
       routesheet_id:routeSheetId
     }
@@ -68,19 +64,26 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
       try {
         let result = await assignRouteSheet(token, object)
         if (result == true) {
-        //  requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
+          if (volunteerIds.length == 2) {
+            setTitle("Волонтёры успешно назначены на маршрут!")
+          } else {
+           setTitle("Волонтёр успешно назначен на маршрут!") 
+          }
+          //  requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
+          setOpenModal(true)
           setAssignVolunteerSuccess(true)
         }
       } catch (err) {
-       setAssignVolunteerFail(true)
+        setTitle("Упс, что - то пошло не так. Попробуйте позже")
+       setOpenModal(true)
       }
     }
   }
 
 //    /////// записываем маршрутный лист на волонтера
-   async function onVolunteerUnassign(volunteerId: number, deliveryId: number, routeSheetId: number, token:string|null, setUnassignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>, setUnassignVolunteerFail:React.Dispatch<React.SetStateAction<boolean>>) {
+   async function onVolunteerUnassign(volunteerIds: number[], deliveryId: number, routeSheetId: number, token:string|null, setTitle:React.Dispatch<React.SetStateAction<string|JSX.Element>>, setOpenModal:React.Dispatch<React.SetStateAction<boolean>>, setUnassignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
     let object:TRouteSheetRequest = {
-      volunteer_id: volunteerId,
+      volunteer_ids: volunteerIds,
       delivery_id: deliveryId,
       routesheet_id:routeSheetId
     }
@@ -88,11 +91,13 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
       try {
         let result = await unassignRouteSheet(token, object)
         if (result == true) {
-        // requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
-        setUnassignVolunteerSuccess(true)
+          setTitle("Волонтер успешно снят с маршрута!")
+          setOpenModal(true)
+          setUnassignVolunteerSuccess(true)
         }
       } catch (err) {
-        setUnassignVolunteerFail(true)
+        setTitle("Упс, что - то пошло не так. Попробуйте позже")
+        setOpenModal(true)
       }
     }
   }

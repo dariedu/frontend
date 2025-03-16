@@ -6,14 +6,10 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { TVolunteerForDeliveryAssignments } from './../../api/apiDeliveries'
 import Small_sms from "./../../assets/icons/small_sms.svg?react";
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
-// import {
-//   postDeliveryTake,
-//   type IDelivery, getDeliveryById
-// } from '../../api/apiDeliveries';
-// import { UserContext } from '../../core/UserContext';
-// import { getMetroCorrectName, getMonthCorrectEndingName } from '../helperFunctions/helperFunctions';
 import { TokenContext } from '../../core/TokenContext';
 import { onVolunteerAssign, onVolunteerUnassign } from '../RouteSheetsCurator/helperFunctions';
+import { IfilteredRouteSheet } from '../RouteSheetsCurator/helperFunctions';
+import '../RouteSheetsCurator/index.css'
 
 interface ListOfVolunteersProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
@@ -22,14 +18,15 @@ interface ListOfVolunteersProps {
   onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
   showActions: boolean; // Добавляем пропс для контроля видимости кнопок
   deliveryId: number
-  routeSheetId?: number
+  // routeSheetId?: number
   routeSheetName?: string
   assignVolunteerSuccess?: boolean
   setAssignVolunteerSuccess ?: React.Dispatch<React.SetStateAction<boolean>>
   unassignVolunteerSuccess?: boolean
   setUnassignVolunteerSuccess?: React.Dispatch<React.SetStateAction<boolean>>
-  assignedVolunteerName?: string
-  preview?:boolean
+  // assignedVolunteerName?: string[]
+  preview?: boolean
+  routeS?: IfilteredRouteSheet;
 }
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
@@ -38,32 +35,41 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onOpenChange,
   showActions,
   deliveryId,
-  routeSheetId,
+  // routeSheetId,
   routeSheetName,
-  // onVolunteerAssign,
-  // onVolunteerUnassign,
-  assignVolunteerSuccess,
+  // assignVolunteerSuccess,
   setAssignVolunteerSuccess,
-  unassignVolunteerSuccess,
+  // unassignVolunteerSuccess,
   setUnassignVolunteerSuccess,
-  assignedVolunteerName,
+  // assignedVolunteerName,
+  routeS,
   preview
 }) => {
-
+  // console.log(routeS, "routeS")
+  // console.log(assignedVolunteerName, "assignedVolunteerName")
   const [volunteerAssignClicked, setVolunteerAssignClicked] = useState(false);
   const [volunteerUnassignClicked, setVolunteerUnassignClicked] = useState(false);
-  const [volunteerId, setVolunteerId] = useState<number[]>([]);
-  const [volunteerName, setVolunteerName] = useState<string[]>([])
-  const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
-  const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
   
+  // const [volunteerName, setVolunteerName] = useState<string[]>(routeS?.volunteerFullName? routeS.volunteerFullName : [])
+  // const [assignVolunteerFail, setAssignVolunteerFail] = useState(false) // ошибка и снятия и назначения волонтера
+  // const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
+  const [volListForAction, setVollListForAction] = useState<string[]>(routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
+  const [volIdListForAction, setVolIdListForAction] = useState<number[]>(routeS?.volunteers? routeS.volunteers : []);// список айди, который мы будет менять назначать или снимать с доставки
   // const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
   // const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
-  const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
-  const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>(''); //переменная для записи названия ошибки при взятии доставки
+  // const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
+  // const [takeDeliveryFailString, setTakeDeliveryFailString] = useState<string>(''); //переменная для записи названия ошибки при взятии доставки
   // const [askCurator, setAskCurator] = useState(false) ///спрашиваем куратора точно ли он хочет записать доставку на себя
-  
-  // const {currentUser} = useContext(UserContext);
+  const [moreThenTwoVol, setMoreThenTwoVol] = useState(false); // если пытается выбрать больше двух волонтеров за раз
+
+  const [title, setTitle] = useState<string|JSX.Element>("");
+  const [openModal, setOpenModal] = useState<boolean>(false)
+
+  const [actionTitle, setActionTitle] = useState<string>("")
+
+  // const [errorTitle, setErrorTitle] = useState<string>('');
+  // const [error, setError] = useState<boolean>(false);
+
   /// используем контекст токена
   const {token} = useContext(TokenContext);
 
@@ -131,7 +137,86 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   //       }
   //     }
   // }
+
   
+  function handleAssignClick() {
+    const volMatch: (boolean | undefined)[] = volIdListForAction.map(i => routeS?.volunteers.includes(i));
+    /// есть ли эьти волонтеры в списке назначенных волонтеров на этом маршрутном листе
+    console.log(routeS?.volunteers.length, "length", volMatch)
+    // routeS?.volunteers.length
+    if (volMatch.every(i => i)) {
+      if (volMatch.length == 2) {
+        setTitle(`Волонтёры ${volListForAction[0]} и ${volListForAction[1]} уже назначены на ${routeSheetName}`)
+      } else {
+        setTitle(`Волонтёр ${volListForAction[0]} уже назначен на ${routeSheetName}.`)
+      }
+      setOpenModal(true)
+    } else if(volMatch.every(i => !i)) {
+      if (volMatch.length == 2) {
+        if (routeS?.volunteers.length == 0) {
+          const confirmed: (boolean | undefined)[] = volIdListForAction.map(i => listOfConfirmedVol?.includes(i));
+          if (confirmed.every(i => i)) {
+            setActionTitle(`Назначить волонтёров ${volListForAction[0]} и ${volListForAction[1]} на ${routeSheetName}?`)
+            setVolunteerAssignClicked(true)
+          } else if (confirmed.every(i => !i)) {
+            setActionTitle(`Вы уверены, что хотите назначить волонтёров ${volListForAction[0]} и ${volListForAction[1]} на ${routeSheetName}? 
+              Они еще не подтвердили свое участие в доставке!`)
+              setVolunteerAssignClicked(true)
+          } else {
+            setActionTitle(`Вы уверены, что хотите назначить волонтёров ${volListForAction[0]} и ${volListForAction[1]} на ${routeSheetName}? 
+              ${confirmed[0] == false ? volListForAction[0] : volListForAction[1]} еще не подтвердил свое участие в доставке!`)
+              setVolunteerAssignClicked(true)
+          }
+        } else if (routeS?.volunteers.length == 1) {
+          setTitle(`На этот маршрутный лист уже назначен один волонтёр. Оставьте только одного волотёра в списке для нового назначения.`)
+          setOpenModal(true)
+        } else if (routeS?.volunteers.length == 2) {
+          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить новых, сначала снимите их с этого маршрутного листа.`)
+          setOpenModal(true)
+        }
+      } else { 
+        if (routeS?.volunteers.length == 0) {
+          if (listOfConfirmedVol?.includes(volIdListForAction[0])) {
+            setActionTitle(`Назначить волонтёра ${volListForAction[0]} на этот маршрутный лист?`)
+            setVolunteerAssignClicked(true)
+          } else {
+            setActionTitle(`Волонтёр ${volListForAction[0]} еще не подтвердил свое участие в доставке! Вы уверены, что хотите назначить его на ${routeSheetName}?`)
+            setVolunteerAssignClicked(true)
+          }
+        } else if (routeS?.volunteers.length == 1 && routeS?.volunteerFullName) {
+          const notAssignedIndex = volMatch.indexOf(false)
+          if (listOfConfirmedVol?.includes(volIdListForAction[0])) {
+            setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Назначить еще одного волонтёра: ${volListForAction[0]}?`)
+          } else {
+            setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Волонтёр ${volListForAction[0]} еще не подтвердил свое участие в доставке! Назначить еще одного волонтёра: ${volListForAction[0]}?  `)
+          }
+          setVolIdListForAction([volIdListForAction[notAssignedIndex]])
+          setVollListForAction([volListForAction[notAssignedIndex]])
+          setVolunteerAssignClicked(true)
+        } else if (routeS?.volunteers.length == 2) {
+          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить нового, сначала снимите одного из назначенных волонтёров.`)
+          setOpenModal(true)
+        }        
+      }
+    } else if(routeS?.volunteerFullName){
+      const notAssignedIndex = volMatch.indexOf(false)
+      if (listOfConfirmedVol?.includes(volIdListForAction[notAssignedIndex])) {
+        setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?`)
+      } else {
+        setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Волонтёр ${volListForAction[notAssignedIndex]} еще не подтвердил свое участие в доставке! Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?  `)
+      }
+      setVolIdListForAction([volIdListForAction[notAssignedIndex]])
+      setVollListForAction([volListForAction[notAssignedIndex]])
+      setVolunteerAssignClicked(true)
+    }
+  }
+  
+  
+  function handleUnAssignClick() {
+
+
+  setVolunteerUnassignClicked(true)  
+  }
 
 
   return (
@@ -142,31 +227,39 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
-            className={ "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"}
-          onClick={(e) => {
-            e.stopPropagation();
-
-            const listOfVol: string[] = [];
-            const listOfVolId:number[] = [];
-            volunteerName.forEach(i => listOfVol.push(i))
-            listOfVol.push(`${volunteer.name} ${volunteer.last_name}`)
-            setVolunteerName(listOfVol);
-
-            volunteerId.forEach(i => listOfVolId.push(i))
-            listOfVolId.push(volunteer.id)
-            setVolunteerId(listOfVolId)
-          }
-          }
-        >
+            className={`flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full ${volListForAction.includes(`${volunteer.name} ${volunteer.last_name}`) ? "bg-light-gray-2 dark:bg-light-gray-5" : " "}`}
+            onClick={(e) => {
+              e.stopPropagation(); 
+              if (volIdListForAction.includes(volunteer.id)) {
+                if (volListForAction.length == 2 && volIdListForAction.length == 2) {
+                  const arrName = volListForAction.filter(i => i !== `${volunteer.name} ${volunteer.last_name}`)
+                  const arrId = volIdListForAction.filter(i => i !== volunteer.id)
+                    setVollListForAction(arrName);
+                    setVolIdListForAction(arrId)
+                  } else if (volListForAction.length == 1 && volIdListForAction.length == 1) {
+                    setVollListForAction([]);
+                    setVolIdListForAction([])
+                  }
+              } else {
+                if (volListForAction.length == 2 && volIdListForAction.length == 2){
+                  setMoreThenTwoVol(true)
+                  setTimeout(() => {
+                    setMoreThenTwoVol(false)
+                  }, 1000);
+              } else if (volListForAction.length == 0 && volIdListForAction.length == 0) {
+                setVollListForAction([`${volunteer.name} ${volunteer.last_name}`])
+                setVolIdListForAction([volunteer.id])
+              } else if (volListForAction.length == 1 && volIdListForAction.length == 1) {
+                setVollListForAction([volListForAction[0], `${volunteer.name} ${volunteer.last_name}`]);
+                setVolIdListForAction([volIdListForAction[0], volunteer.id])
+              }}}}>
            {/* Аватарка */}
            <div className='flex w-fit items-center'>
            <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
             <Avatar.Image
               className="w-[40px] h-[40px] object-cover"
               src={volunteer.photo}
-              
             />
-            
             <Avatar.Fallback
               className="w-full h-full flex items-center justify-center text-white bg-black"
               delayMs={600}
@@ -205,7 +298,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
               className={'btn-M-GreenDefault'}
             onClick={e => {
               e.stopPropagation();
-              setVolunteerAssignClicked(true)
+              // setVolunteerAssignClicked(true)
+              handleAssignClick()
             }
           }
           >
@@ -221,44 +315,58 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
             className={'btn-M-GreenClicked'}
             onClick={e => {
               e.stopPropagation();
-              setVolunteerUnassignClicked(true)
-
+              // setVolunteerUnassignClicked(true)
+              handleUnAssignClick()
             }}
           >
             Снять
           </button>
         </div>
       )}
-      {/* </div> */}
-      {setAssignVolunteerSuccess && volunteerId && deliveryId && routeSheetId ? (
+      { moreThenTwoVol &&
+        <p className=" bg-light-gray-white dark:bg-light-gray-7-logo shadow-xl font-gerbera-sub3
+          text-light-gray-black text-center  dark:text-light-gray-white ToastViewport ToastRoot">
+          Можно выбрать только 2 волонтёра
+       </p>}
+       
+  {setAssignVolunteerSuccess && volIdListForAction.length > 0 && deliveryId && routeS ? (
   <ConfirmModal
   isOpen={volunteerAssignClicked}
   onOpenChange={setVolunteerAssignClicked}
-  onConfirm={() => { onVolunteerAssign(volunteerId[0], deliveryId, routeSheetId, token, setAssignVolunteerSuccess, setAssignVolunteerFail); setVolunteerAssignClicked(false) }}
-  onCancel={()=>setVolunteerAssignClicked(false)}
-  title={assignedVolunteerName && assignedVolunteerName.length > 0 ?
-  listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его вместо {assignedVolunteerName}  на {routeSheetName}? </p>
-  : listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `Назначить волонтёра ${volunteerName} на ${routeSheetName}?` : <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его на {routeSheetName}? </p> }
+  onConfirm={() => {
+  onVolunteerAssign(volIdListForAction, deliveryId, routeS.id, token, setTitle, setOpenModal, setAssignVolunteerSuccess);
+   setVolunteerAssignClicked(false)
+   setActionTitle('') }}
+  onCancel={() => setVolunteerAssignClicked(false)}
+  title={actionTitle}
+  // title={assignedVolunteerName && assignedVolunteerName.length > 0 ?
+  // listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `На ${routeSheetName} уже назначен волонтёр ${assignedVolunteerName}, назначить вместо него волонтёра ${volunteerName}?`: <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его вместо {assignedVolunteerName}  на {routeSheetName}? </p>
+  // : listOfConfirmedVol && listOfConfirmedVol.includes(volunteerId[0]) ? `Назначить волонтёра ${volunteerName} на ${routeSheetName}?` : <p>Волонтёр {volunteerName} еще не подтвердил свое участие в доставке! <br/> Вы уверены, что хотите назначить его на {routeSheetName}? </p> }
   description=""
   confirmText="Назначить"
   cancelText='Закрыть'
   isSingleButton={false}
 />
       ) : ("")}
-{setUnassignVolunteerSuccess && volunteerId && deliveryId && routeSheetId ? (
+{setUnassignVolunteerSuccess && volIdListForAction.length >0 && deliveryId && routeS ? (
   <ConfirmModal
   isOpen={volunteerUnassignClicked}
   onOpenChange={setVolunteerUnassignClicked}
-  onConfirm={() => {assignedVolunteerName && assignedVolunteerName.length > 0  && onVolunteerUnassign(volunteerId[0], deliveryId, routeSheetId, token, setUnassignVolunteerSuccess, setUnassignVolunteerFail); setVolunteerUnassignClicked(false) }}
-  onCancel={()=>setVolunteerUnassignClicked(false)}
-  title={assignedVolunteerName && assignedVolunteerName.length > 0  ? `Снять волонтёра ${volunteerName} с ${routeSheetName}?` : "Этот волонтер не назначен на эту доставку"}
+  onConfirm={() => {
+  routeS.volunteerFullName && routeS.volunteerFullName.length > 0 &&
+  onVolunteerUnassign(volIdListForAction, deliveryId, routeS.id, token, setTitle, setOpenModal, setUnassignVolunteerSuccess);
+  setVolunteerUnassignClicked(false);
+   setActionTitle('')}}
+  onCancel={() => setVolunteerUnassignClicked(false)}
+  title={actionTitle}
+  // title={assignedVolunteerName && assignedVolunteerName.length > 0  ? `Снять волонтёра ${volunteerName} с ${routeSheetName}?` : "Этот волонтер не назначен на эту доставку"}
   description=""
   confirmText="Снять"
   cancelText='Закрыть'
   isSingleButton={false}
 />
       ) : ("")}
-      {assignVolunteerFail && setAssignVolunteerFail && (
+      {/* {assignVolunteerFail && (
       <ConfirmModal
       isOpen={assignVolunteerFail}
       onOpenChange={setAssignVolunteerFail}
@@ -274,23 +382,19 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       isSingleButton={true}
     />
 
-      )}
-      {assignVolunteerSuccess && setAssignVolunteerSuccess && (
+      )} */}
+      {openModal && title && (
         <ConfirmModal
-      isOpen={assignVolunteerSuccess}
-      onOpenChange={setAssignVolunteerSuccess}
-        onConfirm = {() => {setAssignVolunteerSuccess(false)}}
-      title={
-        <p>
-        Волонтер успешно назначен на маршрут!
-        </p>
-      }
+      isOpen={openModal}
+      onOpenChange={setOpenModal}
+      onConfirm={() => { setOpenModal(false); setTitle('') }}
+      title={title}
       description=""
       confirmText="Ок"
       isSingleButton={true}
-          />
+      />
       )}
-       {unassignVolunteerFail && (
+       {/* {unassignVolunteerFail && (
       <ConfirmModal
       isOpen={unassignVolunteerFail}
       onOpenChange={setUnassignVolunteerFail}
@@ -305,8 +409,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       confirmText="Ок"
       isSingleButton={true}
     />
-      ) }
-      {unassignVolunteerSuccess && setUnassignVolunteerSuccess &&  (
+      ) } */}
+      {/* {unassignVolunteerSuccess && setUnassignVolunteerSuccess &&  (
         <ConfirmModal
       isOpen={unassignVolunteerSuccess}
       onOpenChange={setUnassignVolunteerSuccess}
@@ -320,7 +424,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       confirmText="Ок"
       isSingleButton={true}
           />
-      )}
+      )} */}
       {/* <ConfirmModal
         isOpen={askCurator}
         onOpenChange={setAskCurator}
@@ -345,7 +449,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         confirmText="Ок"
         isSingleButton={true}
       /> */}
-      <ConfirmModal
+      {/* <ConfirmModal
         isOpen={takeDeliveryFail}
         onOpenChange={setTakeDeliveryFail}
         onConfirm={() => {
@@ -356,7 +460,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
         description=""
         confirmText="Ок"
         isSingleButton={true}
-      />
+      /> */}
       </div> 
   );
 };

@@ -65,13 +65,10 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   setActivateDeliverySuccess,
   setCompleteDeliverySuccess,
   setCurrentStatus,
-  // curatorDelivery,
-  // setAssignedRouteSheets,
   unassignVolunteerSuccess,
   setUnassignVolunteerSuccess,
   assignVolunteerSuccess,
   setAssignVolunteerSuccess
-  // setReqAssignedRouteSheetsSuccess,
 }) => {
 
 
@@ -79,17 +76,12 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
 
   
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
-  // const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
-  // const [assignVolunteerFail, setAssignVolunteerFail] = useState(false)
-  // const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
-  // const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
   const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
   const [filteredSuccess, setFilteredSuccess] = useState(false)
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
   const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
   const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
-  // const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
   ///// используем контекст токена
   const tokenContext = useContext(TokenContext);
   const token = tokenContext.token;
@@ -134,7 +126,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   
   useEffect(() => {
     findAssignedRouteSheets(routeSheetsData, assignedRouteSheets, listOfVolunteers, setFiltered, setFilteredSuccess);
-  }, [assignVolunteerSuccess, unassignVolunteerSuccess])
+  }, [assignedRouteSheets])
 
   
 //   /////// записываем маршрутный лист на волонтера
@@ -194,7 +186,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
     requestPhotoReports(token, deliveryId, setMyPhotoReports);
   }, [sendPhotoReportSuccess]);
 
-  //  console.log(filtered, "filtered routeSheetCurator")
+    // console.log(filtered, "filtered routeSheetCurator")
 
   return (routeSheetsData.length == 0 ? (
     <div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black  h-screen flex flex-col overflow-y-auto pb-[74px]" onClick={(e)=>e.stopPropagation()}>
@@ -217,8 +209,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
           return (
             <div className="flex flex-col" key={routeS.id + index}>
             <RouteSheet routeS={routeS} index={index} setOpenVolunteerLists={setOpenVolunteerLists}
-              listOfVolunteers={listOfVolunteers} listOfConfirmedVol={listOfConfirmedVol} openVolunteerLists={openVolunteerLists}
-              changeListOfVolunteers={changeListOfVolunteers} deliveryId={deliveryId}
+              listOfVolunteers={listOfVolunteers}  openVolunteerLists={openVolunteerLists}
+              changeListOfVolunteers={changeListOfVolunteers} deliveryId={deliveryId} listOfConfirmedVol={listOfConfirmedVol}
               unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
               assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               openRouteSheets={openRouteSheets} setOpenRouteSheets={setOpenRouteSheets} myPhotoReports={myPhotoReports}

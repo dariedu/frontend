@@ -13,6 +13,8 @@ id: number
 route_sheet: number
 volunteer: number[]
 delivery: number
+volunteersFullNames?:string[]
+telegramNiks?:string[] 
 }
 
 export const getRouteSheetAssignments = async (token: string): Promise<IRouteSheetAssignments[]> => {
@@ -36,6 +38,23 @@ export const getRouteSheetAssignmentsById = async (token: string, routeSheetId: 
   try {
     const response: AxiosResponse<IRouteSheetAssignments> = await axios.get(
       `${routeSheetsAssignmentEndpoint}${routeSheetId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    return response.data
+  } catch (err) {
+    console.error('Error fetching getRouteSheetAssignments:', err);
+    throw new Error('Failed to fetch getRouteSheetAssignments');
+  }
+}
+
+export const getRouteSheetAssignmentsByDeliveryId = async (token: string, deliveryId: number): Promise<IRouteSheetAssignments[]> => {
+  try {
+    const response: AxiosResponse<IRouteSheetAssignments[]> = await axios.get(
+      `${routeSheetsAssignmentEndpoint}${deliveryId}/by_delivery/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

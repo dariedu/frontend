@@ -4,10 +4,13 @@ import NearestDeliveryCurator from '../../../components/NearestDeliveryCurator/N
 import { TokenContext } from '../../../core/TokenContext';
 import { type TTasksConfirmedForCurator, type ITask } from '../../../api/apiTasks';
 import NearestTaskCurator from '../../../components/NearestTask/NearestTaskCurator';
-
+// import { IRouteSheetAssignments } from '../../../api/apiRouteSheetAssignments';
 import { UserContext } from '../../../core/UserContext';
 import Bread from './../../../assets/icons/bread.svg?react'
-import {requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks,requestTaskConfirmedList} from './helperFunctions';
+import {
+  requestDeliveryConfirmedList, getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks, requestTaskConfirmedList,
+  // requestAllRouteSheetsAssignments
+} from './helperFunctions';
 
 
 const CuratorTab: React.FC = () => {
@@ -20,6 +23,11 @@ const CuratorTab: React.FC = () => {
    const [completedDeliveryFeedbacks, setCompletedDeliveryFeedbacks] = useState<number[]>([]); ////тут все мои отзывы
   const [arrayListOfConfirmedVol, setArrayListOfConfirmedVol] = useState<TDeliveryListConfirmedForCurator[] | null>(null);
   const [arrayListOfConfirmedVolTask, setArrayListOfConfirmedVolTask] = useState<TTasksConfirmedForCurator[] | null>(null)
+  // const [allAssignedRouteSheets, setAllAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([])
+
+//    // assignVolunteerSuccess, unassignVolunteerSuccess
+//  const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
+//   const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
   
    ///// используем контекст токена
    const {token} = useContext(TokenContext);
@@ -32,22 +40,35 @@ const CuratorTab: React.FC = () => {
       getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
       requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
       requestTaskConfirmedList(token, setArrayListOfConfirmedVolTask) 
+    
  }, [])
 
+  
+  // useEffect(() => {
+  //   requestAllRouteSheetsAssignments(token, setAllAssignedRouteSheets)
+  // }, [unassignVolunteerSuccess, assignVolunteerSuccess])
  
   return (
     <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-fit pb-20 overflow-y-auto w-full max-w-[500px]">
       {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
         curatorInProcessDeliveries.map((del, index) => {
             return(<div key={index}>
-              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' arrayListOfConfirmedVol={arrayListOfConfirmedVol} />
+              <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' arrayListOfConfirmedVol={arrayListOfConfirmedVol}
+                // allAssignedRouteSheets={allAssignedRouteSheets}
+                // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+                // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+              />
             </div>)
         })
       )}
       {curatorActiveDeliveries && curatorActiveDeliveries.length >0 && (
         curatorActiveDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest'  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
+            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' arrayListOfConfirmedVol={arrayListOfConfirmedVol}
+              // allAssignedRouteSheets={allAssignedRouteSheets}
+            // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+            // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+            />
           </div>)
         })
       )}
@@ -69,7 +90,12 @@ const CuratorTab: React.FC = () => {
       {curatorCompletedDeliveries && curatorCompletedDeliveries.length > 0 && (
        curatorCompletedDeliveries.map((del, index) => {
           return (<div key={index}>
-            <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='completed' feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery)? true : false}  arrayListOfConfirmedVol={arrayListOfConfirmedVol}/>
+            <NearestDeliveryCurator
+              // allAssignedRouteSheets={allAssignedRouteSheets}
+              curatorDelivery={del} deliveryFilter='completed'
+              // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+              // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
+              feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery) ? true : false} arrayListOfConfirmedVol={arrayListOfConfirmedVol} />
           </div>)
         })
       )}  

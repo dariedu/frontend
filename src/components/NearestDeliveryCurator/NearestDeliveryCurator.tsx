@@ -10,21 +10,25 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import ListOfVolunteers from '../ListOfVolunteers/ListOfVolunteers';
 import { type IDelivery, TCuratorDelivery,  TVolunteerForDeliveryAssignments, type TDeliveryListConfirmedForCurator } from '../../api/apiDeliveries';
 import {
-  // assignRouteSheet,
   type IRouteSheet
 } from '../../api/routeSheetApi';
 import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import { TokenContext } from '../../core/TokenContext';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react'
 import Arrow_down from './../../assets/icons/arrow_down.svg?react'
-import { requestMyDelivery,  requestEachMyRouteSheet, requestRouteSheetsAssignments, filterVolList } from './helperFunctions'
+import {
+  requestMyDelivery,
+  requestEachMyRouteSheet,
+  requestRouteSheetsAssignmentsByDelivery,
+  filterVolList
+} from './helperFunctions'
 
 
 interface INearestDeliveryProps {
   curatorDelivery:TCuratorDelivery
   deliveryFilter: TDeliveryFilter
   feedbackSubmited?: boolean
-  arrayListOfConfirmedVol:TDeliveryListConfirmedForCurator[]|null
+  arrayListOfConfirmedVol: TDeliveryListConfirmedForCurator[] | null
 }
 
 type TDeliveryFilter = 'nearest' | 'active' | 'completed';
@@ -33,9 +37,9 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   curatorDelivery,
   deliveryFilter,
   feedbackSubmited,
-  arrayListOfConfirmedVol
+  arrayListOfConfirmedVol,
 }) => {
-
+ 
   const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited);
   const [delivery, setDelivery] = useState<IDelivery>()
   const [fullViewCompleted, setFullViewCompleted] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
@@ -45,24 +49,28 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [currentStatus, setCurrentStatus] = useState<TDeliveryFilter>(deliveryFilter) ; /// статус доставки 'nearest' | 'active' | 'completed'
   const [isCuratorFeedbackModalOpen, setIsCuratorFeedbackModalOpen] = useState(false); /// открываем модальное окно с отзывом по завершенной доставке куратора
   const [isFeedbackSubmitedModalOpen, setIsFeedbackSubmitedModalOpen] = useState(false); ////// открываем модальное окно, чтобы подтвердить доставку
-  
   const [listOfVolunteers, setListOfVolunteers] = useState<TVolunteerForDeliveryAssignments[]>([])
+
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
-  const [reqAssignedRouteSheetsSuccess, setReqAssignedRouteSheetsSuccess] = useState(false);///для апи запроса всех записанных маршрутных листов на волонтеров
+  // на волонтеров, со всеми волонтерами в одном экземпляре по айди маршрутного листа по конкретной доставке
+  const [reqAssignedRouteSheetsSuccess, setReqAssignedRouteSheetsSuccess] = useState(false);///для апи запроса всех записанных маршрутных листов 
+
   const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
   const [activateDeliverySuccess, setActivateDeliverySuccess] = useState(false);
 //  const [deliveryStatus, setDeliveryStatus]= useState<'Активная' | 'Ближайшая' | 'Завершенная' >(status)
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
   const [listOfConfirmedVol, setListOfConfirmedVol] = useState<number[] | null>(null); ///список подтвержденных волонтеров на доставку
-
+  // console.log(assignedRouteSheets, "assignedRouteSheets nearestDeliveryCurator")
   ///// используем контекст токена
    const {token} = useContext(TokenContext);
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
 
-  // assignVolunteerSuccess, unassignVolunteerSuccess
- const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
-  const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
+ 
+    // assignVolunteerSuccess, unassignVolunteerSuccess
+  const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
+   const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
+   
   
   useEffect(() => {
     filterVolList(arrayListOfConfirmedVol, curatorDelivery,  setListOfConfirmedVol)
@@ -75,8 +83,10 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   }, [])
 
   useEffect(() => {
-    requestRouteSheetsAssignments(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
-  }, [unassignVolunteerSuccess, assignVolunteerSuccess])
+    if (currentStatus == "active" ||  currentStatus=="nearest" ) {
+      requestRouteSheetsAssignmentsByDelivery(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
+    }
+  }, [assignVolunteerSuccess, unassignVolunteerSuccess])
 
 // console.log(assignedRouteSheets, "assignedRouteSheets")
 
