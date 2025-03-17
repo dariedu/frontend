@@ -728,10 +728,9 @@ function RegistrationPage() {
                   setRegistrationComplete(true);
                   setRegistrationCompleteModal(false);
                 }}
-                  title={<p>Ваша заявка принята и проходит проверку.<br />
-                  📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green '>
-                @volunteers_dari_edu
-                </a>
+                  title={<p>Спасибо, заявка принята.<br />  Пожалуйста, подождите немного. <br />
+                    Проверяем заявки вручную по будням с 10 до 18.<br />
+                  📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green '> @volunteers_dari_edu </a>
                   </p>}
                 description=""
                 confirmText="Ок"
