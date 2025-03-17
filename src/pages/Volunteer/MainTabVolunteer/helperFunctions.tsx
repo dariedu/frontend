@@ -104,7 +104,7 @@ async function getDeliveryFromServer(delivery: IDelivery, token: string | null, 
           );
         } else if ((err = ' Error: User does not confirmed')) {
           setTakeTaskFail(true);
-          setTakeTaskFailString(<p> Вы сможете записаться на доставку и добрые дела после завершения регистрации.< br /> 
+          setTakeTaskFailString(<p>Вы сможете записаться после того, как ваша заявка пройдет проверку.< br /> 
           📩 <a href={ 'https://t.me/volunteers_dari_edu'} target = "_blank"  className = 'text-light-brand-green ' >
           @volunteers_dari_edu</a></p >,);
        }  else {
@@ -167,7 +167,7 @@ function getDelivery(delivery: IDelivery, setTakeDeliverySuccessDateName:React.D
         );
       } else if ((err = ' Error: User does not confirmed')) {
         setTakeTaskFail(true);
-        setTakeTaskFailString(<p> Вы сможете записаться на доброе дело и доставки после завершения регистрации.< br /> 
+        setTakeTaskFailString(<p>Вы сможете записаться после того, как ваша заявка пройдет проверку.<br/>
           📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank" className='text-light-brand-green ' >
             @volunteers_dari_edu</a></p >,);
       } else {
