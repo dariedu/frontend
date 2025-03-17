@@ -53,7 +53,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   // const [volunteerName, setVolunteerName] = useState<string[]>(routeS?.volunteerFullName? routeS.volunteerFullName : [])
   // const [assignVolunteerFail, setAssignVolunteerFail] = useState(false) // ошибка и снятия и назначения волонтера
   // const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
-  const [volListForAction, setVollListForAction] = useState<string[]>(routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
+  const [volListForAction, setVolListForAction] = useState<string[]>(routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
   const [volIdListForAction, setVolIdListForAction] = useState<number[]>(routeS?.volunteers? routeS.volunteers : []);// список айди, который мы будет менять назначать или снимать с доставки
   // const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
   // const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
@@ -142,17 +142,17 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   function handleAssignClick() {
     const volMatch: (boolean | undefined)[] = volIdListForAction.map(i => routeS?.volunteers.includes(i));
     /// есть ли эьти волонтеры в списке назначенных волонтеров на этом маршрутном листе
-    console.log(routeS?.volunteers.length, "length", volMatch)
-    // routeS?.volunteers.length
-    if (volMatch.every(i => i)) {
+    // console.log(routeS?.volunteers.length, "length", volMatch)
+
+    if (volMatch.every(i => i)) { ////если список полностью совпадает со списком уже назначенных волонтеров
       if (volMatch.length == 2) {
         setTitle(`Волонтёры ${volListForAction[0]} и ${volListForAction[1]} уже назначены на ${routeSheetName}`)
       } else {
         setTitle(`Волонтёр ${volListForAction[0]} уже назначен на ${routeSheetName}.`)
       }
       setOpenModal(true)
-    } else if(volMatch.every(i => !i)) {
-      if (volMatch.length == 2) {
+    } else if (volMatch.every(i => !i)) { // если список к действию полностью не совпадает со списком уже назначенных волонтеров
+      if (volIdListForAction.length == 2) {
         if (routeS?.volunteers.length == 0) {
           const confirmed: (boolean | undefined)[] = volIdListForAction.map(i => listOfConfirmedVol?.includes(i));
           if (confirmed.every(i => i)) {
@@ -161,29 +161,21 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
           } else if (confirmed.every(i => !i)) {
             setActionTitle(`Вы уверены, что хотите назначить волонтёров ${volListForAction[0]} и ${volListForAction[1]} на ${routeSheetName}? 
               Они еще не подтвердили свое участие в доставке!`)
-              setVolunteerAssignClicked(true)
+            setVolunteerAssignClicked(true)
           } else {
             setActionTitle(`Вы уверены, что хотите назначить волонтёров ${volListForAction[0]} и ${volListForAction[1]} на ${routeSheetName}? 
               ${confirmed[0] == false ? volListForAction[0] : volListForAction[1]} еще не подтвердил свое участие в доставке!`)
-              setVolunteerAssignClicked(true)
+            setVolunteerAssignClicked(true)
           }
         } else if (routeS?.volunteers.length == 1) {
           setTitle(`На этот маршрутный лист уже назначен один волонтёр. Оставьте только одного волотёра в списке для нового назначения.`)
           setOpenModal(true)
         } else if (routeS?.volunteers.length == 2) {
-          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить новых, сначала снимите их с этого маршрутного листа.`)
+          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить новых, сначала снимите назначенных волонтёров с этого маршрутного листа.`)
           setOpenModal(true)
         }
-      } else { 
-        if (routeS?.volunteers.length == 0) {
-          if (listOfConfirmedVol?.includes(volIdListForAction[0])) {
-            setActionTitle(`Назначить волонтёра ${volListForAction[0]} на этот маршрутный лист?`)
-            setVolunteerAssignClicked(true)
-          } else {
-            setActionTitle(`Волонтёр ${volListForAction[0]} еще не подтвердил свое участие в доставке! Вы уверены, что хотите назначить его на ${routeSheetName}?`)
-            setVolunteerAssignClicked(true)
-          }
-        } else if (routeS?.volunteers.length == 1 && routeS?.volunteerFullName) {
+    } else if (volIdListForAction.length == 1) {
+        if (routeS?.volunteers.length == 1 && routeS?.volunteerFullName) {
           const notAssignedIndex = volMatch.indexOf(false)
           if (listOfConfirmedVol?.includes(volIdListForAction[0])) {
             setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Назначить еще одного волонтёра: ${volListForAction[0]}?`)
@@ -191,31 +183,74 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
             setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Волонтёр ${volListForAction[0]} еще не подтвердил свое участие в доставке! Назначить еще одного волонтёра: ${volListForAction[0]}?  `)
           }
           setVolIdListForAction([volIdListForAction[notAssignedIndex]])
-          setVollListForAction([volListForAction[notAssignedIndex]])
+          setVolListForAction([volListForAction[notAssignedIndex]])
           setVolunteerAssignClicked(true)
+         
         } else if (routeS?.volunteers.length == 2) {
-          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить нового, сначала снимите одного из назначенных волонтёров.`)
+          setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить нового, сначала снимите одного из них с этого маршрута.`)
           setOpenModal(true)
-        }        
-      }
-    } else if(routeS?.volunteerFullName){
-      const notAssignedIndex = volMatch.indexOf(false)
-      if (listOfConfirmedVol?.includes(volIdListForAction[notAssignedIndex])) {
-        setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?`)
-      } else {
-        setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Волонтёр ${volListForAction[notAssignedIndex]} еще не подтвердил свое участие в доставке! Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?  `)
-      }
-      setVolIdListForAction([volIdListForAction[notAssignedIndex]])
-      setVollListForAction([volListForAction[notAssignedIndex]])
-      setVolunteerAssignClicked(true)
+        } else if (routeS?.volunteers.length == 0) {
+          if (listOfConfirmedVol?.includes(volIdListForAction[0])) {
+            setActionTitle(`Назначить волонтёра ${volListForAction[0]} на этот маршрутный лист?`)
+            setVolunteerAssignClicked(true)
+          } else {
+            setActionTitle(`Волонтёр ${volListForAction[0]} еще не подтвердил свое участие в доставке! Вы уверены, что хотите назначить его на ${routeSheetName}?`)
+            setVolunteerAssignClicked(true)
+          }
+        }
+       }
+
+    } else if (routeS?.volunteerFullName) {//// не весь список выбранных к действию волонтеров совпадает с уже назначенными
+      
+        if (routeS?.volunteers.length == 1) {
+          const notAssignedIndex = volMatch.indexOf(false)
+            if (listOfConfirmedVol?.includes(volIdListForAction[notAssignedIndex])) {
+            setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?`)
+          } else {
+            setActionTitle(`На этот маршрутный лист уже назначен волонтёр ${routeS?.volunteerFullName[0]}. Волонтёр ${volListForAction[notAssignedIndex]} еще не подтвердил свое участие в доставке! Назначить еще одного волонтёра: ${volListForAction[notAssignedIndex]}?  `)
+          }
+          setVolIdListForAction([volIdListForAction[notAssignedIndex]])
+          setVolListForAction([volListForAction[notAssignedIndex]])
+          setVolunteerAssignClicked(true)
+        } else if (routeS?.volunteers.length == 2 ) {
+            setTitle(`На этот маршрутный лист уже назначены два волонтёра. Чтобы назначить нового, сначала снимите одного из назначенных волонтёров.`)
+          setOpenModal(true)
+        }
     }
   }
   
   
-  function handleUnAssignClick() {
+  function handleUnassignClick() {
 
+    const volMatch: (boolean | undefined)[] = volIdListForAction.map(i => routeS?.volunteers.includes(i));
+    // console.log(volMatch, "volMtahc")
+    /// есть ли эьти волонтеры в списке назначенных волонтеров на этом маршрутном листе
 
-  setVolunteerUnassignClicked(true)  
+    if (volMatch.every(i => i)) {
+      if (volMatch.length == 2) {
+        setActionTitle(`Вы уверены, что хотите снять волонтёров ${volListForAction[0]} и ${volListForAction[1]} с этого маршрутного листа?`)
+        setVolunteerUnassignClicked(true)
+      } else {
+        setActionTitle(`Вы уверены, что хотите снять волонтёра ${volListForAction[0]} с этого маршрутного листа?`)
+        setVolunteerUnassignClicked(true)
+      }
+    } else if (volMatch.every(i => !i)) {
+      if (volMatch.length == 2) {
+        setTitle(`Волонтёров ${volListForAction[0]} и ${volListForAction[1]} невозможно снять с маршрута, так как они еще не были назначены на ${routeSheetName}?`)
+        setOpenModal(true)
+      } else if (volMatch.length == 1) {
+        setTitle(`Волонтёра ${volListForAction[0]} невозможно снять с маршрута, так как он еще не был назначен на ${routeSheetName}?`)
+        setOpenModal(true)
+      }
+    } else if (routeS?.volunteerFullName) {
+      const assignedIndex = volMatch.indexOf(true)
+      setVolIdListForAction([volIdListForAction[assignedIndex]])
+      setVolListForAction([volListForAction[assignedIndex]])
+      setActionTitle(`Снять волонтёра  ${volListForAction[assignedIndex]} с этого маршрутного листа?`)
+      // console.log(assignedIndex,  volIdListForAction, volListForAction, "assignedIndex for action")
+         setVolunteerAssignClicked(true) 
+      }
+   
   }
 
 
@@ -234,10 +269,10 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                 if (volListForAction.length == 2 && volIdListForAction.length == 2) {
                   const arrName = volListForAction.filter(i => i !== `${volunteer.name} ${volunteer.last_name}`)
                   const arrId = volIdListForAction.filter(i => i !== volunteer.id)
-                    setVollListForAction(arrName);
+                    setVolListForAction(arrName);
                     setVolIdListForAction(arrId)
                   } else if (volListForAction.length == 1 && volIdListForAction.length == 1) {
-                    setVollListForAction([]);
+                    setVolListForAction([]);
                     setVolIdListForAction([])
                   }
               } else {
@@ -247,10 +282,10 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                     setMoreThenTwoVol(false)
                   }, 1000);
               } else if (volListForAction.length == 0 && volIdListForAction.length == 0) {
-                setVollListForAction([`${volunteer.name} ${volunteer.last_name}`])
+                setVolListForAction([`${volunteer.name} ${volunteer.last_name}`])
                 setVolIdListForAction([volunteer.id])
               } else if (volListForAction.length == 1 && volIdListForAction.length == 1) {
-                setVollListForAction([volListForAction[0], `${volunteer.name} ${volunteer.last_name}`]);
+                setVolListForAction([volListForAction[0], `${volunteer.name} ${volunteer.last_name}`]);
                 setVolIdListForAction([volIdListForAction[0], volunteer.id])
               }}}}>
            {/* Аватарка */}
@@ -298,7 +333,6 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
               className={'btn-M-GreenDefault'}
             onClick={e => {
               e.stopPropagation();
-              // setVolunteerAssignClicked(true)
               handleAssignClick()
             }
           }
@@ -315,8 +349,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
             className={'btn-M-GreenClicked'}
             onClick={e => {
               e.stopPropagation();
-              // setVolunteerUnassignClicked(true)
-              handleUnAssignClick()
+              handleUnassignClick()
             }}
           >
             Снять

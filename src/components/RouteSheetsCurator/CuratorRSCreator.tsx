@@ -132,7 +132,7 @@ const RouteSheet: React.FC<IProps> = ({
           >
             <div className="font-gerbera-h3 text-light-gray-8 w-full flex justify-between px-4 pb-4 ">
               <div className="flex w-full justify-between items-center text-light-gray-black dark:text-light-gray-white">
-                <div className='justify-left items-center flex relative'>
+                {/* <div className='justify-left items-center flex relative'>
                   {routeS.volunteerFullName && routeS.telegramNik ? (
                     <Avatar.Root
                       className={`inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full
@@ -186,22 +186,77 @@ const RouteSheet: React.FC<IProps> = ({
                  )) : (
                   <p className="ml-3 w-full">Не выбран</p>
                 )}
-                {routeS.telegramNik && routeS.telegramNik.length == 1 ? (
-                  <a
+                {routeS.telegramNik && 
+                  routeS.telegramNik.map((nik) => (
+                    <a
                     href={
                       'https://t.me/' +
-                      (routeS.telegramNik.includes('@')
-                        ? routeS.telegramNik.slice(1)
-                        : routeS.telegramNik)
+                      (nik.includes('@')
+                        ? nik.slice(1)
+                        : nik)
                     }
                     target="_blank"
                     onClick={e => e.stopPropagation()}
                   >
                     <Small_sms className="w-[36px] h-[35px]" />
                   </a>
-                ) : (
-                  ''
-                )}
+                  ))
+                } */}
+                {(routeS.volunteerFullName && routeS.volunteerFullName.length == 0 && routeS.telegramNik && routeS.telegramNik.length == 0) ?
+                  (<div>
+                    <AvatarIcon />
+                    <p className="ml-3 w-full">Не выбран</p>
+                    </div>
+                  
+                  ) : (
+                    <div className='w-full flex-col justify-between space-y-3'>
+                      { routeS.volunteerFullName && routeS.volunteerFullName.map((name, index)=> (
+                      <div className='flex w-full justify-between items-center h-[64px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl  p-4' key={name + index}>
+                          <Avatar.Root
+                          className={`inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 min-w-8 min-h-8 rounded-full
+                       bg-light-gray-2 dark:bg-light-gray-5 }`} >
+                          <Avatar.Image
+                            className="w-[40px] h-[40px] min-w-[40px] min-h-[40px] object-cover"
+                            src={
+                              listOfVolunteers.find(
+                                i => i.tg_username == (routeS.telegramNik && routeS.telegramNik[index]),
+                              )?.photo }
+                          />
+                          <Avatar.Fallback
+                            className="w-8 h-8 min-w-8 min-h-8 flex items-center justify-center text-black bg-light-gray-white dark:text-white dark:bg-black"
+                            delayMs={600}
+                          >
+                            {name.charAt(0).toLocaleUpperCase()}
+                          </Avatar.Fallback>
+                          </Avatar.Root>
+                          <p className="ml-3 w-full" >{name}</p>
+                          { routeS.telegramNik && <a
+                              href={
+                                'https://t.me/' +
+                                (routeS.telegramNik[index].includes('@')
+                                  ? routeS.telegramNik[index].slice(1)
+                                  : routeS.telegramNik[index])
+                              }
+                              target="_blank"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <Small_sms className="w-[36px] h-[35px]" />
+                            </a>
+                          }
+                      </div>
+                           
+ 
+                      ))
+                      }
+                    
+                    </div>
+                    
+                 ) 
+                 }
+                  
+    
+
+
               </div>
             </div>
           </div>

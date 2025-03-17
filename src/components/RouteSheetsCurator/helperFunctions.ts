@@ -1,9 +1,9 @@
 import {
   IRouteSheet,
-  assignRouteSheet, unassignRouteSheet, type TRouteSheetRequest
+  assignRouteSheet, unassignRouteSheet, type TRouteSheetRequest, type TRouteSheetUnassignRequest
 } from '../../api/routeSheetApi';
 import { type TVolunteerForDeliveryAssignments} from '../../api/apiDeliveries';
-import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+import { type IRouteSheetAssignments} from '../../api/apiRouteSheetAssignments';
 import {
   getPhotoReportsByDeliveryId,
   type TServerResponsePhotoReport,
@@ -55,7 +55,7 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
 
 ///////// записываем маршрутный лист на волонтера
   async function onVolunteerAssign(volunteerIds: number[], deliveryId: number, routeSheetId: number,  token:string|null, setTitle:React.Dispatch<React.SetStateAction<string|JSX.Element>>, setOpenModal:React.Dispatch<React.SetStateAction<boolean>>, setAssignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
-    let object:TRouteSheetRequest = {
+    let object: TRouteSheetRequest = {
       volunteer_ids: volunteerIds,
       delivery_id: deliveryId,
       routesheet_id:routeSheetId
@@ -82,24 +82,70 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
 
 //    /////// записываем маршрутный лист на волонтера
    async function onVolunteerUnassign(volunteerIds: number[], deliveryId: number, routeSheetId: number, token:string|null, setTitle:React.Dispatch<React.SetStateAction<string|JSX.Element>>, setOpenModal:React.Dispatch<React.SetStateAction<boolean>>, setUnassignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
-    let object:TRouteSheetRequest = {
-      volunteer_ids: volunteerIds,
-      delivery_id: deliveryId,
-      routesheet_id:routeSheetId
-    }
-    if (token) {
-      try {
-        let result = await unassignRouteSheet(token, object)
-        if (result == true) {
-          setTitle("Волонтер успешно снят с маршрута!")
-          setOpenModal(true)
-          setUnassignVolunteerSuccess(true)
-        }
-      } catch (err) {
-        setTitle("Упс, что - то пошло не так. Попробуйте позже")
-        setOpenModal(true)
-      }
-    }
+ 
+       const fullFilledArr: boolean[] = [];
+     if (token) {
+       Promise.allSettled(  
+         volunteerIds.map((id) => {
+          let object: TRouteSheetUnassignRequest = {
+            volunteer_id: id,
+            delivery_id: deliveryId,
+            routesheet_id:routeSheetId
+          }
+             return unassignRouteSheet(token, object);
+           }),
+         )
+           .then(responses =>
+             responses.forEach((result, num) => {
+               if (result.status == 'fulfilled') {
+                fullFilledArr.push(result.value);
+               }
+               if (result.status == 'rejected') {
+                 console.log(`${volunteerIds[num]} was not usassigned`);
+               }
+             }),
+           )
+         .finally(() => {
+           if (volunteerIds.length == 2 && fullFilledArr.length == 2) {
+            setTitle("Оба волонтера успешно сняты с маршрута!")
+            setOpenModal(true)
+            setUnassignVolunteerSuccess(true)
+           } else if (volunteerIds.length == 1 && fullFilledArr.length == 1) {
+            setTitle("Волотнтёр успешно снят с маршрута!")
+            setOpenModal(true)
+            setUnassignVolunteerSuccess(true)
+           } else if ((volunteerIds.length == 2 && fullFilledArr.length == 0) || (volunteerIds.length == 1 && fullFilledArr.length == 0)) {
+             setTitle("Упс, что - то пошло не так. Попробуйте позже.")
+             setOpenModal(true)
+           } else if (volunteerIds.length == 2 && fullFilledArr.length == 1) {
+             setUnassignVolunteerSuccess(true)
+             setTitle("Упс, что - то пошло не так. Одного из волонтёров не удалось снять с маршрута. Обновите страницу и попробуйте позже.")
+             setOpenModal(true)
+            }
+           console.log(fullFilledArr, "fullFilledArr")
+           });
+       }
+  //    } else {
+       
+  //  }
+    //  let object:TRouteSheetUnassignRequest = {
+    //   volunteer_ids: volunteerIds,
+    //   delivery_id: deliveryId,
+    //   routesheet_id:routeSheetId
+    // }
+    // if (token) {
+    //   try {
+    //     let result = await unassignRouteSheet(token, object)
+    //     if (result == true) {
+    //       setTitle("Волонтер успешно снят с маршрута!")
+    //       setOpenModal(true)
+    //       setUnassignVolunteerSuccess(true)
+    //     }
+    //   } catch (err) {
+    //     setTitle("Упс, что - то пошло не так. Попробуйте позже")
+    //     setOpenModal(true)
+    //   }
+    // }
   }
 
 async function requestPhotoReports(token: string|null, deliveryId:number, setMyPhotoReports:React.Dispatch<React.SetStateAction<TServerResponsePhotoReport[]>>) {

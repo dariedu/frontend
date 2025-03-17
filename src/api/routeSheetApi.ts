@@ -78,6 +78,12 @@ type TRouteSheetRequest = {
   delivery_id: number
   routesheet_id:number
 };
+// Тип данных для запроса при создании или обновлении маршрутного листа
+type TRouteSheetUnassignRequest = {
+  volunteer_id: number
+  delivery_id: number
+  routesheet_id:number
+};
 // { "routesheet_id": 1, "volunteer_ids": [7, 6], "delivery_id": 17}
 
 //// кастомный тип для некоторых компонетов куратора
@@ -162,11 +168,11 @@ export const assignRouteSheet = async (
 // Снять маршрутный лист с волонтера
 export const unassignRouteSheet = async (
   access:string,
-  data: TRouteSheetRequest,
+  data: TRouteSheetUnassignRequest,
 ): Promise<boolean|any> => {
   try {
     const response: AxiosResponse<boolean> = await axios({
-      url: `${API_URL}/route_sheets/unassign/`,
+      url: `${API_URL}/route_sheets/remove_volunteer/`,
       method: 'POST',
       headers: {
         Authorization: `Bearer ${access}`,
@@ -191,5 +197,6 @@ export type {
   TAddress,
   TRouteSheetRequest,
   TAddressRequest,
-  TRouteSheetIndividual
+  TRouteSheetIndividual,
+  TRouteSheetUnassignRequest
 };
