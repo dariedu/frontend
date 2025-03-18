@@ -1,14 +1,18 @@
 import { getRouteSheetById, type IRouteSheet } from '../../api/routeSheetApi';
-import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+import {
+  // getRouteSheetAssignments,
+  getRouteSheetAssignmentsByDeliveryId, type IRouteSheetAssignments
+} from '../../api/apiRouteSheetAssignments';
 import { IDelivery } from '../../api/apiDeliveries';
 
     ////запрашиваем все записанные на волонтеров маршрутные листы
     async function requestRouteSheetsAssignments(token:string|null, currentUser:any, delivery:IDelivery, setMyRouteSheet:React.Dispatch<React.SetStateAction<IRouteSheetAssignments[] | undefined>>) {
       if (token) {
         try {
-          const response:IRouteSheetAssignments[] = await getRouteSheetAssignments(token);
+          const response:IRouteSheetAssignments[] = await getRouteSheetAssignmentsByDeliveryId(token, delivery.id );
           if (response) {
-            let filtered = response.filter(i => i.volunteer == currentUser?.id && i.delivery == delivery.id && delivery.in_execution == true);
+            let filtered = response.filter(i => i.volunteer.includes(currentUser?.id));
+            // console.log(filtered, "requestRouteSheetsAssignments filtered")
             if (filtered) {
               setMyRouteSheet(filtered)
            }
