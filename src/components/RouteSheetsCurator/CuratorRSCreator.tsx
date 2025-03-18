@@ -252,7 +252,7 @@ const RouteSheet: React.FC<IProps> = ({
         </div>
       </div>
 
-      {openVolunteerLists[index] && (
+      {openVolunteerLists[index] && listOfVolunteers.length > 0 && (
         <Modal
           isOpen={openVolunteerLists[index]}
           onOpenChange={() => {

@@ -109,11 +109,11 @@ interface IfilteredRouteSheet extends IRouteSheet{
            )
          .finally(() => {
            if (volunteerIds.length == 2 && fullFilledArr.length == 2) {
-            setTitle("Оба волонтера успешно сняты с маршрута!")
+            setTitle("Оба волонтёра успешно сняты с маршрута!")
              setOpenModal(true)
              setUnassignVolunteerSuccess(true);
            } else if (volunteerIds.length == 1 && fullFilledArr.length == 1) {
-            setTitle("Волотнтёр успешно снят с маршрута!")
+            setTitle("Волонтёр успешно снят с маршрута!")
             setOpenModal(true)
             setUnassignVolunteerSuccess(true)
            } else if ((volunteerIds.length == 2 && fullFilledArr.length == 0) || (volunteerIds.length == 1 && fullFilledArr.length == 0)) {

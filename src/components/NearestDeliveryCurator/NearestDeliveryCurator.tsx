@@ -308,7 +308,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         isSingleButton={true}
       />
       {/* ///// раскрываем полные детали активной доставки для куратора///// */}
-      {currentStatus == 'nearest' || currentStatus == "active" ? (
+      {(currentStatus == 'nearest' || currentStatus == "active") && listOfVolunteers.length > 0 ? (
         <Modal isOpen={fullViewNearest} onOpenChange={setFullViewNearest}>
           <ListOfVolunteers
             listOfVolunteers={listOfVolunteers}
