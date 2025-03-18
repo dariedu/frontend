@@ -14,6 +14,7 @@ import {
   type IRouteSheetAssignments,
 } from '../../api/apiRouteSheetAssignments';
 import { TDeliveryFilter } from './NearestDeliveryCurator';
+import { IfilteredRouteSheet } from '../RouteSheetsCurator/helperFunctions';
 
 function filterVolList(
   arrayListOfConfirmedVol: TDeliveryListConfirmedForCurator[] | null,
@@ -112,6 +113,8 @@ async function requestDeliveryComplete(
   }
 }
 
+
+
 //// 4. запрашиваем все маршрутные листы по отдельности только у активной или доставки в процессе
 function requestEachMyRouteSheet(
   token: string | null,
@@ -148,8 +151,48 @@ function requestEachMyRouteSheet(
 //   volunteer: number[]
 //   delivery: number
 //   volunteersFullNames:string[]
-//   telegramNiks:string[] 
+//   telegramNiks:string[]
 //   }
+
+///проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
+function findAssignedRouteSheets(
+  routeSheetsData: IRouteSheet[],
+  assignedRouteSheets: IRouteSheetAssignments[],
+  listOfVolunteers: TVolunteerForDeliveryAssignments[],
+  setFiltered: React.Dispatch<React.SetStateAction<IfilteredRouteSheet[]>>,
+  // setFilteredSuccess: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  
+   const routeSheetsWithVName: IfilteredRouteSheet[] = [];/// финальный массив который вернет этацункция
+  routeSheetsData.forEach(i => routeSheetsWithVName.push(i));//// переношу все маршрутные листы в отдельный массив для дальнейших модификаций
+
+  //// перебираем массив назначенным маршрутных листов, добавляю туда полные имена и телеграм айди волонтеров
+  assignedRouteSheets.forEach(route => {
+    route.volunteer.forEach(vol => {
+       listOfVolunteers.forEach(assVol => {
+        if (vol == assVol.id) {
+          !route.volunteersFullNames?.includes(`${assVol.name} ${assVol.last_name}`) && route.volunteersFullNames?.push(`${assVol.name} ${assVol.last_name}`)
+          !route.telegramNiks?.includes(assVol.tg_username) && route.telegramNiks?.push(assVol.tg_username)
+          }
+        })
+      })
+  })
+  
+//// перебираем маршрутные листы добавляем к ним верные айди, полное имя и телеграм ник волонтера
+  routeSheetsWithVName.forEach(route => {
+    route.volunteers = [];//опустошаем аррэй с волонтерами до начала манипуляций
+    const correspRouteVol = assignedRouteSheets.find(i => i.route_sheet == route.id)
+    if (correspRouteVol?.volunteer && correspRouteVol.volunteersFullNames && correspRouteVol.telegramNiks) {
+      route.volunteers = correspRouteVol.volunteer;
+      route.volunteerFullName = correspRouteVol.volunteersFullNames;
+      route.telegramNik = correspRouteVol.telegramNiks;
+    }
+  });
+    //  console.log( routeSheetsWithVName, "routeSheetsData routeSheetsWithVName")
+    setFiltered(routeSheetsWithVName);
+    // setFilteredSuccess(true)
+  // }
+}
 
 ////запрашиваем все записанные на волонтеров маршрутные листы
 async function requestRouteSheetsAssignmentsByDelivery(
@@ -158,10 +201,11 @@ async function requestRouteSheetsAssignmentsByDelivery(
   setAssignedRouteSheets: React.Dispatch<
     React.SetStateAction<IRouteSheetAssignments[]>
   >,
-  setReqAssignedRouteSheetsSuccess: React.Dispatch<
-    React.SetStateAction<boolean>
-  >,
+  // setReqAssignedRouteSheetsSuccess: React.Dispatch<
+  //   React.SetStateAction<boolean>
+  // >,
 ) {
+// console.log("request requestRouteSheetsAssignmentsByDelivery")
   if (token) {
     try {
       const response: IRouteSheetAssignments[] = await getRouteSheetAssignmentsByDeliveryId(token, curatorDelivery.id_delivery);
@@ -195,9 +239,12 @@ async function requestRouteSheetsAssignmentsByDelivery(
             }
           }
         }
+
         setAssignedRouteSheets(arrWithArrayOfVolunteers);
-        // console.log(arrWithArrayOfVolunteers, "arrWithArrayOfVolunteers", curatorDelivery.id_delivery, "curatorDelivery.id_delivery")
-        setReqAssignedRouteSheetsSuccess(true);
+        // findAssignedRouteSheets(routeSheets, arrWithArrayOfVolunteers, listOfVolunteers, setFiltered, 
+        //   setFilteredSuccess
+        // );
+        // setReqAssignedRouteSheetsSuccess(true);
       }
     } catch (err) {
       console.log(err);
@@ -212,4 +259,5 @@ export {
   requestEachMyRouteSheet,
   requestRouteSheetsAssignmentsByDelivery,
   filterVolList,
+  findAssignedRouteSheets
 };

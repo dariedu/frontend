@@ -22,7 +22,11 @@ import {
   requestRouteSheetsAssignmentsByDelivery,
   filterVolList
 } from './helperFunctions'
-
+import { IfilteredRouteSheet } from '../RouteSheetsCurator/RouteSheetsCurator';
+import {
+  findAssignedRouteSheets,
+  // requestPhotoReports, type IfilteredRouteSheet
+} from './helperFunctions';
 
 interface INearestDeliveryProps {
   curatorDelivery:TCuratorDelivery
@@ -53,7 +57,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
 
   const [assignedRouteSheets, setAssignedRouteSheets] = useState<IRouteSheetAssignments[]>([]); /// список волонтеров по маршрутным листам!!!!!
   // на волонтеров, со всеми волонтерами в одном экземпляре по айди маршрутного листа по конкретной доставке
-  const [reqAssignedRouteSheetsSuccess, setReqAssignedRouteSheetsSuccess] = useState(false);///для апи запроса всех записанных маршрутных листов 
+  // const [reqAssignedRouteSheetsSuccess, setReqAssignedRouteSheetsSuccess] = useState(false);///для апи запроса всех записанных маршрутных листов 
 
   const [completeDeliverySuccess, setCompleteDeliverySuccess] = useState(false);
   const [activateDeliverySuccess, setActivateDeliverySuccess] = useState(false);
@@ -61,34 +65,49 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [routeSheets, setRouteSheets] = useState<IRouteSheet[]>([])
   const [listOfConfirmedVol, setListOfConfirmedVol] = useState<number[] | null>(null); ///список подтвержденных волонтеров на доставку
   // console.log(assignedRouteSheets, "assignedRouteSheets nearestDeliveryCurator")
+    const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
+    // const [filteredSuccess, setFilteredSuccess] = useState(false)
   ///// используем контекст токена
    const {token} = useContext(TokenContext);
   ////// используем контекст
   const [deliveryDate, setDeliveryDate] = useState<Date>();
-
+// console.log(filtered, 'filtered nearest deliveryCurator')
  
     // assignVolunteerSuccess, unassignVolunteerSuccess
   const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
    const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
    
-  
+  ///// запрашиваем список подтвержденных волонтеров
   useEffect(() => {
     filterVolList(arrayListOfConfirmedVol, curatorDelivery,  setListOfConfirmedVol)
   }, [arrayListOfConfirmedVol])
   
-
+///// запрашиваем список записавшихся волонтеров на доставку
   useEffect(() => {
     requestMyDelivery(token, curatorDelivery, setDelivery, setDeliveryDate, setListOfVolunteers )
+  }, [])
+
+  /// 1. запрашиваем полную версию маршрутных листов по одному
+  useEffect(() => {
     requestEachMyRouteSheet(token,  deliveryFilter, curatorDelivery, setRouteSheets);
   }, [])
 
+/// 2. запрашиваем назначения волонтеров на конкретную доставку
   useEffect(() => {
     if (currentStatus == "active" ||  currentStatus=="nearest" ) {
-      requestRouteSheetsAssignmentsByDelivery(token, curatorDelivery, setAssignedRouteSheets, setReqAssignedRouteSheetsSuccess);
+      requestRouteSheetsAssignmentsByDelivery(token, curatorDelivery, setAssignedRouteSheets,
+        // setReqAssignedRouteSheetsSuccess
+      );
     }
   }, [assignVolunteerSuccess, unassignVolunteerSuccess])
 
-// console.log(assignedRouteSheets, "assignedRouteSheets")
+//// 3.  ждем пока загрузятся маршрутные листы полные версии и ждем назначения волонтеров соединяем все вместе
+  useEffect(() => {
+    findAssignedRouteSheets(routeSheets, assignedRouteSheets, listOfVolunteers, setFiltered,
+      // setFilteredSuccess
+    );
+  }, [routeSheets, assignedRouteSheets, listOfVolunteers])
+
 
   return (
     <>
@@ -237,7 +256,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         )}
         {/* /////////////////////// */}
       </div>
-      { routeSheets && reqAssignedRouteSheetsSuccess ? (
+      { filtered && routeSheets ? (
        <ModalTop isOpen={fullViewActive} onOpenChange={setFullViewActive}>
        <RouteSheetsM
         status={currentStatus ? (currentStatus == 'nearest' ? 'Ближайшая' : currentStatus == 'active' ? 'Активная' : 'Завершенная'):(deliveryFilter == 'nearest' ? 'Ближайшая' : deliveryFilter == 'active' ? 'Активная' : 'Завершенная')}
@@ -248,7 +267,8 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
         listOfVolunteers={listOfVolunteers}
         listOfConfirmedVol={listOfConfirmedVol}
         deliveryId={delivery.id}
-        assignedRouteSheets={assignedRouteSheets}
+        filtered={filtered}
+        // assignedRouteSheets={assignedRouteSheets}
         setActivateDeliverySuccess={setActivateDeliverySuccess}
         setCompleteDeliverySuccess={setCompleteDeliverySuccess}
         setCurrentStatus={setCurrentStatus}
@@ -298,6 +318,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
             deliveryId={delivery.id}
             showActions={false}
             preview={true}
+            onClose={()=>setFullViewNearest(false)}
           />
         </Modal>
       ) : (

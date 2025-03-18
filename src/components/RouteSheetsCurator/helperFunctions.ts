@@ -2,8 +2,8 @@ import {
   IRouteSheet,
   assignRouteSheet, unassignRouteSheet, type TRouteSheetRequest, type TRouteSheetUnassignRequest
 } from '../../api/routeSheetApi';
-import { type TVolunteerForDeliveryAssignments} from '../../api/apiDeliveries';
-import { type IRouteSheetAssignments} from '../../api/apiRouteSheetAssignments';
+// import { type TVolunteerForDeliveryAssignments} from '../../api/apiDeliveries';
+// import { type IRouteSheetAssignments} from '../../api/apiRouteSheetAssignments';
 import {
   getPhotoReportsByDeliveryId,
   type TServerResponsePhotoReport,
@@ -14,43 +14,43 @@ interface IfilteredRouteSheet extends IRouteSheet{
   volunteerFullName?: string[]
   telegramNik?: string[]
 }
-////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
-function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
-  assignedRouteSheets: IRouteSheetAssignments[],
-  listOfVolunteers: TVolunteerForDeliveryAssignments[],
-  setFiltered: React.Dispatch<React.SetStateAction<IfilteredRouteSheet[]>>,
-  setFilteredSuccess: React.Dispatch<React.SetStateAction<boolean>>) {
+// ////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
+// function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
+//   assignedRouteSheets: IRouteSheetAssignments[],
+//   listOfVolunteers: TVolunteerForDeliveryAssignments[],
+//   setFiltered: React.Dispatch<React.SetStateAction<IfilteredRouteSheet[]>>,
+//   setFilteredSuccess: React.Dispatch<React.SetStateAction<boolean>>) {
   
-   const routeSheetsWithVName: IfilteredRouteSheet[] = [];/// финальный массив который вернет этацункция
-  routeSheetsData.forEach(i => routeSheetsWithVName.push(i));//// переношу все маршрутные листы в отдельный массив для дальнейших модификаций
+//    const routeSheetsWithVName: IfilteredRouteSheet[] = [];/// финальный массив который вернет этацункция
+//   routeSheetsData.forEach(i => routeSheetsWithVName.push(i));//// переношу все маршрутные листы в отдельный массив для дальнейших модификаций
 
-  //// перебираем массив назначенным маршрутных листов, добавляю туда полные имена и телеграм айди волонтеров
-  assignedRouteSheets.forEach(route => {
-    route.volunteer.forEach(vol => {
-       listOfVolunteers.forEach(assVol => {
-        if (vol == assVol.id) {
-          !route.volunteersFullNames?.includes(`${assVol.name} ${assVol.last_name}`) && route.volunteersFullNames?.push(`${assVol.name} ${assVol.last_name}`)
-          !route.telegramNiks?.includes(assVol.tg_username) && route.telegramNiks?.push(assVol.tg_username)
-          }
-        })
-      })
-  })
+//   //// перебираем массив назначенным маршрутных листов, добавляю туда полные имена и телеграм айди волонтеров
+//   assignedRouteSheets.forEach(route => {
+//     route.volunteer.forEach(vol => {
+//        listOfVolunteers.forEach(assVol => {
+//         if (vol == assVol.id) {
+//           !route.volunteersFullNames?.includes(`${assVol.name} ${assVol.last_name}`) && route.volunteersFullNames?.push(`${assVol.name} ${assVol.last_name}`)
+//           !route.telegramNiks?.includes(assVol.tg_username) && route.telegramNiks?.push(assVol.tg_username)
+//           }
+//         })
+//       })
+//   })
   
-//// перебираем маршрутные листы добавляем к ним верные айди, полное имя и телеграм ник волонтера
-  routeSheetsWithVName.forEach(route => {
-    route.volunteers = [];//опустошаем аррэй с волонтерами до начала манипуляций
-    const correspRouteVol = assignedRouteSheets.find(i => i.route_sheet == route.id)
-    if (correspRouteVol?.volunteer && correspRouteVol.volunteersFullNames && correspRouteVol.telegramNiks) {
-      route.volunteers = correspRouteVol.volunteer;
-      route.volunteerFullName = correspRouteVol.volunteersFullNames;
-      route.telegramNik = correspRouteVol.telegramNiks;
-    }
-  });
-    //  console.log( routeSheetsWithVName, "routeSheetsData routeSheetsWithVName")
-    setFiltered(routeSheetsWithVName);
-    setFilteredSuccess(true)
-  // }
-}
+// //// перебираем маршрутные листы добавляем к ним верные айди, полное имя и телеграм ник волонтера
+//   routeSheetsWithVName.forEach(route => {
+//     route.volunteers = [];//опустошаем аррэй с волонтерами до начала манипуляций
+//     const correspRouteVol = assignedRouteSheets.find(i => i.route_sheet == route.id)
+//     if (correspRouteVol?.volunteer && correspRouteVol.volunteersFullNames && correspRouteVol.telegramNiks) {
+//       route.volunteers = correspRouteVol.volunteer;
+//       route.volunteerFullName = correspRouteVol.volunteersFullNames;
+//       route.telegramNik = correspRouteVol.telegramNiks;
+//     }
+//   });
+//     //  console.log( routeSheetsWithVName, "routeSheetsData routeSheetsWithVName")
+//     setFiltered(routeSheetsWithVName);
+//     setFilteredSuccess(true)
+//   // }
+// }
 
 
 ///////// записываем маршрутный лист на волонтера
@@ -60,12 +60,14 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
       delivery_id: deliveryId,
       routesheet_id:routeSheetId
     }
+    setAssignVolunteerSuccess(false)
     if (token) {
       try {
         let result = await assignRouteSheet(token, object)
         if (result == true) {
           if (volunteerIds.length == 2) {
             setTitle("Волонтёры успешно назначены на маршрут!")
+           
           } else {
            setTitle("Волонтёр успешно назначен на маршрут!") 
           }
@@ -82,7 +84,7 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
 
 //    /////// записываем маршрутный лист на волонтера
    async function onVolunteerUnassign(volunteerIds: number[], deliveryId: number, routeSheetId: number, token:string|null, setTitle:React.Dispatch<React.SetStateAction<string|JSX.Element>>, setOpenModal:React.Dispatch<React.SetStateAction<boolean>>, setUnassignVolunteerSuccess:React.Dispatch<React.SetStateAction<boolean>>) {
- 
+    setUnassignVolunteerSuccess(false)
        const fullFilledArr: boolean[] = [];
      if (token) {
        Promise.allSettled(  
@@ -108,8 +110,8 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
          .finally(() => {
            if (volunteerIds.length == 2 && fullFilledArr.length == 2) {
             setTitle("Оба волонтера успешно сняты с маршрута!")
-            setOpenModal(true)
-            setUnassignVolunteerSuccess(true)
+             setOpenModal(true)
+             setUnassignVolunteerSuccess(true);
            } else if (volunteerIds.length == 1 && fullFilledArr.length == 1) {
             setTitle("Волотнтёр успешно снят с маршрута!")
             setOpenModal(true)
@@ -122,7 +124,7 @@ function findAssignedRouteSheets(routeSheetsData: IRouteSheet[],
              setTitle("Упс, что - то пошло не так. Одного из волонтёров не удалось снять с маршрута. Обновите страницу и попробуйте позже.")
              setOpenModal(true)
             }
-           console.log(fullFilledArr, "fullFilledArr")
+          //  console.log(fullFilledArr, "fullFilledArr")
            });
        }
   //    } else {
@@ -163,6 +165,6 @@ async function requestPhotoReports(token: string|null, deliveryId:number, setMyP
   
   
 export {
-  findAssignedRouteSheets,
+  // findAssignedRouteSheets,
   onVolunteerAssign, onVolunteerUnassign, requestPhotoReports, type IfilteredRouteSheet
 }

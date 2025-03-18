@@ -9,7 +9,8 @@ import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { TokenContext } from '../../core/TokenContext';
 import { onVolunteerAssign, onVolunteerUnassign } from '../RouteSheetsCurator/helperFunctions';
 import { IfilteredRouteSheet } from '../RouteSheetsCurator/helperFunctions';
-import '../RouteSheetsCurator/index.css'
+import '../RouteSheetsCurator/index.css';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 interface ListOfVolunteersProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
@@ -27,6 +28,7 @@ interface ListOfVolunteersProps {
   // assignedVolunteerName?: string[]
   preview?: boolean
   routeS?: IfilteredRouteSheet;
+  onClose:()=>void
 }
 
 const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
@@ -43,7 +45,8 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   setUnassignVolunteerSuccess,
   // assignedVolunteerName,
   routeS,
-  preview
+  preview,
+  onClose
 }) => {
   // console.log(routeS, "routeS")
   // console.log(assignedVolunteerName, "assignedVolunteerName")
@@ -53,7 +56,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   // const [volunteerName, setVolunteerName] = useState<string[]>(routeS?.volunteerFullName? routeS.volunteerFullName : [])
   // const [assignVolunteerFail, setAssignVolunteerFail] = useState(false) // ошибка и снятия и назначения волонтера
   // const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
-  const [volListForAction, setVolListForAction] = useState<string[]>(routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
+  const [volListForAction, setVolListForAction] = useState<string[]>(routeS?.volunteers.length == 0 ? [] : routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
   const [volIdListForAction, setVolIdListForAction] = useState<number[]>(routeS?.volunteers? routeS.volunteers : []);// список айди, который мы будет менять назначать или снимать с доставки
   // const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
   // const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
@@ -248,22 +251,23 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
       setVolListForAction([volListForAction[assignedIndex]])
       setActionTitle(`Снять волонтёра  ${volListForAction[assignedIndex]} с этого маршрутного листа?`)
       // console.log(assignedIndex,  volIdListForAction, volListForAction, "assignedIndex for action")
-         setVolunteerAssignClicked(true) 
+      setVolunteerUnassignClicked(true) 
       }
-   
   }
-
+// console.log(volIdListForAction.length, volListForAction, volListForAction.length , 'volIdListForAction.length, volListForAction.length')
 
   return (
-    <div className={"items-center space-y-4 w-full max-w-[500px] px-4 py-10 rounded-[16px] flex flex-col mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
+    <div className={"items-center space-y-4 w-full max-w-[500px] px-4 pt-[8px] pb-10 rounded-[16px] flex flex-col mt-3 bg-light-gray-white dark:bg-light-gray-7-logo"} onClick={e => {e.stopPropagation() }
 }>
+       <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end' onClick={onClose} />
       {/* Список волонтёров */}
       <div className='overflow-y-scroll max-h-[450px] items-start justify-start space-y-4 w-full'>
         {listOfVolunteers.map((volunteer, index) => (
         <div
           key={index}
-            className={`flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full ${volListForAction.includes(`${volunteer.name} ${volunteer.last_name}`) ? "bg-light-gray-2 dark:bg-light-gray-5" : " "}`}
-            onClick={(e) => {
+            className={volIdListForAction.includes(volunteer.id) ? "flex items-center justify-between space-x-4 p-4  rounded-[16px] shadow cursor-pointer w-full dark:bg-light-gray-5 bg-light-gray-2":
+              "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"
+            } onClick={(e) => {
               e.stopPropagation(); 
               if (volIdListForAction.includes(volunteer.id)) {
                 if (volListForAction.length == 2 && volIdListForAction.length == 2) {
@@ -279,7 +283,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
                 if (volListForAction.length == 2 && volIdListForAction.length == 2){
                   setMoreThenTwoVol(true)
                   setTimeout(() => {
-                    setMoreThenTwoVol(false)
+                   setMoreThenTwoVol(false)
                   }, 1000);
               } else if (volListForAction.length == 0 && volIdListForAction.length == 0) {
                 setVolListForAction([`${volunteer.name} ${volunteer.last_name}`])
@@ -368,7 +372,9 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onOpenChange={setVolunteerAssignClicked}
   onConfirm={() => {
   onVolunteerAssign(volIdListForAction, deliveryId, routeS.id, token, setTitle, setOpenModal, setAssignVolunteerSuccess);
-   setVolunteerAssignClicked(false)
+    setVolunteerAssignClicked(false);
+    // setVolIdListForAction([]);
+    // setVolListForAction([]);
    setActionTitle('') }}
   onCancel={() => setVolunteerAssignClicked(false)}
   title={actionTitle}
@@ -388,7 +394,9 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   onConfirm={() => {
   routeS.volunteerFullName && routeS.volunteerFullName.length > 0 &&
   onVolunteerUnassign(volIdListForAction, deliveryId, routeS.id, token, setTitle, setOpenModal, setUnassignVolunteerSuccess);
-  setVolunteerUnassignClicked(false);
+    setVolunteerUnassignClicked(false);
+    // setVolIdListForAction([]);
+    // setVolListForAction([]);
    setActionTitle('')}}
   onCancel={() => setVolunteerUnassignClicked(false)}
   title={actionTitle}

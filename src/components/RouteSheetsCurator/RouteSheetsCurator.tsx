@@ -7,7 +7,7 @@ import {
   type TVolunteerForDeliveryAssignments,
   // type TCuratorDelivery
 } from '../../api/apiDeliveries';
-import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
+// import { type IRouteSheetAssignments } from '../../api/apiRouteSheetAssignments';
 import Arrow_right from './../../assets/icons/arrow_right.svg?react';
 import { TokenContext } from '../../core/TokenContext';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
@@ -21,7 +21,7 @@ import {
   // requestRouteSheetsAssignments
 } from '../NearestDeliveryCurator/helperFunctions'
 import {
-  findAssignedRouteSheets,
+  // findAssignedRouteSheets,
   requestPhotoReports, type IfilteredRouteSheet
 } from './helperFunctions';
 
@@ -36,7 +36,7 @@ interface RouteSheetsProps {
   listOfVolunteers: TVolunteerForDeliveryAssignments[]
   listOfConfirmedVol:number[]|null
   deliveryId: number
-  assignedRouteSheets: IRouteSheetAssignments[]
+  filtered: IfilteredRouteSheet[]
   setActivateDeliverySuccess: React.Dispatch<React.SetStateAction<boolean>>
   setCompleteDeliverySuccess:React.Dispatch<React.SetStateAction<boolean>>
   setCurrentStatus: React.Dispatch<React.SetStateAction<'nearest' | 'active' | 'completed'>>
@@ -61,7 +61,8 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   listOfVolunteers,
   listOfConfirmedVol,
   deliveryId,
-  assignedRouteSheets,
+  filtered,
+  // assignedRouteSheets,
   setActivateDeliverySuccess,
   setCompleteDeliverySuccess,
   setCurrentStatus,
@@ -70,14 +71,13 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   assignVolunteerSuccess,
   setAssignVolunteerSuccess
 }) => {
-
+// console.log(routeSheetsData, "routeSheetsData")
 
   const [openRouteSheets, setOpenRouteSheets] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
 
   
   const [openVolunteerLists, setOpenVolunteerLists] = useState<boolean[]>(Array(routeSheetsData.length).fill(false));
-  const [filtered, setFiltered] = useState<IfilteredRouteSheet[]>([])
-  const [filteredSuccess, setFilteredSuccess] = useState(false)
+
   const [askCuratorCompleteDelivery, setAskCuratorCompleteDelivery] = useState(false)
   const [askCuratorActivateDelivery, setAskCuratorActivateDelivery] = useState(false)
   const [myPhotoReports, setMyPhotoReports] = useState<TServerResponsePhotoReport[]>(localStorage.getItem(`curator_del_${deliveryId}`) !== null && localStorage.getItem(`curator_del_${deliveryId}`) !== undefined ? JSON.parse(localStorage.getItem(`curator_del_${deliveryId}`) as string) : []);
@@ -87,7 +87,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
   const token = tokenContext.token;
  ////// используем контекст
 
-// console.log(filtered, "filtered")
+//  console.log(filtered, "filtered")
 // ////проверяем назначен ли волонтер на конкретный маршрутный лист и добавляем к объекту маршрутного листа volunteerFullName
 //   function findAssignedRouteSheets() {
 //     let filtered: number[] = [];
@@ -124,9 +124,9 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
 //     }
   //   }
   
-  useEffect(() => {
-    findAssignedRouteSheets(routeSheetsData, assignedRouteSheets, listOfVolunteers, setFiltered, setFilteredSuccess);
-  }, [assignedRouteSheets])
+  // useEffect(() => {
+  //   findAssignedRouteSheets(routeSheetsData, assignedRouteSheets, listOfVolunteers, setFiltered, setFilteredSuccess);
+  // }, [assignedRouteSheets])
 
   
 //   /////// записываем маршрутный лист на волонтера
@@ -198,7 +198,7 @@ const RouteSheetsM: React.FC<RouteSheetsProps> = ({
         Маршрутные листы не доступны, проверьте корректность назначения куратора на эти маршрутные листы в Админ панели, в разделе Адреса ==&gt; Локации
       </div>
       </div>
-  ) : filteredSuccess &&
+  ) : filtered &&
     (<div className="w-full max-w-[500px] bg-light-gray-1 dark:bg-light-gray-black h-screen flex flex-col overflow-y-auto pb-[74px]" onClick={(e)=>e.stopPropagation()}>
         <div className="flex items-center pb-1 mb-1 h-[60px] min-h-[60px] text-light-gray-black rounded-b-2xl bg-light-gray-white dark:bg-light-gray-7-logo w-full">
         <Arrow_right  className={`stroke-[#D7D7D7] dark:stroke-[#575757] cursor-pointer transform rotate-180 ml-[22px] mr-4`} onClick={onClose}/>

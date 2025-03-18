@@ -55,7 +55,7 @@ const RouteSheet: React.FC<IProps> = ({
   const [finished, setFinished] = useState(false);
   const [thisRouteMyPhotoReports, setThisRouteMyPhotoReports] = useState<TServerResponsePhotoReport[]>([]);
 
-// console.log(routeS, "routeS")
+  //  console.log(routeS, "routeS", "dliveryId", deliveryId);
   function filterPhotoReports() {
     if (
       myPhotoReports &&
@@ -85,7 +85,7 @@ const RouteSheet: React.FC<IProps> = ({
   }, [myPhotoReports]);
 
 
-  // console.log(routeS, "routeS", "dliveryId", deliveryId);
+
 
 
   return (
@@ -202,14 +202,13 @@ const RouteSheet: React.FC<IProps> = ({
                   </a>
                   ))
                 } */}
-                {(routeS.volunteerFullName && routeS.volunteerFullName.length == 0 && routeS.telegramNik && routeS.telegramNik.length == 0) ?
-                  (<div>
+                {(routeS.volunteers && routeS.volunteers.length == 0 ) ?
+                  (<div className='flex w-full  justify-between items-center'>
                     <AvatarIcon />
                     <p className="ml-3 w-full">Не выбран</p>
-                    </div>
-                  
+                    </div>  
                   ) : (
-                    <div className='w-full flex-col justify-between space-y-3'>
+                    <div className='flex w-full flex-col justify-between space-y-3'>
                       { routeS.volunteerFullName && routeS.volunteerFullName.map((name, index)=> (
                       <div className='flex w-full justify-between items-center h-[64px] bg-light-gray-1 dark:bg-light-gray-6 rounded-2xl  p-4' key={name + index}>
                           <Avatar.Root
@@ -244,19 +243,9 @@ const RouteSheet: React.FC<IProps> = ({
                             </a>
                           }
                       </div>
-                           
- 
                       ))
                       }
-                    
-                    </div>
-                    
-                 ) 
-                 }
-                  
-    
-
-
+                    </div>  ) }
               </div>
             </div>
           </div>
@@ -294,6 +283,13 @@ const RouteSheet: React.FC<IProps> = ({
             setAssignVolunteerSuccess={setAssignVolunteerSuccess}
             unassignVolunteerSuccess={unassignVolunteerSuccess}
             setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
+            onClose={() => {
+              setOpenVolunteerLists(prev =>
+                prev.map((isOpen, idx) =>
+                  idx === index ? (isOpen ? false : true) : isOpen,
+                ),
+              );
+            }}
             // assignedVolunteerName={routeS.volunteerFullName}
           />
         </Modal>
