@@ -143,9 +143,13 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
 
   
   function handleAssignClick() {
+    if (volIdListForAction.length == 0) {
+      return
+    }
     const volMatch: (boolean | undefined)[] = volIdListForAction.map(i => routeS?.volunteers.includes(i));
     /// есть ли эьти волонтеры в списке назначенных волонтеров на этом маршрутном листе
     // console.log(routeS?.volunteers.length, "length", volMatch)
+
 
     if (volMatch.every(i => i)) { ////если список полностью совпадает со списком уже назначенных волонтеров
       if (volMatch.length == 2) {

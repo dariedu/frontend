@@ -188,7 +188,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       key={routeSheetId + 'routeSheetViewVolunteer'}
       className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
     >
-      {!routes || routes.length == 0 ? (
+      {!routes || routes.length == 0 || routes.find(route => route.address.length == 0 || route.beneficiar.length == 0)? (
         <div className="w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center">
           Упс! Этот маршрутный лист пуст!
         </div>

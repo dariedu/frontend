@@ -167,8 +167,8 @@ const RouteSheetsView: React.FC<IRouteSheetsViewProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black space-y-1">
-      {!routes || routes.length == 0 ? (
-        <div className="w-full bg-light-gray-white dark:bg-light-gray-7-logo pb-4 dark:text-light-gray-white text-center font-gerbera-h3 rounded-b-2xl  flex flex-col justify-between items-center">
+      {!routes || routes.length == 0 ||routes.find(route => route.address.length == 0 || route.beneficiar.length == 0) ? (
+        <div  className="w-full bg-light-gray-white dark:bg-light-gray-7-logo pb-4 dark:text-light-gray-white text-center font-gerbera-h3 rounded-b-2xl  flex flex-col justify-between items-center">
           Упс, этот маршрутный лист пуст!
         </div>
       ) : (
