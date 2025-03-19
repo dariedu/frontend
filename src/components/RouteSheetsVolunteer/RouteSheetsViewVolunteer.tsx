@@ -1,20 +1,13 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 //import Avatar from '../../../src/assets/icons/forRouteSheetSvg.svg?react';
 import { TAddress } from '../../api/routeSheetApi';
 import { Modal } from '../ui/Modal/Modal';
-// import Comment from '../Comment/Comment';
-import {
-  TPhotoReport,
-  type TServerResponsePhotoReport,
-} from '../../api/apiPhotoReports';
-import { UserContext } from '../../core/UserContext';
-import { TokenContext } from '../../core/TokenContext';
-import { postPhotoReport } from '../../api/apiPhotoReports';
+import {type TServerResponsePhotoReport } from '../../api/apiPhotoReports';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal';
 import { UploadPic } from '../UploadPicForPhotoReport/UploadPicForPhotoReport';
-// import Camera from '../../assets/icons/photo.svg?react';
 import Arrow_down from './../../assets/icons/arrow_down.svg?react';
 import './index.css';
+import { submitPhotoReport } from './helperFunctions';
 
 import copy from 'clipboard-copy'; // Импортируем библиотеку
 
@@ -42,22 +35,18 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
   const [fileUploaded, setFileUploaded] = useState<boolean[]>(
     Array(routes.length).fill(false),
   );
-  // const [openComment, setOpenComment] = useState<boolean[]>(
-  //   Array(routes.length).fill(false),
-  // );
-  const [comment, addComment] = useState(Array(routes.length).fill(''));
-  const [files, setFiles] = useState<Blob[]>(
-    Array(routes.length).fill(new Blob()),
-  ); ////форматит фото в блоб файл
-  // const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
+
+  // const [comment, addComment] = useState<string[]>(Array(routes.length).fill(''));
+  // const [files, setFiles] = useState<Blob[]>(  Array(routes.length).fill(new Blob()),); ////форматит фото в блоб файл
+  //  const [sendPhotoReportSuccess, setSendPhotoReportSuccess] = useState(false);
   const [sendPhotoReportFail, setSendPhotoReportFail] = useState(false);
   const [sendMessage, setSendMessage] = useState<string>('');
   const [uploadPictureModal, setUploadPictureModal] = useState<boolean[]>(
     Array(routes.length).fill(false),
   );
-  const [beneficiarIsAbsent, setBeneficiarIsAbsent] = useState<boolean[]>(
-    Array(routes.length).fill(false),
-  ); ////  проверяем благополучатель на месте или нет
+  // const [beneficiarIsAbsent, setBeneficiarIsAbsent] = useState<boolean[]>(
+  //   Array(routes.length).fill(false),
+  // ); ////  проверяем благополучатель на месте или нет
   const [unactive, setUnactive] = useState<
     ('Отправить' | 'Отправка' | 'Отправлен')[]
   >(Array(routes.length).fill('Отправить'));
@@ -66,8 +55,8 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     Array(routes.length).fill(false),
   ); // раскрываем детали о благополучателе
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { currentUser } = useContext(UserContext);
-  const { token } = useContext(TokenContext);
+  // const { currentUser } = useContext(UserContext);
+  // const { token } = useContext(TokenContext);
 
   const [object, setObj] = useState<[number, string][]>([]); /// массив с сылками на фотографии с фотоотчетов
   const [array, setArr] = useState<number[]>([]); ////массив для легкого перебора
@@ -118,94 +107,17 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
     checkoForUploadedReports();
   }, [sendPhotoReportSuccess]);
 
-  function handleAddComment(index: number, comment: string) {
-    localStorage.removeItem('comment');
-    addComment(prev =>
-      prev.map((string, idx) => (idx === index ? comment : string)),
-    );
-    // setOpenComment(prev =>
-    //   prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
-    // );
-  }
+  // function handleAddComment(index: number, comment: string) {
+  //   localStorage.removeItem('comment');
+  //   addComment(prev =>
+  //     prev.map((string, idx) => (idx === index ? comment : string)),
+  //   );
+  //   // setOpenComment(prev =>
+  //   //   prev.map((isOpen, idx) => (idx === index ? !isOpen : isOpen)),
+  //   // );
+  // }
 
-  async function submitPhotoReport(index: number) {
-    if (currentUser && token) {
-      setUnactive(prev =>
-        prev.map((string, idx) => (idx === index ? 'Отправка' : string)),
-      );
-      setSendMessage('');
-      setIsSending(true);
-      const obj: TPhotoReport = {
-        photo: files[index],
-        comment: comment[index],
-        route_sheet_id: routeSheetId,
-        delivery_id: deliveryId,
-        address: routes[index].id,
-        is_absent: beneficiarIsAbsent[index],
-      };
-
-      // let blobPhoto = await fetch(uploadedFileLink[index])
-      //   .then(res => res.blob())
-      //   .then(blob1 => {
-      //     setBlob(blob1);
-      //     return blob1;
-      //   });
-
-      if (files[index] && currentUser) {
-        const formData = new FormData();
-        for (let key in obj) {
-          if (key == 'photo') {
-            formData.append('photo', files[index]);
-          } else if (key == 'is_absent') {
-            formData.set(
-              'is_absent',
-              String(beneficiarIsAbsent[index] ? 'True' : 'False'),
-            );
-          } else {
-            const typedKey = key as keyof TPhotoReport | keyof typeof obj;
-            formData.set(typedKey, String(obj[typedKey]));
-          }
-        }
-        // Создаем AbortController для установки таймаута
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000); // Таймаут 20 секунд
-
-        try {
-          await postPhotoReport(token, formData, controller.signal);
-          setSendMessage(routes[index].address);
-          setSendPhotoReportSuccess(true);
-          setUnactive(prev =>
-            prev.map((string, idx) => (idx === index ? 'Отправлен' : string)),
-          );
-          localStorage.removeItem(`comment${routes[index].beneficiar[0].id}`);
-        } catch (err: any) {
-          if (err == 'Error: AxiosError: Network Error') {
-            setErrorMessage(
-              'Возникла проблема с интернет соединением. Возможно фотография слишком тяжелая, попробуйте выбрать фото меньшего размера и попробуйте снова отправить фотоотчет',
-            );
-          } else if (
-            err == 'Error: Данный токен недействителен для любого типа токена'
-          ) {
-            setErrorMessage(
-              'Возникла ошибка авторизации, пожалуйста обновите страницу и попробуйте снова отправить фотоотчет',
-            );
-          } else if (err == 'Error: CanceledError: canceled') {
-            console.log('Загрузка прервана из-за слабого интернет соединения');
-            setErrorMessage(
-              'Загрузка прервана из-за слабого интернет соединения',
-            );
-          }
-          setSendPhotoReportFail(true);
-          setUnactive(prev =>
-            prev.map((string, idx) => (idx === index ? 'Отправить' : string)),
-          );
-        } finally {
-          clearTimeout(timeoutId);
-          setIsSending(false);
-        }
-      }
-    }
-  }
+  
 
   const openYandexMaps = (address: string) => {
     const url = `https://yandex.ru/maps/?text=${encodeURIComponent('Москва, ' + address.slice(0, 20))}`;
@@ -276,7 +188,7 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
       key={routeSheetId + 'routeSheetViewVolunteer'}
       className={`flex flex-col items-center justify-normal bg-light-gray-1 dark:bg-light-gray-black w-full `}
     >
-      {!routes || routes.length == 0 ? (
+      {!routes || routes.length == 0 || routes.find(route => route.address.length == 0 || route.beneficiar.length == 0)? (
         <div className="w-full bg-light-gray-white dark:bg-light-gray-7-logo py-4 dark:text-light-gray-white text-center font-gerbera-h3 mt-1 rounded-2xl flex flex-col justify-between items-center">
           Упс! Этот маршрутный лист пуст!
         </div>
@@ -512,15 +424,26 @@ const RouteSheetsViewVolunteer: React.FC<IRouteSheetsViewProps> = ({
                 setFileUploaded={setFileUploaded}
                 fileUploaded={fileUploaded}
                 uploadedFileLink={uploadedFileLink}
-                beneficiarIsAbsent={beneficiarIsAbsent[index]}
-                setBeneficiarIsAbsent={setBeneficiarIsAbsent}
-                setFiles={setFiles}
-                files={files}
+                // beneficiarIsAbsentInd={beneficiarIsAbsent[index]}
+                // setBeneficiarIsAbsent={setBeneficiarIsAbsent}
+                // setFiles={setFiles}
+                // files={files}
                 sendPhotoReportFunc={submitPhotoReport}
                 name={route.address}
-                onSave={handleAddComment}
+                // onSave={handleAddComment}
                 idForComment={route.beneficiar[0].id}
-                savedComment={comment[index]}
+                // savedComment={comment[index]}
+                setSendMessage={setSendMessage}
+                setUnactive={setUnactive}
+                setIsSending={setIsSending}
+                routeSheetId={routeSheetId}
+                deliveryId={deliveryId}
+                routes={routes}
+                // beneficiarIsAbsent={beneficiarIsAbsent}
+                // comment={comment}
+                setSendPhotoReportSuccess={setSendPhotoReportSuccess}
+                setErrorMessage={setErrorMessage}
+                setSendPhotoReportFail={setSendPhotoReportFail}
               />
             </Modal>
           </div>

@@ -1,7 +1,7 @@
 import { getMyFeedbacks, type TMyFeedback } from '../../../api/feedbackApi';
 import { getCuratorDeliveries, TCuratorDelivery, ICuratorDeliveries, getDeliveryListConfirmedForCurator, type TDeliveryListConfirmedForCurator  } from '../../../api/apiDeliveries';
 import { getTasksCurator, type ITask, getTaskListConfirmedForCurator, type TTasksConfirmedForCurator } from '../../../api/apiTasks';
-
+import { getRouteSheetAssignments, type IRouteSheetAssignments } from '../../../api/apiRouteSheetAssignments';
 
 
   ////активация доставки куратором
@@ -107,4 +107,26 @@ async function getMyCuratorDeliveries(token:string|null, setCuratorActiveDeliver
 }
 }
 
-export {getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks, requestDeliveryConfirmedList, requestTaskConfirmedList}
+
+////запрашиваем все записанные на волонтеров маршрутные листы
+async function requestAllRouteSheetsAssignments(
+  token: string | null,
+  setAllAssignedRouteSheets: React.Dispatch<
+    React.SetStateAction<IRouteSheetAssignments[]>
+  >,
+) {
+  if (token) {
+    try {
+      const response: IRouteSheetAssignments[] =
+        await getRouteSheetAssignments(token);
+      if (response) {
+        // console.log(response, "requestAllRouteSheetsAssignments CuratorTab")
+        setAllAssignedRouteSheets(response);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export {getMyCuratorDeliveries, getMyCuratorTasks, getAllMyFeedbacks, requestDeliveryConfirmedList, requestTaskConfirmedList, requestAllRouteSheetsAssignments}

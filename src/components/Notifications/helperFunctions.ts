@@ -154,7 +154,7 @@ function combineAllNotConfirmed(
       const obj:TNotificationInfo = {
         objType: "promo",
         nameOrMetro: promotion.name,
-        addressOrInfo: promotion.address ? promotion.address: promotion.category ? String(promotion.category) : '',
+        addressOrInfo: promotion.address ? promotion.address: promotion.description ? promotion.description.slice(0, 100)+"..." : '',
         stringStart: promotion.is_permanent
           ? 'В любое время'
             : `${eventDate.getUTCDate()}

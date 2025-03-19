@@ -26,9 +26,8 @@ const ListOfVolunteersTasks: React.FC<ListOfVolunteersProps> = ({
         listOfVolunteers.map((volunteer, index) => (
           <div
           key={index}
-            className={listOfConfirmedVolTask && listOfConfirmedVolTask.length > 0  && listOfConfirmedVolTask.includes(volunteer.id) ?
-              "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"
-              : "flex items-center justify-between space-x-4 p-4 bg-light-gray-2 dark:bg-light-gray-5 rounded-[16px] shadow cursor-pointer w-full" }
+            className={
+              "flex items-center justify-between space-x-4 p-4 bg-light-gray-1 dark:bg-light-gray-6 rounded-[16px] shadow cursor-pointer w-full"}
          >
           <div className='flex w-fit items-center'>
             <Avatar.Root className="inline-flex items-center justify-center align-middle overflow-hidden w-8 h-8 rounded-full bg-light-gray-2 dark:bg-light-gray-5">
@@ -46,7 +45,8 @@ const ListOfVolunteersTasks: React.FC<ListOfVolunteersProps> = ({
               </Avatar.Fallback>
             </Avatar.Root>
             <span className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1  ml-[10px]">
-              {`${volunteer.last_name} ${volunteer.name}`}
+                {`${volunteer.last_name} ${volunteer.name}`}
+                {listOfConfirmedVolTask && listOfConfirmedVolTask.length > 0  && listOfConfirmedVolTask.includes(volunteer.id) && <p className='text-light-gray-5 dark:text-light-gray-4 font-gerbera-sub3'>Подтвержден</p>}
             </span>
           </div>
         

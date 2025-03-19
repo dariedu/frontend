@@ -66,17 +66,25 @@ interface IRouteSheet {
   address: TAddress[] // Список адресов
   name: string // Название маршрутного листа
   map?: string // Карта (если есть)
-  diners: number
+  dinners: number
+  volunteers:number[]
 }
 
 
 ///////Проверено!
 // Тип данных для запроса при создании или обновлении маршрутного листа
 type TRouteSheetRequest = {
+  volunteer_ids: number[]
+  delivery_id: number
+  routesheet_id:number
+};
+// Тип данных для запроса при создании или обновлении маршрутного листа
+type TRouteSheetUnassignRequest = {
   volunteer_id: number
   delivery_id: number
   routesheet_id:number
 };
+// { "routesheet_id": 1, "volunteer_ids": [7, 6], "delivery_id": 17}
 
 //// кастомный тип для некоторых компонетов куратора
 type TRouteSheetIndividual = {
@@ -157,6 +165,31 @@ export const assignRouteSheet = async (
   }
 };
 
+// Снять маршрутный лист с волонтера
+export const unassignRouteSheet = async (
+  access:string,
+  data: TRouteSheetUnassignRequest,
+): Promise<boolean|any> => {
+  try {
+    const response: AxiosResponse<boolean> = await axios({
+      url: `${API_URL}/route_sheets/remove_volunteer/`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${access}`,
+        accept: 'application/json',
+        'cross-origin-opener-policy': 'same-origin',
+      },
+      data: data,
+    })
+    if (response) {
+      return true;
+    }
+  } catch (error: any) {
+    console.error('Error  unassignRouteSheet:', error);
+    throw new Error('Failed to unassignRouteSheet');
+  }
+};
+
 // Экспортируем интерфейсы и типы для использования в других API-файлах
 export type {
   IRouteSheet,
@@ -164,5 +197,6 @@ export type {
   TAddress,
   TRouteSheetRequest,
   TAddressRequest,
-  TRouteSheetIndividual
+  TRouteSheetIndividual,
+  TRouteSheetUnassignRequest
 };

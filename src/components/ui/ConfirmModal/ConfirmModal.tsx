@@ -27,11 +27,11 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
   zIndex
 }) => {
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onOpenChange} >
+    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}  >
       <Dialog.Portal>
         <Dialog.Overlay className={`${zIndex ? "z-[55] fixed inset-0 bg-black opacity-30" : " z-[5] fixed inset-0 bg-black opacity-30"}`} onClick={e=>e.stopPropagation()} />
-        <Dialog.Content className={`${zIndex ? "z-[55] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]" : " z-[5] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]"}` }>
-          <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl p-6 w-[300px] h-fit max-w-sm flex flex-col justify-center items-center text-center">
+        <Dialog.Content className={`${zIndex ? "z-[55] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]" : " z-[5] fixed inset-0 flex items-center justify-center backdrop-blur-[2px]"}` } onClick={e=>e.stopPropagation()}>
+          <div className="bg-light-gray-white dark:bg-light-gray-7-logo rounded-2xl p-6 w-[300px] h-fit max-w-sm flex flex-col justify-center items-center text-center" onClick={e=>e.stopPropagation()}>
             <Dialog.Title className="font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-white">
               {title}
             </Dialog.Title>

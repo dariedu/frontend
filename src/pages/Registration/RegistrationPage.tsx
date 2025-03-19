@@ -19,6 +19,7 @@ import LogoNoTaskYet from './../../assets/icons/LogoNoTaskYet.svg?react';
 import CalendarIcon from '../../assets/icons/tap_calendar.svg?react';
 import { useLocation } from 'react-router-dom';
 import DownloadPdfButton from './DownloadPDF.tsx';
+import CreateTelegramNik from './CreateTelegramNik.tsx';
 
 function RegistrationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false); /// открыть модальное для загрузки своей фотографии
@@ -41,7 +42,7 @@ function RegistrationPage() {
   const [registrationComplete, setRegistrationComplete] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<boolean>(false); ///дополнительное поле для обозначения загруженного файла (а не сфотографированной с камеры)
-
+  const [openNickInstruction, setOpenNickInstruction]= useState(false)
   //// работаем с датой рождения
    const [date, setDate] = useState(localStorage.getItem('birthday') ?? '');
    const [dateError, setDateError] = useState('');
@@ -343,17 +344,15 @@ function RegistrationPage() {
         formData.set(typedKey, String(user[typedKey])); // Приводим значение к строке, если требуется
       }
     }
-    // if (formData.get('tg_username') == '' || formData.get('tg_username') == null || formData.get('tg_username') == '@'|| formData.get('tg_username') == 'none' || formData.get('tg_username') == 'None') {
-    //   setRegistrationHasFailedString(<p>Упс, у вашего аккаунта в Telegram  не задано имя пользователя. <br /> Пожалуйста, создайте имя пользователя и попробуйте снова пройти регистрацию.</p>)
-    //   setRequestSent(false);
-    //   setRegistrationhasFailed(true);
-    //   setIsSending(false);
-    // } else {
+    if (formData.get('tg_username') == '' || formData.get('tg_username') == null || formData.get('tg_username') == '@'|| formData.get('tg_username') == 'none' || formData.get('tg_username') == 'None') {
+      setRegistrationHasFailedString(<div>Для регистрации в приложении вам необходимо
+        <p className='text-light-brand-green ' onClick={() => { setRegistrationhasFailed(false); setOpenNickInstruction(true) }}>создать имя пользователя Telegram.</p> Оно нужно, чтобы мы с вами оставались на связи.</div>)
+      setRequestSent(false);
+      setRegistrationhasFailed(true);
+      setIsSending(false);
+    } else {
       fetchRegistration(formData); ////отправляем запрос на сервер с даттыми формДата
-    // }
-    
-    
-   
+    }
   }
 
 
@@ -400,28 +399,18 @@ function RegistrationPage() {
                   Для завершения регистрации просим одного из ваших родителей/официального опекуна заполнить и 
                   подписать {" "}
                   <DownloadPdfButton />
-                  {/* <a href="https://cloud.mail.ru/public/c4Yr/MWBRTqPv5" target="_blank" download={"document.pdf"} className="font-gerbera-h3 text-center text-light-brand-green font-normal">Согласие</a> */}
+                  <a href="https://cloud.mail.ru/public/c4Yr/MWBRTqPv5" target="_blank" download={"document.pdf"} className="font-gerbera-h3 text-center text-light-brand-green font-normal">Согласие</a>
                 * на ваше участие в благотворительных доставках и других добрых делах.
               </p>
               <br />
               <p className="font-gerbera-h3 text-center text-light-gray-5 dark:text-light-gray-2">
-                *Подписанный документ отправьте @volunteers_dari_edu
-
+                  *Подписанный документ отправьте
+                  <a href={'https://t.me/volunteers_dari_edu'} target="_blank" className='text-light-brand-green '>
+                @volunteers_dari_edu
+                </a>
               </p>
               <br />
               <br />
-              {/* <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white">
-                Теперь вы можете перейти на{' '}
-                <p
-                  className="text-light-brand-green cursor-pointer"
-                  onClick={() => location.reload()}
-                >
-                  главную страницу
-                  </p>
-                  
-                </h1> */}
-                <br/>
-                  {/* <h1 className="font-gerbera-h3 text-light-gray-black w-[325px] h-[63px] text-center mt-7 dark:text-light-gray-white" >Спасибо!</h1> */}
             </div>
           )}
         </div>
@@ -706,7 +695,17 @@ function RegistrationPage() {
                     {requestSent ? 'Запрос отправлен' : 'Отправить заявку'}
                   </button>
                 </div>
-
+            <ConfirmModal
+            isOpen={registrationhasFailed}
+            onOpenChange={setRegistrationhasFailed}
+            onConfirm={() => setRegistrationhasFailed(false)}
+            title={
+             registrationHasFailedString
+            }
+            description=""
+            confirmText="Закрыть"
+            isSingleButton={true}
+            />
               <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
                 <Selfie
                   text="Сфотографируйтесь на камеру своего телефона"
@@ -729,10 +728,9 @@ function RegistrationPage() {
                   setRegistrationComplete(true);
                   setRegistrationCompleteModal(false);
                 }}
-                  title={<p>Ваша заявка принята и проходит проверку.<br />
-                  📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green '>
-                @volunteers_dari_edu
-                </a>
+                  title={<p>Спасибо, заявка принята.<br />  Пожалуйста, подождите немного. <br />
+                    Проверяем заявки вручную по будням с 10 до 18.<br />
+                  📩 <a href={'https://t.me/volunteers_dari_edu'} target="_blank"  className='text-light-brand-green '> @volunteers_dari_edu </a>
                   </p>}
                 description=""
                 confirmText="Ок"
@@ -742,25 +740,18 @@ function RegistrationPage() {
           </Form.Root>
           <Modal isOpen={concentOpenModal} onOpenChange={setConcentOpenModal}>
             <ConcentToPersonalData onOpenChange={setConcentOpenModal} />
-          </Modal>
-          <ConfirmModal
-            isOpen={registrationhasFailed}
-            onOpenChange={setRegistrationhasFailed}
-            onConfirm={() => setRegistrationhasFailed(false)}
-            title={
-             registrationHasFailedString
-            }
-            description=""
-            confirmText="Закрыть"
-            isSingleButton={true}
-          />
+            </Modal>
         </>
       )}
+      <Modal isOpen={openNickInstruction} onOpenChange={setOpenNickInstruction} >
+     <CreateTelegramNik onOpenChange={setOpenNickInstruction} />
+       </Modal>
       <Modal onOpenChange={()=>{}} isOpen={isSending}>
         <div className="h-screen items-center flex flex-col justify-center ">
           <div className='loader'></div>
         </div>
       </Modal>
+      
     </>
   );
 }

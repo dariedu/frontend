@@ -8,6 +8,7 @@ import { TokenContext } from '../../core/TokenContext.tsx';
 import { getUserById, IUser } from '../..//api/userApi.ts';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import { UserContext } from '../../core/UserContext.tsx';
+import TextEdit, {findTextPosition} from '../TextEdit/TextEdit.tsx';
 
 interface IDefaultInfoProps {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -53,6 +54,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [confirmMakeReservationModal, setConfirmMakeReservationModal] = useState(false);
   const [contactPerson, setContactPerson] = useState<IUser>()
+  const [position, setPosition] = useState<"left" | "center" | "right" | "justify">('left');
 
   const { token } = useContext(TokenContext);
    ////// используем контекст юзера, чтобы вывести количество доступных баллов 
@@ -76,8 +78,13 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
 }
 
   
-  useEffect(()=>{getContactName()}, [])
-
+  useEffect(() => {
+    getContactName();
+    if (promotion.description) { 
+      findTextPosition(promotion.description, setPosition)
+    }
+    }, [])
+//  useEffect(()=>{getContactName()}, [])
 
   /////////////////////////////
   let curatorTelegramNik = contactPerson?.tg_username;
@@ -89,13 +96,14 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
   ///////////////////////////////////
 
 
+
   return (
     <div className=" w-full max-w-[500px] flex flex-col h-fit max-h-screen overflow-y-scroll rounded-t-2xl px-4 pt-2 pb-8 bg-light-gray-white dark:bg-light-gray-7-logo" onClick={e=>e.stopPropagation()}>
      <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end mb-2' onClick={()=>onOpenChange(false)} />
-      <div className="flex items-start justify-between">
-        <div className="flex w-[90%]">
+      <div className="flex items-start justify-between ">
+        <div className="flex">
           <div className="flex flex-col justify-center items-start">
-            <h1 className="w-full h-fit max-h-[34px] font-gerbera-h3 m-0 p-0 dark:text-light-gray-1" >
+            <h1 className="w-full h-fit  font-gerbera-h3 m-0 p-0 dark:text-light-gray-1 mb-1 flex items-center justify-center" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
             <p className="w-full font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
@@ -105,7 +113,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         </div>
         {promotion.category!=undefined && promotion.category.name.length > 0 &&
         <div className='flex justify-center items-center'>
-           <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
+           <p className="font-gerbera-sub2 text-light-gray-3 dark:text-light-gray-4 ml-4">{promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1)}</p>
         </div>
       }
       </div>
@@ -122,7 +130,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
         <p className="w-full h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-4">
          {promotion.about_tickets && promotion.about_tickets}
          {promotion.ticket_file && <a href={promotion.ticket_file} target='_blank' rel="noopener noreferrer" className='text-light-brand-green' >Ссылка на билет</a>}</p>)
-              : (<p className="w-[296px] h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
+              : (<p className=" h-fit font-gerbera-sub1 text-start mt-[10px] dark:text-light-gray-3">
           За два часа до мероприятия тут появится информация о вашем билете
           </p>)}
       </div>
@@ -139,7 +147,6 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
             ${eventDate.toLocaleDateString("RU", {month:"short"})} в
             ${eventDate.getUTCHours() < 10 ? '0' + eventDate.getUTCHours() : eventDate.getUTCHours()}:${eventDate.getUTCMinutes() < 10 ? '0' + eventDate.getUTCMinutes() : eventDate.getUTCMinutes()}`
           }  
-            
           </p>
         </div>
         <div className="bg-light-gray-1 rounded-2xl flex flex-col justify-between items-start w-[50%] min-w-[161px] h-[62px] p-[12px] dark:bg-light-gray-6">
@@ -180,11 +187,11 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
                 </a>
               </div>}
       {promotion.description != undefined && promotion.description.length > 0 ? (
-      <div className="w-full h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
-        <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1">Описание</h3>
-        <p className="font-gerbera-sub1 text-light-gray-4 h-fit text-start mt-[10px] dark:text-light-gray-3 overflow-y-auto">
-          {promotion.description}
-        </p>
+      <div className=" w-full h-fit max-h-[160px] p-4 bg-light-gray-1 rounded-2xl mt-[14px] flex flex-col justify-center items-start dark:bg-light-gray-6">
+        <h3 className="font-gerbera-h3 text-light-gray-black dark:text-light-gray-1  ">Описание</h3>
+          <div className={`font-gerbera-sub1 text-light-gray-4 h-fit text-${position} mt-[10px] dark:text-light-gray-3 overflow-y-auto`}>
+            <TextEdit text={promotion.description}/>
+        </div>
       </div>
       ): ""}
       
@@ -246,9 +253,7 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
           if (makeReservationFunc) {
             makeReservationFunc(promotion, token, setRedeemPromotionSuccessName, setRedeemPromotionSuccess, userValue, setRedeemPromotionErr, setError)
             onOpenChange(false)
-            setConfirmMakeReservationModal(false)
-          }
-        }}
+            setConfirmMakeReservationModal(false) } }}
         title={<p>Уверены, что хотите забронировать мероприятие?</p>}
         description=""
         confirmText="Да"
