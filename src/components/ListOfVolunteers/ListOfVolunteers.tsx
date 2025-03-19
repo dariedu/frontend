@@ -57,7 +57,7 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
   // const [assignVolunteerFail, setAssignVolunteerFail] = useState(false) // ошибка и снятия и назначения волонтера
   // const [unassignVolunteerFail, setUnassignVolunteerFail] = useState(false)
   const [volListForAction, setVolListForAction] = useState<string[]>(routeS?.volunteers.length == 0 ? [] : routeS?.volunteerFullName ? routeS?.volunteerFullName: []);/// список поименный, который мы будет менять назначать или снимать с доставки
-  const [volIdListForAction, setVolIdListForAction] = useState<number[]>(routeS?.volunteers? routeS.volunteers : []);// список айди, который мы будет менять назначать или снимать с доставки
+  const [volIdListForAction, setVolIdListForAction] = useState<number[]>(routeS?.volunteers.length == 0 ? [] : routeS?.volunteers? routeS.volunteers : []);// список айди, который мы будет менять назначать или снимать с доставки
   // const [takeDeliverySuccess, setTakeDeliverySuccess] = useState<boolean>(false); //// подтверждение бронирования доставки
   // const [takeDeliverySuccessDateName, setTakeDeliverySuccessDateName] = useState<string>(''); ///строка для вывова названия и времени доставки в алерт
   // const [takeDeliveryFail, setTakeDeliveryFail] = useState<boolean>(false); /// переменная для записи если произошла ошибка  при взятии доставки
@@ -208,7 +208,6 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
        }
 
     } else if (routeS?.volunteerFullName) {//// не весь список выбранных к действию волонтеров совпадает с уже назначенными
-      
         if (routeS?.volunteers.length == 1) {
           const notAssignedIndex = volMatch.indexOf(false)
             if (listOfConfirmedVol?.includes(volIdListForAction[notAssignedIndex])) {
@@ -341,7 +340,9 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
               className={'btn-M-GreenDefault'}
             onClick={e => {
               e.stopPropagation();
-              handleAssignClick()
+              if (volIdListForAction.length > 0 && volListForAction.length > 0) {
+                handleAssignClick()
+              }
             }
           }
           >
@@ -357,7 +358,9 @@ const ListOfVolunteers: React.FC<ListOfVolunteersProps> = ({
             className={'btn-M-GreenClicked'}
             onClick={e => {
               e.stopPropagation();
-              handleUnassignClick()
+              if (volIdListForAction.length > 0 && volListForAction.length > 0) {
+                handleUnassignClick()
+              }
             }}
           >
             Снять
