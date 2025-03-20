@@ -1,4 +1,8 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, {
+  useState,
+  // useRef,
+  useContext, useEffect
+} from 'react';
 import CardStories from '../ui/Cards/CardStories/CardStories';
 import SliderStoriesView from './SliderStoriesView';
 import { getStories, type IStory } from '../../api/storiesApi';
@@ -16,71 +20,71 @@ const SliderStories: React.FC = () => {
   const [currentStoryIndex, setCurrentStoryIndex] = useState<number | null>(
     null,
   );
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  //  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   // Начальные позиции для перетаскивания
-  const [dragStart, setDragStart] = useState<number>(0);
-  const [scrollLeft, setScrollLeft] = useState<number>(0);
+  // const [dragStart, setDragStart] = useState<number>(0);
+  // const [scrollLeft, setScrollLeft] = useState<number>(0);
 
   // Реф на контейнер слайдера
-  const sliderRef = useRef<HTMLDivElement | null>(null);
+  // const sliderRef = useRef<HTMLDivElement | null>(null);
 
   // Обработчик начала перетаскивания
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    setDragStart(e.pageX - (sliderRef.current?.offsetLeft || 0));
-    setScrollLeft(sliderRef.current?.scrollLeft || 0);
-  };
+  // const handleMouseDown = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   setIsDragging(false);
+  //   setDragStart(e.pageX - (sliderRef.current?.offsetLeft || 0));
+  //   setScrollLeft(sliderRef.current?.scrollLeft || 0);
+  // };
 
-  // Обработчик движения мыши
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (e.buttons !== 1) return; // Только при зажатой левой кнопке мыши
-    e.preventDefault();
-    const x = e.pageX - (sliderRef.current?.offsetLeft || 0);
-    const walk = x - dragStart;
+  // // Обработчик движения мыши
+  // const handleMouseMove = (e: React.MouseEvent) => {
+  //   if (e.buttons !== 1) return; // Только при зажатой левой кнопке мыши
+  //   e.preventDefault();
+  //   const x = e.pageX - (sliderRef.current?.offsetLeft || 0);
+  //   const walk = x - dragStart;
 
-    if (Math.abs(walk) > 5 && !isDragging) {
-      setIsDragging(true);
-    }
+  //   if (Math.abs(walk) > 5 && !isDragging) {
+  //     setIsDragging(true);
+  //   }
 
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
+  //   if (sliderRef.current) {
+  //     sliderRef.current.scrollLeft = scrollLeft - walk;
+  //   }
+  // };
 
-  // Обработчик окончания перетаскивания
-  const handleMouseUp = () => {
-    setTimeout(() => {
-      setIsDragging(false);
-    }, 0);
-  };
+  // // Обработчик окончания перетаскивания
+  // const handleMouseUp = () => {
+  //   setTimeout(() => {
+  //     setIsDragging(false);
+  //   }, 0);
+  // };
 
-  // Обработчики для touch-событий (мобильные устройства)
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(false);
-    setDragStart(e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0));
-    setScrollLeft(sliderRef.current?.scrollLeft || 0);
-  };
+  // // Обработчики для touch-событий (мобильные устройства)
+  // const handleTouchStart = (e: React.TouchEvent) => {
+  //   setIsDragging(false);
+  //   setDragStart(e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0));
+  //   setScrollLeft(sliderRef.current?.scrollLeft || 0);
+  // };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const x = e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0);
-    const walk = x - dragStart;
+  // const handleTouchMove = (e: React.TouchEvent) => {
+  //   const x = e.touches[0].pageX - (sliderRef.current?.offsetLeft || 0);
+  //   const walk = x - dragStart;
 
-    if (Math.abs(walk) > 5 && !isDragging) {
-      setIsDragging(true);
-    }
+  //   if (Math.abs(walk) > 5 && !isDragging) {
+  //     setIsDragging(true);
+  //   }
 
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
+  //   if (sliderRef.current) {
+  //     sliderRef.current.scrollLeft = scrollLeft - walk;
+  //   }
+  // };
 
-  const handleTouchEnd = () => {
-    setTimeout(() => {
-      setIsDragging(false);
-    }, 0);
-  };
+  // const handleTouchEnd = () => {
+  //   setTimeout(() => {
+  //     setIsDragging(false);
+  //   }, 0);
+  // };
 
 
   async function getAllStories() {
@@ -121,15 +125,15 @@ const SliderStories: React.FC = () => {
     <>
       {/* Слайдер для историй */}
       <div
-        className="flex overflow-x-hidden space-x-2 p-4 w-full max-w-[500px] bg-light-gray-white rounded-2xl mt-1 dark:bg-light-gray-7-logo"
-        ref={sliderRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ cursor: 'grab', whiteSpace: 'nowrap' }}
+        className="flex space-x-2 p-4 w-full max-w-[500px] bg-light-gray-white rounded-2xl mt-1 dark:bg-light-gray-7-logo overflow-x-auto"
+        // ref={sliderRef}
+        // onMouseDown={handleMouseDown}
+        // onMouseMove={handleMouseMove}
+        // onMouseUp={handleMouseUp}
+        // onTouchStart={handleTouchStart}
+        // onTouchMove={handleTouchMove}
+        // onTouchEnd={handleTouchEnd}
+        // style={{ cursor: 'grab', whiteSpace: 'nowrap' }}
       >
         {stories.map((story, index) => {
           if (story.cover && story.title && story.text) {
@@ -139,9 +143,9 @@ const SliderStories: React.FC = () => {
                 imageSrc={story.cover}
                 title={story.title}
                 onClick={() => {
-                  if (!isDragging) {
+                  // if (!isDragging) {
                     setCurrentStoryIndex(index);
-                  }
+                  // }
                 }}
               />
             </div>
