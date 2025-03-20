@@ -9,6 +9,7 @@ import { ITask } from '../../api/apiTasks';
 import Small_sms from './../../assets/icons/small_sms.svg?react'
 import Kind from './../../assets/icons/tasksIcons/kind.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
+import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 
 type TDetailedInfoTaskProps = {
   tasksCateg: { icon: JSX.Element, id: number, name: string, icon_full_view: JSX.Element }[]
@@ -67,11 +68,12 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
 
   return (
         <div
-          className="w-full max-w-[500px] py-[17px] px-4 h-fit rounded-2xl flex flex-col items-center  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo"
+          className="w-full max-w-[500px] pb-[17px] pt-[10px] px-4 h-fit rounded-2xl flex flex-col items-center  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo max-h-screen overflow-y-scroll"
           onClick={e => {
             e.stopPropagation();
           }}
-        >
+    >
+      <CloseIcon className='fill-light-gray-3 w-8 h-8 min-w-8 min-h-8 self-end' onClick={()=>onOpenChange(false)} />
           <div className="flex justify-between w-full">
             <div
               className={'flex items-center'}
@@ -147,9 +149,9 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
 
           {task.description && task.description.length != 0 ? (
             <div className="w-full h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
-              <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1">
+              <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 ">
                 Подробности
-                <p className="font-gerbera-sub1 text-light-gray-5 text-start pt-2 dark:text-light-gray-3">
+                <p className="font-gerbera-sub1 text-light-gray-5 text-start pt-2 dark:text-light-gray-3 max-h-[200px] overflow-y-auto">
                   {task.description}
                 </p>
               </div>
