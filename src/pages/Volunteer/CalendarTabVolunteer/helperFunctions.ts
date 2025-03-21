@@ -72,15 +72,20 @@ async function getAllMyTasks(token:string|null, setAllMyTasks:React.Dispatch<Rea
     if (token) {
       let result: ITask[] = await getMyTasksNoFilter(token);
       if (result) {
+
         result.map(task => {
           if (task.curator.photo && !task.curator.photo.includes('https')) {
            task.curator.photo = task.curator.photo.replace('http', 'https')
          }
         })
-         let filtered = result.filter(task => {
+        let filtered = result.filter(task => {
+          if (task.is_completed) {
           let timeDiff = Math.abs(+new Date() - +new Date(task.end_date));
           let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
           if(diffDays <= 5) return task
+          } else {
+            return task
+           }
         })
         setAllMyTasks(filtered)
         localStorage.setItem(`vol_tasks_for_calendar_tab`, JSON.stringify(filtered))
