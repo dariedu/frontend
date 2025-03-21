@@ -109,19 +109,19 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
                  <Kind className="w-[32px] h-[32px] min-w-[32px] min-h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
           <div className='flex flex-col items-start ml-2'>
-              <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
+              <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] max-w-[107px] overflow-hidden text-start dark:text-light-gray-white'>
                {task.category.name.slice(0, 1).toUpperCase()+task.category.name.slice(1)}
               </p>
           </div>
              </div>
             </div>    
         <div className="flex justify-between items-center w-fit space-x-1">
-        <div className="flex justify-center text-center bg-light-gray-white w-fit h-fit py-[6px] px-3 rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub2">
+        <div className="flex justify-center text-center bg-light-gray-white w-fit h-[24px] py-[4px] px-[8px] rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub1">
           {dateString}
             </div>
-          <div className="flex items-center justify-center bg-light-brand-green w-fit h-fit py-[6px]  px-3 rounded-2xl">
-            <span className="text-light-gray-white font-gerbera-sub2">
-              + {task.volunteer_price} {getBallCorrectEndingName(task.volunteer_price)}
+          <div className="flex items-center justify-center bg-light-brand-green w-fit h-[24px] py-[4px] px-[8px] rounded-2xl">
+            <span className="text-light-gray-white font-gerbera-sub1">
+              +{task.volunteer_price} {getBallCorrectEndingName(task.volunteer_price)}
             </span>
           </div>
         </div>

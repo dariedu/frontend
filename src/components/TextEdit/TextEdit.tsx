@@ -95,8 +95,8 @@ const TextEdit: React.FC<TTextEdit> = ({ text }) => {
   ).join('<br/><br/>');
 
   afterStyles = afterStyles.replace(/<br1>/g, "<br/>").replace(/<c>/g, '<p className="line-through inline">').replace(/<\/c>/g, "</p>");
- console.log(afterStyles, "afterStyles")
- const final = `<p className="">${afterStyles}</p>`
+//  console.log(afterStyles, "afterStyles")
+ const final = `<div>${afterStyles}</div>`
 return parse(final)
 }
  

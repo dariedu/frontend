@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   // getMonthCorrectEndingName,
   getBallCorrectEndingName,
@@ -10,6 +10,8 @@ import Small_sms from './../../assets/icons/small_sms.svg?react'
 import Kind from './../../assets/icons/tasksIcons/kind.svg?react';
 import * as Avatar from '@radix-ui/react-avatar';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
+import TextEdit from '../TextEdit/TextEdit';
+import { findTextPosition } from '../TextEdit/TextEdit';
 
 type TDetailedInfoTaskProps = {
   tasksCateg: { icon: JSX.Element, id: number, name: string, icon_full_view: JSX.Element }[]
@@ -37,6 +39,7 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
   setTakeTaskSuccess
 }) => {
 
+    const [position, setPosition] = useState<"left" | "center" | "right" | "justify">('left');
 
  ///// работаем с датой //////////////
  const taskStartDate = new Date(Date.parse(task.start_date) + 180*60000);
@@ -65,7 +68,12 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
  }
  ///// работаем с датой //////////////
 
+    useEffect(() => {
+      if (task.description && task.description.length >0) { 
+        findTextPosition(task.description, setPosition)
+      }}, [])
 
+  
   return (
         <div
           className="w-full max-w-[500px] pb-[17px] pt-[10px] px-4 h-fit rounded-2xl flex flex-col items-center  mt-1 bg-light-gray-white dark:bg-light-gray-7-logo max-h-screen overflow-y-scroll"
@@ -151,9 +159,9 @@ const DetailedInfoTask: React.FC<TDetailedInfoTaskProps> = ({
             <div className="w-full h-fit min-h-[67px] bg-light-gray-1 rounded-2xl mt-[20px] flex items-center justify-between p-4 dark:bg-light-gray-6">
               <div className="flex flex-col justify-start items-start font-gerbera-h3 text-light-gray-8-text dark:text-light-gray-1 ">
                 Подробности
-                <p className="font-gerbera-sub1 text-light-gray-5 text-start pt-2 dark:text-light-gray-3 max-h-[200px] overflow-y-auto">
-                  {task.description}
-                </p>
+                <div className={`font-gerbera-sub1 text-light-gray-5 text-${position} pt-2 dark:text-light-gray-3 max-h-[200px] overflow-y-auto`}>
+                  <TextEdit text={task.description} /> 
+                </div>
               </div>
             </div>
           ) : (

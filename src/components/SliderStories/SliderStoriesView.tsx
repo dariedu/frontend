@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect} from 'react';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 import { IStory } from '../../api/storiesApi';
 import * as Avatar from '@radix-ui/react-avatar';
+import TextEdit from '../TextEdit/TextEdit';
+import { findTextPosition } from '../TextEdit/TextEdit';
 
 interface SliderStoriesViewProps {
   currentStoryIndex: number;
@@ -20,6 +22,8 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
   const touchEndX = useRef<number | null>(null);
   const mouseStartX = useRef<number | null>(null);
   const mouseEndX = useRef<number | null>(null);
+  const [position, setPosition] = useState<"left" | "center" | "right" | "justify">('left');
+  const [positionSub, setPositionSub] = useState<"left" | "center" | "right" | "justify">('left');
 
   const minSwipeDistance = 100; // Минимальное расстояние свайпа в пикселях
 
@@ -105,6 +109,14 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
 
   // const storieText:string[] = [];
   // storieText.push(stories[currentIndex].text.split('<br/>'))
+    useEffect(() => {
+    if (stories[currentIndex].text) { 
+      findTextPosition(stories[currentIndex].text, setPosition)
+      }
+      if (stories[currentIndex].subtitle) {
+        findTextPosition(stories[currentIndex].subtitle, setPositionSub)
+      }
+    }, [])
 
   return (
     <div
@@ -146,18 +158,15 @@ const SliderStoriesView: React.FC<SliderStoriesViewProps> = ({
             {stories[currentIndex].date && <div className="flex bg-light-brand-green font-gerbera-h3 w-fit p-3 h-[28px] items-center justify-center text-light-gray-white rounded-full mb-[14px]">
               {new Date(stories[currentIndex].date).toLocaleDateString()}
             </div>}
-            {stories[currentIndex].subtitle && <p className="font-gerbera-st text-left mb-3 w-fit">
+            {stories[currentIndex].subtitle &&
+              <div className={`font-gerbera-st text-${positionSub} mb-3 w-full`}>
+             <TextEdit text={stories[currentIndex].subtitle} />
+              </div>}
+            {/* {stories[currentIndex].subtitle && <p className="font-gerbera-st text-left mb-3 w-fit">
               {stories[currentIndex].subtitle}
-            </p>}
-            <div className="font-gerbera-h2 text-left h-fit max-h-[400px] overflow-y-auto" >
-              {stories[currentIndex].text.split('<br/>')
-                  .map((text, index) => {
-                    return <p key={index}
-                      onTouchEnd={e=>e.stopPropagation()}
-                    >{ 
-                      text
-                    }<br/><br/></p>
-                  })}
+            </p>} */}
+            <div className={`font-gerbera-h2 text-${position} h-fit max-h-[400px] overflow-y-auto`} >
+            <TextEdit text={stories[currentIndex].text} />
             </div>
           </div>
         </div>
