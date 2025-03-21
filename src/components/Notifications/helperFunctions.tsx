@@ -6,7 +6,7 @@ import { getMonthCorrectEndingName, getMetroCorrectName } from "../helperFunctio
 import { postDeliveryCancel, postDeliveryConfirm } from "../../api/apiDeliveries"
 import { postTaskRefuse, postTaskConfirm } from "../../api/apiTasks"
 import { postPromotionCancel, postPromotionConfirm} from "../../api/apiPromotions";
-
+import TextEdit from "../TextEdit/TextEdit"
 
 function combineAllNotConfirmed(
   allNotConfirmedToday: IDelivery[],
@@ -95,7 +95,7 @@ function combineAllNotConfirmed(
       const obj:TNotificationInfo = {
         objType: "task",
         nameOrMetro: task.name,
-        addressOrInfo: task.description ? task.description.slice(0, 100)+"..." : task.category ? String(task.category) : '',
+        addressOrInfo: task.category ? task.category.name.slice(0,1).toUpperCase() + task.category.name.slice(1) : task.description ? <TextEdit text={task.description}/> :  '',
         stringStart: dateString,
         id: task.id,
         idString: `task${task.id}`,
@@ -136,7 +136,7 @@ function combineAllNotConfirmed(
       const obj:TNotificationInfo = {
         objType: "task",
         nameOrMetro: task.name,
-        addressOrInfo: task.description ?  task.description.slice(0, 100)+"..." : task.category ? String(task.category) : '',
+        addressOrInfo: task.category ? task.category.name.slice(0,1).toUpperCase()+task.category.name.slice(1) : task.description ?  <TextEdit text={task.description} />  : '',
         stringStart: dateString,
         id: task.id,
         idString: `task${task.id}`,
@@ -154,7 +154,7 @@ function combineAllNotConfirmed(
       const obj:TNotificationInfo = {
         objType: "promo",
         nameOrMetro: promotion.name,
-        addressOrInfo: promotion.address ? promotion.address: promotion.description ? promotion.description.slice(0, 100)+"..." : '',
+        addressOrInfo: promotion.category ? promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1) : promotion.description ? <TextEdit text={promotion.description} />  : '',
         stringStart: promotion.is_permanent
           ? 'В любое время'
             : `${eventDate.getUTCDate()}
@@ -174,7 +174,7 @@ function combineAllNotConfirmed(
       const obj:TNotificationInfo = {
         objType: "promo",
         nameOrMetro: promotion.name,
-        addressOrInfo: promotion.address ? promotion.address: promotion.category ? String(promotion.category) : '',
+        addressOrInfo: promotion.category ? promotion.category.name.slice(0,1).toUpperCase()+promotion.category.name.slice(1) : promotion.description ? <TextEdit text={promotion.description} />  : '',
         stringStart: promotion.is_permanent
           ? 'В любое время'
             : `${eventDate.getUTCDate()}

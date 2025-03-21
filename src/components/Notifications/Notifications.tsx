@@ -24,7 +24,7 @@ import CancelledDeliveryOrTaskFeedback from '../DeliveryOrTaskFeedback/Cancelled
 type TNotificationInfo = {
   objType: 'task' | 'delivery' | 'promo';
   nameOrMetro: string;
-  addressOrInfo: string;
+  addressOrInfo: string|JSX.Element
   stringStart: string;
   idString: string;
   id: number;
@@ -264,9 +264,9 @@ const Notifications: React.FC<INotifications> = ({
                               : objItem.nameOrMetro.slice(0, 1).toUpperCase() +
                                 objItem.nameOrMetro.slice(1)}
                           </p>
-                          <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
+                          <div className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text max-h-[48px] overflow-hidden h-fit">
                             {objItem.addressOrInfo}
-                          </p>
+                          </div>
                           <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
                             {objItem.stringStart}
                           </p>
@@ -383,9 +383,9 @@ const Notifications: React.FC<INotifications> = ({
                               : objItem.nameOrMetro.slice(0, 1).toUpperCase() +
                                 objItem.nameOrMetro.slice(1)}
                           </p>
-                          <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
+                          <div className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text max-h-[48px] overflow-hidden h-fit">
                             {objItem.addressOrInfo}
-                          </p>
+                          </div>
                           <p className="font-gerbera-sub1 dark:text-light-gray-1 text-light-gray-8-text  h-fit">
                             {objItem.stringStart}
                           </p>

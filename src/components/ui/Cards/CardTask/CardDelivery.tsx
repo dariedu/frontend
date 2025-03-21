@@ -46,7 +46,7 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
              <div className="flex items-start justify-center">
              <Metro_station  className='w-[32px] h-[32px] min-w-[32px] min-h-[32px] bg-[#FFFFFF] fill-[#000000] rounded-full dark:bg-[#575757] dark:fill-[#F8F8F8]' />
           <div className='flex flex-col items-start ml-2'>
-              <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] overflow-hidden text-start dark:text-light-gray-white'>
+              <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] max-w-[107px] overflow-hidden text-start dark:text-light-gray-white'>
                 {getMetroCorrectName(delivery.location.subway)}
               </p>
           <p className='text-light-gray-black text-start font-gerbera-sub1 max-h-[31px] overflow-hidden dark:text-light-gray-3'>{delivery.location.address}</p>
@@ -54,12 +54,12 @@ const CardDelivery: React.FC<TCardDeliveryProps> = ({ delivery, canBook, switchT
              </div>
             </div>    
         <div className="flex justify-between items-center w-fit space-x-2">
-        <div className="flex justify-center text-center bg-light-gray-white w-fit h-fit py-[6px] px-3 rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub2">
+        <div className="flex justify-center text-center bg-light-gray-white w-fit h-[24px] py-[4px] px-[8px] rounded-2xl dark:bg-light-gray-5 dark:text-light-gray-2 font-gerbera-sub1">
           {`${day} ${month.slice(0,3)+"."} ${hours}:${minutes}`}
             </div>
-          <div className="flex items-center justify-center bg-light-brand-green w-fit h-fit py-[6px] px-3 rounded-2xl">
-            <span className="text-light-gray-white font-gerbera-sub2">
-              + {delivery.price} {getBallCorrectEndingName(delivery.price)}
+          <div className="flex items-center justify-center bg-light-brand-green h-[24px] py-[4px] px-[8px] w-fit rounded-2xl ">
+            <span className="text-light-gray-white font-gerbera-sub1">
+              +{delivery.price} {getBallCorrectEndingName(delivery.price)}
             </span>
           </div>
         </div>
