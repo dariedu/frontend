@@ -118,7 +118,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       {/* Переключение темы */}
       {showThemeToggle && (
         <div className="relative rounded-2xl">
-          <div className="flex items-center justify-between p-4 bg-light-gray-white shadow h-[66px] rounded-2xl dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
+          <div className="flex items-center justify-between p-4 bg-light-gray-white h-[66px] rounded-2xl dark:bg-light-gray-7-logo" onClick={e=>e.preventDefault()}>
             <ThemeToggle />
           </div>
         </div>
@@ -127,7 +127,7 @@ const ActionsVolunteer: React.FC<IActionsVolunteerProps> = ({
       {/* Действия */}
       {filteredActions.map((action, index) => (
 
-        <div  key={index} className="flex items-center justify-start p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] shadow h-[66px]" onClick={action.onClick ? action.onClick : ()=>{}}>
+        <div  key={index} className="flex items-center justify-start p-4 bg-light-gray-white dark:bg-light-gray-7-logo rounded-[16px] h-[66px]" onClick={action.onClick ? action.onClick : ()=>{}}>
           <div className="flex items-center space-x-4">
               <span>{action.icon}</span>
             {/* )} */}

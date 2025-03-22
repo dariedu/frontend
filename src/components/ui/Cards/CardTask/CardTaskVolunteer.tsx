@@ -108,11 +108,11 @@ const CardTaskVolunteer: React.FC<TCardDeliveryProps> = ({ task, myTasks, switch
                ): (
                  <Kind className="w-[32px] h-[32px] min-w-[32px] min-h-[32px] fill-[#000000] bg-light-gray-white rounded-full dark:fill-[#F8F8F8] dark:bg-light-gray-5"/>
                )}
-          <div className='flex flex-col items-start ml-2'>
-              <p className='font-gerbera-h3 text-light-gray-black w-40 h-[18px] max-w-[107px] overflow-hidden text-start dark:text-light-gray-white'>
+          <div className='flex flex-col items-start ml-2 '>
+              <p className='font-gerbera-h3 text-light-gray-black w-40 max-h-[47px] max-w-[130px] overflow-hidden text-start dark:text-light-gray-white'>
                {task.category.name.slice(0, 1).toUpperCase()+task.category.name.slice(1)}
               </p>
-          </div>
+            </div>
              </div>
             </div>    
         <div className="flex justify-between items-center w-fit space-x-1">

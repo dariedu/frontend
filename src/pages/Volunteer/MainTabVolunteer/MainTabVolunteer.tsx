@@ -109,7 +109,7 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
                 if (i.in_execution == true) {
                   return (
                     <div key={i.id}>
-                      <NearestDeliveryVolunteer delivery={i} status="active" />
+                      <NearestDeliveryVolunteer delivery={i} status="active" mainTab={true} />
                     </div>
                   );
                 }

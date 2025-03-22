@@ -32,7 +32,8 @@ interface INearestDeliveryProps {
   setCancelDeliverySuccess?: React.Dispatch<React.SetStateAction<boolean>>
   setCancelDeliveryFail?: React.Dispatch<React.SetStateAction<boolean>>
   allNotConfirmed?: number[] | null
-  setAllNotConfirmed?:React.Dispatch<React.SetStateAction<number[] | null>>
+  setAllNotConfirmed?: React.Dispatch<React.SetStateAction<number[] | null>>
+  mainTab?:boolean
 }
 
 
@@ -49,7 +50,8 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
   setCancelDeliverySuccess,
   setCancelDeliveryFail,
   allNotConfirmed, 
-  setAllNotConfirmed
+  setAllNotConfirmed,
+  mainTab
 }) => {
 
   const deliveryDate = new Date(Date.parse(delivery.date) + 180 * 60000);
@@ -256,8 +258,9 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             <a href={'https://t.me/' + curatorTelegramNik} target="_blank">
               <Small_sms className="w-[36px] h-[35px]" />
               </a>
-          </div>
-          <button
+              </div>
+              {
+                !mainTab && <button
             className="btn-B-GrayDefault mt-[20px] dark:bg-light-gray-6 dark:text-light-gray-white self-center"
             onClick={e => {
               e.preventDefault();
@@ -265,7 +268,9 @@ const NearestDeliveryVolunteer: React.FC<INearestDeliveryProps> = ({
             }}
           >
             Отказаться
-          </button>  
+          </button> 
+          }
+           
               </div>
         
         )}

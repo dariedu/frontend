@@ -3,7 +3,7 @@ import {
   getBallCorrectEndingName,
   getMonthCorrectEndingName,
 } from '../../../helperFunctions/helperFunctions';
-import DetailedInfo from '../../../DetailedInfo/DetailedInfo';
+import DetailedInfoPromo from '../../../DetailedInfoPromo/DetailedInfoPromo';
 import { Modal } from '../../Modal/Modal';
 import { type IPromotion } from '../../../../api/apiPromotions';
 import * as Avatar from '@radix-ui/react-avatar';
@@ -67,7 +67,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({
   return (
     <>
       <div
-        className="w-[159px] bg-light-gray-white rounded-2xl overflow-hidden flex flex-col h-[190px] select-none dark:bg-light-gray-6"
+        className="w-[159px] bg-light-gray-1 rounded-2xl overflow-hidden flex flex-col h-[190px] select-none dark:bg-light-gray-6"
         onClick={() => setOpenFullView(true)}
       >
         {/* Image Section */}
@@ -115,7 +115,7 @@ const CardPromotion: React.FC<IPromotionProps> = ({
         </div>
       </div>
       <Modal isOpen={openFullView} onOpenChange={setOpenFullView}>
-        <DetailedInfo
+        <DetailedInfoPromo
           onOpenChange={setOpenFullView}
           optional={optional}
           promotion={promotion}

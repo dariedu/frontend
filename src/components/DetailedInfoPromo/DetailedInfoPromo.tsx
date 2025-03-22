@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { type IPromotion } from './../../api/apiPromotions.ts';
-import { getBallCorrectEndingName } from '../helperFunctions/helperFunctions';
+import { type IPromotion } from '../../api/apiPromotions.ts';
+import { getBallCorrectEndingName } from '../helperFunctions/helperFunctions.ts';
 import ConfirmModal from '../ui/ConfirmModal/ConfirmModal.tsx';
 import CloseIcon from "../../assets/icons/closeIcon.svg?react"
 import * as Avatar from '@radix-ui/react-avatar';
 import { TokenContext } from '../../core/TokenContext.tsx';
-import { getUserById, IUser } from '../..//api/userApi.ts';
+import { getUserById, IUser } from '../../api/userApi.ts';
 import Small_sms from "./../../assets/icons/small_sms.svg?react"
 import { UserContext } from '../../core/UserContext.tsx';
 import TextEdit, {findTextPosition} from '../TextEdit/TextEdit.tsx';
@@ -30,7 +30,7 @@ interface IDefaultInfoProps {
 }
 
  
-const DetailedInfo: React.FC<IDefaultInfoProps> = ({
+const DetailedInfoPromo: React.FC<IDefaultInfoProps> = ({
   onOpenChange,
   optional,
   promotion,
@@ -107,10 +107,10 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
       <div className="flex items-start justify-between ">
         <div className="flex">
           <div className="flex flex-col justify-center items-start">
-            <h1 className="w-full h-fit  font-gerbera-h3 m-0 p-0 dark:text-light-gray-1 mb-1 flex items-center justify-center" >
+            <h1 className="w-full h-fit text-left font-gerbera-h3 m-0 p-0 dark:text-light-gray-1 mb-1 flex items-center justify-center" >
               {promotion.name.slice(0, 1).toUpperCase() + promotion.name.slice(1)}
             </h1>
-            <p className="w-full font-gerbera-sub1 text-light-gray-4 text-start dark:text-light-gray-3">
+            <p className="w-full font-gerbera-sub1 text-left text-light-gray-4  dark:text-light-gray-3">
               {promotion.address}
             </p>
           </div>
@@ -270,4 +270,4 @@ const DetailedInfo: React.FC<IDefaultInfoProps> = ({
 };
 
 
-export default DetailedInfo;
+export default DetailedInfoPromo;
