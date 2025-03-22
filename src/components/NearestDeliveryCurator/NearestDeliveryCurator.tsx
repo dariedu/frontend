@@ -43,7 +43,7 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   feedbackSubmited,
   arrayListOfConfirmedVol,
 }) => {
- 
+//  console.log(curatorDelivery, "curator delivery")
   const [isFeedbackSubmited, setIsFeedbackSubmited] = useState(feedbackSubmited);
   const [delivery, setDelivery] = useState<IDelivery>()
   const [fullViewCompleted, setFullViewCompleted] = useState(false); //// раскрываем завершенную доставку, чтобы увидеть детали
@@ -77,15 +77,25 @@ const NearestDeliveryCurator: React.FC<INearestDeliveryProps> = ({
   const [unassignVolunteerSuccess, setUnassignVolunteerSuccess] = useState(false)
    const [assignVolunteerSuccess, setAssignVolunteerSuccess] = useState(false)
    
+  ///// переносим список волонтеров в отдельную переменную
+    useEffect(() => {
+    curatorDelivery.volunteers.map(vol => {
+      if (vol.photo && !vol.photo.includes('https')) {
+        vol.photo = vol.photo.replace('http', 'https');
+      }
+    });
+    setListOfVolunteers(curatorDelivery.volunteers);
+  },[])
+  
   ///// запрашиваем список подтвержденных волонтеров
   useEffect(() => {
     filterVolList(arrayListOfConfirmedVol, curatorDelivery,  setListOfConfirmedVol)
   }, [arrayListOfConfirmedVol])
   
-///// запрашиваем список записавшихся волонтеров на доставку
+///// запрашиваем  полноценный объект доставки
   useEffect(() => {
-    requestMyDelivery(token, curatorDelivery, setDelivery, setDeliveryDate, setListOfVolunteers )
-  }, [])
+    requestMyDelivery(token, curatorDelivery, setDelivery, setDeliveryDate)
+  }, []);
 
   /// 1. запрашиваем полную версию маршрутных листов по одному
   useEffect(() => {

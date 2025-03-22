@@ -34,29 +34,33 @@ const CuratorTab: React.FC = () => {
    const {currentUser} = useContext(UserContext);
   ////// используем контекст
 
-    useEffect(() => {
-      getMyCuratorDeliveries(token,setCuratorActiveDeliveries, setCuratorInProcessDeliveries, setCuratorCompletedDeliveries )
-      getMyCuratorTasks(token,  setCurtorTasks)
-      getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
-      requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
-      requestTaskConfirmedList(token, setArrayListOfConfirmedVolTask) 
-    
- }, [])
+  useEffect(() => {
+    getMyCuratorDeliveries(token, setCuratorActiveDeliveries, setCuratorInProcessDeliveries, setCuratorCompletedDeliveries)
+  }, []);
+  
+  useEffect(() => {
+    getMyCuratorTasks(token, setCurtorTasks)
+  }, []);
+
+  useEffect(() => {
+    getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+  }, []);
+
+  useEffect(() => {
+    requestDeliveryConfirmedList(token, setArrayListOfConfirmedVol)
+  }, []);
+
+  useEffect(() => {
+    requestTaskConfirmedList(token, setArrayListOfConfirmedVolTask)
+  }, []);
 
   
-  // useEffect(() => {
-  //   requestAllRouteSheetsAssignments(token, setAllAssignedRouteSheets)
-  // }, [unassignVolunteerSuccess, assignVolunteerSuccess])
- 
   return (
     <div className="flex-col bg-light-gray-1 dark:bg-light-gray-black h-fit pb-20 overflow-y-auto w-full max-w-[500px]">
-      {curatorInProcessDeliveries && curatorInProcessDeliveries.length >0 && (
+      {curatorInProcessDeliveries && curatorInProcessDeliveries.length > 0 && (
         curatorInProcessDeliveries.map((del, index) => {
             return(<div key={index}>
               <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='active' arrayListOfConfirmedVol={arrayListOfConfirmedVol}
-                // allAssignedRouteSheets={allAssignedRouteSheets}
-                // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
-                // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               />
             </div>)
         })
@@ -65,9 +69,6 @@ const CuratorTab: React.FC = () => {
         curatorActiveDeliveries.map((del, index) => {
           return (<div key={index}>
             <NearestDeliveryCurator curatorDelivery={del} deliveryFilter='nearest' arrayListOfConfirmedVol={arrayListOfConfirmedVol}
-              // allAssignedRouteSheets={allAssignedRouteSheets}
-            // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
-            // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
             />
           </div>)
         })
@@ -80,8 +81,7 @@ const CuratorTab: React.FC = () => {
              task={task}
              taskFilter={+new Date() - +new Date(task.start_date) <= 0 ? 'nearest' : 'active'}
               feedbackSubmited={submited}
-              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}
-       />
+              arrayListOfConfirmedVolTask={arrayListOfConfirmedVolTask}/>
           </div>
           )
         }
@@ -91,10 +91,7 @@ const CuratorTab: React.FC = () => {
        curatorCompletedDeliveries.map((del, index) => {
           return (<div key={index}>
             <NearestDeliveryCurator
-              // allAssignedRouteSheets={allAssignedRouteSheets}
               curatorDelivery={del} deliveryFilter='completed'
-              // unassignVolunteerSuccess={unassignVolunteerSuccess} setUnassignVolunteerSuccess={setUnassignVolunteerSuccess}
-              // assignVolunteerSuccess={assignVolunteerSuccess} setAssignVolunteerSuccess={setAssignVolunteerSuccess}
               feedbackSubmited={completedDeliveryFeedbacks.includes(del.id_delivery) ? true : false} arrayListOfConfirmedVol={arrayListOfConfirmedVol} />
           </div>)
         })

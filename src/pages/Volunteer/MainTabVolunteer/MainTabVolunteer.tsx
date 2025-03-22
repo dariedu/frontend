@@ -22,6 +22,9 @@ import {
   getTaskFromServer,
   getAllMyTasks
 } from './helperFunctions';
+import AfterRegPopup from '../../../components/AfterRegPopup/AfterRegPopup';
+import { Modal } from '../../../components/ui/Modal/Modal';
+import { UserContext } from '../../../core/UserContext';
 
 type TMainTabVolunteerProps = {
   switchTab: React.Dispatch<React.SetStateAction<string>>;
@@ -54,12 +57,20 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
   const [takeTaskModal, setTakeTaskModal] = useState(false)///просим подтвердить пользователя чтобы взять доброе дело
   const [taskForReservation, setTaskForReservation] = useState<ITask>();/// запоминаем таск который пользователь хочет взять
   const [allMyTasksId, setAllMyTasksId] = useState<number[]>([]);
+  const [openPopUp, setOpenPopup] = useState(false) // на попап после регитстрации  для несовершеннолетних
   ////// используем контекст доставок, чтобы вывести количество доступных баллов
   const { deliveries } = useContext(DeliveryContext);
     ///// используем контекст токена
-    const {token} = useContext(TokenContext);
+  const { token } = useContext(TokenContext);
+  const {currentUser} = useContext(UserContext)
     // const token = tokenContext.token;
    ////// используем контекст
+  //  console.log(currentUser, "currentUser")
+  useEffect(() => {
+    if (!currentUser?.is_adult && !currentUser?.is_confirmed ) {
+      setOpenPopup(true)
+    }
+  }, []);
 
   useEffect(() => {
     //  console.log(deliveries)
@@ -233,6 +244,9 @@ const [selectedDate, setSelectedDate] = useState<Date|null>(null);
         confirmText="Ок"
         isSingleButton={true}
       />
+      <Modal isOpen={openPopUp} onOpenChange={setOpenPopup}>
+      <AfterRegPopup onClose={setOpenPopup} />
+      </Modal>
     </>
   );
 };

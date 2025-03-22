@@ -41,7 +41,8 @@ async function getMyCuratorDeliveries(token:string|null, setCuratorActiveDeliver
   if (token) {
     try {
      let result: ICuratorDeliveries = await getCuratorDeliveries(token);
-    if (result) { 
+      if (result) { 
+      // console.log(result, 'all curator deliveries')
       result['активные доставки'].forEach((i: TCuratorDelivery) => { activeDeliveries.push(i) });
       setCuratorActiveDeliveries(activeDeliveries)/// запоминаем результат
       localStorage.setItem(`curator_active_del_for_curator_tab`, JSON.stringify(activeDeliveries))

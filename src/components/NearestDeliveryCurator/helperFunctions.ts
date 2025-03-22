@@ -39,9 +39,6 @@ async function requestMyDelivery(
   curatorDelivery: TCuratorDelivery,
   setDelivery: React.Dispatch<React.SetStateAction<IDelivery | undefined>>,
   setDeliveryDate: React.Dispatch<React.SetStateAction<Date | undefined>>,
-  setListOfVolunteers: React.Dispatch<
-    React.SetStateAction<TVolunteerForDeliveryAssignments[]>
-  >,
 ) {
   if (token) {
     try {
@@ -60,12 +57,6 @@ async function requestMyDelivery(
           setDelivery(result);
         }
         setDeliveryDate(new Date(Date.parse(result.date) + 180 * 60000));
-        curatorDelivery.volunteers.map(vol => {
-          if (vol.photo && !vol.photo.includes('https')) {
-            vol.photo = vol.photo.replace('http', 'https');
-          }
-        });
-        setListOfVolunteers(curatorDelivery.volunteers);
       }
     } catch (err) {
       console.log('requestMyDelivery() NearestDeliveryCurator has failed');

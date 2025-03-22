@@ -73,7 +73,7 @@ function findTextPosition(text: string, setPosition: React.Dispatch<React.SetSta
 
 const TextEdit: React.FC<TTextEdit> = ({ text }) => {
 // убираем первые три символа позиционирования
-  const afterPosition = text.replace(/<(m|l|r|j)>/g, '');
+  const afterPosition = text.replace(/<(m|l|r|j)>/g, '').replace(/<(vt|vm)>/, "");
   // делим на блоки по два отступа
   let afterStyles = afterPosition.split('<br2>')
     .map((t) => {

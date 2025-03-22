@@ -83,6 +83,9 @@
   .btn-S-GreenDefault {
     @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-brand-green text-light-gray-white;
   }
+  .btn-S-GreenRevert {
+    @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-1 text-light-brand-green;
+  }
   .btn-S-GreenClicked {
     @apply w-28 h-7 min-h-7 rounded-[40px] font-gerbera-sub2 bg-light-gray-6 text-light-gray-white;
   }

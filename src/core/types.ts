@@ -17,7 +17,9 @@ export interface IUser {
   city: { id: number; city: string } | null
   is_superuser: boolean
   is_staff: boolean
+  is_confirmed:boolean
   metier?: string
   interests?: string
+  university?: string|null
   consent_to_personal_data: boolean
 }

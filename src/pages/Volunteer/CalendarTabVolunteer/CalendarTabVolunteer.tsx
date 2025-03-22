@@ -47,19 +47,27 @@ const CalendarTabVolunteer = () => {
 
 
   useEffect(() => {
-    getMyDeliveries(token, setMyCurrent, setMyPast)
+    if (token && currentUser?.is_confirmed) {
+      getMyDeliveries(token, setMyCurrent, setMyPast)
+    }
   }, [cancelDeliverySuccess])
 
   useEffect(() => {
-    getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+    if (token && currentUser?.is_confirmed) {
+      getAllMyFeedbacks(token, currentUser, setCompletedDeliveryFeedbacks, setCompletedTaskFeedbacks)
+    }
   }, [isFeedbackSubmitedModalOpen])
 
-    useEffect(() => {
-      getAllMyTasks(token, setAllMyTasks )
+  useEffect(() => {
+    if (token && currentUser?.is_confirmed) {
+      getAllMyTasks(token, setAllMyTasks)
+    }
     }, [cancelTaskSuccess])
   
-    useEffect(() => {
+  useEffect(() => {
+    if (token && currentUser?.is_confirmed) {
       getListNotConfirmed(token, setAllNotConfirmed)
+    }
       // getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
   }, [])
 

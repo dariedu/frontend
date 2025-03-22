@@ -399,14 +399,13 @@ function RegistrationPage() {
                   Для завершения регистрации просим одного из ваших родителей/официального опекуна заполнить и 
                   подписать {" "}
                   <DownloadPdfButton />
-                  <a href="https://cloud.mail.ru/public/c4Yr/MWBRTqPv5" target="_blank" download={"document.pdf"} className="font-gerbera-h3 text-center text-light-brand-green font-normal">Согласие</a>
                 * на ваше участие в благотворительных доставках и других добрых делах.
               </p>
               <br />
               <p className="font-gerbera-h3 text-center text-light-gray-5 dark:text-light-gray-2">
-                  *Подписанный документ отправьте
+                  *Подписанный документ отправьте 
                   <a href={'https://t.me/volunteers_dari_edu'} target="_blank" className='text-light-brand-green '>
-                @volunteers_dari_edu
+                    {` @volunteers_dari_edu`}
                 </a>
               </p>
               <br />

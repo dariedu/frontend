@@ -48,9 +48,10 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
     ///// используем контекст токена
   const { token } = useContext(TokenContext);
 
+
     ////запрашиваем таски и доставки и промо
     useEffect(() => {
-      if (token) {
+      if (token && currentUser?.is_confirmed) {
       getPromoListNotConfirmed(token, setAllPromoNotConfirmed)
       getTasksListNotConfirmed(token, setAllTasksNotConfirmed)
       getListNotConfirmed(token, setAllNotConfirmed)
@@ -59,21 +60,21 @@ const NavigationBar: React.FC<INavigationBarProps> = ({
   
   ////запрашиваем  доставки
   useEffect(() => {
-    if (token) {
+    if (token && currentUser?.is_confirmed) {
     getMyDeliveries(token, allNotConfirmed, setAllNotConfirmedToday, setAllNotConfirmedTomorrow )
     }
   }, [allNotConfirmed])
 
     ////запрашиваем таски 
  useEffect(() => {
-  if (token) {
+  if (token && currentUser?.is_confirmed) {
    getAllMyTasks(token, allTasksNotConfirmed, setAllTasksNotConfirmedToday, setAllTasksNotConfirmedTomorrow )
   }
 }, [allTasksNotConfirmed])
   
    ////запрашиваем промо
   useEffect(() => {
-     if (token) {
+     if (token && currentUser?.is_confirmed) {
       getAllMyPromo(token, allPromoNotConfirmed, setAllPromoNotConfirmedToday, setAllPromoNotConfirmedTomorrow)
      }
   }, [allPromoNotConfirmed])

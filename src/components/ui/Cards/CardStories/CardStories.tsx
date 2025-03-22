@@ -18,7 +18,7 @@ const CardStories: React.FC<CardStoriesProps> = ({
 
   const [positionV, setPositionV] = useState<"top-[12px]" | "top-[55px]" | "bottom-[12px]" >("bottom-[12px]");
   const [positionH, setPositionH] = useState<"left" | "center" | "right" | "justify">('left');
-  const [finalTitle, setFinalTitle] = useState<string>(title);
+  // const [finalTitle, setFinalTitle] = useState<string>(title);
 
 
   // <vt> - наверху
@@ -31,8 +31,8 @@ function findTextVerticalPosition(text: string) {
   if (match) {
      position = match[0] == "<vm>" ? "top-[55px]" : match[0] == "<vt>" ? "top-[12px]" : "bottom-[12px]";
   }
-  text.replace(/<(vt|vm)>/, "");
-  setFinalTitle(text)
+  // const afterPosition = text.replace(/<(vt|vm)>/, "");
+  // setFinalTitle(afterPosition)
   setPositionV(position)
 }
 
@@ -58,7 +58,7 @@ useEffect(() => {
         </Avatar.Root>
       {/* Текст поверх картинки */}
       <div className={`absolute text-${positionH} ${positionV} px-[12px] font-gerbera-sub2 text-light-gray-white w-full h-fit whitespace-normal `}>
-        <TextEdit text={finalTitle} />
+        <TextEdit text={title} />
       </div>
     </div>
   );
